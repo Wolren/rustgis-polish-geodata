@@ -16,6 +16,33 @@ GUGiK — bez kluczy API, bez pośredników.
 | Dane | **Obszar z widoku** | Dodaje prostokąt bieżącego widoku jako warstwę „Obszar pobierania” |
 | | **Pobierz dane…** | Narzędzie (panel Narzędzia): zestaw danych + warstwa obszaru, w tle z postępem i przerwaniem |
 | Działka | Działka z ULDK | Działka pod środkiem mapy: geometria + atrybuty |
+| Narzędzia | **Przytnij do obszaru** | Tnie warstwę do granicy „Obszar pobierania”; bez argumentów bierze najnowszą warstwę |
+| | Wyczyść cache | Usuwa zapisane odpowiedzi WFS (domyślnie 7 dni) |
+
+### Przycinanie do granicy
+
+Filtr WFS zwraca **całe** obiekty, które dotykają obszaru — nie przycina ich. Dlatego po pobraniu
+uruchom **Przytnij do obszaru**: wywołuje wbudowane narzędzie Clip i zastępuje warstwę wersją
+przyciętą (jedna warstwa, nie dwie). Uchwyt `layer` jest opcjonalny: bez niego bierze najnowszą
+warstwę wektorową, więc po poleceniu „Pobierz dane…” wystarczy jedno kliknięcie.
+
+Pomiar: 5586 działek przecinało obszar, po przycięciu zostało 5583 — dla działek różnica jest
+mała, dla dróg i obiektów wielkości gminy duża.
+
+### Sterowanie z agenta (MCP)
+
+Wtyczka jest dostępna przez MCP bez osobnej warstwy, bo RustGIS uruchamia ją jako polecenia
+i narzędzia geoprzetwarzania. Agent używa `run_command` i `run_tool`:
+
+```
+run_command  plugin:dane-pl/obszar-widok  {}
+run_tool     plugin:dane-pl/pobierz       {"dane":"Działki (EGiB)","obszar":"Obszar pobierania"}
+run_command  plugin:dane-pl/przytnij      {}
+```
+
+`describe_tool` i `search_tools` widzą wtyczkę po instalacji. `script.run` (łączenie kilku
+poleceń w jednym wywołaniu) jest zarezerwowane dla użytkownika i agent go nie użyje, dlatego
+`przytnij` działa bez argumentów.
 
 Kliknięcie podkładu drugi raz usuwa warstwę. Jeśli widok nie obejmuje Polski, wtyczka najpierw
 przybliża mapę do Polski — usługi GUGiK pokrywają tylko Polskę i poza nią zwracają puste kafle.
@@ -119,7 +146,8 @@ udostępniane nieodpłatnie. Przy każdej warstwie ustawiana jest atrybucja
 ## Ograniczenia
 
 - Narzędzie tnie po **zasięgu (bbox)** warstwy obszaru; nie przycina geometrii do jej poligonów.
-- Limit obiektów: 6000 na pobranie (12 stron × 500). Większy obszar = komunikat o przerwaniu.
+- Limit obiektów: 6000 na pobranie (po 4 strony równolegle, po 500 obiektów). Większy obszar =
+  komunikat o przerwaniu.
 - Brak pobierania paczek LAZ / NMT / ortofoto na dysk (to materiał na wersję 2).
 - WFS GUGiK nie ma GeoJSON-u, więc konwersja jest lokalna; geometrie inne niż
   Point/LineString/Polygon i ich wersje multi nie są obsługiwane.

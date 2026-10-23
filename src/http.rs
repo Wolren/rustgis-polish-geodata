@@ -1,13 +1,25 @@
 //! Small HTTP helper: a GET with a timeout and a name RustGIS's users can trace.
 
+use crate::cache;
 use std::io::Read;
 use std::time::Duration;
 
-const UA: &str = "dane-pl/0.4 (RustGIS plugin)";
+const UA: &str = "dane-pl/0.5 (RustGIS plugin)";
 /// The largest document one request may bring back. A page of 500 communes is a few MB.
 const MAX_BYTES: u64 = 64 * 1024 * 1024;
 
+/// A GET, answered from the on-disk cache when a fresh copy exists.
 pub fn get(url: &str, timeout_secs: u64) -> Result<String, String> {
+    if let Some(cached) = cache::get(url) {
+        return Ok(cached);
+    }
+    let body = fetch(url, timeout_secs)?;
+    cache::put(url, &body);
+    Ok(body)
+}
+
+/// A GET that always reaches the server, bypassing the cache.
+pub fn fetch(url: &str, timeout_secs: u64) -> Result<String, String> {
     let response = ureq::get(url)
         .timeout(Duration::from_secs(timeout_secs))
         .set("User-Agent", UA)
@@ -26,7 +38,8 @@ pub fn get(url: &str, timeout_secs: u64) -> Result<String, String> {
     if bytes.len() as u64 > MAX_BYTES {
         return Err(format!("odpowiedź z {} jest zbyt duża", short(url)));
     }
-    String::from_utf8(bytes).map_err(|_| format!("odpowiedź z {} nie jest tekstem UTF-8", short(url)))
+    String::from_utf8(bytes)
+        .map_err(|_| format!("odpowiedź z {} nie jest tekstem UTF-8", short(url)))
 }
 
 fn short(url: &str) -> &str {

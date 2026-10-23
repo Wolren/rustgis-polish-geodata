@@ -11,9 +11,12 @@ use serde_json::{json, Value};
 
 pub fn run(request: &Value) -> Result<Value, String> {
     let params = request.get("params").cloned().unwrap_or_else(|| json!({}));
-    let label = params.get("dane").and_then(Value::as_str).unwrap_or_default();
-    let layer = catalog::wfs_by_label(label)
-        .ok_or_else(|| format!("nieznany zestaw danych: '{label}'"))?;
+    let label = params
+        .get("dane")
+        .and_then(Value::as_str)
+        .unwrap_or_default();
+    let layer =
+        catalog::wfs_by_label(label).ok_or_else(|| format!("nieznany zestaw danych: '{label}'"))?;
     let area = params
         .get("obszar")
         .and_then(Value::as_str)
@@ -40,10 +43,13 @@ pub fn run(request: &Value) -> Result<Value, String> {
 
     let (features, truncated) = {
         let mut report = |text: &str| host::progress_line(text);
-        wfs::fetch(layer, bbox, &mut report)?
+        wfs::fetch(layer, bbox, Some(features_of_area), &mut report)?
     };
     if features.is_empty() {
-        return Err(format!("brak obiektów „{}” w wybranym obszarze", layer.name));
+        return Err(format!(
+            "brak obiektów „{}” w wybranym obszarze",
+            layer.name
+        ));
     }
 
     let total = features.len();
@@ -51,7 +57,8 @@ pub fn run(request: &Value) -> Result<Value, String> {
     let mut messages = vec![format!("{}: {total} obiektów", layer.name)];
     if truncated {
         messages.push("Pobieranie przerwane limitem — wybierz mniejszy obszar.".into());
-    }    Ok(json!({
+    }
+    Ok(json!({
         "layers": [{ "name": layer.name, "geojson": collection }],
         "messages": messages
     }))
@@ -74,7 +81,10 @@ fn bbox_of(collection: &Value) -> Option<[f64; 4]> {
 fn coordinates(value: &Value, bbox: &mut [f64; 4], found: &mut bool) {
     if let Some(array) = value.as_array() {
         if array.len() >= 2 && array[0].is_number() && array[1].is_number() {
-            let (lon, lat) = (array[0].as_f64().unwrap_or(0.0), array[1].as_f64().unwrap_or(0.0));
+            let (lon, lat) = (
+                array[0].as_f64().unwrap_or(0.0),
+                array[1].as_f64().unwrap_or(0.0),
+            );
             bbox[0] = bbox[0].min(lon);
             bbox[1] = bbox[1].min(lat);
             bbox[2] = bbox[2].max(lon);
@@ -110,6 +120,9 @@ mod tests {
 
     #[test]
     fn has_no_bbox_without_geometry() {
-        assert_eq!(bbox_of(&json!({"type": "FeatureCollection", "features": []})), None);
+        assert_eq!(
+            bbox_of(&json!({"type": "FeatureCollection", "features": []})),
+            None
+        );
     }
 }

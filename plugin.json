@@ -11,7 +11,7 @@
     "default": ["bin/dane-pl"]
   },
   "minRustgisVersion": "0.3.0",
-  "permissions": ["edit", "network"],
+  "permissions": ["edit", "files", "network"],
   "commands": [
     {
       "id": "orto",
@@ -72,6 +72,18 @@
       "label": "Działka\nz ULDK",
       "help": "Znajduje działkę pod środkiem mapy i dodaje jej granice wraz z atrybutami.",
       "icon": "bookmark"
+    },
+    {
+      "id": "przytnij",
+      "label": "Przytnij\ndo obszaru",
+      "help": "Przycina warstwę do granicy „Obszar pobierania” (albo wskazanej warstwy). WFS zwraca całe obiekty dotykające obszaru; to je tnie.",
+      "icon": "buffer"
+    },
+    {
+      "id": "wyczysc-cache",
+      "label": "Wyczyść\ncache",
+      "help": "Usuwa zapisane odpowiedzi WFS (domyślnie trzymane 7 dni), żeby pobrać dane od nowa.",
+      "icon": "buffer"
     }
   ],
   "tools": [
@@ -120,6 +132,10 @@
       {
         "label": "Działka",
         "items": ["parcel"]
+      },
+      {
+        "label": "Narzędzia",
+        "items": ["przytnij", "wyczysc-cache"]
       }
     ]
   },
@@ -128,6 +144,9 @@
       "Podkłady": "Basemaps",
       "Dane": "Data",
       "Działka": "Parcel",
+      "Narzędzia": "Tools",
+      "Wyczyść\ncache": "Clear\ncache",
+      "Przytnij\ndo obszaru": "Clip\nto area",
       "Ortofoto": "Orthophoto",
       "Ortofoto\nHi-Res": "Orthophoto\nHi-Res",
       "Działki\n(WMS)": "Parcels\n(WMS)",
