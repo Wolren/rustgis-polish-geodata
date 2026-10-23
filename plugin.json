@@ -1,0 +1,151 @@
+{
+  "id": "dane-pl",
+  "name": "Dane PL",
+  "version": "0.5.0",
+  "description": "Polish geodetic data from GUGiK in one tab: orthophoto, BDOT10k, parcels, addresses, PRG boundaries, place names and hillshade as map layers; an area-from-view button plus a background download tool (dataset + area layer, with progress and Cancel); and ULDK parcel lookup by map point.",
+  "author": "Wolren",
+  "license": "MIT",
+  "runtime": "process",
+  "run": {
+    "windows": ["bin/dane-pl.exe"],
+    "default": ["bin/dane-pl"]
+  },
+  "minRustgisVersion": "0.3.0",
+  "permissions": ["edit", "network"],
+  "commands": [
+    {
+      "id": "orto",
+      "label": "Ortofoto",
+      "help": "Ortofotomapa GUGiK (WMTS, EPSG:3857). Kliknij ponownie, aby usunąć.",
+      "icon": "basemap"
+    },
+    {
+      "id": "orto-hi",
+      "label": "Ortofoto\nHi-Res",
+      "help": "Ortofotomapa w wysokiej rozdzielczości (WMS).",
+      "icon": "basemap"
+    },
+    {
+      "id": "bdot",
+      "label": "BDOT10k",
+      "help": "Baza Danych Obiektów Topograficznych jako warstwa nakładkowa (widoczna od skali miasta).",
+      "icon": "basemap"
+    },
+    {
+      "id": "dzialki-wms",
+      "label": "Działki\n(WMS)",
+      "help": "Granice działek i budynków z KIEG (widoczne od skali ok. 1:5000).",
+      "icon": "buffer"
+    },
+    {
+      "id": "adresy",
+      "label": "Adresy",
+      "help": "Punkty adresowe i ulice (Krajowa Integracja Numeracji Adresowej).",
+      "icon": "bookmark"
+    },
+    {
+      "id": "prg-wms",
+      "label": "Granice\nPRG",
+      "help": "Granice państwa, województw, powiatów, gmin i miast.",
+      "icon": "buffer"
+    },
+    {
+      "id": "prng",
+      "label": "Nazwy\nmiejscowości",
+      "help": "Nazwy miejscowości z PRNG.",
+      "icon": "stats"
+    },
+    {
+      "id": "nmt",
+      "label": "NMT\ncieniowanie",
+      "help": "Cieniowanie numerycznego modelu terenu.",
+      "icon": "relief"
+    },
+    {
+      "id": "obszar-widok",
+      "label": "Obszar\nz widoku",
+      "help": "Dodaje prostokąt bieżącego widoku jako warstwę „Obszar pobierania” — obszar dla narzędzia Pobierz dane.",
+      "icon": "bookmark"
+    },
+    {
+      "id": "parcel",
+      "label": "Działka\nz ULDK",
+      "help": "Znajduje działkę pod środkiem mapy i dodaje jej granice wraz z atrybutami.",
+      "icon": "bookmark"
+    }
+  ],
+  "tools": [
+    {
+      "id": "pobierz",
+      "name": "Pobierz dane…",
+      "summary": "Pobiera zestaw danych GUGiK dla obszaru warstwy (np. „Obszar pobierania”). Działa w tle: pokazuje postęp i można je przerwać.",
+      "toolbox": "Dane PL",
+      "params": [
+        {
+          "name": "dane",
+          "label": "Zestaw danych",
+          "kind": "choice",
+          "choices": [
+            "Działki (EGiB)",
+            "Budynki (EGiB)",
+            "Gminy (PRG)",
+            "Powiaty (PRG)",
+            "Województwa (PRG)"
+          ],
+          "default": "Działki (EGiB)",
+          "required": true,
+          "help": "Co pobrać z usług WFS GUGiK."
+        },
+        {
+          "name": "obszar",
+          "label": "Obszar (warstwa)",
+          "kind": "vectorLayer",
+          "required": true,
+          "help": "Zasięg pobierania. Użyj „Obszar pobierania” z przycisku Obszar z widoku, albo własnej warstwy — wtedy liczy się tylko jej zaznaczenie, jeśli je ma."
+        }
+      ]
+    }
+  ],
+  "tab": {
+    "label": "Dane PL",
+    "groups": [
+      {
+        "label": "Podkłady",
+        "items": ["orto", "orto-hi", "bdot", "dzialki-wms", "adresy", "prg-wms", "prng", "nmt"]
+      },
+      {
+        "label": "Dane",
+        "items": ["obszar-widok", "tool:pobierz"]
+      },
+      {
+        "label": "Działka",
+        "items": ["parcel"]
+      }
+    ]
+  },
+  "i18n": {
+    "en": {
+      "Podkłady": "Basemaps",
+      "Dane": "Data",
+      "Działka": "Parcel",
+      "Ortofoto": "Orthophoto",
+      "Ortofoto\nHi-Res": "Orthophoto\nHi-Res",
+      "Działki\n(WMS)": "Parcels\n(WMS)",
+      "Adresy": "Addresses",
+      "Granice\nPRG": "PRG\nboundaries",
+      "Nazwy\nmiejscowości": "Place\nnames",
+      "NMT\ncieniowanie": "DEM\nhillshade",
+      "Obszar\nz widoku": "Area\nfrom view",
+      "Działka\nz ULDK": "Parcel\nfrom ULDK",
+      "Pobierz dane…": "Download data…",
+      "Pobiera zestaw danych GUGiK dla obszaru warstwy (np. „Obszar pobierania”). Działa w tle: pokazuje postęp i można je przerwać.": "Downloads a GUGiK dataset for a layer's area (e.g. „Obszar pobierania”). Runs in the background with progress and Cancel.",
+      "Zestaw danych": "Dataset",
+      "Obszar (warstwa)": "Area (layer)",
+      "Działki (EGiB)": "Parcels (EGiB)",
+      "Budynki (EGiB)": "Buildings (EGiB)",
+      "Gminy (PRG)": "Communes (PRG)",
+      "Powiaty (PRG)": "Counties (PRG)",
+      "Województwa (PRG)": "Voivodeships (PRG)"
+    }
+  }
+}
