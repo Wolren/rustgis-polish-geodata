@@ -62,9 +62,13 @@ instytucji, potem według tematu — i którą w całości da się sterować prz
 
 ### Interfejs
 
-- **Szerokość wstęgi.** Grupa „WMS (podgląd)" ma 9 menu i przewija się w prawo. Do decyzji:
-  skrócić etykiety menu, zostawić 4 menu GUGiK + osobno instytucje, albo przenieść katalog
-  do panelu (wymaga listy w panelu — host ma dziś tekst, checkbox, suwak i przycisk).
+- **Szerokość wstęgi.** Kolejność jest dziś: Podkłady, Obszar, Narzędzia, WMS (podgląd),
+  Pobieranie, Wysokości, Wyszukiwanie. 9 menu grupy „WMS (podgląd)" zajmuje cały rząd, więc
+  Pobieranie, Wysokości i Wyszukiwanie siedzą za prawą krawędzią pod strzałką przewijania.
+  Do decyzji: skrócić etykiety menu („Kataster i granice" → „Kataster",
+  „Pozostałe dane GUGiK" → „GUGiK · inne"; około 150 px), przenieść WMS na koniec, albo
+  schować katalog do panelu (wymaga listy w panelu — host ma dziś tekst, checkbox, suwak
+  i przycisk).
 - **`eziudp` → dodanie usługi z rejestru.** Rejestr zna adresy WMS/WFS; wtyczka mogłaby
   dodać usługę spoza katalogu, gdyby host przyjmował szablon kafli zbudowany w locie.
   To samo dotyczy „Integratora usług danych przestrzennych" z przeglądu wtyczek 2024.
