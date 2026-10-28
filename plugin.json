@@ -1218,45 +1218,13 @@
         ]
       },
       {
-        "label": "Area",
+        "label": "Tools",
         "items": [
-          "obszar-widok",
-          "obszar-rysuj",
-          "obszar-anuluj",
-          "obszar-wyczysc"
-        ]
-      },
-      {
-        "label": "Downloads",
-        "items": [
-          "tool:pobierz-adresy",
-          "tool:pobierz-granice",
-          "tool:pobierz-osnowy",
-          "tool:pobierz-urzedy",
-          "tool:pobierz-pozostale"
-        ]
-      },
-      {
-        "label": "Lookups",
-        "items": [
-          "parcel",
-          "wysokosc"
-        ]
-      },
-      {
-        "label": "Elevation",
-        "items": [
-          {
-            "menu": "Model",
-            "icon": "relief",
-            "help": "The 1 m elevation model of the area, as GeoTIFF or ASCII grid.",
-            "items": [
-              "dem",
-              "dem-evr",
-              "dem-nmpt"
-            ]
-          },
-          "dem-style"
+          "panel",
+          "przytnij",
+          "zoom-polska",
+          "wyczysc-cache",
+          "katalog"
         ]
       },
       {
@@ -1448,13 +1416,45 @@
         ]
       },
       {
-        "label": "Tools",
+        "label": "Elevation",
         "items": [
-          "panel",
-          "przytnij",
-          "zoom-polska",
-          "wyczysc-cache",
-          "katalog"
+          {
+            "menu": "Model",
+            "icon": "relief",
+            "help": "The 1 m elevation model of the area, as GeoTIFF or ASCII grid.",
+            "items": [
+              "dem",
+              "dem-evr",
+              "dem-nmpt"
+            ]
+          },
+          "dem-style"
+        ]
+      },
+      {
+        "label": "Area",
+        "items": [
+          "obszar-widok",
+          "obszar-rysuj",
+          "obszar-anuluj",
+          "obszar-wyczysc"
+        ]
+      },
+      {
+        "label": "Downloads",
+        "items": [
+          "tool:pobierz-adresy",
+          "tool:pobierz-granice",
+          "tool:pobierz-osnowy",
+          "tool:pobierz-urzedy",
+          "tool:pobierz-pozostale"
+        ]
+      },
+      {
+        "label": "Lookups",
+        "items": [
+          "parcel",
+          "wysokosc"
         ]
       }
     ]

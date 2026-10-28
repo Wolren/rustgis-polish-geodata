@@ -341,6 +341,46 @@
         ]
       },
       {
+        "label": "Tools",
+        "items": [
+          "panel",
+          "przytnij",
+          "zoom-polska",
+          "wyczysc-cache",
+          "katalog"
+        ]
+      },
+      {
+        "label": "WMS (view only)",
+        "menus": [
+          "gugik-orto",
+          "gugik-mapy",
+          "gugik-kataster",
+          "gugik-inne",
+          "cartomatic",
+          "pig",
+          "nid",
+          "lasy",
+          "other"
+        ]
+      },
+      {
+        "label": "Elevation",
+        "items": [
+          {
+            "menu": "Model",
+            "icon": "relief",
+            "help": "The 1 m elevation model of the area, as GeoTIFF or ASCII grid.",
+            "items": [
+              "dem",
+              "dem-evr",
+              "dem-nmpt"
+            ]
+          },
+          "dem-style"
+        ]
+      },
+      {
         "label": "Area",
         "items": [
           "obszar-widok",
@@ -364,46 +404,6 @@
         "items": [
           "parcel",
           "wysokosc"
-        ]
-      },
-      {
-        "label": "Elevation",
-        "items": [
-          {
-            "menu": "Model",
-            "icon": "relief",
-            "help": "The 1 m elevation model of the area, as GeoTIFF or ASCII grid.",
-            "items": [
-              "dem",
-              "dem-evr",
-              "dem-nmpt"
-            ]
-          },
-          "dem-style"
-        ]
-      },
-      {
-        "label": "WMS (view only)",
-        "menus": [
-          "gugik-orto",
-          "gugik-mapy",
-          "gugik-kataster",
-          "gugik-inne",
-          "cartomatic",
-          "pig",
-          "nid",
-          "lasy",
-          "other"
-        ]
-      },
-      {
-        "label": "Tools",
-        "items": [
-          "panel",
-          "przytnij",
-          "zoom-polska",
-          "wyczysc-cache",
-          "katalog"
         ]
       }
     ]
