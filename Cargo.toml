@@ -1,3 +1,6 @@
+[workspace]
+members = ["packaging"]
+
 [package]
 name = "dane-pl"
 version = "0.1.0"
