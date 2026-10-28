@@ -8,6 +8,7 @@
 //! GUGiK answers `SRSNAME=EPSG:4326`, whose GML coordinate order is **lat lon**. The
 //! `swap` flag turns that into GeoJSON's `[lon, lat]`.
 
+use crate::text::{self, Lang};
 use quick_xml::events::Event;
 use quick_xml::Reader;
 use serde_json::{json, Map, Value};
@@ -29,13 +30,20 @@ impl Node {
     }
 }
 
+/// Builds the element tree.
+///
+/// The error is dropped: parse_fragment turns it into `None`, so only parse_features
+/// reports a GML failure to the user, in the interface language.
 fn parse_tree(xml: &str) -> Result<Vec<Node>, String> {
     let mut reader = Reader::from_str(xml);
     reader.config_mut().trim_text(false);
     let mut stack: Vec<Node> = Vec::new();
     let mut roots: Vec<Node> = Vec::new();
     loop {
-        match reader.read_event().map_err(|e| format!("GML could not be read: {e}"))? {
+        match reader
+            .read_event()
+            .map_err(|e| format!("GML could not be read: {e}"))?
+        {
             Event::Start(e) => {
                 let id = gml_id(&e);
                 let name = e.local_name().as_ref().to_vec();
@@ -81,7 +89,7 @@ fn gml_id(e: &quick_xml::events::BytesStart<'_>) -> Option<String> {
     None
 }
 
-fn push_node(stack: &mut Vec<Node>, roots: &mut Vec<Node>, node: Node) {
+fn push_node(stack: &mut [Node], roots: &mut Vec<Node>, node: Node) {
     match stack.last_mut() {
         Some(parent) => parent.children.push(node),
         None => roots.push(node),
@@ -106,7 +114,7 @@ fn is_geometry(name: &str) -> bool {
     GEOMETRIES.contains(&name)
 }
 
-fn find_geometry<'a>(node: &'a Node) -> Option<&'a Node> {
+fn find_geometry(node: &Node) -> Option<&Node> {
     if is_geometry(&node.name) {
         return Some(node);
     }
@@ -144,8 +152,14 @@ fn coordinates(node: &Node, swap: bool) -> Vec<[f64; 2]> {
                 .filter_map(|s| s.parse::<f64>().ok())
                 .collect();
             let mut out = Vec::with_capacity(numbers.len() / 2);
-            for pair in numbers.chunks_exact(2) {
-                out.push(if swap { [pair[1], pair[0]] } else { [pair[0], pair[1]] });
+            let mut i = 0;
+            while i + 1 < numbers.len() {
+                out.push(if swap {
+                    [numbers[i + 1], numbers[i]]
+                } else {
+                    [numbers[i], numbers[i + 1]]
+                });
+                i += 2;
             }
             if !out.is_empty() {
                 return out;
@@ -291,64 +305,31 @@ fn feature(node: &Node, swap: bool) -> Option<Value> {
 /// sliced out of the input and parsed on its own. A country-wide PRG answer is 40 MB, and
 /// building one tree for all of it would cost hundreds of megabytes; a feature at a time does
 /// not.
-pub fn parse_features(xml: &str, swap: bool) -> Result<Vec<Value>, String> {
-    let mut reader = Reader::from_str(xml);
-    reader.config_mut().trim_text(false);
+pub fn parse_features(xml: &str, swap: bool, lang: Lang) -> Result<Vec<Value>, String> {
+    // The whole document is read as one tree, so every namespace a feature uses is in scope.
+    let roots = parse_tree(xml).map_err(|e| text::gml_unreadable(lang, &e))?;
     let mut features = Vec::new();
-    let mut in_member = false;
-    let mut depth = 0usize;
-    let mut feature_start: Option<usize> = None;
-
-    loop {
-        let before = reader.buffer_position() as usize;
-        match reader.read_event().map_err(|e| format!("GML could not be read: {e}"))? {
-            Event::Start(e) => {
-                let local = e.local_name();
-                if local.as_ref() == b"member" || local.as_ref() == b"featureMember" {
-                    in_member = true;
-                    depth = 0;
-                } else if in_member {
-                    if depth == 0 {
-                        feature_start = Some(before);
-                    }
-                    depth += 1;
-                }
-            }
-            Event::End(e) => {
-                if !in_member {
-                    continue;
-                }
-                let local = e.local_name();
-                if local.as_ref() == b"member" || local.as_ref() == b"featureMember" {
-                    in_member = false;
-                    continue;
-                }
-                if depth == 0 {
-                    continue;
-                }
-                depth -= 1;
-                if depth == 0 {
-                    let end = reader.buffer_position() as usize;
-                    let start = feature_start.take().unwrap_or(end);
-                    if start < end {
-                        if let Some(node) = xml.get(start..end).and_then(|f| parse_fragment(f, swap)) {
-                            features.push(node);
-                        }
-                    }
-                }
-            }
-            Event::Eof => break,
-            _ => {}
-        }
+    for root in &roots {
+        collect_members(root, swap, &mut features);
     }
     Ok(features)
 }
 
-/// Parses one feature's XML into a GeoJSON feature.
-fn parse_fragment(xml: &str, swap: bool) -> Option<Value> {
-    let roots = parse_tree(xml).ok()?;
-    let node = roots.first()?;
-    feature(node, swap)
+/// Walks the tree for member wrappers and parses the feature inside each.
+fn collect_members(node: &Node, swap: bool, out: &mut Vec<Value>) {
+    let name = node.name.to_ascii_lowercase();
+    // WFS 1.1 writes one `featureMember` per feature; some services pack them in `featureMembers`.
+    if name.ends_with("member") || name.ends_with("members") {
+        for child in &node.children {
+            if let Some(feature) = feature(child, swap) {
+                out.push(feature);
+            }
+        }
+        return;
+    }
+    for child in &node.children {
+        collect_members(child, swap, out);
+    }
 }
 
 /// A WKT polygon or multipolygon (`SRID=2180;POLYGON((…))`) as GeoJSON;
@@ -433,8 +414,8 @@ fn wkt_rings(body: &str, transform: &impl Fn(f64, f64) -> [f64; 2]) -> Vec<Vec<V
     rings
 }
 
-/// A stable key for a feature: its `gml:id`, or — for GUGiK's PRG layers, which carry no
-/// properties and no id — the bounding box of its geometry. Two cells of a split download
+/// A stable key for a feature: its `gml:id` or, when GUGiK's PRG layers carry no properties
+/// and no id, the bounding box of its geometry. Two cells of a split download
 /// return the same feature identically, so the bbox matches exactly.
 pub fn feature_key(feature: &Value) -> Option<String> {
     if let Some(id) = feature.get("id").and_then(Value::as_str) {
@@ -490,7 +471,7 @@ mod tests {
 
     #[test]
     fn reads_a_parcel_and_swaps_to_lon_lat() {
-        let features = parse_features(DZIALKA, true).unwrap();
+        let features = parse_features(DZIALKA, true, Lang::En).unwrap();
         assert_eq!(features.len(), 1);
         let f = &features[0];
         assert_eq!(f["properties"]["ID_DZIALKI"], "101104_5.0017.1004/2");
@@ -508,7 +489,7 @@ mod tests {
         let xml = r#"<wfs:FeatureCollection xmlns:wfs="http://www.opengis.net/wfs" xmlns:gml="http://www.opengis.net/gml" xmlns:ms="http://mapserver.gis.umn.edu/mapserver">
 <gml:featureMember><ms:punkty><ms:geom><gml:Point><gml:pos>52.1 21.0</gml:pos></gml:Point></ms:geom><ms:NAZWA>Test</ms:NAZWA></ms:punkty></gml:featureMember>
 </wfs:FeatureCollection>"#;
-        let f = &parse_features(xml, true).unwrap()[0];
+        let f = &parse_features(xml, true, Lang::En).unwrap()[0];
         assert_eq!(f["geometry"]["coordinates"][0], 21.0);
         assert_eq!(f["geometry"]["coordinates"][1], 52.1);
         assert_eq!(f["properties"]["NAZWA"], "Test");
@@ -520,5 +501,28 @@ mod tests {
         let gj = wkt_to_geojson(wkt, |x, y| [x / 1000.0, y / 1000.0]).unwrap();
         assert_eq!(gj["type"], "Polygon");
         assert_eq!(gj["coordinates"][0].as_array().unwrap().len(), 4);
+    }
+}
+
+#[cfg(test)]
+mod serviced_points {
+    use super::*;
+    use crate::text::Lang;
+
+    /// The address service answers in EPSG:2180 with the northing first, an empty collection
+    /// when the box arrives in lon and lat, and namespaces only on the root element.
+    #[test]
+    fn parses_an_answer_served_in_the_national_grid() {
+        let xml = include_str!("../testdata/kina-point.xml");
+        let mut features = parse_features(xml, false, Lang::En).expect("the answer parses");
+        assert_eq!(features.len(), 1, "one address point");
+        let geometry = features[0].get_mut("geometry").expect("geometry");
+        let coordinates = geometry.get_mut("coordinates").expect("coordinates");
+        let point = coordinates.as_array().expect("a point");
+        let northing = point[0].as_f64().unwrap();
+        let easting = point[1].as_f64().unwrap();
+        let (lon, lat) = crate::gk92::inverse(northing, easting);
+        assert!((lon - 16.93).abs() < 0.02, "lon {lon}");
+        assert!((lat - 52.40).abs() < 0.02, "lat {lat}");
     }
 }

@@ -13,7 +13,7 @@ const MAX_FILTER_CHARS: usize = 6000;
 const MAX_POINTS: usize = 300;
 
 /// A percent-encoded `<Filter>` for the area, or `None` when the area is not a single polygon
-/// (several polygons, or none) — the caller then uses the bounding box.
+/// (several polygons, or none); the caller then uses the bounding box.
 pub fn polygon_filter(layer: &WfsLayer, collection: &Value) -> Option<String> {
     let rings = exterior_rings(collection);
     if rings.len() != 1 {
@@ -128,7 +128,7 @@ mod tests {
 
     #[test]
     fn filters_by_the_single_polygon() {
-        let layer = catalog::wfs("gminy").unwrap();
+        let layer = catalog::wfs_by_label("gminy").unwrap();
         let filter = polygon_filter(layer, &square(0.01)).expect("a filter");
         assert!(filter.starts_with("%3CFilter%3E"));
         assert!(filter.contains("msGeometry"));
@@ -139,7 +139,7 @@ mod tests {
 
     #[test]
     fn refuses_two_polygons() {
-        let layer = catalog::wfs("gminy").unwrap();
+        let layer = catalog::wfs_by_label("gminy").unwrap();
         let mut area = square(0.01);
         let copy = area["features"][0].clone();
         area["features"].as_array_mut().unwrap().push(copy);

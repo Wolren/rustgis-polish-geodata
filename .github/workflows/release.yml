@@ -1,0 +1,102 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: build ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: windows
+            os: windows-latest
+            asset: dane-pl.exe
+          - name: linux
+            os: ubuntu-latest
+            asset: dane-pl-linux
+          - name: macos
+            os: macos-latest
+            asset: dane-pl-macos
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.name == 'macos' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: build
+        if: matrix.name != 'macos'
+        run: cargo build --release --locked
+
+      - name: build and fuse
+        if: matrix.name == 'macos'
+        run: |
+          cargo build --release --locked --target aarch64-apple-darwin
+          cargo build --release --locked --target x86_64-apple-darwin
+          lipo -create -output dane-pl-macos \
+            target/aarch64-apple-darwin/release/dane-pl \
+            target/x86_64-apple-darwin/release/dane-pl
+          lipo -info dane-pl-macos
+
+      - name: stage
+        shell: bash
+        run: |
+          mkdir -p dist/bin
+          if [ "${{ matrix.name }}" = "windows" ]; then
+            cp target/release/dane-pl.exe "dist/bin/${{ matrix.asset }}"
+          elif [ "${{ matrix.name }}" = "linux" ]; then
+            cp target/release/dane-pl "dist/bin/${{ matrix.asset }}"
+          fi
+          ls -l dist/bin
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: binary-${{ matrix.name }}
+          path: dist/bin/${{ matrix.asset }}
+          if-no-files-found: error
+
+  package:
+    name: package and release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist/bin
+          pattern: binary-*
+          merge-multiple: true
+
+      - name: make the package
+        run: |
+          chmod +x dist/bin/dane-pl-linux dist/bin/dane-pl-macos
+          cargo run --release --locked -p package -- \
+            --source-url "https://github.com/${{ github.repository }}/releases/download/${GITHUB_REF_NAME}/dane-pl-${GITHUB_REF_NAME#v}.rgplugin"
+
+      - name: check it twice
+        run: |
+          first=$(sha256sum dist/dane-pl-*.rgplugin | cut -d' ' -f1)
+          cargo run --release --locked -p package -- \
+            --source-url "https://github.com/${{ github.repository }}/releases/download/${GITHUB_REF_NAME}/dane-pl-${GITHUB_REF_NAME#v}.rgplugin"
+          second=$(sha256sum dist/dane-pl-*.rgplugin | cut -d' ' -f1)
+          test "$first" = "$second" || { echo "the package is not deterministic: $first then $second"; exit 1; }
+          echo "sha256 $second" >> "$GITHUB_STEP_SUMMARY"
+          unzip -l dist/dane-pl-*.rgplugin >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            dist/dane-pl-*.rgplugin
+            dist/dane-pl.json

@@ -3,7 +3,11 @@
 //! RustGIS starts this program once per command and writes one request line on standard
 //! input. While handling it, we may ask RustGIS to do things (`{"call": …}`) and read its
 //! answer, then finish with `{"ok": …}` or `{"error": …}`.
+//!
+//! The protocol's own failures are reported in the interface language too, so a broken answer
+//! reads the same way as every other message.
 
+use crate::text::{self, Lang};
 use serde_json::{json, Value};
 use std::io::{BufRead, BufReader, Write};
 
@@ -16,11 +20,12 @@ pub fn progress_line(text: &str) {
 
 pub struct Host {
     input: BufReader<std::io::Stdin>,
+    lang: Lang,
 }
 
 impl Host {
-    pub fn new() -> Self {
-        Host { input: BufReader::new(std::io::stdin()) }
+    pub fn new(lang: Lang) -> Self {
+        Host { input: BufReader::new(std::io::stdin()), lang }
     }
 
     fn send(&self, value: &Value) -> Result<(), String> {
@@ -35,21 +40,20 @@ impl Host {
         let mut line = String::new();
         let read = self.input.read_line(&mut line).map_err(|e| e.to_string())?;
         if read == 0 {
-            return Err("RustGIS closed the connection".into());
+            return Err(text::host_closed(self.lang));
         }
-        let reply: Value =
-            serde_json::from_str(line.trim()).map_err(|e| format!("unreadable reply from RustGIS: {e}"))?;
+        let reply: Value = serde_json::from_str(line.trim())
+            .map_err(|e| text::host_unreadable_reply(self.lang, &e.to_string()))?;
         if let Some(error) = reply.get("error") {
-            return Err(error.as_str().unwrap_or("RustGIS reported an error").to_string());
+            return Err(error.as_str().unwrap_or(text::host_reported_error(self.lang)).to_string());
         }
-        reply.get("ok").cloned().ok_or_else(|| "RustGIS sent a reply without an answer".to_string())
+        reply.get("ok").cloned().ok_or_else(|| text::host_no_answer(self.lang))
     }
 
     /// Shows a message in the status bar. Never fails the command.
     pub fn notify(&mut self, text: &str) {
         let _ = self.call("host.notify", json!({ "text": text }));
     }
-
 
     /// Adds a GeoJSON layer to the project (`edit` permission).
     pub fn add_layer(&mut self, name: &str, geojson: Value) -> Result<Value, String> {
@@ -62,13 +66,13 @@ impl Host {
         let e = answer
             .get("extent")
             .and_then(Value::as_array)
-            .ok_or_else(|| "map.extent returned no extent".to_string())?;
+            .ok_or_else(|| text::extent_missing(self.lang))?;
         if e.len() != 4 {
-            return Err("map.extent returned an unexpected extent".into());
+            return Err(text::extent_shape(self.lang));
         }
         let mut out = [0.0; 4];
         for (i, v) in e.iter().enumerate() {
-            out[i] = v.as_f64().ok_or_else(|| "map.extent returned a non-numeric extent".to_string())?;
+            out[i] = v.as_f64().ok_or_else(|| text::extent_non_numeric(self.lang))?;
         }
         Ok(out)
     }
@@ -79,9 +83,9 @@ impl Host {
         let c = view
             .get("center")
             .and_then(Value::as_array)
-            .ok_or_else(|| "host.view returned no centre".to_string())?;
-        let lon = c.first().and_then(Value::as_f64).ok_or_else(|| "no longitude".to_string())?;
-        let lat = c.get(1).and_then(Value::as_f64).ok_or_else(|| "no latitude".to_string())?;
+            .ok_or_else(|| text::view_no_centre(self.lang))?;
+        let lon = c.first().and_then(Value::as_f64).ok_or_else(|| text::no_longitude(self.lang))?;
+        let lat = c.get(1).and_then(Value::as_f64).ok_or_else(|| text::no_latitude(self.lang))?;
         Ok((lon, lat))
     }
 }

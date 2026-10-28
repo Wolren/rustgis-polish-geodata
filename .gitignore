@@ -1,2 +1,4 @@
 target/
 dist/
+tools/.cache/
+cap.xml

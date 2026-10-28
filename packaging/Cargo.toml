@@ -1,0 +1,15 @@
+[package]
+name = "package"
+version = "0.1.0"
+edition = "2021"
+description = "Packages the Polish Geodata plugin for RustGIS"
+publish = false
+
+[dependencies]
+serde_json = "1"
+sha2 = "0.10"
+zip = { version = "2", default-features = false, features = ["deflate"] }
+
+[[bin]]
+name = "package"
+path = "src/main.rs"

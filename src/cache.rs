@@ -12,14 +12,32 @@ use std::time::{Duration, SystemTime};
 pub const TTL: Duration = Duration::from_secs(7 * 24 * 60 * 60);
 
 pub fn dir() -> PathBuf {
+    root().join("cache")
+}
+
+/// Where a downloaded ASCII model is kept: named by its box, so a second click costs no download.
+pub fn dem_file(name: &str) -> PathBuf {
+    dem_dir().join(name)
+}
+
+/// The mode of the last draw command, kept next to the cache so a model reads it in any session.
+pub fn area_mode_file() -> PathBuf {
+    root().join("area.mode")
+}
+
+pub fn dem_dir() -> PathBuf {
+    root().join("dem")
+}
+
+fn root() -> PathBuf {
     let base = std::env::var("LOCALAPPDATA")
         .or_else(|_| std::env::var("HOME"))
         .map(PathBuf::from)
         .unwrap_or_else(|_| std::env::temp_dir());
-    base.join("RustGIS").join("dane-pl").join("cache")
+    base.join("RustGIS").join("dane-pl")
 }
 
-fn key(url: &str) -> String {
+pub fn key(url: &str) -> String {
     let mut hash: u64 = 0xcbf2_9ce4_8422_2325;
     for byte in url.as_bytes() {
         hash ^= u64::from(*byte);
@@ -49,7 +67,16 @@ pub fn put(url: &str, body: &str) {
 
 /// Removes every cached answer; returns how many and how many bytes.
 pub fn clear() -> Result<(usize, u64), String> {
-    let dir = dir();
+    clear_in(&dir())
+}
+
+/// Removes the downloaded models; returns how many and how many bytes.
+pub fn dem_clear() -> (usize, u64) {
+    clear_in(&dem_dir()).unwrap_or((0, 0))
+}
+
+fn clear_in(dir: &std::path::Path) -> Result<(usize, u64), String> {
+    let dir = dir.to_path_buf();
     if !dir.exists() {
         return Ok((0, 0));
     }
@@ -64,6 +91,32 @@ pub fn clear() -> Result<(usize, u64), String> {
         count += 1;
     }
     Ok((count, bytes))
+}
+
+/// How many answers are stored and how many bytes they take.
+pub fn stats() -> (usize, u64) {
+    stats_in(&dir())
+}
+
+/// How many model files are stored and how many bytes they take.
+pub fn dem_stats() -> (usize, u64) {
+    stats_in(&dem_dir())
+}
+
+fn stats_in(dir: &std::path::Path) -> (usize, u64) {
+    let mut count = 0;
+    let mut bytes = 0;
+    if let Ok(entries) = fs::read_dir(dir) {
+        for entry in entries.flatten() {
+            if let Ok(meta) = entry.metadata() {
+                if meta.is_file() {
+                    bytes += meta.len();
+                    count += 1;
+                }
+            }
+        }
+    }
+    (count, bytes)
 }
 
 #[cfg(test)]

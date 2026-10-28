@@ -2,22 +2,25 @@
 
 use crate::catalog::{self, Overlay, ATTRIBUTION, POLAND};
 use crate::host::Host;
+use crate::text::{self, Lang};
 use serde_json::{json, Value};
 
 /// Overlays that GUGiK draws only at large scales: at country zoom their tiles are empty.
 const DETAIL_ONLY: &[&str] = &["dzialki-wms", "adresy"];
 
-pub fn toggle(host: &mut Host, overlay: &Overlay) -> Result<Value, String> {
+pub fn toggle(host: &mut Host, overlay: &Overlay, lang: Lang) -> Result<Value, String> {
     let tiles = host.call("map.tiles", json!({}))?;
-    let present = tiles
-        .as_array()
-        .map(|list| list.iter().any(|t| t.get("name").and_then(Value::as_str) == Some(overlay.name)))
-        .unwrap_or(false);
+    let present = tiles.as_array().and_then(|list| {
+        list.iter()
+            .filter_map(|t| t.get("name").and_then(Value::as_str))
+            .find(|name| overlay.matches(name))
+            .map(str::to_string)
+    });
 
-    if present {
-        host.call("map.removeTiles", json!({ "name": overlay.name }))?;
-        host.notify(&format!("Usunięto: {}", overlay.name));
-        return Ok(json!({ "removed": overlay.name }));
+    if let Some(name) = present {
+        host.call("map.removeTiles", json!({ "name": name }))?;
+        host.notify(&text::removed(lang, &name));
+        return Ok(json!({ "removed": name }));
     }
 
     // GUGiK serves Poland only: from a world view its tiles are blank, which reads as "broken".
@@ -28,12 +31,13 @@ pub fn toggle(host: &mut Host, overlay: &Overlay) -> Result<Value, String> {
         zoomed = true;
     }
 
+    let name = overlay.name(lang);
     host.call(
         "map.addTiles",
         json!({
             "url": catalog::url_for(overlay),
             "kind": "raster",
-            "name": overlay.name,
+            "name": name,
             "attribution": ATTRIBUTION,
             "overlay": true,
             "minZoom": overlay.min_zoom,
@@ -42,20 +46,20 @@ pub fn toggle(host: &mut Host, overlay: &Overlay) -> Result<Value, String> {
         }),
     )?;
 
-    let mut note = format!("Dodano: {}", overlay.name);
+    let mut note = text::added(lang, name);
     if zoomed {
-        note.push_str(" — przybliżono do Polski");
+        note.push_str(text::zoomed_to_poland(lang));
     }
     host.notify(&note);
 
     if DETAIL_ONLY.contains(&overlay.id) {
         let width = (view[2] - view[0]).abs();
         if zoomed || width > 0.05 {
-            host.notify("Działki i adresy GUGiK rysuje dopiero od skali ok. 1:5000 — przybliż mapę");
+            host.notify(text::detail_hint(lang));
         }
     }
 
-    Ok(json!({ "added": overlay.name, "zoomedToPoland": zoomed }))
+    Ok(json!({ "added": name, "zoomedToPoland": zoomed }))
 }
 
 fn overlaps(a: [f64; 4], b: [f64; 4]) -> bool {

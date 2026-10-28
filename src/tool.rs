@@ -1,65 +1,82 @@
 //! The download tool: a form in the Tools pane, with a dataset choice and an area layer.
 //!
 //! Tools run without access to the map (no host requests), so the area comes from a layer the
-//! user picks — its features' bounding box, or only its selected features, which RustGIS hands
+//! user picks: its features' bounding box, or only its selected features, which RustGIS hands
 //! over. What the tool returns is added to the project by RustGIS, with undo.
 
+use crate::cache;
 use crate::catalog;
 use crate::host;
+use crate::text::{self, Lang};
 use crate::wfs;
 use serde_json::{json, Value};
 
-pub fn run(request: &Value) -> Result<Value, String> {
+pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     let params = request.get("params").cloned().unwrap_or_else(|| json!({}));
     let label = params
         .get("dane")
         .and_then(Value::as_str)
         .unwrap_or_default();
-    let layer =
-        catalog::wfs_by_label(label).ok_or_else(|| format!("nieznany zestaw danych: '{label}'"))?;
+    let layer = catalog::wfs_by_label(label).ok_or_else(|| text::unknown_dataset(lang, label))?;
     let area = params
         .get("obszar")
         .and_then(Value::as_str)
         .filter(|s| !s.is_empty())
-        .ok_or("wybierz warstwę obszaru — np. „Obszar pobierania” z przycisku „Obszar z widoku”")?;
-    let features_of_area = request
-        .get("layers")
-        .and_then(|l| l.get(area))
-        .ok_or_else(|| format!("nie otrzymałem warstwy obszaru „{area}”"))?;
-    let bbox = bbox_of(features_of_area)
-        .ok_or_else(|| format!("warstwa „{area}” nie ma geometrii do wyznaczenia obszaru"))?;
+        .ok_or_else(|| text::pick_area(lang))?;
+    // The box may have been drawn under the other language's name.
+    let layers = request.get("layers");
+    let (area, features_of_area) = match layers.and_then(|l| l.get(area)) {
+        Some(found) => (area, found),
+        None => {
+            let other = text::AREA_LAYERS.iter().find(|name| **name != area).copied();
+            match other.and_then(|name| layers.and_then(|l| l.get(name)).map(|found| (name, found))) {
+                Some((name, found)) => (name, found),
+                None => return Err(text::area_not_passed(lang, area)),
+            }
+        }
+    };
+    let bbox = bbox_of(features_of_area).ok_or_else(|| text::area_no_geometry(lang, area))?;
 
     if wfs::too_large(layer, bbox) {
-        return Err(format!(
-            "warstwa „{area}” obejmuje {:.1}° × {:.1}° — za dużo dla „{}” (maks. {:.2}°). \
-             Zaznacz na mapie interesujące obiekty i uruchom narzędzie ponownie (zaznaczenie zawęża obszar) \
-             albo wskaż mniejszą warstwę.",
+        return Err(text::area_too_large(
+            lang,
+            area,
             bbox[2] - bbox[0],
             bbox[3] - bbox[1],
-            layer.name,
-            layer.max_span
+            layer.name(lang),
+            layer.max_span,
         ));
     }
 
+    // The panel's checkbox asks for the stored answers to go once the data is in.
+    let clear = request
+        .get("panel")
+        .and_then(|panel| panel.get("values"))
+        .and_then(|values| values.get("clear"))
+        .and_then(Value::as_bool)
+        .unwrap_or(false);
+
     let (features, truncated) = {
         let mut report = |text: &str| host::progress_line(text);
-        wfs::fetch(layer, bbox, Some(features_of_area), &mut report)?
+        wfs::fetch(layer, bbox, Some(features_of_area), &mut report, lang)?
     };
     if features.is_empty() {
-        return Err(format!(
-            "brak obiektów „{}” w wybranym obszarze",
-            layer.name
-        ));
+        return Err(text::no_features(lang, layer.name(lang)));
     }
 
     let total = features.len();
     let collection = json!({ "type": "FeatureCollection", "features": features });
-    let mut messages = vec![format!("{}: {total} obiektów", layer.name)];
+    let mut messages = vec![text::count(lang, layer.name(lang), total)];
     if truncated {
-        messages.push("Pobieranie przerwane limitem — wybierz mniejszy obszar.".into());
+        messages.push(text::truncated(lang).to_string());
+    }
+    if clear {
+        if let Ok((files, bytes)) = cache::clear() {
+            messages.push(text::cache_cleared(lang, files, bytes as f64 / 1e6));
+        }
     }
     Ok(json!({
-        "layers": [{ "name": layer.name, "geojson": collection }],
+        "layers": [{ "name": layer.name(lang), "geojson": collection }],
         "messages": messages
     }))
 }
@@ -124,5 +141,22 @@ mod tests {
             bbox_of(&json!({"type": "FeatureCollection", "features": []})),
             None
         );
+    }
+
+    #[test]
+    fn answers_in_the_requested_language() {
+        let request = |lang: &str| {
+            json!({
+                "kind": "tool",
+                "id": "pobierz",
+                "lang": lang,
+                "params": { "dane": "Parcels (EGiB)", "obszar": "Area to download" },
+                "layers": {}
+            })
+        };
+        let english = run(&request("en"), Lang::En).unwrap_err();
+        let polish = run(&request("pl"), Lang::Pl).unwrap_err();
+        assert!(english.contains("was not passed in"), "{english}");
+        assert!(polish.contains("nie otrzymałem"), "{polish}");
     }
 }

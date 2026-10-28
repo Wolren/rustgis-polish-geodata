@@ -5,22 +5,20 @@
 //! calls RustGIS's own Clip, and replaces the layer with the cut result.
 
 use crate::host::Host;
+use crate::text::{self, Lang};
 use serde_json::{json, Value};
-
-/// The layer a download produces, and the area it was cut to.
-pub const AREA_LAYER: &str = "Obszar pobierania";
 
 /// The newest vector layer that is not the area, so a caller need not name the layer it just
 /// downloaded. Newest is the highest id, which RustGIS assigns in creation order.
-pub fn newest_layer(host: &mut Host, area: &str) -> Result<String, String> {
+pub fn newest_layer(host: &mut Host, area: &str, lang: Lang) -> Result<String, String> {
     let layers = host.call("host.layers", json!({}))?;
     let list = layers
         .as_array()
-        .ok_or_else(|| "RustGIS podało warstwy w nieoczekiwanej postaci".to_string())?;
+        .ok_or_else(|| text::layers_unexpected(lang))?;
     let mut best: Option<(&str, i64)> = None;
     for layer in list {
         let name = layer.get("name").and_then(Value::as_str).unwrap_or_default();
-        if name.is_empty() || name == area {
+        if name.is_empty() || name == area || text::AREA_LAYERS.contains(&name) {
             continue;
         }
         if layer.get("raster").and_then(Value::as_bool) == Some(true) {
@@ -35,11 +33,23 @@ pub fn newest_layer(host: &mut Host, area: &str) -> Result<String, String> {
         }
     }
     best.map(|(name, _)| name.to_string())
-        .ok_or_else(|| "nie ma warstwy do przycięcia — najpierw pobierz dane".to_string())
+        .ok_or_else(|| text::nothing_to_clip(lang))
+}
+
+/// The area layer's name on this map, which may carry the other language's wording.
+pub fn existing_area(host: &mut Host, lang: Lang) -> Result<String, String> {
+    let layers = host.call("host.layers", json!({}))?;
+    let found = layers.as_array().and_then(|all| {
+        all.iter().find_map(|layer| {
+            let name = layer.get("name").and_then(Value::as_str)?;
+            text::AREA_LAYERS.contains(&name).then(|| name.to_string())
+        })
+    });
+    Ok(found.unwrap_or_else(|| text::area_layer(lang).to_string()))
 }
 
 /// Clips `layer` to `area`, replacing the layer in place.
-pub fn to_area(host: &mut Host, layer: &str, area: &str) -> Result<Value, String> {
+pub fn to_area(host: &mut Host, layer: &str, area: &str, lang: Lang) -> Result<Value, String> {
     let layers = host.call("host.layers", json!({}))?;
     let exists = |name: &str| {
         layers
@@ -48,13 +58,13 @@ pub fn to_area(host: &mut Host, layer: &str, area: &str) -> Result<Value, String
             .unwrap_or(false)
     };
     if !exists(layer) {
-        return Err(format!("nie ma warstwy „{layer}” do przycięcia"));
+        return Err(text::no_layer(lang, layer));
     }
     if !exists(area) {
-        return Err(format!("nie ma warstwy obszaru „{area}”"));
+        return Err(text::no_area_layer(lang, area));
     }
 
-    let cut = format!("{layer} (przycięte)");
+    let cut = format!("{layer}{}", text::clipped_suffix(lang));
     host.call(
         "gp.run",
         json!({
@@ -72,6 +82,6 @@ pub fn to_area(host: &mut Host, layer: &str, area: &str) -> Result<Value, String
     let _ = host.call("layer.remove", json!({ "layer": layer }));
     let _ = host.call("layer.rename", json!({ "layer": cut, "name": layer }));
 
-    host.notify(&format!("Przycięto „{layer}” do „{area}”: {kept} obiektów"));
+    host.notify(&text::clipped(lang, layer, area, kept));
     Ok(json!({ "layer": layer, "area": area, "features": kept }))
 }
