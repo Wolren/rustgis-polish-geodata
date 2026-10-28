@@ -20,6 +20,9 @@ use zip::CompressionMethod;
 
 const MAX_PACKAGE: u64 = 64 * 1024 * 1024;
 const MAX_ENTRIES: usize = 4096;
+/// Where the releases of this plugin live, for the registry entry a local package writes.
+/// `--source-url` overrides it: CI names the release it is building.
+const REPOSITORY: &str = "Wolren/rustgis-dane-pl";
 
 fn main() -> ExitCode {
     match run() {
@@ -79,7 +82,7 @@ fn run() -> Result<(), String> {
     let digest = sha256(&package)?;
     let url = source_url.unwrap_or_else(|| {
         format!(
-            "https://github.com/Wolren/{id}/releases/download/v{version}/{id}-{version}.rgplugin"
+            "https://github.com/{REPOSITORY}/releases/download/v{version}/{id}-{version}.rgplugin"
         )
     });
     let entry = json!({
@@ -90,12 +93,18 @@ fn run() -> Result<(), String> {
     let entry_path = dist.join(format!("{id}.json"));
     fs::write(
         &entry_path,
-        format!("{}\n", serde_json::to_string_pretty(&entry).map_err(|e| e.to_string())?),
+        format!(
+            "{}\n",
+            serde_json::to_string_pretty(&entry).map_err(|e| e.to_string())?
+        ),
     )
     .map_err(|e| e.to_string())?;
 
     let size = fs::metadata(&package).map_err(|e| e.to_string())?.len();
-    println!("package: {id} {version}, {entries} files, {}", platforms(&binaries));
+    println!(
+        "package: {id} {version}, {entries} files, {}",
+        platforms(&binaries)
+    );
     println!("package: dist/{id}-{version}.rgplugin {size} bytes sha256 {digest}");
     println!("package: entry at dist/{id}.json");
     Ok(())
@@ -120,7 +129,11 @@ fn collect(
             }
         }
         Some(Value::Array(argv)) => {
-            if let Some(name) = argv.get(0).and_then(Value::as_str).and_then(|a| a.strip_prefix("bin/")) {
+            if let Some(name) = argv
+                .get(0)
+                .and_then(Value::as_str)
+                .and_then(|a| a.strip_prefix("bin/"))
+            {
                 wanted.push(("default".into(), name.to_string()));
             }
         }
@@ -168,7 +181,10 @@ fn write_archive(package: &Path, staging: &Path) -> Result<usize, String> {
     walk(staging, staging, &mut files)?;
     files.sort();
     if files.len() > MAX_ENTRIES {
-        return Err(format!("{} entries, the limit is {MAX_ENTRIES}", files.len()));
+        return Err(format!(
+            "{} entries, the limit is {MAX_ENTRIES}",
+            files.len()
+        ));
     }
 
     let file = fs::File::create(package).map_err(|e| e.to_string())?;
@@ -176,7 +192,11 @@ fn write_archive(package: &Path, staging: &Path) -> Result<usize, String> {
     let stamp = zip::DateTime::from_date_and_time(1980, 1, 1, 0, 0, 0)
         .map_err(|e| format!("the fixed timestamp: {e}"))?;
     for inside in &files {
-        let mode = if inside.starts_with("bin/") { 0o755 } else { 0o644 };
+        let mode = if inside.starts_with("bin/") {
+            0o755
+        } else {
+            0o644
+        };
         let options = SimpleFileOptions::default()
             .compression_method(CompressionMethod::Deflated)
             .compression_level(Some(9))
@@ -186,7 +206,9 @@ fn write_archive(package: &Path, staging: &Path) -> Result<usize, String> {
             .start_file(inside, options)
             .map_err(|e| format!("{inside}: {e}"))?;
         let bytes = fs::read(staging.join(inside)).map_err(|e| format!("{inside}: {e}"))?;
-        archive.write_all(&bytes).map_err(|e| format!("{inside}: {e}"))?;
+        archive
+            .write_all(&bytes)
+            .map_err(|e| format!("{inside}: {e}"))?;
     }
     archive.finish().map_err(|e| e.to_string())?;
 

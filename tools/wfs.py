@@ -31,6 +31,7 @@ def box_2180():
     global BOX_2180
     if BOX_2180 is None:
         from pyproj import Transformer
+
         forward = Transformer.from_crs("EPSG:4326", "EPSG:2180", always_xy=True)
         x1, y1 = forward.transform(BOX_4326[0], BOX_4326[1])
         x2, y2 = forward.transform(BOX_4326[2], BOX_4326[3])
@@ -77,7 +78,10 @@ def types_of(data):
 def capabilities(url):
     for version in ("1.1.0", "2.0.0"):
         try:
-            data = fetch(url, {"SERVICE": "WFS", "VERSION": version, "REQUEST": "GetCapabilities"})
+            data = fetch(
+                url,
+                {"SERVICE": "WFS", "VERSION": version, "REQUEST": "GetCapabilities"},
+            )
         except Exception as error:
             last = f"{type(error).__name__}: {error}"
             continue
@@ -98,15 +102,38 @@ def geom_of(data):
     except ET.ParseError:
         return None
     for element in root.iter():
-        if local(element.tag) in ("boundedBy", "Envelope", "lowerCorner", "upperCorner"):
+        if local(element.tag) in (
+            "boundedBy",
+            "Envelope",
+            "lowerCorner",
+            "upperCorner",
+        ):
             continue
         if element.get("srsName") or local(element.tag) in (
-                "Point", "LineString", "Polygon", "MultiSurface", "MultiCurve", "MultiPoint",
-                "Surface", "Curve", "MultiPolygon", "MultiLineString"):
+            "Point",
+            "LineString",
+            "Polygon",
+            "MultiSurface",
+            "MultiCurve",
+            "MultiPoint",
+            "Surface",
+            "Curve",
+            "MultiPolygon",
+            "MultiLineString",
+        ):
             parent_hint = local(element.tag)
-            if parent_hint in ("Point", "LineString", "Polygon", "Surface", "Curve",
-                               "MultiSurface", "MultiCurve", "MultiPoint", "MultiPolygon",
-                               "MultiLineString"):
+            if parent_hint in (
+                "Point",
+                "LineString",
+                "Polygon",
+                "Surface",
+                "Curve",
+                "MultiSurface",
+                "MultiCurve",
+                "MultiPoint",
+                "MultiPolygon",
+                "MultiLineString",
+            ):
                 return None
     return None
 
@@ -114,8 +141,15 @@ def geom_of(data):
 def describe(url, version, type_name):
     """The geometry property from the schema, so an empty box still proves a type."""
     try:
-        data = fetch(url, {"SERVICE": "WFS", "VERSION": version,
-                           "REQUEST": "DescribeFeatureType", "TYPENAME": type_name})
+        data = fetch(
+            url,
+            {
+                "SERVICE": "WFS",
+                "VERSION": version,
+                "REQUEST": "DescribeFeatureType",
+                "TYPENAME": type_name,
+            },
+        )
     except Exception:
         return None
     try:
@@ -123,8 +157,12 @@ def describe(url, version, type_name):
     except ET.ParseError:
         return None
     for element in root.iter():
-        kind = (element.get("type") or "")
-        if local(element.tag) == "element" and kind.startswith("gml:") and kind.endswith("PropertyType"):
+        kind = element.get("type") or ""
+        if (
+            local(element.tag) == "element"
+            and kind.startswith("gml:")
+            and kind.endswith("PropertyType")
+        ):
             return element.get("name")
     return None
 
@@ -162,15 +200,35 @@ def _probe(url, version, type_name, srs, box):
         return False, "exception: " + reason.strip(), 0
     if len(data) < 200:
         return False, f"short answer ({len(data)} bytes)", 0
-    count = text.count("<gml:featureMember") or text.count("<wfs:member") or text.count("<member")
+    count = (
+        text.count("<gml:featureMember")
+        or text.count("<wfs:member")
+        or text.count("<member")
+    )
     geom = None
     root = ET.fromstring(data)
     for element in root.iter():
         tag = local(element.tag)
-        if tag in ("boundedBy", "Envelope", "lowerCorner", "upperCorner", "FeatureCollection"):
+        if tag in (
+            "boundedBy",
+            "Envelope",
+            "lowerCorner",
+            "upperCorner",
+            "FeatureCollection",
+        ):
             continue
-        if tag in ("Point", "LineString", "Polygon", "MultiSurface", "MultiCurve", "MultiPoint",
-                   "Surface", "Curve", "MultiPolygon", "MultiLineString"):
+        if tag in (
+            "Point",
+            "LineString",
+            "Polygon",
+            "MultiSurface",
+            "MultiCurve",
+            "MultiPoint",
+            "Surface",
+            "Curve",
+            "MultiPolygon",
+            "MultiLineString",
+        ):
             geom = None
             break
     # The geometry property: the child of the feature that holds a geometry element.
@@ -180,9 +238,18 @@ def _probe(url, version, type_name, srs, box):
         for feature in list(member):
             for prop in list(feature):
                 for child in prop.iter():
-                    if local(child.tag) in ("Point", "LineString", "Polygon", "MultiSurface",
-                                            "MultiCurve", "MultiPoint", "Surface", "Curve",
-                                            "MultiPolygon", "MultiLineString"):
+                    if local(child.tag) in (
+                        "Point",
+                        "LineString",
+                        "Polygon",
+                        "MultiSurface",
+                        "MultiCurve",
+                        "MultiPoint",
+                        "Surface",
+                        "Curve",
+                        "MultiPolygon",
+                        "MultiLineString",
+                    ):
                         geom = local(prop.tag)
                         break
                 if not geom and prop.get("srsName"):
@@ -199,6 +266,22 @@ def _probe(url, version, type_name, srs, box):
             return True, geom, count
         return False, f"no geometry property (members {count})", count
     return True, geom, count
+
+
+def defaults(type_name, title):
+    """The fields a new type needs to be a catalogue entry, not just a proof.
+
+    `data/wfs.json` carries the id a command and a script name, the label a picker shows, the
+    widest area one download may cover and whether the type is a sheet index. A type that is new
+    to the file gets these defaults; only a run that never saw it can, because `merge` keeps the
+    previous entry, hand-set fields included.
+
+    The span default is the cautious one: the plugin refuses an area wider than it rather than
+    asking GUGiK for a province. `index` stays false so a new type shows up in a picker (and, if
+    its title clashes with another, `tools/manifest.py` fails the build) instead of vanishing.
+    """
+    slug = re.sub(r"[^a-z0-9]+", "-", type_name.split(":")[-1].lower()).strip("-")
+    return {"id": "dane-" + slug, "label": title, "max_span": 0.15, "index": False}
 
 
 def load_previous():
@@ -228,10 +311,16 @@ def merge(previous, kept):
 
 
 def main():
-    source = sys.argv[1] if len(sys.argv) > 1 else os.path.join(
-        os.path.dirname(__file__), "wfs-endpoints.txt")
-    endpoints = [line.strip() for line in io.open(source, encoding="utf-8")
-                 if line.strip() and not line.startswith("#")]
+    source = (
+        sys.argv[1]
+        if len(sys.argv) > 1
+        else os.path.join(os.path.dirname(__file__), "wfs-endpoints.txt")
+    )
+    endpoints = [
+        line.strip()
+        for line in io.open(source, encoding="utf-8")
+        if line.strip() and not line.startswith("#")
+    ]
     print(f"{len(endpoints)} endpoints")
 
     found = []
@@ -251,8 +340,16 @@ def main():
         results = list(pool.map(lambda row: probe(row[0], row[1], row[2]), found))
     for (url, version, name, title), (ok, detail, count) in zip(found, results):
         if ok:
-            kept.append({"url": url, "type": name, "geom": detail, "title": title,
-                         "version": version})
+            kept.append(
+                {
+                    "url": url,
+                    "type": name,
+                    "geom": detail,
+                    "title": title,
+                    "version": version,
+                    **defaults(name, title),
+                }
+            )
         else:
             failed.append((name, detail))
             print(f"  FAIL {name:40} {detail[:90]}")

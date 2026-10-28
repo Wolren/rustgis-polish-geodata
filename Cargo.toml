@@ -3,7 +3,7 @@ members = ["packaging"]
 
 [package]
 name = "dane-pl"
-version = "0.1.0"
+version = "0.6.0"
 edition = "2021"
 description = "Polish geodetic data for RustGIS: GUGiK overlays, WFS downloads and parcel lookup"
 license = "MIT"

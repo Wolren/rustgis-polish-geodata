@@ -25,7 +25,9 @@ pub fn state(host: &mut Host, lang: Lang, _request: &Value) -> Result<Value, Str
     };
     let features_of = |layer: &Value| layer.get("features").and_then(Value::as_i64).unwrap_or(0);
 
-    let area = list.iter().find(|l| text::AREA_LAYERS.contains(&named(l).as_str()));
+    let area = list
+        .iter()
+        .find(|l| text::AREA_LAYERS.contains(&named(l).as_str()));
     let others = list
         .iter()
         .filter(|l| !text::AREA_LAYERS.contains(&named(l).as_str()))
@@ -37,7 +39,10 @@ pub fn state(host: &mut Host, lang: Lang, _request: &Value) -> Result<Value, Str
     let (models, model_bytes) = cache::dem_stats();
     let (files, bytes) = (files + models, bytes + model_bytes);
     let mut items = Map::new();
-    items.insert("view".into(), json!({ "text": text::view_text(lang, extent, scale) }));
+    items.insert(
+        "view".into(),
+        json!({ "text": text::view_text(lang, extent, scale) }),
+    );
     items.insert(
         "area".into(),
         json!({
@@ -47,8 +52,24 @@ pub fn state(host: &mut Host, lang: Lang, _request: &Value) -> Result<Value, Str
             }
         }),
     );
-    items.insert("cache".into(), json!({ "text": text::cache_text(lang, files, bytes) }));
-    items.insert("przytnij".into(), json!({ "enabled": area.is_some() && others > 0 }));
+    items.insert(
+        "cache".into(),
+        json!({ "text": text::cache_text(lang, files, bytes) }),
+    );
+    items.insert(
+        "catalogue".into(),
+        json!({
+            "text": text::catalogue_text(
+                lang,
+                crate::catalog::offered().count(),
+                crate::catalog::wfs_layers().len()
+            )
+        }),
+    );
+    items.insert(
+        "przytnij".into(),
+        json!({ "enabled": area.is_some() && others > 0 }),
+    );
     items.insert("wyczysc-cache".into(), json!({ "enabled": files > 0 }));
 
     Ok(json!({

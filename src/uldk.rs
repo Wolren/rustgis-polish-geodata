@@ -13,6 +13,10 @@ use serde_json::{json, Map, Value};
 
 const ULDK: &str = "https://uldk.gugik.gov.pl/";
 
+/// The fields asked of ULDK, for a parcel found by a point or by its identifier.
+const FIELDS: &str = "parcel,voivodeship,county,commune,teryt,geom_wkt";
+
+/// The parcel under a point: `x`/`y` in PL-1992, or the map centre.
 pub fn parcel(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String> {
     let (lon, lat) = match (params.get("x").and_then(Value::as_f64), params.get("y").and_then(Value::as_f64)) {
         (Some(x), Some(y)) => (x, y),
@@ -20,17 +24,55 @@ pub fn parcel(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, Stri
     };
     let (easting, northing) = tm::to_2180(lon, lat);
     let url = format!(
-        "{ULDK}?request=GetParcelByXY&xy={easting:.2},{northing:.2}&srid=2180&\
-result=parcel,voivodeship,county,commune,teryt,geom_wkt"
+        "{ULDK}?request=GetParcelByXY&xy={easting:.2},{northing:.2}&srid=2180&result={FIELDS}"
     );
     let body = http::get(&url, 20, lang)?;
-    let (fields, wkt) = parse(&body, lang)?;
+    answer(host, &body, lang, Some((lon, lat)))
+}
+
+/// The parcel an identifier names: `id` as ULDK writes it (`306401_1.0001.14/4`), or `teryt`,
+/// `obreb`, `numer` and `arkusz` to build it.
+pub fn parcel_by_id(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String> {
+    let id = identifier(params, lang)?;
+    let url = format!("{ULDK}?request=GetParcelById&id={id}&srid=2180&result={FIELDS}");
+    let body = http::get(&url, 20, lang)?;
+    answer(host, &body, lang, None)
+}
+
+/// ULDK's identifier for the parcel: the one given, or `TERYT_R.OBREB.NUMER/ARKUSZ`.
+fn identifier(params: &Value, lang: Lang) -> Result<String, String> {
+    let field = |key: &str| {
+        params
+            .get(key)
+            .map(|value| match value {
+                Value::String(s) => s.trim().to_string(),
+                Value::Number(n) => n.to_string(),
+                _ => String::new(),
+            })
+            .filter(|s| !s.is_empty())
+    };
+    if let Some(id) = field("id") {
+        return Ok(id);
+    }
+    let teryt = field("teryt").ok_or_else(|| text::uldk_needs_id(lang))?;
+    let numer = field("numer").ok_or_else(|| text::uldk_needs_id(lang))?;
+    let obreb = field("obreb").unwrap_or_else(|| "0001".to_string());
+    let arkusz = field("arkusz").unwrap_or_else(|| "1".to_string());
+    let rodzaj = field("rodzaj").unwrap_or_else(|| "1".to_string());
+    Ok(format!("{teryt}_{rodzaj}.{obreb}.{numer}/{arkusz}"))
+}
+
+/// Turns ULDK's answer into a layer, with the point that was asked about beside it.
+fn answer(host: &mut Host, body: &str, lang: Lang, asked: Option<(f64, f64)>) -> Result<Value, String> {
+    let (fields, wkt) = parse(body, lang)?;
 
     let mut properties = Map::new();
     for (name, value) in ["parcel", "voivodeship", "county", "commune", "teryt"].iter().zip(fields.iter()) {
         properties.insert((*name).into(), json!(value));
     }
-    properties.insert("queryPoint".into(), json!([lon, lat]));
+    if let Some((lon, lat)) = asked {
+        properties.insert("queryPoint".into(), json!([lon, lat]));
+    }
 
     let geometry = gml::wkt_to_geojson(&wkt, tm::to_wgs84).ok_or_else(|| text::uldk_bad_geometry(lang))?;
     let feature = json!({

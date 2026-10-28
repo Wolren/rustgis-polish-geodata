@@ -22,9 +22,17 @@ import xml.etree.ElementTree as ET
 CACHE = os.path.join(os.path.dirname(__file__), ".cache")
 OUT = os.path.join(os.path.dirname(__file__), "..", "data", "services.json")
 
-# A small box over Poznań, in EPSG:3857 metres, so a tile request is cheap and inland.
-BOX = "1881000,6868000,1887000,6874000"
-BOX_SMALL = "1883000,6869000,1883600,6869600"
+# Where a tile is asked for, in EPSG:3857 metres: two boxes, 1.2 km and 0.6 km across. A service
+# that draws only part of the country (a coast, a river, a mountain park) answers at none of the
+# boxes over Poznań, so the probes walk four places: inland, the coast, the mountains, the
+# south-west. The first answer that is an image of some size wins.
+BOXES = [
+    ("Poznań", "1883782,6873571,1884382,6874171"),
+    ("Poznań, close", "1883900,6873700,1884200,6874000"),
+    ("Gdańsk", "2075809,7236423,2076409,7237023"),
+    ("Zakopane", "2220524,6325619,2221124,6326219"),
+    ("Wrocław", "1895471,6640475,1896071,6641075"),
+]
 AGENT = "Mozilla/5.0 (compatible; RustGIS-dane-pl/0.1)"
 
 
@@ -105,15 +113,14 @@ def template(address, layer, version):
 def probe(address, layer, version):
     url = (
         template(address, layer, version)
-        .replace("{bbox-epsg-3857}", BOX)
+        .replace("{bbox-epsg-3857}", BOXES[0][1])
         .replace("{width}", "256")
         .replace("{height}", "256")
     )
-    # A detailed service draws nothing over a wide box, so the second box is 0.6 km across.
     reason = "no answer"
-    for box in (BOX, BOX_SMALL):
+    for place, box in BOXES:
         try:
-            data, kind = fetch(url.replace(BOX, box), 40)
+            data, kind = fetch(url.replace(BOXES[0][1], box), 40)
         except Exception as error:
             reason = f"{type(error).__name__}: {error}"
             continue
@@ -122,9 +129,9 @@ def probe(address, layer, version):
             reason = f"not an image ({kind}): {head}"
             continue
         if len(data) < 500:
-            reason = f"image too small at {box.split(',')[0]} ({len(data)} bytes)"
+            reason = f"image too small over {place} ({len(data)} bytes)"
             continue
-        return True, f"{type(kind)} {len(data)} bytes"
+        return True, f"{kind} {len(data)} bytes over {place}"
     return False, reason
 POLISH = str.maketrans("ąćęłńóśźżĄĆĘŁŃÓŚŹŻ", "acelnoszzACELNOSZZ")
 
@@ -227,6 +234,12 @@ def main():
         used[slug] = used.get(slug, 0) + 1
         if used[slug] > 1:
             item["id"] = f"{slug}-{used[slug]}"
+    # Every entry names the command a ribbon button runs and the short label it shows, so the
+    # manifest can be built from this file alone.
+    for item in good:
+        item.setdefault("label", item["name"])
+        if not item.get("cmd"):
+            item["cmd"] = "usluga-" + item["id"]
     good.sort(key=lambda item: item["name"].lower())
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w", encoding="utf-8", newline="\n") as f:

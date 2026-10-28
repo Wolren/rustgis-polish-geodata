@@ -11,8 +11,8 @@
 use crate::cache;
 use crate::gk92;
 use crate::host::Host;
-use crate::obszar;
 use crate::http;
+use crate::obszar;
 use crate::text::{self, Lang};
 use serde_json::{json, Value};
 use std::path::Path;
@@ -112,7 +112,13 @@ pub fn add(host: &mut Host, lang: Lang, request: &Value, kind: Kind) -> Result<V
     let bytes = cells * kind.bytes_per_cell();
     let seconds = bytes / kind.bytes_per_second();
     if seconds > BUDGET_SECONDS {
-        return Err(text::nmt_budget(lang, cells, bytes / 1e6, seconds, BUDGET_SECONDS));
+        return Err(text::nmt_budget(
+            lang,
+            cells,
+            bytes / 1e6,
+            seconds,
+            BUDGET_SECONDS,
+        ));
     }
 
     let wanted = text::nmt_layer_name(kind.surface(), kind.datum());
@@ -123,7 +129,10 @@ pub fn add(host: &mut Host, lang: Lang, request: &Value, kind: Kind) -> Result<V
         attempts(|| host.call("layer.addUrl", json!({ "url": address, "name": wanted })))?;
         resolved_name(host, &wanted)
     } else {
-        let file = cache::dem_file(&format!("{}_{x0}_{y0}_{width}x{height}.asc", kind.coverage()));
+        let file = cache::dem_file(&format!(
+            "{}_{x0}_{y0}_{width}x{height}.asc",
+            kind.coverage()
+        ));
         megabytes = http::download(&address, &file, 110, lang)? as f64 / 1e6;
         // An ASCII grid carries no CRS, so the sidecar places it.
         let prj = file.with_extension("prj");
@@ -146,6 +155,11 @@ pub fn add(host: &mut Host, lang: Lang, request: &Value, kind: Kind) -> Result<V
         &source,
         colours(request),
     ));
+    // A model is a rectangle: when the area was drawn as something else, say which rectangle it
+    // turned into, because the layer now shows that box instead of the shape.
+    if text::AREA_LAYERS.contains(&source.as_str()) && !covers_its_box(&features, boxes.lon) {
+        host.notify(&text::nmt_box_note(lang, &source, boxes.lon));
+    }
     Ok(json!({
         "layer": name,
         "area": source,
@@ -162,11 +176,11 @@ pub fn add(host: &mut Host, lang: Lang, request: &Value, kind: Kind) -> Result<V
     }))
 }
 
-/// Leaves the map usable after a build: the drawn area becomes the box the model covers, and the
+/// Leaves the map usable after a build: a drawn area becomes the box the model covers, and the
 /// drawing tool returns to explore so the next click pans instead of adding a vertex.
 fn tidy(host: &mut Host, source: &str, box_lon: [f64; 4]) {
     let drawn = text::AREA_LAYERS.contains(&source);
-    if drawn && matches!(obszar::Mode::stored(), obszar::Mode::Rectangle | obszar::Mode::Line) {
+    if drawn && obszar::Mode::stored() == obszar::Mode::Drawn {
         let _ = obszar::snap(host, source, box_lon);
     }
     host.call("tool.set", json!({ "tool": "explore" })).ok();
@@ -240,7 +254,10 @@ pub fn area(
         }
         None => choose(&list, &text::AREA_LAYERS).ok_or(missing)?,
     };
-    let answer = host.call("host.features", json!({ "layer": name, "selected": only_selected }))?;
+    let answer = host.call(
+        "host.features",
+        json!({ "layer": name, "selected": only_selected }),
+    )?;
     let features: Vec<Value> = answer
         .get("features")
         .and_then(Value::as_array)
@@ -253,7 +270,10 @@ pub fn area(
 }
 
 fn name_of(layer: &Value) -> Option<String> {
-    layer.get("name").and_then(Value::as_str).map(str::to_string)
+    layer
+        .get("name")
+        .and_then(Value::as_str)
+        .map(str::to_string)
 }
 
 fn vector(layer: &Value) -> bool {
@@ -269,18 +289,15 @@ fn active(layer: &Value) -> bool {
     layer.get("active").and_then(Value::as_bool) == Some(true)
 }
 
-/// The layer a click builds from when no area is named: the active layer's selection first, because
-/// a selection is a deliberate pick, then the largest selection, then the drawn area layer, then the
-/// active layer whole.
+/// The layer an elevation model builds from when no area is named: a selection on the active layer
+/// first, because selecting features is a deliberate pick, then the drawn area layer, then the
+/// active layer whole. A selection on some other layer is not consulted: a click must not take its
+/// area from a layer the user is not looking at.
 fn choose(list: &[Value], areas: &[&str]) -> Option<(String, bool)> {
-    if let Some(layer) = list.iter().find(|layer| vector(layer) && active(layer) && selected(layer)) {
-        return name_of(layer).map(|name| (name, true));
-    }
-    let most = list
+    if let Some(layer) = list
         .iter()
-        .filter(|layer| vector(layer) && selected(layer))
-        .max_by_key(|layer| layer.get("selected").and_then(Value::as_i64).unwrap_or(0));
-    if let Some(layer) = most {
+        .find(|layer| vector(layer) && active(layer) && selected(layer))
+    {
         return name_of(layer).map(|name| (name, true));
     }
     let drawn = list.iter().find(|layer| {
@@ -306,14 +323,54 @@ pub struct Boxes {
 impl Boxes {
     fn new() -> Boxes {
         Boxes {
-            lon: [f64::INFINITY, f64::INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY],
-            metres: [f64::INFINITY, f64::INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY],
+            lon: [
+                f64::INFINITY,
+                f64::INFINITY,
+                f64::NEG_INFINITY,
+                f64::NEG_INFINITY,
+            ],
+            metres: [
+                f64::INFINITY,
+                f64::INFINITY,
+                f64::NEG_INFINITY,
+                f64::NEG_INFINITY,
+            ],
         }
     }
 
     fn empty(&self) -> bool {
         self.metres[2] <= self.metres[0] || self.metres[3] <= self.metres[1]
     }
+}
+
+/// Whether the shape drawn is already the box: four corners, and every one of them on the box's.
+/// A triangle, an L or a freehand ring is not, and the model will cover a rectangle around it.
+fn covers_its_box(features: &[Value], box_lon: [f64; 4]) -> bool {
+    let [west, south, east, north] = box_lon;
+    let corners = [[west, south], [east, south], [east, north], [west, north]];
+    let mut points: Vec<[f64; 2]> = Vec::new();
+    for feature in features {
+        let Some(coordinates) = feature
+            .get("geometry")
+            .and_then(|geometry| geometry.get("coordinates"))
+        else {
+            continue;
+        };
+        walk(coordinates, &mut |lon, lat| {
+            let point = [(lon * 1e7).round() / 1e7, (lat * 1e7).round() / 1e7];
+            if !points.contains(&point) {
+                points.push(point);
+            }
+        });
+    }
+    points.len() == 4
+        && corners.iter().all(|corner| {
+            let corner = [
+                (corner[0] * 1e7).round() / 1e7,
+                (corner[1] * 1e7).round() / 1e7,
+            ];
+            points.contains(&corner)
+        })
 }
 
 pub fn envelopes(features: &[Value]) -> Option<Boxes> {
@@ -363,12 +420,21 @@ pub fn snap(metres: [f64; 4]) -> (i64, i64, u32, u32) {
     let y0 = metres[1].floor();
     let x1 = metres[2].ceil();
     let y1 = metres[3].ceil();
-    (x0 as i64, y0 as i64, (x1 - x0).max(1.0) as u32, (y1 - y0).max(1.0) as u32)
+    (
+        x0 as i64,
+        y0 as i64,
+        (x1 - x0).max(1.0) as u32,
+        (y1 - y0).max(1.0) as u32,
+    )
 }
 
 /// The coverage's address: a whole-metre PL-1992 box, one cell per metre.
 pub fn url(kind: Kind, x0: i64, y0: i64, width: u32, height: u32) -> String {
-    let format = if kind.tiff() { "image/tiff" } else { "image/x-aaigrid" };
+    let format = if kind.tiff() {
+        "image/tiff"
+    } else {
+        "image/x-aaigrid"
+    };
     let x1 = x0 + i64::from(width);
     let y1 = y0 + i64::from(height);
     format!(
@@ -414,7 +480,8 @@ fn resolved_name(host: &mut Host, wanted: &str) -> String {
             best = Some((id, name.to_string()));
         }
     }
-    best.map(|(_, name)| name).unwrap_or_else(|| wanted.to_string())
+    best.map(|(_, name)| name)
+        .unwrap_or_else(|| wanted.to_string())
 }
 
 /// The newest raster this plugin added, by its name.
@@ -469,8 +536,14 @@ mod tests {
         ]);
         let boxes = envelopes(&[drawn]).expect("a box");
         let (x0, y0, width, height) = snap(boxes.metres);
-        assert!((347_000..=348_129).contains(&x0), "the west edge covers the corner: {x0}");
-        assert!((496_000..=497_807).contains(&y0), "the south edge covers the corner: {y0}");
+        assert!(
+            (347_000..=348_129).contains(&x0),
+            "the west edge covers the corner: {x0}"
+        );
+        assert!(
+            (496_000..=497_807).contains(&y0),
+            "the south edge covers the corner: {y0}"
+        );
         assert!(width > 2_000 && width < 2_100, "{width}");
         assert!(height > 1_500 && height < 1_700, "{height}");
     }
@@ -490,21 +563,31 @@ mod tests {
     }
 
     #[test]
-    fn a_selection_anywhere_beats_the_active_layer() {
+    fn a_selection_on_another_layer_is_ignored() {
         let list = [layer("a", true, 0, 100), layer("b", false, 9, 100)];
-        assert_eq!(choose(&list, &[]), Some(("b".to_string(), true)), "the largest selection");
+        // The active layer, not a selection the user cannot see.
+        assert_eq!(choose(&list, &[]), Some(("a".to_string(), false)));
     }
 
     #[test]
     fn the_drawn_area_layer_beats_the_active_layer() {
-        let list = [layer("Area to download", false, 0, 1), layer("parcels", true, 0, 6)];
-        assert_eq!(choose(&list, &["Area to download"]), Some(("Area to download".to_string(), false)));
+        let list = [
+            layer("Area to download", false, 0, 1),
+            layer("parcels", true, 0, 6),
+        ];
+        assert_eq!(
+            choose(&list, &["Area to download"]),
+            Some(("Area to download".to_string(), false))
+        );
     }
 
     #[test]
     fn the_active_layer_alone_is_the_area() {
         let list = [layer("a", false, 0, 4), layer("b", true, 0, 6)];
-        assert_eq!(choose(&list, &["Area to download"]), Some(("b".to_string(), false)));
+        assert_eq!(
+            choose(&list, &["Area to download"]),
+            Some(("b".to_string(), false))
+        );
     }
 
     #[test]
@@ -513,7 +596,11 @@ mod tests {
             json!({ "name": "model", "active": true, "selected": 3, "features": 0, "raster": true }),
             json!({ "name": "empty", "active": false, "selected": 0, "features": 0, "raster": false }),
         ];
-        assert_eq!(choose(&list, &["Area to download"]), None, "no vector feature to build from");
+        assert_eq!(
+            choose(&list, &["Area to download"]),
+            None,
+            "no vector feature to build from"
+        );
     }
 
     #[test]
@@ -532,10 +619,19 @@ mod tests {
     #[test]
     fn the_address_asks_for_one_metre_cells() {
         let address = url(Kind::TerrainKron, 348_129, 497_807, 2317, 2193);
-        assert!(address.contains("COVERAGE=DTM_PL-KRON86-NH_TIFF"), "{address}");
+        assert!(
+            address.contains("COVERAGE=DTM_PL-KRON86-NH_TIFF"),
+            "{address}"
+        );
         assert!(address.contains("FORMAT=image/tiff"), "{address}");
-        assert!(address.contains("BBOX=348129,497807,350446,500000"), "{address}");
-        assert!(address.contains("CRS=EPSG:2180&RESPONSE_CRS=EPSG:2180"), "{address}");
+        assert!(
+            address.contains("BBOX=348129,497807,350446,500000"),
+            "{address}"
+        );
+        assert!(
+            address.contains("CRS=EPSG:2180&RESPONSE_CRS=EPSG:2180"),
+            "{address}"
+        );
         assert!(address.contains("WIDTH=2317&HEIGHT=2193"), "{address}");
         let ascii = url(Kind::TerrainEvrf, 0, 0, 1000, 1000);
         assert!(ascii.contains("FORMAT=image/x-aaigrid"), "{ascii}");
@@ -558,7 +654,10 @@ mod tests {
         assert_eq!(shaded["grey"], true, "a ramp turns a relief into bands");
         let coloured = look("NMT", true);
         assert_eq!(coloured["type"], "classify");
-        assert_eq!(coloured["method"], "equalinterval", "quantiles bunch on flat ground");
+        assert_eq!(
+            coloured["method"], "equalinterval",
+            "quantiles bunch on flat ground"
+        );
         assert_eq!(coloured["ramp"], "terrain");
     }
 

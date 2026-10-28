@@ -24,8 +24,6 @@ https://mapy.geoportal.gov.pl/wss/service/PZGIK/OsnowaGrawimetryczna
 https://mapy.geoportal.gov.pl/wss/service/PZGIK/OsnowaMagnetyczna
 https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries
 https://mapy.geoportal.gov.pl/wss/service/PZGIK/PodstawowaOsnowaGeodezyjnaPozioma
-https://mapy.geoportal.gov.pl/wss/service/PZGIK/PodstawowaOsnowaGeodezyjnaWysokosciowa
-https://mapy.geoportal.gov.pl/wss/service/PZGIK/PodstawowaOsnowaGeodezyjnawysokosciowa
 https://mapy.geoportal.gov.pl/wss/service/PZGIK/ZDJ/WFS/Aerotriangulacja
 https://mapy.geoportal.gov.pl/wss/service/PZGIK/ZDJ/WFS/Fotopunkty
 https://mapy.geoportal.gov.pl/wss/service/PZGIK/ZDJ/WFS/LinieMozaikowania

@@ -1,7 +1,9 @@
-//! "Draw area": the drawing tool, the area layer it fills, and the modes that shape an area.
+//! The area layer: a rectangle taken from the map view, or a shape drawn on the map.
 //!
-//! A grid request honours a rectangle only, so rectangle mode stores the bounding box of the drawn
-//! shape and polygon mode keeps the shape as drawn.
+//! RustGIS draws editable features point by point and has no rectangle tool, so a rectangle is
+//! taken from the view instead of drawn: one click, exact, and visible as a rectangle at once.
+//! A shape that is drawn stays as drawn; the elevation model, which can only fetch a rectangle,
+//! says which rectangle it is covering.
 
 use crate::cache;
 use crate::gk92;
@@ -9,51 +11,29 @@ use crate::host::Host;
 use crate::text::{self, Lang};
 use serde_json::{json, Value};
 
-/// How the drawn shape becomes an area.
+/// How the area layer was made. A model snaps a drawn shape to its box and leaves a rectangle be.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum Mode {
-    /// The bounding box of the drawn shape, the only shape a grid request can honour.
-    Rectangle,
-    /// The shape as drawn, kept for the record.
-    Polygon,
-    /// Two opposite corners, joined as the diagonal of a rectangle.
-    Line,
-    /// The current map view.
+    /// A rectangle copied from the map view.
     View,
+    /// A shape drawn on the map, kept as it was drawn.
+    Drawn,
 }
 
 impl Mode {
-    pub fn parse(key: &str) -> Mode {
-        match key {
-            "poligon" => Mode::Polygon,
-            "linia" => Mode::Line,
-            "widok" => Mode::View,
-            _ => Mode::Rectangle,
-        }
-    }
-
-    pub fn key(self) -> &'static str {
+    fn key(self) -> &'static str {
         match self {
-            Mode::Rectangle => "prostokat",
-            Mode::Polygon => "poligon",
-            Mode::Line => "linia",
             Mode::View => "widok",
+            Mode::Drawn => "rysowany",
         }
     }
 
-    /// Two clicks make a diagonal, three or more make a ring.
-    fn tool(self) -> &'static str {
-        match self {
-            Mode::Line => "createLine",
-            _ => "createPolygon",
-        }
-    }
-
-    /// The mode of the last draw command, so a model knows how to read the shape.
+    /// The mode of the last area command, so a model knows whether to snap the shape.
     pub fn stored() -> Mode {
-        std::fs::read_to_string(cache::area_mode_file())
-            .map(|text| Mode::parse(text.trim()))
-            .unwrap_or(Mode::Rectangle)
+        match std::fs::read_to_string(cache::area_mode_file()) {
+            Ok(text) if text.trim() == Mode::View.key() => Mode::View,
+            _ => Mode::Drawn,
+        }
     }
 
     fn remember(self) {
@@ -61,26 +41,20 @@ impl Mode {
     }
 }
 
-/// Puts the drawing tool on the map with an empty area layer active.
-pub fn draw(host: &mut Host, lang: Lang, mode: Mode) -> Result<Value, String> {
-    // The app keeps geometry types per layer, so a diagonal needs a line layer, not a polygon one.
-    let template = if mode == Mode::Line { "lines" } else { "areas" };
-    let name = fresh(host, lang, template)?;
-    host.call("layer.select", json!({ "layer": name }))?;
-    host.call("edit.enable", json!({ "on": true }))?;
-    host.call("tool.set", json!({ "tool": mode.tool() }))?;
-    mode.remember();
-    host.notify(&text::area_armed(lang, mode.key(), &name));
-    Ok(json!({ "layer": name, "mode": mode.key(), "tool": mode.tool(), "editing": true }))
-}
-
 /// Fills the area layer with the current view, so a rectangle needs no drawing at all.
-pub fn from_view(host: &mut Host, lang: Lang) -> Result<Value, String> {
+pub fn rectangle_from_view(host: &mut Host, lang: Lang) -> Result<Value, String> {
     let extent = host.extent()?;
     if extent[2] <= extent[0] || extent[3] <= extent[1] {
         return Err(text::area_no_view(lang));
     }
-    let name = fresh(host, lang, "areas")?;
+    let name = area_layer(host, lang)?;
+    // The layer is emptied, not dropped: its renderer and place in the layer list stay.
+    host.call("layer.remove", json!({ "layer": [name.clone()] }))
+        .ok();
+    host.call(
+        "layer.template",
+        json!({ "template": "areas", "name": name.clone() }),
+    )?;
     host.call("edit.enable", json!({ "on": true }))?;
     host.call(
         "edit.addFeature",
@@ -93,6 +67,34 @@ pub fn from_view(host: &mut Host, lang: Lang) -> Result<Value, String> {
     Ok(json!({ "layer": name, "mode": Mode::View.key(), "box": extent }))
 }
 
+/// Puts the drawing tool on the map, with the area layer active.
+///
+/// An area layer that is already there is kept and drawn into, so a second shape widens the area
+/// instead of throwing the first one away. A drawn layer that is in the way can be removed with
+/// Clear area.
+pub fn draw(host: &mut Host, lang: Lang) -> Result<Value, String> {
+    let name = area_layer(host, lang)?;
+    let layers = host.call("host.layers", json!({}))?;
+    let list = layers.as_array().cloned().unwrap_or_default();
+    let present = list
+        .iter()
+        .any(|layer| layer.get("name").and_then(Value::as_str) == Some(name.as_str()));
+    if !present {
+        host.call(
+            "layer.template",
+            json!({ "template": "areas", "name": name.clone() }),
+        )?;
+    }
+    host.call("layer.select", json!({ "layer": name }))?;
+    host.call("edit.enable", json!({ "on": true }))?;
+    host.call("tool.set", json!({ "tool": "createPolygon" }))?;
+    Mode::Drawn.remember();
+    host.notify(&text::area_armed(lang, &name));
+    Ok(
+        json!({ "layer": name, "mode": Mode::Drawn.key(), "tool": "createPolygon", "editing": true }),
+    )
+}
+
 /// Drops the drawing tool. The app also cancels a half-drawn ring on Escape.
 pub fn abort(host: &mut Host, lang: Lang) -> Result<Value, String> {
     host.call("tool.set", json!({ "tool": "explore" }))?;
@@ -100,34 +102,48 @@ pub fn abort(host: &mut Host, lang: Lang) -> Result<Value, String> {
     Ok(json!({ "tool": "explore" }))
 }
 
+/// Removes the area layer, so the next rectangle or shape starts empty.
+pub fn clear(host: &mut Host, lang: Lang) -> Result<Value, String> {
+    let layers = host.call("host.layers", json!({}))?;
+    let list = layers.as_array().cloned().unwrap_or_default();
+    let present = list
+        .iter()
+        .filter_map(|layer| layer.get("name").and_then(Value::as_str))
+        .find(|name| text::AREA_LAYERS.contains(name))
+        .map(str::to_string);
+    let Some(name) = present else {
+        return Err(text::area_none(lang));
+    };
+    host.call("layer.remove", json!({ "layer": [name.clone()] }))?;
+    host.notify(&text::area_cleared(lang, &name));
+    Ok(json!({ "removed": name }))
+}
+
+/// The area layer's name: the one on the map, in either language, or a fresh one in this one.
+fn area_layer(host: &mut Host, lang: Lang) -> Result<String, String> {
+    let layers = host.call("host.layers", json!({}))?;
+    let list = layers.as_array().cloned().unwrap_or_default();
+    // A layer made in the other language is the same layer, so it is reused and never doubled.
+    let existing = list.iter().find_map(|layer| {
+        let name = layer.get("name").and_then(Value::as_str)?;
+        text::AREA_LAYERS.contains(&name).then(|| name.to_string())
+    });
+    Ok(existing.unwrap_or_else(|| text::area_layer(lang).to_string()))
+}
+
 /// Replaces the drawn shape with its bounding box, so the layer shows the ground the model covers.
 pub fn snap(host: &mut Host, name: &str, box_lon: [f64; 4]) -> Result<(), String> {
     host.call("layer.remove", json!({ "layer": [name] }))?;
-    host.call("layer.template", json!({ "template": "areas", "name": name }))?;
+    host.call(
+        "layer.template",
+        json!({ "template": "areas", "name": name }),
+    )?;
     host.call("edit.enable", json!({ "on": true }))?;
     host.call(
         "edit.addFeature",
         json!({ "layer": name, "geometry": { "type": "Polygon", "coordinates": [ring(box_lon)] } }),
     )?;
     Ok(())
-}
-
-/// The area layer with no features: the drawn one emptied, or a new one in the interface language.
-fn fresh(host: &mut Host, lang: Lang, template: &str) -> Result<String, String> {
-    let layers = host.call("host.layers", json!({}))?;
-    let list = layers.as_array().cloned().unwrap_or_default();
-    // A layer drawn in the other language is the same layer, so it is reused and never doubled.
-    let existing = list.iter().find_map(|layer| {
-        let name = layer.get("name").and_then(Value::as_str)?;
-        text::AREA_LAYERS.contains(&name).then(|| name.to_string())
-    });
-    let name = existing.unwrap_or_else(|| text::area_layer(lang).to_string());
-    if name.is_empty() {
-        return Err(text::area_no_geometry(lang, &name));
-    }
-    host.call("layer.remove", json!({ "layer": [name.clone()] })).ok();
-    host.call("layer.template", json!({ "template": template, "name": name.clone() }))?;
-    Ok(name)
 }
 
 /// A closed ring around a `[west, south, east, north]` box.
@@ -149,11 +165,16 @@ mod tests {
     use super::*;
 
     #[test]
-    fn every_mode_key_parses_back() {
-        for mode in [Mode::Rectangle, Mode::Polygon, Mode::Line, Mode::View] {
-            assert_eq!(Mode::parse(mode.key()), mode);
+    fn every_mode_key_reads_back() {
+        for mode in [Mode::View, Mode::Drawn] {
+            assert_eq!(
+                match mode.key() {
+                    "widok" => Mode::View,
+                    _ => Mode::Drawn,
+                },
+                mode
+            );
         }
-        assert_eq!(Mode::parse("unknown"), Mode::Rectangle);
     }
 
     #[test]

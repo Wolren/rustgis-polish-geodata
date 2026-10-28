@@ -52,7 +52,7 @@ pub fn too_large(layer: &WfsLayer, bbox: [f64; 4]) -> bool {
 pub fn span_error(layer: &WfsLayer, bbox: [f64; 4], lang: Lang) -> String {
     text::span_too_large(
         lang,
-        layer.name(lang),
+        layer.name,
         bbox[2] - bbox[0],
         bbox[3] - bbox[1],
         layer.max_span,
@@ -100,9 +100,8 @@ fn gather(
     lang: Lang,
     srs: Srs,
 ) -> Result<(Vec<Value>, bool), String> {
-
     let areas = split_cells(bbox);
-    report(&text::split_areas(lang, layer.name(lang), areas.len()));
+    report(&text::split_areas(lang, layer.name, areas.len()));
 
     let mut parts: Vec<(Vec<Value>, bool)> = Vec::new();
     if areas.len() == 1 {
@@ -127,14 +126,14 @@ fn gather(
                 match &result {
                     Ok((features, _)) => report(&text::area_progress(
                         lang,
-                        layer.name(lang),
+                        layer.name,
                         done,
                         total,
                         features.len(),
                     )),
                     Err(e) => report(&text::area_progress_error(
                         lang,
-                        layer.name(lang),
+                        layer.name,
                         done,
                         total,
                         e.as_str(),
@@ -211,7 +210,7 @@ fn fetch_cell(
                 break;
             }
         }
-        report(&text::count(lang, layer.name(lang), features.len()));
+        report(&text::count(lang, layer.name, features.len()));
         if read == 0 {
             break;
         }
@@ -329,12 +328,7 @@ fn page_url(
                 Srs::Grid => {
                     let (x1, y1) = gk92::forward(bbox[0], bbox[1]);
                     let (x2, y2) = gk92::forward(bbox[2], bbox[3]);
-                    [
-                        x1.min(x2),
-                        y1.min(y2),
-                        x1.max(x2),
-                        y1.max(y2),
-                    ]
+                    [x1.min(x2), y1.min(y2), x1.max(x2), y1.max(y2)]
                 }
             };
             url.push_str(&format!(
@@ -366,7 +360,13 @@ mod tests {
     #[test]
     fn drops_the_bbox_when_a_filter_is_given() {
         let layer = catalog::wfs_by_label("gminy").unwrap();
-        let url = page_url(layer, [21.0, 52.2, 21.01, 52.21], 0, Some("%3CFilter%3E"), Srs::LonLat);
+        let url = page_url(
+            layer,
+            [21.0, 52.2, 21.01, 52.21],
+            0,
+            Some("%3CFilter%3E"),
+            Srs::LonLat,
+        );
         assert!(url.contains("&FILTER=%3CFilter%3E"));
         // GUGiK answers "BBOX and FILTER are mutually exclusive" if both are sent.
         assert!(!url.contains("BBOX="));

@@ -8,7 +8,8 @@
     "id": "dane-punkty-adresowe",
     "max_span": 0.15,
     "index": false,
-    "label": "Punkty adresowe"
+    "label": "Punkty adresowe",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/ext/wfs/KrajowaIntegracjaNumeracjiAdresowej",
@@ -19,7 +20,8 @@
     "id": "dane-ulice",
     "max_span": 0.15,
     "index": false,
-    "label": "Ulice"
+    "label": "Ulice",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT/WFS/PobieranieBDOT10k",
@@ -30,7 +32,8 @@
     "id": "dane-bdot10k-powiaty-do-pobrania",
     "max_span": 20.0,
     "index": false,
-    "label": "BDOT10k - powiaty do pobrania"
+    "label": "BDOT10k - powiaty do pobrania",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/MasztyStrefyWylaczone",
@@ -41,7 +44,8 @@
     "id": "dane-strefy-wylaczone-wokol-masztow",
     "max_span": 0.15,
     "index": false,
-    "label": "Strefy wyłączone wokół masztów"
+    "label": "Strefy wyłączone wokół masztów",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/MasztyStrefyWylaczone",
@@ -52,7 +56,8 @@
     "id": "dane-turbiny-wiatrowe",
     "max_span": 0.15,
     "index": false,
-    "label": "Turbiny wiatrowe"
+    "label": "Turbiny wiatrowe",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/NoweBudynki",
@@ -63,7 +68,8 @@
     "id": "dane-aktualnosc-danych-bdot10k",
     "max_span": 0.15,
     "index": false,
-    "label": "Aktualność danych BDOT10k"
+    "label": "Aktualność danych BDOT10k",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/NoweBudynki",
@@ -74,7 +80,8 @@
     "id": "dane-budynki-dodane-w-roku-2018",
     "max_span": 0.15,
     "index": false,
-    "label": "Budynki dodane w roku 2018"
+    "label": "Budynki dodane w roku 2018",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/NoweBudynki",
@@ -85,7 +92,8 @@
     "id": "dane-budynki-dodane-w-roku-2019",
     "max_span": 0.15,
     "index": false,
-    "label": "Budynki dodane w roku 2019"
+    "label": "Budynki dodane w roku 2019",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/NoweBudynki",
@@ -96,7 +104,8 @@
     "id": "dane-budynki-dodane-w-roku-2020",
     "max_span": 0.15,
     "index": false,
-    "label": "Budynki dodane w roku 2020"
+    "label": "Budynki dodane w roku 2020",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/NoweBudynki",
@@ -107,7 +116,8 @@
     "id": "dane-budynki-dodane-w-roku-2021",
     "max_span": 0.15,
     "index": false,
-    "label": "Budynki dodane w roku 2021"
+    "label": "Budynki dodane w roku 2021",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/NoweBudynki",
@@ -118,7 +128,8 @@
     "id": "dane-budynki-dodane-w-roku-2022",
     "max_span": 0.15,
     "index": false,
-    "label": "Budynki dodane w roku 2022"
+    "label": "Budynki dodane w roku 2022",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/NoweBudynki",
@@ -129,7 +140,8 @@
     "id": "dane-budynki-dodane-w-roku-2023",
     "max_span": 0.15,
     "index": false,
-    "label": "Budynki dodane w roku 2023"
+    "label": "Budynki dodane w roku 2023",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/NoweBudynki",
@@ -140,7 +152,8 @@
     "id": "dane-budynki-dodane-w-roku-2024",
     "max_span": 0.15,
     "index": false,
-    "label": "Budynki dodane w roku 2024"
+    "label": "Budynki dodane w roku 2024",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/NoweBudynki",
@@ -151,7 +164,8 @@
     "id": "dane-budynki-dodane-w-roku-2025",
     "max_span": 0.15,
     "index": false,
-    "label": "Budynki dodane w roku 2025"
+    "label": "Budynki dodane w roku 2025",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/StatystykiBudynkow",
@@ -162,7 +176,8 @@
     "id": "dane-budynki-i-budowle-w-powiatach",
     "max_span": 20.0,
     "index": false,
-    "label": "Budynki i budowle w powiatach"
+    "label": "Budynki i budowle w powiatach",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/StatystykiBudynkow",
@@ -173,7 +188,8 @@
     "id": "dane-budynki-i-budowle-w-wojewodztwach",
     "max_span": 0.15,
     "index": false,
-    "label": "Budynki i budowle w"
+    "label": "Budynki i budowle w województwach",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/StatystykiObiektowInnych",
@@ -184,7 +200,8 @@
     "id": "dane-obiekty-inne-w-powiatach",
     "max_span": 20.0,
     "index": false,
-    "label": "Obiekty inne w powiatach"
+    "label": "Obiekty inne w powiatach",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/StatystykiObiektowInnych",
@@ -195,7 +212,8 @@
     "id": "dane-obiekty-inne-w-wojewodztwach",
     "max_span": 0.15,
     "index": false,
-    "label": "Obiekty inne w województwach"
+    "label": "Obiekty inne w województwach",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/StatystykiSieciKomunikacyjnej",
@@ -206,7 +224,8 @@
     "id": "dane-siec-komunikacyjna-w-powiatach",
     "max_span": 20.0,
     "index": false,
-    "label": "Sieć komunikacyjna w powiatach"
+    "label": "Sieć komunikacyjna w powiatach",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/StatystykiSieciKomunikacyjnej",
@@ -217,7 +236,8 @@
     "id": "dane-siec-komunikacyjna-w-wojewodztwach",
     "max_span": 0.15,
     "index": false,
-    "label": "Sieć komunikacyjna w"
+    "label": "Sieć komunikacyjna w województwach",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/StatystykiSieciWodnej",
@@ -228,7 +248,8 @@
     "id": "dane-siec-wodna-w-powiatach",
     "max_span": 20.0,
     "index": false,
-    "label": "Sieć wodna w powiatach"
+    "label": "Sieć wodna w powiatach",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/StatystykiSieciWodnej",
@@ -239,7 +260,8 @@
     "id": "dane-siec-wodna-w-wojewodztwach",
     "max_span": 0.15,
     "index": false,
-    "label": "Sieć wodna w województwach"
+    "label": "Sieć wodna w województwach",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/DanePomiaroweLidarEVRF2007/WFS/Skorowidze",
@@ -459,7 +481,8 @@
     "id": "dane-dzialki",
     "max_span": 0.15,
     "index": false,
-    "label": "Działki"
+    "label": "Działki",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/EGIB/WFS/UslugaZbiorcza",
@@ -470,7 +493,8 @@
     "id": "dane-budynki",
     "max_span": 0.15,
     "index": false,
-    "label": "Budynki"
+    "label": "Budynki",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/NMT/WFS/ModeleSiatkowe3D",
@@ -481,7 +505,8 @@
     "id": "dane-wfs-modele-siatkowe-3d",
     "max_span": 0.15,
     "index": false,
-    "label": "WFS Modele siatkowe 3D"
+    "label": "WFS Modele siatkowe 3D",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/NMT/WFS/SiatkiRozszerzonegoPodzialuArkuszowego1992",
@@ -1768,7 +1793,8 @@
     "id": "dane-fundamentalna-grawimetryczna",
     "max_span": 0.15,
     "index": false,
-    "label": "Fundamentalna grawimetryczna"
+    "label": "Fundamentalna grawimetryczna",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/OsnowaGrawimetryczna",
@@ -1779,7 +1805,8 @@
     "id": "dane-bazowa-osnowa-grawimetryczna",
     "max_span": 0.15,
     "index": false,
-    "label": "Bazowa osnowa grawimetryczna"
+    "label": "Bazowa osnowa grawimetryczna",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/OsnowaMagnetyczna",
@@ -1790,7 +1817,8 @@
     "id": "dane-izogony-etykiety",
     "max_span": 0.15,
     "index": false,
-    "label": "Izogony - etykiety"
+    "label": "Izogony - etykiety",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/OsnowaMagnetyczna",
@@ -1801,7 +1829,8 @@
     "id": "dane-izogony",
     "max_span": 0.15,
     "index": false,
-    "label": "Izogony"
+    "label": "Izogony",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/OsnowaMagnetyczna",
@@ -1812,7 +1841,8 @@
     "id": "dane-fundamentalna-magnetyczna",
     "max_span": 0.15,
     "index": false,
-    "label": "Fundamentalna magnetyczna"
+    "label": "Fundamentalna magnetyczna",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/OsnowaMagnetyczna",
@@ -1823,7 +1853,8 @@
     "id": "dane-bazowa-osnowa-magnetyczna",
     "max_span": 0.15,
     "index": false,
-    "label": "Bazowa osnowa magnetyczna"
+    "label": "Bazowa osnowa magnetyczna",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -1834,7 +1865,8 @@
     "id": "dane-w12-przystan-morska",
     "max_span": 0.15,
     "index": false,
-    "label": "Przystań morska"
+    "label": "Przystań morska",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -1845,7 +1877,8 @@
     "id": "dane-w11-port-morski",
     "max_span": 0.15,
     "index": false,
-    "label": "Port morski"
+    "label": "Port morski",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -1856,7 +1889,8 @@
     "id": "dane-w10-reda",
     "max_span": 0.15,
     "index": false,
-    "label": "Reda"
+    "label": "Reda",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -1867,7 +1901,8 @@
     "id": "dane-w09-pas-techniczny",
     "max_span": 0.15,
     "index": false,
-    "label": "Pas techniczny"
+    "label": "Pas techniczny",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -1878,7 +1913,8 @@
     "id": "dane-w08-pas-ochronny",
     "max_span": 0.15,
     "index": false,
-    "label": "Pas ochronny"
+    "label": "Pas ochronny",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -1889,7 +1925,8 @@
     "id": "dane-w07-pas-nadbrzezny",
     "max_span": 0.15,
     "index": false,
-    "label": "Pas nadbrzeżny"
+    "label": "Pas nadbrzeżny",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -1900,7 +1937,8 @@
     "id": "dane-w06-morskie-linie-brzegowe",
     "max_span": 0.15,
     "index": false,
-    "label": "Morskie linie brzegowe"
+    "label": "Morskie linie brzegowe",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -1911,7 +1949,8 @@
     "id": "dane-w05-strefa-przylegla",
     "max_span": 0.15,
     "index": false,
-    "label": "Strefa przyległa"
+    "label": "Strefa przyległa",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -1922,7 +1961,8 @@
     "id": "dane-w04-wylaczna-strefa-ekonomiczna",
     "max_span": 0.15,
     "index": false,
-    "label": "Wyłączna strefa ekonomiczna"
+    "label": "Wyłączna strefa ekonomiczna",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -1933,7 +1973,8 @@
     "id": "dane-w03-morskie-wody-wewnetrzne",
     "max_span": 0.15,
     "index": false,
-    "label": "Morskie wody wewnętrzne"
+    "label": "Morskie wody wewnętrzne",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -1944,7 +1985,8 @@
     "id": "dane-w02-morze-terytorialne-rp",
     "max_span": 0.15,
     "index": false,
-    "label": "Morze terytorialne"
+    "label": "Morze terytorialne",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -1955,7 +1997,8 @@
     "id": "dane-w01-linia-podstawowa-morza-terytorialnego",
     "max_span": 0.15,
     "index": false,
-    "label": "Linia podstawowa morza"
+    "label": "Linia podstawowa morza",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -1966,7 +2009,8 @@
     "id": "dane-u11-urzad-zeglugi-srodladowej",
     "max_span": 0.15,
     "index": false,
-    "label": "Urząd żeglugi śródlądowej"
+    "label": "Urząd żeglugi śródlądowej",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -1977,7 +2021,8 @@
     "id": "dane-u10-urzad-morski",
     "max_span": 0.15,
     "index": false,
-    "label": "Urząd morski"
+    "label": "Urząd morski",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -1988,7 +2033,8 @@
     "id": "dane-u09-regionalny-zarzad-gospodarki-wodnej-pgwwp",
     "max_span": 0.15,
     "index": false,
-    "label": "Regionalny zarzad gospodarki"
+    "label": "Regionalny zarzad gospodarki",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -1999,7 +2045,8 @@
     "id": "dane-u08-zarzad-zlewni-pgwwp",
     "max_span": 0.15,
     "index": false,
-    "label": "Zarząd zlewni PGWWP"
+    "label": "Zarząd zlewni PGWWP",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2010,7 +2057,8 @@
     "id": "dane-u07-regionalna-dyrekcja-lasow-panstwowych",
     "max_span": 0.15,
     "index": false,
-    "label": "Regionalna dyrekcja lasow"
+    "label": "Regionalna dyrekcja lasow",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2021,7 +2069,8 @@
     "id": "dane-u06-nadlesnictwo",
     "max_span": 0.15,
     "index": false,
-    "label": "Nadleśnictwo"
+    "label": "Nadleśnictwo",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2032,7 +2081,8 @@
     "id": "dane-u05-izba-administracji-skarbowej",
     "max_span": 0.15,
     "index": false,
-    "label": "Izba administracji skarbowej"
+    "label": "Izba administracji skarbowej",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2043,7 +2093,8 @@
     "id": "dane-u04-urzad-celno-skarbowy",
     "max_span": 0.15,
     "index": false,
-    "label": "Urząd celno-skarbowy"
+    "label": "Urząd celno-skarbowy",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2054,7 +2105,8 @@
     "id": "dane-u03-wyspecjalizowany-urzad-skarbowy",
     "max_span": 0.15,
     "index": false,
-    "label": "Wyspecjalizowany urzad skarbowy"
+    "label": "Wyspecjalizowany urzad skarbowy",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2065,7 +2117,8 @@
     "id": "dane-u02-urzad-skarbowy",
     "max_span": 0.15,
     "index": false,
-    "label": "Urząd skarbowy"
+    "label": "Urząd skarbowy",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2076,7 +2129,8 @@
     "id": "dane-u01-archiwum-panstwowe",
     "max_span": 0.15,
     "index": false,
-    "label": "Archiwum państwowe"
+    "label": "Archiwum państwowe",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2087,7 +2141,8 @@
     "id": "dane-k13-obszar-dzialania-szefa-obrony-cywilnej-gminy",
     "max_span": 20.0,
     "index": false,
-    "label": "Szef obrony: obszar 13"
+    "label": "Szef obrony: obszar 13",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2098,7 +2153,8 @@
     "id": "dane-k12-obszar-dzialania-szefa-obrony-cywilnej-powiatu",
     "max_span": 20.0,
     "index": false,
-    "label": "Szef obrony: obszar 12"
+    "label": "Szef obrony: obszar 12",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2109,7 +2165,8 @@
     "id": "dane-k11-obszar-dzialania-szefa-obrony-cywilnej-wojewodztwa",
     "max_span": 20.0,
     "index": false,
-    "label": "Szef obrony: obszar 11"
+    "label": "Szef obrony: obszar 11",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2120,7 +2177,8 @@
     "id": "dane-k10-dywizjon-strazy-granicznej",
     "max_span": 20.0,
     "index": false,
-    "label": "Dywizjon strazy granicznej"
+    "label": "Dywizjon strazy granicznej",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2131,7 +2189,8 @@
     "id": "dane-k09-placowka-strazy-granicznej",
     "max_span": 20.0,
     "index": false,
-    "label": "Placowka strazy granicznej"
+    "label": "Placowka strazy granicznej",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2142,7 +2201,8 @@
     "id": "dane-k08-oddzial-strazy-granicznej",
     "max_span": 20.0,
     "index": false,
-    "label": "Oddzial strazy granicznej"
+    "label": "Oddzial strazy granicznej",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2153,7 +2213,8 @@
     "id": "dane-k07-komenda-powiatowa-strazy-pozarnej",
     "max_span": 20.0,
     "index": false,
-    "label": "Komenda powiatowa strazy"
+    "label": "Komenda powiatowa strazy",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2164,7 +2225,8 @@
     "id": "dane-k06-komenda-wojewodzka-strazy-pozarnej",
     "max_span": 0.15,
     "index": false,
-    "label": "Straż pożarna: komenda"
+    "label": "Straż pożarna: komenda",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2175,7 +2237,8 @@
     "id": "dane-k05-komisariat-policji",
     "max_span": 0.15,
     "index": false,
-    "label": "Policja: komisariat"
+    "label": "Policja: komisariat",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2186,7 +2249,8 @@
     "id": "dane-k04-komenda-rejonowa-policji",
     "max_span": 0.15,
     "index": false,
-    "label": "Policja: komenda rejonowa"
+    "label": "Policja: komenda rejonowa",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2197,7 +2261,8 @@
     "id": "dane-k03-komenda-stoleczna-policji",
     "max_span": 0.15,
     "index": false,
-    "label": "Policja: komenda stołeczna"
+    "label": "Policja: komenda stołeczna",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2208,7 +2273,8 @@
     "id": "dane-k02-komenda-powiatowa-policji",
     "max_span": 20.0,
     "index": false,
-    "label": "Komenda powiatowa policji"
+    "label": "Komenda powiatowa policji",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2219,7 +2285,8 @@
     "id": "dane-k01-komenda-wojewodzka-policji",
     "max_span": 0.15,
     "index": false,
-    "label": "Policja: komenda wojewódzka"
+    "label": "Policja: komenda wojewódzka",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2230,7 +2297,8 @@
     "id": "dane-p03-prokuratura-rejonowa",
     "max_span": 0.15,
     "index": false,
-    "label": "Prokuratura rejonowa"
+    "label": "Prokuratura rejonowa",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2241,7 +2309,8 @@
     "id": "dane-p02-prokuratura-okregowa",
     "max_span": 0.15,
     "index": false,
-    "label": "Prokuratura okręgowa"
+    "label": "Prokuratura okręgowa",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2252,7 +2321,8 @@
     "id": "dane-p01-prokuratura-regionalna",
     "max_span": 0.15,
     "index": false,
-    "label": "Prokuratura regionalna"
+    "label": "Prokuratura regionalna",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2263,7 +2333,8 @@
     "id": "dane-s04-wojewodzki-sad-administracyjny",
     "max_span": 0.15,
     "index": false,
-    "label": "Wojewodzki sad administracyjny"
+    "label": "Wojewodzki sad administracyjny",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2274,7 +2345,8 @@
     "id": "dane-s03-sad-rejonowy",
     "max_span": 0.15,
     "index": false,
-    "label": "Sąd rejonowy"
+    "label": "Sąd rejonowy",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2285,7 +2357,8 @@
     "id": "dane-s02-sad-okregowy",
     "max_span": 0.15,
     "index": false,
-    "label": "Sąd okręgowy"
+    "label": "Sąd okręgowy",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2296,7 +2369,8 @@
     "id": "dane-s01-sad-apelacyjny",
     "max_span": 0.15,
     "index": false,
-    "label": "Sąd apelacyjny"
+    "label": "Sąd apelacyjny",
+    "tool": "pobierz-urzedy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2307,7 +2381,8 @@
     "id": "dane-r02-granice-obwodow-spisowych",
     "max_span": 20.0,
     "index": false,
-    "label": "Granice obwodow spisowych"
+    "label": "Granice obwodow spisowych",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2318,7 +2393,8 @@
     "id": "dane-r01-granice-rejonow-statystycznych",
     "max_span": 20.0,
     "index": false,
-    "label": "Granice rejonow statystycznych"
+    "label": "Granice rejonow statystycznych",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2329,7 +2405,8 @@
     "id": "dane-a06-granice-obrebow-ewidencyjnych",
     "max_span": 20.0,
     "index": false,
-    "label": "Granice obrebow ewidencyjnych"
+    "label": "Granice obrebow ewidencyjnych",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2340,7 +2417,8 @@
     "id": "dane-a05-granice-jednostek-ewidencyjnych",
     "max_span": 20.0,
     "index": false,
-    "label": "Granice jednostek ewidencyjnych"
+    "label": "Granice jednostek ewidencyjnych",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2351,7 +2429,8 @@
     "id": "dane-a04-granice-miast",
     "max_span": 20.0,
     "index": false,
-    "label": "Granice miast"
+    "label": "Granice miast",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2362,7 +2441,8 @@
     "id": "dane-a03-granice-gmin",
     "max_span": 20.0,
     "index": false,
-    "label": "Granice gmin"
+    "label": "Granice gmin",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2373,7 +2453,8 @@
     "id": "dane-a02-granice-powiatow",
     "max_span": 20.0,
     "index": false,
-    "label": "Granice powiatow"
+    "label": "Granice powiatow",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2384,7 +2465,8 @@
     "id": "dane-a01-granice-wojewodztw",
     "max_span": 20.0,
     "index": false,
-    "label": "Granice wojewodztw"
+    "label": "Granice wojewodztw",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2395,7 +2477,8 @@
     "id": "dane-a00-granice-panstwa",
     "max_span": 20.0,
     "index": false,
-    "label": "Granice panstwa"
+    "label": "Granice panstwa",
+    "tool": "pobierz-granice"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PodstawowaOsnowaGeodezyjnaPozioma",
@@ -2406,7 +2489,8 @@
     "id": "dane-fundamentalna-pozioma",
     "max_span": 0.15,
     "index": false,
-    "label": "Osnowa fundamentalna pozioma"
+    "label": "Osnowa fundamentalna pozioma",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PodstawowaOsnowaGeodezyjnaPozioma",
@@ -2417,7 +2501,8 @@
     "id": "dane-bazowa-osnowa-pozioma",
     "max_span": 0.15,
     "index": false,
-    "label": "Bazowa osnowa pozioma"
+    "label": "Bazowa osnowa pozioma",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PodstawowaOsnowaGeodezyjnaWysokosciowa",
@@ -2428,7 +2513,8 @@
     "id": "dane-fundamentalna-wysokosciowa",
     "max_span": 0.15,
     "index": false,
-    "label": "Osnowa fundamentalna"
+    "label": "Osnowa fundamentalna",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PodstawowaOsnowaGeodezyjnaWysokosciowa",
@@ -2439,29 +2525,8 @@
     "id": "dane-bazowa-osnowa-wysokosciowa",
     "max_span": 0.15,
     "index": false,
-    "label": "Bazowa osnowa wysokosciowa"
-  },
-  {
-    "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PodstawowaOsnowaGeodezyjnawysokosciowa",
-    "type": "Fundamentalna_wysokosciowa",
-    "geom": "msGeometry",
-    "title": "Fundamentalna_wysokosciowa",
-    "version": "1.1.0",
-    "id": "dane-fundamentalna-wysokosciowa-2",
-    "max_span": 0.15,
-    "index": false,
-    "label": "Osnowa fundamentalna"
-  },
-  {
-    "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PodstawowaOsnowaGeodezyjnawysokosciowa",
-    "type": "Bazowa_wysokosciowa",
-    "geom": "msGeometry",
-    "title": "Bazowa osnowa wysokosciowa",
-    "version": "1.1.0",
-    "id": "dane-bazowa-osnowa-wysokosciowa-2",
-    "max_span": 0.15,
-    "index": false,
-    "label": "Bazowa osnowa wysokosciowa"
+    "label": "Bazowa osnowa wysokosciowa",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ZDJ/WFS/Aerotriangulacja",
@@ -2494,7 +2559,8 @@
     "id": "dane-skorowidz-linii-mozaikowania",
     "max_span": 0.15,
     "index": false,
-    "label": "Skorowidz Linii mozaikowania"
+    "label": "Skorowidz Linii mozaikowania",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ZDJ/WFS/Skorowidze_Srodki_Rzutow_Zdjec",
@@ -2780,7 +2846,8 @@
     "id": "dane-o3-pozostalenazwyobiektowfizjograficznych",
     "max_span": 0.15,
     "index": false,
-    "label": "Fizjografia: inne nazwy"
+    "label": "Fizjografia: inne nazwy",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGiK/PRNG/WFS/GeographicalNames",
@@ -2791,7 +2858,8 @@
     "id": "dane-o2-zestandaryzowanenazwyobiektowfizjograficznych",
     "max_span": 0.15,
     "index": false,
-    "label": "Fizjografia: standaryzowane"
+    "label": "Fizjografia: standaryzowane",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGiK/PRNG/WFS/GeographicalNames",
@@ -2802,7 +2870,8 @@
     "id": "dane-o1-urzedowenazwyobiektowfizjograficznych",
     "max_span": 0.15,
     "index": false,
-    "label": "Fizjografia: nazwy urzędowe"
+    "label": "Fizjografia: nazwy urzędowe",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGiK/PRNG/WFS/GeographicalNames",
@@ -2813,7 +2882,8 @@
     "id": "dane-m2-pozostalenazwymiejscowosci",
     "max_span": 0.15,
     "index": false,
-    "label": "Miejscowości: inne nazwy"
+    "label": "Miejscowości: inne nazwy",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGiK/PRNG/WFS/GeographicalNames",
@@ -2824,7 +2894,8 @@
     "id": "dane-m1-urzedowenazwymiejscowosci",
     "max_span": 0.15,
     "index": false,
-    "label": "Miejscowości: nazwy urzędowe"
+    "label": "Miejscowości: nazwy urzędowe",
+    "tool": "pobierz-adresy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -2835,7 +2906,8 @@
     "id": "dane-pkp-lhs-sp-z-o-o",
     "max_span": 0.15,
     "index": false,
-    "label": "Przejazdy: PKP LHS"
+    "label": "Przejazdy: PKP LHS",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -2846,7 +2918,8 @@
     "id": "dane-kpk-lk-sp-z-o-o",
     "max_span": 0.15,
     "index": false,
-    "label": "Przejazdy: KPK-LK"
+    "label": "Przejazdy: KPK-LK",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -2857,7 +2930,8 @@
     "id": "dane-mb-infrastruktura-sp-z-o-o",
     "max_span": 0.15,
     "index": false,
-    "label": "Przejazdy: MB Infrastruktura"
+    "label": "Przejazdy: MB Infrastruktura",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -2868,7 +2942,8 @@
     "id": "dane-dsdik-wroclaw",
     "max_span": 0.15,
     "index": false,
-    "label": "DSDiK Wrocław"
+    "label": "DSDiK Wrocław",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -2879,7 +2954,8 @@
     "id": "dane-pmt-linie-kolejowe-sp-z-o-o",
     "max_span": 0.15,
     "index": false,
-    "label": "Przejazdy: PMT Linie Kolejowe"
+    "label": "Przejazdy: PMT Linie Kolejowe",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -2890,7 +2966,8 @@
     "id": "dane-euroterminal-slawkow-sp-z-o-o",
     "max_span": 0.15,
     "index": false,
-    "label": "Przejazdy: EUROTERMINAL SŁAWKÓW"
+    "label": "Przejazdy: EUROTERMINAL SŁAWKÓW",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -2901,7 +2978,8 @@
     "id": "dane-infra-silesia-s-a",
     "max_span": 0.15,
     "index": false,
-    "label": "Przejazdy: Infra SILESIA"
+    "label": "Przejazdy: Infra SILESIA",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -2912,7 +2990,8 @@
     "id": "dane-jastrzebska-spolka-kolejowa-sp-z-o-o",
     "max_span": 0.15,
     "index": false,
-    "label": "Jastrzębska Spółka Kolejowa Sp"
+    "label": "Jastrzębska Spółka Kolejowa Sp",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -2923,7 +3002,8 @@
     "id": "dane-warszawska-kolej-dojazdowa-sp-z-o-o",
     "max_span": 0.15,
     "index": false,
-    "label": "Warszawska Kolej Dojazdowa sp"
+    "label": "Warszawska Kolej Dojazdowa sp",
+    "tool": "pobierz-pozostale"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -2934,7 +3014,8 @@
     "id": "dane-pgnig-termika-sa",
     "max_span": 0.15,
     "index": false,
-    "label": "Przejazdy: PGNiG TERMIKA"
+    "label": "Przejazdy: PGNiG TERMIKA",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -2945,7 +3026,8 @@
     "id": "dane-pkp-skm-w-trojmiescie-sp-z-o-o",
     "max_span": 0.15,
     "index": false,
-    "label": "Przejazdy: PKP SKM w Trójmieście"
+    "label": "Przejazdy: PKP SKM w Trójmieście",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -2956,7 +3038,8 @@
     "id": "dane-cargotor-sp-z-o-o",
     "max_span": 0.15,
     "index": false,
-    "label": "Przejazdy: CARGOTOR"
+    "label": "Przejazdy: CARGOTOR",
+    "tool": "pobierz-osnowy"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -2967,6 +3050,7 @@
     "id": "dane-pkp-plk",
     "max_span": 0.15,
     "index": false,
-    "label": "PKP PLK"
+    "label": "PKP PLK",
+    "tool": "pobierz-pozostale"
   }
 ]

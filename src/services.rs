@@ -22,6 +22,12 @@ pub struct Service {
     /// The plugin command that adds this service, one per catalogue entry.
     #[serde(default)]
     pub cmd: String,
+    /// Who publishes the service, as the catalogue file records it.
+    #[serde(default)]
+    pub institution: String,
+    /// The ribbon menu it sits in, when the institution spreads over more than one.
+    #[serde(default, rename = "institutionMenu")]
+    pub institution_menu: String,
 }
 
 impl Service {
@@ -46,11 +52,12 @@ pub fn all() -> &'static [Service] {
 /// The service a request names, by id or by its catalogue name.
 pub fn find(wanted: &str) -> Option<&'static Service> {
     let wanted = wanted.trim();
-    all().iter()
+    all()
+        .iter()
         .find(|s| s.id == wanted || s.cmd == wanted || s.name.eq_ignore_ascii_case(wanted))
 }
 
-/// The service a request names, or the one the panel's slider points at.
+/// The service a request names: the `service` parameter, or the command that carried it.
 pub fn chosen(request: &Value) -> Option<&'static Service> {
     let named = request
         .get("params")
@@ -66,12 +73,7 @@ pub fn chosen(request: &Value) -> Option<&'static Service> {
             return Some(service);
         }
     }
-    let index = request
-        .get("panel")
-        .and_then(|panel| panel.get("values"))
-        .and_then(|values| values.get("usluga-index"))
-        .and_then(Value::as_u64)? as usize;
-    all().get(index)
+    None
 }
 
 /// Adds a catalogue service as a tile overlay, or takes it away when it is already on the map.
@@ -111,7 +113,11 @@ pub fn toggle(host: &mut Host, lang: Lang, request: &Value) -> Result<Value, Str
             "tileSize": 256,
         }),
     )?;
-    host.notify(&text::service_added(lang, service.display(), service.layer.as_str()));
+    host.notify(&text::service_added(
+        lang,
+        service.display(),
+        service.layer.as_str(),
+    ));
     Ok(json!({
         "added": service.display(),
         "source": service.source,
@@ -131,10 +137,23 @@ mod tests {
         for service in list {
             assert!(!service.id.is_empty(), "{} has no id", service.name);
             assert!(!service.name.is_empty(), "{} has no name", service.id);
-            assert!(service.url.contains("{bbox-epsg-3857}"), "{} is not a template", service.id);
-            assert!(service.url.contains("{width}"), "{} has no width", service.id);
+            assert!(
+                service.url.contains("{bbox-epsg-3857}"),
+                "{} is not a template",
+                service.id
+            );
+            assert!(
+                service.url.contains("{width}"),
+                "{} has no width",
+                service.id
+            );
             assert!(!service.layer.is_empty(), "{} names no layer", service.id);
-            assert!(service.zoom >= 14 && service.zoom <= 22, "{} zoom {}", service.id, service.zoom);
+            assert!(
+                service.zoom >= 14 && service.zoom <= 22,
+                "{} zoom {}",
+                service.id,
+                service.zoom
+            );
         }
     }
 

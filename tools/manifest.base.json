@@ -1,0 +1,635 @@
+{
+  "manifest": {
+    "id": "dane-pl",
+    "name": "Polish Geodata",
+    "version": "0.6.0",
+    "description": "Polish national geodetic data from GUGiK in one tab: orthophoto, BDOT10k, parcels, addresses, PRG boundaries, place names and hillshade as map layers; the national WFS catalogue through background download tools with progress and Cancel; a 1 m elevation model built from the area you point at; and a ULDK parcel lookup at the map centre.",
+    "author": "Wolren",
+    "license": "MIT",
+    "runtime": "process",
+    "run": {
+      "windows": [
+        "bin/dane-pl.exe"
+      ],
+      "macos": [
+        "bin/dane-pl-macos"
+      ],
+      "linux": [
+        "bin/dane-pl-linux"
+      ]
+    },
+    "minRustgisVersion": "0.4.0",
+    "permissions": [
+      "edit",
+      "files",
+      "network"
+    ]
+  },
+  "commands": [
+    {
+      "id": "orto",
+      "label": "Orthophoto",
+      "icon": "basemap",
+      "help": "GUGiK orthophoto (WMTS, EPSG:3857). Click again to remove it."
+    },
+    {
+      "id": "orto-hi",
+      "label": "Orthophoto\nHi-Res",
+      "icon": "basemap",
+      "help": "High-resolution orthophoto (WMS)."
+    },
+    {
+      "id": "bdot",
+      "label": "BDOT10k",
+      "icon": "basemap",
+      "help": "Topographic object database as an overlay (visible from city scale)."
+    },
+    {
+      "id": "dzialki-wms",
+      "label": "Parcels\n(WMS)",
+      "icon": "buffer",
+      "help": "Parcel and building boundaries from KIEG (visible from about 1:5,000)."
+    },
+    {
+      "id": "adresy",
+      "label": "Addresses",
+      "icon": "bookmark",
+      "help": "Address points and streets from the national address numbering service."
+    },
+    {
+      "id": "prg-wms",
+      "label": "PRG\nboundaries",
+      "icon": "buffer",
+      "help": "Country, voivodeship, county, commune and city boundaries."
+    },
+    {
+      "id": "prng",
+      "label": "Place\nnames",
+      "icon": "label",
+      "help": "Place names from PRNG."
+    },
+    {
+      "id": "nmt",
+      "label": "DEM\nhillshade",
+      "icon": "relief",
+      "help": "Hillshade of the digital terrain model."
+    },
+    {
+      "id": "obszar-widok",
+      "label": "Rectangle\narea",
+      "icon": "g_rect",
+      "help": "Copies the map view into the area layer as a rectangle: one click, and the rectangle is exactly what you see. It is the area a download and the elevation model use."
+    },
+    {
+      "id": "obszar-rysuj",
+      "label": "Draw\narea",
+      "icon": "polygon_tool",
+      "help": "Click the corners, then double-click to close the ring, or press Escape to stop. The shape stays as drawn: a download follows it, and the elevation model covers the rectangle around it."
+    },
+    {
+      "id": "obszar-anuluj",
+      "label": "Cancel\ndrawing",
+      "icon": "erase",
+      "help": "Drops the drawing tool and leaves the map in the explore tool. Escape does the same."
+    },
+    {
+      "id": "obszar-wyczysc",
+      "label": "Clear\narea",
+      "icon": "erase",
+      "help": "Removes the area layer, so the next rectangle or drawn shape starts empty."
+    },
+    {
+      "id": "parcel",
+      "label": "Parcel\nfrom ULDK",
+      "icon": "bookmark",
+      "help": "Finds the parcel under the map centre and adds its boundary with its attributes."
+    },
+    {
+      "id": "przytnij",
+      "label": "Clip\nto area",
+      "icon": "buffer",
+      "help": "Clips a layer to the area layer's boundary, or to a named one. A WFS answer returns whole features that touch the area; this cuts them.",
+      "params": "{\"layer\": \"layer name (optional, the newest vector layer when left out)\", \"obszar\": \"area layer name (optional)\"}"
+    },
+    {
+      "id": "wyczysc-cache",
+      "label": "Clear\ncache",
+      "icon": "erase",
+      "help": "Deletes the stored WFS answers (kept for 7 days by default) and the downloaded elevation grids, so the data is fetched again."
+    },
+    {
+      "id": "zoom-polska",
+      "label": "Zoom to Poland",
+      "icon": "zoom_world",
+      "help": "Brings the map to the whole of Poland, the area GUGiK serves."
+    },
+    {
+      "id": "katalog",
+      "label": "Catalogue\n(JSON)",
+      "icon": "table",
+      "help": "Lists every service and every dataset, with the ids a script or an agent runs, optionally narrowed by institution or by a word of the name.",
+      "params": "{\"instytucja\": \"gugik | pig | wody | ...\", \"szukaj\": \"text\"}"
+    },
+    {
+      "id": "geokoduj",
+      "label": "Geocode\naddress",
+      "icon": "bookmark",
+      "help": "Finds an address with GUGiK's UUG service and adds it as a point: city, street, number, postcode and the PL-1992 position.",
+      "params": "{\"adres\": \"Poznań, Głogowska 10\", \"x\": \"PL-1992 easting (optional)\", \"y\": \"northing (optional)\"}"
+    },
+    {
+      "id": "dzialka-id",
+      "label": "Parcel by\nnumber",
+      "icon": "bookmark",
+      "help": "Adds the parcel an identifier names, without pointing at the map: id as ULDK writes it, or teryt and numer.",
+      "params": "{\"id\": \"306401_1.0001.14/4\", \"teryt\": \"306401 (instead of id)\", \"obreb\": \"0001\", \"numer\": \"14\", \"arkusz\": \"4\"}"
+    },
+    {
+      "id": "wysokosc",
+      "label": "Height\nat point",
+      "icon": "relief",
+      "help": "Reads the terrain model's height at the map centre, or at x/y given in PL-1992. PL-KRON86-NH, in metres above sea level.",
+      "params": "{\"x\": \"PL-1992 easting (optional, the map centre by default)\", \"y\": \"northing\"}"
+    },
+    {
+      "id": "eziudp",
+      "label": "Register\nEZiUDP",
+      "icon": "globe_view",
+      "help": "Searches the national register of spatial data sets and services: which body holds what, and the address of its WMS, WFS and CSW. Narrows the register, never dumps it.",
+      "params": "{\"szukaj\": \"ortofoto\", \"instytucja\": \"Geolog\", \"teryt\": \"3064\", \"usluga\": \"wms\"}"
+    },
+    {
+      "id": "panel-state",
+      "label": "Refresh the panel",
+      "icon": "history",
+      "help": "Updates the panel: the view, the area layer, the catalogue and the stored answers."
+    },
+    {
+      "id": "dem",
+      "label": "Terrain\nKRON86",
+      "icon": "relief",
+      "help": "Adds the 1 m terrain model of the area, shaded. GUGiK serves PL-KRON86-NH as GeoTIFF.",
+      "params": "{\"area\": \"area layer name (optional)\", \"colours\": \"false\"}"
+    },
+    {
+      "id": "dem-evr",
+      "label": "Terrain\nEVRF2007",
+      "icon": "relief",
+      "help": "The terrain model in PL-EVRF2007-NH. GUGiK serves it as an ASCII grid, so one click covers less ground than the GeoTIFF.",
+      "params": "{\"area\": \"area layer name (optional)\", \"colours\": \"false\"}"
+    },
+    {
+      "id": "dem-nmpt",
+      "label": "Surface\nNMPT",
+      "icon": "relief",
+      "help": "The surface model, buildings and trees kept, in PL-KRON86-NH. An ASCII grid.",
+      "params": "{\"area\": \"area layer name (optional)\", \"colours\": \"false\"}"
+    },
+    {
+      "id": "dem-style",
+      "label": "Style the model",
+      "icon": "map",
+      "help": "Shades the newest elevation model again. Pass colours to band the heights instead.",
+      "params": "{\"layer\": \"elevation model layer (optional)\", \"colours\": \"false\"}"
+    }
+  ],
+  "tools": [
+    {
+      "id": "pobierz-adresy",
+      "name": "Download addresses and buildings",
+      "summary": "GUGiK types for addresses, buildings and their statistics.",
+      "toolbox": "Polish Geodata",
+      "params": [
+        {
+          "name": "dane",
+          "label": "Dataset",
+          "kind": "choice",
+          "required": true,
+          "choicesGroup": "addresses",
+          "help": "The GUGiK feature type to download."
+        },
+        {
+          "name": "obszar",
+          "label": "Area (layer)",
+          "kind": "vectorLayer",
+          "required": true,
+          "help": "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download."
+        }
+      ]
+    },
+    {
+      "id": "pobierz-granice",
+      "name": "Download boundaries and units",
+      "summary": "PRG boundaries, place names and the administrative units around them.",
+      "toolbox": "Polish Geodata",
+      "params": [
+        {
+          "name": "dane",
+          "label": "Dataset",
+          "kind": "choice",
+          "required": true,
+          "choicesGroup": "boundaries",
+          "help": "The GUGiK feature type to download."
+        },
+        {
+          "name": "obszar",
+          "label": "Area (layer)",
+          "kind": "vectorLayer",
+          "required": true,
+          "help": "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download."
+        }
+      ]
+    },
+    {
+      "id": "pobierz-osnowy",
+      "name": "Download control points and measurements",
+      "summary": "Geodetic, gravimetric and magnetic control networks, with their measurements.",
+      "toolbox": "Polish Geodata",
+      "params": [
+        {
+          "name": "dane",
+          "label": "Dataset",
+          "kind": "choice",
+          "required": true,
+          "choicesGroup": "control",
+          "help": "The GUGiK feature type to download."
+        },
+        {
+          "name": "obszar",
+          "label": "Area (layer)",
+          "kind": "vectorLayer",
+          "required": true,
+          "help": "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download."
+        }
+      ]
+    },
+    {
+      "id": "pobierz-urzedy",
+      "name": "Download offices and courts",
+      "summary": "Public offices, courts, schools, forests and other institutions.",
+      "toolbox": "Polish Geodata",
+      "params": [
+        {
+          "name": "dane",
+          "label": "Dataset",
+          "kind": "choice",
+          "required": true,
+          "choicesGroup": "offices",
+          "help": "The GUGiK feature type to download."
+        },
+        {
+          "name": "obszar",
+          "label": "Area (layer)",
+          "kind": "vectorLayer",
+          "required": true,
+          "help": "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download."
+        }
+      ]
+    },
+    {
+      "id": "pobierz-pozostale",
+      "name": "Download other data",
+      "summary": "Maritime zones, road and rail statistics, historic monuments and the rest.",
+      "toolbox": "Polish Geodata",
+      "params": [
+        {
+          "name": "dane",
+          "label": "Dataset",
+          "kind": "choice",
+          "required": true,
+          "choicesGroup": "other",
+          "help": "The GUGiK feature type to download."
+        },
+        {
+          "name": "obszar",
+          "label": "Area (layer)",
+          "kind": "vectorLayer",
+          "required": true,
+          "help": "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download."
+        }
+      ]
+    }
+  ],
+  "tab": {
+    "label": "Polish Geodata",
+    "groups": [
+      {
+        "label": "Basemaps",
+        "items": [
+          {
+            "menu": "Raster",
+            "icon": "basemap",
+            "help": "Orthophoto, hillshade and the topographic overlay.",
+            "items": [
+              "orto",
+              "orto-hi",
+              "bdot",
+              "nmt"
+            ]
+          },
+          {
+            "menu": "Vector",
+            "icon": "buffer",
+            "help": "Parcels, buildings, addresses, boundaries and place names.",
+            "items": [
+              "dzialki-wms",
+              "adresy",
+              "prg-wms",
+              "prng"
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Area",
+        "items": [
+          "obszar-widok",
+          "obszar-rysuj",
+          "obszar-anuluj",
+          "obszar-wyczysc"
+        ]
+      },
+      {
+        "label": "Downloads",
+        "items": [
+          "tool:pobierz-adresy",
+          "tool:pobierz-granice",
+          "tool:pobierz-osnowy",
+          "tool:pobierz-urzedy",
+          "tool:pobierz-pozostale"
+        ]
+      },
+      {
+        "label": "Lookups",
+        "items": [
+          "parcel",
+          "wysokosc"
+        ]
+      },
+      {
+        "label": "Elevation",
+        "items": [
+          {
+            "menu": "Model",
+            "icon": "relief",
+            "help": "The 1 m elevation model of the area, as GeoTIFF or ASCII grid.",
+            "items": [
+              "dem",
+              "dem-evr",
+              "dem-nmpt"
+            ]
+          },
+          "dem-style"
+        ]
+      },
+      {
+        "label": "WMS (view only)",
+        "menus": [
+          "gugik-orto",
+          "gugik-mapy",
+          "gugik-kataster",
+          "gugik-inne",
+          "cartomatic",
+          "pig",
+          "nid",
+          "lasy",
+          "other"
+        ]
+      },
+      {
+        "label": "Tools",
+        "items": [
+          "panel",
+          "przytnij",
+          "zoom-polska",
+          "wyczysc-cache",
+          "katalog"
+        ]
+      }
+    ]
+  },
+  "panel": {
+    "title": "Polish Geodata",
+    "icon": "map",
+    "help": "The map view, the area to download, the catalogue and the stored answers, with the buttons that act on them.",
+    "state": "panel-state",
+    "items": [
+      {
+        "kind": "text",
+        "id": "view",
+        "label": "Map view",
+        "text": "Open the panel to read the view."
+      },
+      {
+        "kind": "text",
+        "id": "area",
+        "label": "Area to download",
+        "text": "Press Rectangle area to make one."
+      },
+      {
+        "kind": "text",
+        "id": "catalogue",
+        "label": "Catalogue",
+        "text": "Filled in when the panel opens."
+      },
+      {
+        "kind": "text",
+        "id": "cache",
+        "label": "Stored answers",
+        "text": "Measured when the panel opens."
+      },
+      {
+        "kind": "checkbox",
+        "id": "clear",
+        "label": "Clear the stored answers after a download",
+        "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time.",
+        "default": false
+      },
+      {
+        "kind": "button",
+        "command": "zoom-polska"
+      },
+      {
+        "kind": "button",
+        "command": "obszar-widok"
+      },
+      {
+        "kind": "button",
+        "command": "obszar-rysuj"
+      },
+      {
+        "kind": "button",
+        "command": "parcel"
+      },
+      {
+        "kind": "button",
+        "command": "przytnij"
+      },
+      {
+        "kind": "button",
+        "command": "wyczysc-cache"
+      }
+    ]
+  },
+  "i18n": {
+    "pl": {
+      "Address points and streets from the national address numbering service.": "Punkty adresowe i ulice (Krajowa Integracja Numeracji Adresowej).",
+      "Addresses": "Adresy",
+      "Adds the 1 m terrain model of the area, shaded. GUGiK serves PL-KRON86-NH as GeoTIFF.": "Dodaje model terenu 1 m dla obszaru, cieniowany. GUGiK udostępnia PL-KRON86-NH jako GeoTIFF.",
+      "Adds the parcel an identifier names, without pointing at the map: id as ULDK writes it, or teryt and numer.": "Dodaje działkę wskazaną identyfikatorem, bez klikan ia w mapę: id w postaci ULDK albo teryt i numer.",
+      "Area": "Obszar",
+      "Area (layer)": "Obszar (warstwa)",
+      "Area to download": "Obszar pobierania",
+      "BDOT10k": "BDOT10k",
+      "Basemaps": "Podkłady",
+      "Brings the map to the whole of Poland, the area GUGiK serves.": "Przybliża mapę do całej Polski, obszaru obsługiwanego przez GUGiK.",
+      "Cadastre and boundaries": "Kataster i granice",
+      "Cancel\ndrawing": "Anuluj\nrysowanie",
+      "Catalogue": "Katalog",
+      "Catalogue\n(JSON)": "Katalog\n(JSON)",
+      "Clear\narea": "Wyczyść\nobszar",
+      "Clear\ncache": "Wyczyść\ncache",
+      "Clear the stored answers after a download": "Wyczyść zapisane odpowiedzi po pobraniu",
+      "Click the corners, then double-click to close the ring, or press Escape to stop. The shape stays as drawn: a download follows it, and the elevation model covers the rectangle around it.": "Klikaj narożniki, a na końcu kliknij dwukrotnie, aby zamknąć obwód, albo naciśnij Escape, aby przerwać. Kształt zostaje taki, jak narysowany: pobieranie idzie za nim, a model wysokości obejmuje prostokąt wokół niego.",
+      "Clip\nto area": "Przytnij\ndo obszaru",
+      "Clips a layer to the area layer's boundary, or to a named one. A WFS answer returns whole features that touch the area; this cuts them.": "Przycina warstwę do granicy warstwy obszaru albo wskazanej warstwy. WFS zwraca całe obiekty dotykające obszaru; to je tnie.",
+      "Copies the map view into the area layer as a rectangle: one click, and the rectangle is exactly what you see. It is the area a download and the elevation model use.": "Kopiuje widok mapy do warstwy obszaru jako prostokąt: jedno kliknięcie i prostokąt jest dokładnie tym, co widać. To obszar, którego używa pobieranie i model wysokości.",
+      "Country, voivodeship, county, commune and city boundaries.": "Granice państwa, województw, powiatów, gmin i miast.",
+      "DEM\nhillshade": "NMT\ncieniowanie",
+      "Dataset": "Zestaw",
+      "Deletes the stored WFS answers (kept for 7 days by default) and the downloaded elevation grids, so the data is fetched again.": "Usuwa zapisane odpowiedzi WFS (domyślnie trzymane 7 dni) i pobrane siatki wysokości, żeby pobrać dane od nowa.",
+      "Download addresses and buildings": "Pobierz adresy i budynki",
+      "Download boundaries and units": "Pobierz granice i jednostki",
+      "Download control points and measurements": "Pobierz osnowy i pomiary",
+      "Download offices and courts": "Pobierz urzędy i sądy",
+      "Download other data": "Pobierz pozostałe dane",
+      "Downloads": "Pobieranie",
+      "Draw\narea": "Narysuj\nobszar",
+      "Drops the drawing tool and leaves the map in the explore tool. Escape does the same.": "Wyłącza narzędzie rysowania i zostawia mapę w trybie przeglądania. Escape robi to samo.",
+      "Elevation": "Wysokości",
+      "Filled in when the panel opens.": "Wypełniane przy otwarciu panelu.",
+      "Finds an address with GUGiK's UUG service and adds it as a point: city, street, number, postcode and the PL-1992 position.": "Znajduje adres w usłudze UUG GUGiK i dodaje go jako punkt: miejscowość, ulica, numer, kod pocztowy i pozycja w PL-1992.",
+      "Finds the parcel under the map centre and adds its boundary with its attributes.": "Znajduje działkę pod środkiem mapy i dodaje jej granice wraz z atrybutami.",
+      "Forest data of the State Forests' Bank of Forest Data.": "Dane leśne Banku Danych o Lasach.",
+      "Forests (BDL)": "Lasy (BDL)",
+      "GDOŚ, PKP PLK, GUS, PGW Wody Polskie and IMGW-PIB.": "GDOŚ, PKP PLK, GUS, PGW Wody Polskie i IMGW-PIB.",
+      "GUGiK orthophoto (WMTS, EPSG:3857). Click again to remove it.": "Ortofotomapa GUGiK (WMTS, EPSG:3857). Kliknij ponownie, aby usunąć.",
+      "GUGiK types for addresses, buildings and their statistics.": "Typy GUGiK dla adresów, budynków i ich statystyk.",
+      "Geocode\naddress": "Geokoduj\nadres",
+      "Geodetic, gravimetric and magnetic control networks, with their measurements.": "Osnowy geodezyjne, grawimetryczne i magnetyczne wraz z pomiarami.",
+      "Geological, hydrogeological and environmental maps of the Polish Geological Institute.": "Mapy geologiczne, hydrogeologiczne i środowiskowe Państwowego Instytutu Geologicznego.",
+      "Geology (PIG)": "Geologia (PIG)",
+      "Height\nat point": "Wysokość\nw punkcie",
+      "Heritage (NID)": "Zabytki (NID)",
+      "High-resolution orthophoto (WMS).": "Ortofotomapa w wysokiej rozdzielczości (WMS).",
+      "Hillshade of the digital terrain model.": "Cieniowanie numerycznego modelu terenu.",
+      "Historical maps": "Mapy historyczne",
+      "Lists every service and every dataset, with the ids a script or an agent runs, optionally narrowed by institution or by a word of the name.": "Wypisuje wszystkie usługi i zestawy danych wraz z identyfikatorami, których używa skrypt albo agent; można zawęzić do instytucji albo do słowa z nazwy.",
+      "Lookups": "Wyszukiwanie",
+      "Map view": "Widok mapy",
+      "Maps": "Mapy",
+      "Maritime zones, road and rail statistics, historic monuments and the rest.": "Strefy morskie, statystyki dróg i kolei, zabytki oraz pozostałe dane.",
+      "Measured when the panel opens.": "Mierzone przy otwarciu panelu.",
+      "Model": "Model",
+      "Monuments, archaeological records and UNESCO sites.": "Zabytki, rejestr archeologiczny i obiekty UNESCO.",
+      "Open the panel to read the view.": "Otwórz panel, aby odczytać widok.",
+      "Orthophoto": "Ortofoto",
+      "Orthophoto\nHi-Res": "Ortofoto\nHi-Res",
+      "Orthophoto and DEM": "Ortofoto i NMT",
+      "Orthophoto, elevation, vegetation and archive imagery.": "Ortofoto, wysokości, wegetacja i zdjęcia archiwalne.",
+      "Orthophoto, hillshade and the topographic overlay.": "Ortofoto, cieniowanie i nakładka topograficzna.",
+      "Other GUGiK data": "Pozostałe dane GUGiK",
+      "Other institutions": "Pozostałe instytucje",
+      "PRG\nboundaries": "Granice\nPRG",
+      "PRG boundaries, place names and the administrative units around them.": "Granice PRG, nazwy miejscowości i jednostki administracyjne.",
+      "Parcel\nfrom ULDK": "Działka\nz ULDK",
+      "Parcel and building boundaries from KIEG (visible from about 1:5,000).": "Granice działek i budynków z KIEG (widoczne od skali ok. 1:5000).",
+      "Parcel by\nnumber": "Działka\nz numeru",
+      "Parcels\n(WMS)": "Działki\n(WMS)",
+      "Parcels, buildings, addresses, boundaries and place names.": "Działki, budynki, adresy, granice i nazwy miejscowości.",
+      "Parcels, buildings, utilities, addresses and administrative boundaries.": "Działki, budynki, uzbrojenie, adresy i granice administracyjne.",
+      "Place\nnames": "Nazwy\nmiejscowości",
+      "Place names from PRNG.": "Nazwy miejscowości z PRNG.",
+      "Polish Geodata": "Dane PL",
+      "Polish national geodetic data from GUGiK in one tab: orthophoto, BDOT10k, parcels, addresses, PRG boundaries, place names and hillshade as map layers; the national WFS catalogue through background download tools with progress and Cancel; a 1 m elevation model built from the area you point at; and a ULDK parcel lookup at the map centre.": "Polskie dane geodezyjne GUGiK w jednej zakładce: ortofoto, BDOT10k, działki, adresy, granice PRG, nazwy miejscowości i cieniowanie NMT jako warstwy mapy; katalog krajowych usług WFS przez narzędzia pobierania działające w tle, z postępem i przerwaniem; model wysokości 1 m dla wskazanego obszaru; oraz działka z ULDK pod środkiem mapy.",
+      "Press Rectangle area to make one.": "Naciśnij Obszar prostokąt, aby go utworzyć.",
+      "Public offices, courts, schools, forests and other institutions.": "Urzędy, sądy, szkoły, nadleśnictwa i inne instytucje.",
+      "Raster": "Rastry",
+      "Reads the terrain model's height at the map centre, or at x/y given in PL-1992. PL-KRON86-NH, in metres above sea level.": "Odczytuje wysokość modelu terenu pod środkiem mapy albo pod x/y w PL-1992. PL-KRON86-NH, w metrach nad poziomem morza.",
+      "Rectangle\narea": "Obszar\nprostokąt",
+      "Refresh the panel": "Odśwież panel",
+      "Register\nEZiUDP": "Rejestr\nEZiUDP",
+      "Removes the area layer, so the next rectangle or drawn shape starts empty.": "Usuwa warstwę obszaru, żeby następny prostokąt albo rysowany kształt zaczynał od zera.",
+      "Searches the national register of spatial data sets and services: which body holds what, and the address of its WMS, WFS and CSW. Narrows the register, never dumps it.": "Przeszukuje krajową ewidencję zbiorów i usług danych przestrzennych: kto co ma i pod jakim adresem są jego WMS, WFS i CSW. Zawęża rejestr, nigdy nie pobiera go całego.",
+      "Shades the newest elevation model again. Pass colours to band the heights instead.": "Ponownie cieniuje najnowszy model wysokości. Podaj colours, aby pokazać wysokości w barwach.",
+      "Statistics, ASG-EUPOS, archiving, elections and the rest.": "Statystyki, ASG-EUPOS, archiwizacja, wybory i pozostałe.",
+      "Stored answers": "Zapisane odpowiedzi",
+      "Style the model": "Stylizuj model",
+      "Surface\nNMPT": "Pokrycie\nNMPT",
+      "Terrain\nEVRF2007": "Teren\nEVRF2007",
+      "Terrain\nKRON86": "Teren\nKRON86",
+      "The 1 m elevation model of the area, as GeoTIFF or ASCII grid.": "Model wysokości 1 m dla obszaru, jako GeoTIFF albo siatka ASCII.",
+      "The GUGiK feature type to download.": "Typ obiektów GUGiK do pobrania.",
+      "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time.": "Odpowiedzi są trzymane 7 dni, więc powtórne pobranie nic nie kosztuje. Zaznacz, aby następnym razem pobrać świeże dane.",
+      "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download.": "Warstwa, której zasięg jest pobierany. Narysuj ją przyciskiem Obszar prostokąt albo wskaż własną warstwę; zaznaczenie na niej zawęża pobieranie.",
+      "The map view, the area to download, the catalogue and the stored answers, with the buttons that act on them.": "Widok mapy, obszar pobierania, katalog i zapisane odpowiedzi oraz przyciski, które na nich działają.",
+      "The surface model, buildings and trees kept, in PL-KRON86-NH. An ASCII grid.": "Model pokrycia, z budynkami i drzewami, w PL-KRON86-NH. Siatka ASCII.",
+      "The terrain model in PL-EVRF2007-NH. GUGiK serves it as an ASCII grid, so one click covers less ground than the GeoTIFF.": "Model terenu w PL-EVRF2007-NH. GUGiK udostępnia go jako siatkę ASCII, więc jedno kliknięcie obejmuje mniejszy obszar niż GeoTIFF.",
+      "Tools": "Narzędzia",
+      "Topographic object database as an overlay (visible from city scale).": "Baza Danych Obiektów Topograficznych jako warstwa nakładkowa (widoczna od skali miasta).",
+      "Topographic, landscape, archival and thematic maps.": "Mapy topograficzne, krajobrazowe, archiwalne i tematyczne.",
+      "Updates the panel: the view, the area layer, the catalogue and the stored answers.": "Odświeża panel: widok, warstwę obszaru, katalog i zapisane odpowiedzi.",
+      "Vector": "Wektory",
+      "WIG and German survey maps of the 19th and 20th centuries, as scans.": "Arkusze WIG i mapy niemieckie z XIX i XX wieku, jako skany.",
+      "WMS (view only)": "WMS (podgląd)",
+      "Zoom to Poland": "Przybliż do Polski"
+    }
+  },
+  "institutionMenus": {
+    "gugik-orto": {
+      "label": "Orthophoto and DEM",
+      "icon": "relief",
+      "help": "Orthophoto, elevation, vegetation and archive imagery."
+    },
+    "gugik-mapy": {
+      "label": "Maps",
+      "icon": "basemap",
+      "help": "Topographic, landscape, archival and thematic maps."
+    },
+    "gugik-kataster": {
+      "label": "Cadastre and boundaries",
+      "icon": "buffer",
+      "help": "Parcels, buildings, utilities, addresses and administrative boundaries."
+    },
+    "gugik-inne": {
+      "label": "Other GUGiK data",
+      "icon": "globe_view",
+      "help": "Statistics, ASG-EUPOS, archiving, elections and the rest."
+    },
+    "cartomatic": {
+      "label": "Historical maps",
+      "icon": "history",
+      "help": "WIG and German survey maps of the 19th and 20th centuries, as scans."
+    },
+    "pig": {
+      "label": "Geology (PIG)",
+      "icon": "relief",
+      "help": "Geological, hydrogeological and environmental maps of the Polish Geological Institute."
+    },
+    "nid": {
+      "label": "Heritage (NID)",
+      "icon": "bookmark",
+      "help": "Monuments, archaeological records and UNESCO sites."
+    },
+    "lasy": {
+      "label": "Forests (BDL)",
+      "icon": "label",
+      "help": "Forest data of the State Forests' Bank of Forest Data."
+    },
+    "other": {
+      "label": "Other institutions",
+      "icon": "globe_view",
+      "help": "GDOŚ, PKP PLK, GUS, PGW Wody Polskie and IMGW-PIB."
+    }
+  }
+}

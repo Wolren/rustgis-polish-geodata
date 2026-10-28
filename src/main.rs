@@ -1,27 +1,31 @@
 //! Polish Geodata: GUGiK data in RustGIS.
 //!
 //! A process plugin: RustGIS starts this program once per command or tool call and writes the
-//! request on standard input, with the interface language as `lang`. Map layers and the parcel
-//! lookup are commands; the download is a tool, so it runs in the background (with progress and
-//! Cancel) instead of freezing the window.
+//! request on standard input, with the interface language as `lang`.
+//!
+//! Commands only do things that finish at once: a map layer, a drawn area, a parcel lookup. A
+//! command holds the interface while it runs, so nothing that downloads belongs in one. The WFS
+//! download is a tool: it runs in the background with progress and Cancel.
 
 mod cache;
 mod catalog;
 mod clip;
 mod filter;
+mod eziudp;
 mod gk92;
 mod gml;
 mod host;
 mod http;
+mod katalog;
 mod nmt;
 mod obszar;
-mod dane;
-mod services;
 mod panel;
+mod services;
 mod text;
 mod tile;
 mod tm;
 mod tool;
+mod uug;
 mod uldk;
 mod wfs;
 
@@ -64,19 +68,27 @@ fn main() {
     }
 }
 
-fn run(request: &Value, id: &str, params: &Value, host: &mut host::Host, lang: Lang) -> Result<Value, String> {
+fn run(
+    request: &Value,
+    id: &str,
+    params: &Value,
+    host: &mut host::Host,
+    lang: Lang,
+) -> Result<Value, String> {
     if let Some(overlay) = catalog::overlay(id) {
         return tile::toggle(host, overlay, lang);
     }
     match id {
-        "obszar-rysuj" => obszar::draw(host, lang, obszar::Mode::Rectangle),
-        "obszar-poligon" => obszar::draw(host, lang, obszar::Mode::Polygon),
-        "obszar-linia" => obszar::draw(host, lang, obszar::Mode::Line),
-        "obszar-widok" => obszar::from_view(host, lang),
+        "obszar-rysuj" => obszar::draw(host, lang),
+        "obszar-widok" => obszar::rectangle_from_view(host, lang),
         "obszar-anuluj" => obszar::abort(host, lang),
-        "usluga" => services::toggle(host, lang, request),
+        "obszar-wyczysc" => obszar::clear(host, lang),
         other if other.starts_with("usluga-") => services::toggle(host, lang, request),
-        other if other.starts_with("dane-") => dane::add(host, lang, request, other),
+        "katalog" => katalog::run(params, lang),
+        "eziudp" => eziudp::search(params, lang),
+        "geokoduj" => uug::geocode(host, params, lang),
+        "wysokosc" => uug::height(host, params, lang),
+        "dzialka-id" => uldk::parcel_by_id(host, params, lang),
         "panel-state" => panel::state(host, lang, request),
         "dem" => nmt::add(host, lang, request, nmt::Kind::TerrainKron),
         "dem-evr" => nmt::add(host, lang, request, nmt::Kind::TerrainEvrf),
@@ -93,11 +105,18 @@ fn run(request: &Value, id: &str, params: &Value, host: &mut host::Host, lang: L
 /// Cuts a layer to the area boundary. With no layer named it takes the newest one, so an agent
 /// can call it straight after a download without having to name the layer.
 fn cut(host: &mut host::Host, params: &Value, lang: Lang) -> Result<Value, String> {
-    let area = match params.get("obszar").and_then(Value::as_str).filter(|s| !s.is_empty()) {
+    let area = match params
+        .get("obszar")
+        .and_then(Value::as_str)
+        .filter(|s| !s.is_empty())
+    {
         Some(named) => named.to_string(),
         None => clip::existing_area(host, lang)?,
     };
-    let named = params.get("layer").and_then(Value::as_str).unwrap_or_default();
+    let named = params
+        .get("layer")
+        .and_then(Value::as_str)
+        .unwrap_or_default();
     let layer = if named.is_empty() {
         clip::newest_layer(host, &area, lang)?
     } else {

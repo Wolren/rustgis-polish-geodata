@@ -1,8 +1,13 @@
-//! The download tool: a form in the Tools pane, with a dataset choice and an area layer.
+//! The download tools: a form in the Tools pane, with a dataset choice and an area layer.
 //!
-//! Tools run without access to the map (no host requests), so the area comes from a layer the
-//! user picks: its features' bounding box, or only its selected features, which RustGIS hands
-//! over. What the tool returns is added to the project by RustGIS, with undo.
+//! There is one tool per catalogue group, and nothing else downloads a WFS type: a command would
+//! hold the interface for the length of the download. The tools share this code; the group only
+//! decides which titles the form offers.
+//!
+//! Tools run without access to the map (no host requests), so the area is a layer the user names:
+//! its features' bounding box, or only its selected features, which RustGIS hands over. Nothing is
+//! inferred, so a click cannot take the whole country by surprise. What the tool returns is added
+//! to the project by RustGIS, with undo.
 
 use crate::cache;
 use crate::catalog;
@@ -17,6 +22,9 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
         .get("dane")
         .and_then(Value::as_str)
         .unwrap_or_default();
+    if label.trim().is_empty() {
+        return Err(text::pick_dataset(lang));
+    }
     let layer = catalog::wfs_by_label(label).ok_or_else(|| text::unknown_dataset(lang, label))?;
     let area = params
         .get("obszar")
@@ -28,8 +36,12 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     let (area, features_of_area) = match layers.and_then(|l| l.get(area)) {
         Some(found) => (area, found),
         None => {
-            let other = text::AREA_LAYERS.iter().find(|name| **name != area).copied();
-            match other.and_then(|name| layers.and_then(|l| l.get(name)).map(|found| (name, found))) {
+            let other = text::AREA_LAYERS
+                .iter()
+                .find(|name| **name != area)
+                .copied();
+            match other.and_then(|name| layers.and_then(|l| l.get(name)).map(|found| (name, found)))
+            {
                 Some((name, found)) => (name, found),
                 None => return Err(text::area_not_passed(lang, area)),
             }
@@ -43,7 +55,7 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
             area,
             bbox[2] - bbox[0],
             bbox[3] - bbox[1],
-            layer.name(lang),
+            layer.name,
             layer.max_span,
         ));
     }
@@ -61,12 +73,12 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
         wfs::fetch(layer, bbox, Some(features_of_area), &mut report, lang)?
     };
     if features.is_empty() {
-        return Err(text::no_features(lang, layer.name(lang)));
+        return Err(text::no_features(lang, layer.name));
     }
 
     let total = features.len();
     let collection = json!({ "type": "FeatureCollection", "features": features });
-    let mut messages = vec![text::count(lang, layer.name(lang), total)];
+    let mut messages = vec![text::count(lang, layer.name, total)];
     if truncated {
         messages.push(text::truncated(lang).to_string());
     }
@@ -76,7 +88,7 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
         }
     }
     Ok(json!({
-        "layers": [{ "name": layer.name(lang), "geojson": collection }],
+        "layers": [{ "name": layer.name, "geojson": collection }],
         "messages": messages
     }))
 }
@@ -148,9 +160,9 @@ mod tests {
         let request = |lang: &str| {
             json!({
                 "kind": "tool",
-                "id": "pobierz",
+                "id": "pobierz-adresy",
                 "lang": lang,
-                "params": { "dane": "Parcels (EGiB)", "obszar": "Area to download" },
+                "params": { "dane": "Działki", "obszar": "Area to download" },
                 "layers": {}
             })
         };

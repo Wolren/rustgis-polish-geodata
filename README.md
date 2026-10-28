@@ -1,124 +1,163 @@
 # Dane PL: polskie dane geodezyjne w RustGIS
 
-Wtyczka do [RustGIS](https://rustgis.app): jedna zakładka **Dane PL** z podkładami i danymi
-GUGiK, bez kluczy API i bez pośredników.
+Wtyczka do [RustGIS](https://rustgis.app): jedna zakładka **Dane PL** z podkładami, usługami i
+danymi GUGiK, bez kluczy API i bez pośredników.
+
+Zasada, która trzyma tę wtyczkę w kupie: **polecenie tylko pokazuje coś na mapie, a pobiera
+narzędzie.** Wstęga mówi to wprost nazwami grup: **WMS (podgląd)** tylko wyświetla, **Pobieranie**
+jako jedyne ściąga dane, **Wyszukiwanie** pyta usługę punktową, **Narzędzia** zmieniają projekt. Polecenie wykonuje się w wątku interfejsu, więc pobieranie jako polecenie zamrażało
+okno na czas transferu. Dlatego na wstędze nie ma już 108 przycisków pobierania: są pięć narzędzi
+w panelu Narzędzia, działających w tle, z postępem i przerwaniem.
 
 | Grupa | Przycisk | Co robi |
 | --- | --- | --- |
-| Podkłady | Ortofoto | Ortofotomapa WMTS (EPSG:3857) jako nakładka |
-| | Ortofoto Hi-Res | Ortofotomapa w wysokiej rozdzielczości (WMS) |
-| | BDOT10k | Baza Danych Obiektów Topograficznych (WMS, od skali miasta) |
-| | Działki (WMS) | Granice działek i budynków z KIEG (od skali ok. 1:5000) |
-| | Adresy | Punkty adresowe i ulice |
-| | Granice PRG | Państwo, województwa, powiaty, gminy, miasta |
-| | Nazwy miejscowości | PRNG |
-| | NMT cieniowanie | Cieniowanie numerycznego modelu terenu |
-| Obszar | **Obszar prostokąt** | Narzędzie poligonu na warstwie „Obszar pobierania”; po zbudowaniu modelu kształt zamienia się w prostokąt wokół narysowanych punktów |
-| | **Obszar poligon** | To samo narzędzie, ale kształt zostaje taki, jak narysowany |
-| | **Dwa narożniki** | Narzędzie linii: kliknij dwa przeciwległe narożniki, model obejmie prostokąt między nimi |
-| | **Obszar z widoku** | Kopiuje bieżący widok mapy do warstwy obszaru, bez rysowania |
-| | **Anuluj obszar** | Wyłącza narzędzie rysowania i wraca do przeglądania |
-| | **Usługi** | Osiem menu z katalogiem krajowym; nazwa usługi to osobne polecenie, drugie naciśnięcie zdejmuje ją z mapy |
-| Dane | **Pobierz dane…** | Narzędzie (panel Narzędzia): zestaw danych + warstwa obszaru, w tle z postępem i przerwaniem |
-| Wysokości | **Model terenu KRON86** | Model terenu 1 m (GeoTIFF) dla zaznaczonego obszaru |
-| | **Model terenu EVRF2007** | To samo w PL-EVRF2007-NH (siatka ASCII) |
-| | **Model pokrycia NMPT** | Model pokrycia 1 m, z budynkami i drzewami (siatka ASCII) |
-| | **Stylizuj model** | Cieniowanie najnowszego modelu, albo barwy |
-| Działka | Działka z ULDK | Działka pod środkiem mapy: geometria + atrybuty |
-| Narzędzia | **Przytnij do obszaru** | Tnie warstwę do granicy „Obszar pobierania”; bez argumentów bierze najnowszą warstwę |
-| | Wyczyść cache | Usuwa zapisane odpowiedzi WFS (domyślnie 7 dni) |
+| Podkłady | Rastry | Ortofoto (WMTS), Ortofoto Hi-Res (WMS), BDOT10k, cieniowanie NMT |
+| | Wektory | Działki (KIEG), Adresy, Granice PRG, Nazwy miejscowości |
+| **WMS (podgląd)** | GUGiK · Ortofoto i NMT | 20 usług — tylko podgląd na mapie |
+| | GUGiK · Mapy | 21 usług |
+| | GUGiK · Kataster i granice | 24 usługi |
+| | GUGiK · Pozostałe dane | 11 usług |
+| | Mapy historyczne | 11 arkuszy WIG i map niemieckich |
+| | Geologia (PIG) | 9 usług |
+| | Zabytki (NID) | 4 usługi |
+| | Lasy (BDL) | 4 usługi |
+| | Pozostałe instytucje | GDOŚ, PKP PLK, GUS, Wody Polskie, IMGW-PIB |
+| **Pobieranie** | Pięć narzędzi | Jedyne miejsce, które ściąga dane: adresy i budynki, granice, osnowy, urzędy, pozostałe |
+| **Wyszukiwanie** | Działka z ULDK | Działka pod środkiem mapy |
+| | Wysokość w punkcie | Wysokość NMT w PL-1992 (środek mapy albo x/y) |
+| Obszar | **Obszar prostokąt** | Prostokąt z widoku mapy: jedno kliknięcie, bez rysowania. Dokładnie to, co widać |
+| | Narysuj obszar | Narzędzie poligonu na warstwie „Obszar pobierania”; kształt zostaje taki, jak narysowany |
+| | Anuluj rysowanie | Wyłącza narzędzie rysowania i wraca do przeglądania |
+| | Wyczyść obszar | Usuwa warstwę „Obszar pobierania”, żeby zacząć od pustej |
+| Dane | **Pobieranie** | Pięć narzędzi: adresy i budynki, granice i jednostki, osnowy i pomiary, urzędy i sądy, pozostałe dane |
+| | Działka z ULDK | Działka pod środkiem mapy: geometria + atrybuty |
+| | Przytnij do obszaru | Tnie warstwę do granicy „Obszar pobierania” |
+| Wysokości | Model terenu KRON86 | Model terenu 1 m (GeoTIFF) dla wskazanego obszaru |
+| | Model terenu EVRF2007 | To samo w PL-EVRF2007-NH (siatka ASCII) |
+| | Model pokrycia NMPT | Model pokrycia 1 m, z budynkami i drzewami (siatka ASCII) |
+| | Stylizuj model | Cieniowanie najnowszego modelu, albo barwy |
+| Narzędzia | Panel | Panel z widokiem, obszarem, katalogiem i zapisanymi odpowiedziami |
+| | Przybliż do Polski | Cała Polska w widoku |
+| | Wyczyść cache | Usuwa zapisane odpowiedzi WFS i pobrane siatki wysokości |
+
+Łącznie: **130 poleceń** (21 własnych i 109 usług) i **5 narzędzi**. Wcześniej było 228 poleceń, z
+czego 108 pobierało dane natychmiast, blokując okno.
 
 ### Usługi krajowe
 
-Katalog obejmuje **97 usług WMS** z Geoportalu Krajowego i od innych instytucji: BDOT10k (w tym nowe
+Katalog obejmuje **109 usług WMS** z Geoportalu Krajowego i od innych instytucji: BDOT10k (w tym nowe
 budynki i statystyki), ortofotomapę prawdziwą, wysokiej rozdzielczości i archiwalną, cieniowanie
 NMT, hipsometrię NMT, EMUiA, PRG, PRNG, RCN, KIMPZP, ISOK, POLSA, osnowy, mapy geologiczne PIG,
 BDL Lasów Państwowych, zabytki NID i inne. Każda pozycja przeszła realne żądanie kafla, więc lista
 nie zawiera martwych adresów.
 
-Usługi stoją w grupie **Usługi** na wstędze, w czterech menu: Ortofoto i NMT, Mapy,
-Działki i plany, Instytucje.
-
-1. Otwórz grupę **Usługi** i wybierz menu, na przykład **Ortofoto i NMT**.
-2. Naciśnij nazwę usługi. Wjeżdża na mapę jako warstwa kafelkowa.
-3. Naciśnij ją drugi raz, aby zdjąć ją z mapy.
-
-Każda usługa to osobne polecenie, więc działa też wyszukiwarka poleceń: wpisz „cieniowanie”
-albo „ortofoto” i naciśnij wynik. Skrypt albo agent może podać nazwę wprost:
+Usługi stoją w dwóch grupach: **GUGiK** (cztery menu tematyczne) i **Instytucje** (pięć menu).
+Podział jest instytucjonalny, bo tak szukają danych użytkownicy: najpierw *kto publikuje*, potem
+*co*. Naciśnięcie nazwy wjeżdża na mapę jako warstwa
+kafelkowa, drugie naciśnięcie ją zdejmuje. Każda usługa to osobne polecenie, więc działa też
+wyszukiwarka poleceń: wpisz „cieniowanie” albo „ortofoto” i naciśnij wynik.
 
 ```
 run_command  plugin:dane-pl/usluga-cieniowanie-wms
-run_command  plugin:dane-pl/usluga  {"service": "Cieniowanie (WMS)"}
+run_command  plugin:dane-pl/usluga-ceny-nieruchomosci
 ```
 
-Listę buduje `tools/services.py`: czyta katalog usług, pobiera GetCapabilities, wybiera warstwy
-liści, sprawdza każdą kandydatkę żądaniem GetMap i zapisuje wynik do `data/services.json`. Ten plik
-jest wkompilowany w binarkę, więc wtyczka nie czyta capabilities w czasie działania. Lista tylko
-rośnie: usługa, która odpowiedziała w którymkolwiek przebiegu, zostaje.
+Osobne menu **Mapy historyczne** to jedenaście arkuszy z serwera Cartomatic: WIG 1:25 000,
+1:100 000, 1:300 000 i 1:500 000 oraz mapy niemieckie (Karte des Deutschen Reiches 1:100 000,
+Meßtischblätter 1:25 000, Übersichtskarte von Mitteleuropa 1:300 000). Każdy arkusz przeszedł
+realne żądanie kafla, tak jak reszta katalogu. Serwer podaje 110 warstw (plany miast, mapy
+katastralne), z których wybrano te jedenaście — reszta czeka na osobną decyzję.
 
 ### Dane z WFS
 
-Katalog obejmuje **108 typów WFS** z krajowych usług pobierania: adresy i ulice z KI NA, budynki
+Katalog obejmuje **268 typów WFS** z krajowych usług pobierania: adresy i ulice z KI NA, budynki
 i działki z EGiB, granice z PRG, osnowy, urzędy, sądy, kolej, obiekty morskie i statystyki BDOT.
 Każdy typ przeszedł realne żądanie GetFeature, więc lista nie zawiera martwych adresów.
 
-Typy stoją w grupie **Dane**, w pięciu menu: Adresy i budynki, Granice i jednostki,
-Osnowy i pomiary, Urzędy i sądy, Pozostałe dane.
+**106 z nich to dane mapowe** i te pokazują się w narzędziach pobierania. Pozostałe **162 to
+skorowidze** (arkusze i siatki, które wskazują paczki do pobrania z Geoportalu) — wtyczka ich nie
+pobiera, bo nie umie ściągać paczek, ale zostają w katalogu: skrypt może je wskazać po
+identyfikatorze, np. `dane-skorowidz-danych-pomiarowych-lidar-2024`.
 
-1. Wskaż obszar, na przykład przyciskiem **Narysuj obszar**.
-2. Otwórz grupę **Dane** i wybierz menu, na przykład **Adresy i budynki**.
-3. Naciśnij typ danych. Wtyczka pobiera obiekty z obszaru i wjeżdża nimi jako warstwa wektorowa.
+Pobieranie to **pięć narzędzi** w grupie **Dane › Pobieranie**. Każde ma listę swoich zestawów:
 
-Obszar bierze się z tej samej kolejności co dla modelu wysokości: argument `area`, zaznaczenie,
-warstwa „Obszar pobierania”, aktywna warstwa.
+| Narzędzie | Zestawy |
+| --- | --- |
+| Pobierz adresy i budynki | 19 |
+| Pobierz granice i jednostki | 24 |
+| Pobierz osnowy i pomiary | 21 |
+| Pobierz urzędy i sądy | 21 |
+| Pobierz pozostałe dane | 21 |
+
+1. Wskaż obszar: **Obszar prostokąt**, **Obszar z widoku** albo własna warstwa.
+2. Otwórz **Dane › Pobieranie** i wybierz grupę.
+3. W panelu Narzędzia wybierz zestaw i warstwę obszaru, naciśnij **Uruchom**.
+
+Narzędzie działa w tle: panel pokazuje postęp i ma przycisk przerwania. Wynik wjeżdża na mapę jako
+warstwa wektorowa, jednym krokiem cofania. Opcje w formularzu to tylko zestaw i warstwa obszaru —
+nic więcej nie trzeba ustawiać, bo nic więcej nie jest zgadywane.
+
+Skrypt albo agent uruchamia to samo przez `gp.run`:
+
+```
+run_tool  plugin:dane-pl/pobierz-adresy  {"dane": "Budynki", "obszar": "Obszar pobierania"}
+run_tool  plugin:dane-pl/pobierz-granice  {"dane": "A03_Granice_gmin", "obszar": "obszar"}
+```
 
 Typy spoza układu 4326 działają bez ustawień: wtyczka wysyła pierwsze żądanie we współrzędnych
 geograficznych, a gdy usługa odpowie pustą kolekcją, powtarza je w układzie 2180 i przelicza
 współrzędne z powrotem. Dotyczy to usługi adresowej KI NA.
 
-Skrypt albo agent może podać nazwę wprost:
+### Obszar: nic nie jest zgadywane
 
-```
-run_command  plugin:dane-pl/dane-punkty-adresowe
-run_command  plugin:dane-pl/dane-budynki    {"area": "Obszar pobierania"}
-```
+Narzędzie pobierania **wymaga warstwy obszaru**. Nie ma już łańcucha „aktywna warstwa, jej
+zaznaczenie, największe zaznaczenie w projekcie, warstwa obszaru, a w ostateczności cała aktywna
+warstwa”. To ostatnie ogniwo potrafiło pobrać województwo po kliknięciu w przycisk, a przedostatnie
+brało obszar z warstwy, której użytkownik nie widział.
+
+Model wysokości (polecenie, więc działa natychmiast) bierze obszar w tej kolejności:
+
+1. warstwa podana w argumencie `area`,
+2. zaznaczenie na aktywnej warstwie,
+3. warstwa „Obszar pobierania” z przycisku **Obszar prostokąt**,
+4. aktywna warstwa w całości.
+
+Zaznaczenie na innej warstwie nie jest brane pod uwagę. Zbyt duży obszar jest odrzucany z liczbami,
+zanim poleci jakiekolwiek żądanie.
+
+**Obszar prostokąt** to jedno kliknięcie: wtyczka bierze bieżący widok mapy i zapisuje go jako
+prostokąt na warstwie „Obszar pobierania”. Prostokąt jest dokładnie tym, co widać — żadnego
+rysowania i żadnego zgadywania. Chcesz inny obszar? Przybliż mapę i naciśnij ponownie.
+
+**Narysuj obszar** zostawia kształt taki, jak narysowany: klikaj narożniki i zakończ dwuklikiem
+(kliknięcie w pierwszy narożnik nie zamyka obwodu — tak działa narzędzie RustGIS), albo przerwij
+Escape. Pobieranie idzie za narysowanym kształtem. Model wysokości jest natomiast zawsze
+prostokątem, więc obejmuje prostokąt wokół kształtu i wtyczka mówi wtedy, jaki to prostokąt, a
+warstwa obszaru pokazuje go zamiast rysunku.
+
+To rozróżnienie jest jedyną prawdą, jaką wtyczka może powiedzieć: RustGIS rysuje obiekty
+edytowalne punkt po punkcie i nie ma narzędzia prostokąta (prostokąt „przeciągnij” istnieje tylko
+dla grafiki, nie dla warstwy wektorowej). Dlatego prostokąt bierze się z widoku, a nie z rysowania.
+
+**Wyczyść obszar** usuwa warstwę, więc kolejny prostokąt albo rysunek zaczyna od zera. Bez tego
+drugi rysunek dokłada kształt do istniejącego i obszar się powiększa.
 
 ### Przycinanie do granicy
 
 Filtr WFS zwraca **całe** obiekty, które dotykają obszaru i nie przycina ich. Dlatego po pobraniu
 uruchom **Przytnij do obszaru**: wywołuje wbudowane narzędzie Clip i zastępuje warstwę wersją
 przyciętą (jedna warstwa, nie dwie). Uchwyt `layer` jest opcjonalny: bez niego bierze najnowszą
-warstwę wektorową, więc po poleceniu „Pobierz dane…” wystarczy jedno kliknięcie.
+warstwę wektorową.
 
 Pomiar: 5586 działek przecinało obszar, po przycięciu zostało 5583, dla działek różnica jest
 mała, dla dróg i obiektów wielkości gminy duża.
 
 ### Model wysokości z obszaru
 
-Model powstaje z obszaru, który wskażesz, a nie z widoku mapy. Obszar bierze się z jednego z tych
-źródeł, w tej kolejności:
-
-1. warstwa podana w argumencie `area`,
-2. zaznaczenie na aktywnej warstwie,
-3. zaznaczenie na dowolnej warstwie (wygrywa największe),
-4. warstwa „Obszar pobierania” z przycisku **Narysuj obszar**,
-5. aktywna warstwa w całości.
-
-Zaznaczenie zawęża model do zaznaczonych obiektów, więc warstwa z wieloma poligonami daje model
-tylko dla tych, które zaznaczysz. Warstwa bez zaznaczenia to cały jej zasięg. Widok nie ma tu nic
-do rzeczy.
-
-Najkrótsza droga to **Obszar prostokąt**: jedno kliknięcie tworzy warstwę „Obszar pobierania”,
-ustawia ją jako aktywną i włącza narzędzie poligonu. Rysujesz obszar i naciskasz przycisk modelu.
-Po zbudowaniu modelu warstwa pokazuje prostokąt, który model naprawdę pokrywa: siatka WCS umie
-tylko prostokąt. **Obszar poligon** zostawia kształt, **Dwa narożniki** wystarcza na dwa kliknięcia,
-a **Obszar z widoku** bierze widok mapy. Ta sama warstwa jest obszarem dla **Pobierz dane…**
-i **Przytnij do obszaru**. Narzędzie rysowania wyłącza się samo po zbudowaniu modelu, więc kolejne
-kliknięcia na mapie przesuwają mapę, a nie dodają wierzchołki.
-
 Grupa **Wysokości** ma trzy pokrycia:
 
 | Przycisk | Pokrycie | Format |
+| --- | --- | --- |
 | Model terenu KRON86 | `DTM_PL-KRON86-NH_TIFF` | GeoTIFF |
 | Model terenu EVRF2007 | `DTM_PL-EVRF2007-NH` | siatka ASCII |
 | Model pokrycia NMPT | `DSM_PL-KRON86-NH` | siatka ASCII |
@@ -140,45 +179,6 @@ i 2,0 MB/s dla ASCII, zmierzonych przy tych samych próbach. Dla większego obsz
 albo pobierz kilka modeli obok siebie. Pobrane siatki ASCII zostają w
 `%LOCALAPPDATA%\RustGIS\dane-pl\dem`, a Wyczyść cache usuwa je razem z odpowiedziami WFS.
 
-
-### Sterowanie z agenta (MCP)
-
-Wtyczka jest dostępna przez MCP bez osobnej warstwy, bo RustGIS uruchamia ją jako polecenia
-i narzędzia geoprzetwarzania. Agent używa `run_command` i `run_tool`:
-
-```
-run_command  plugin:dane-pl/obszar-rysuj  {}
-run_tool     plugin:dane-pl/pobierz       {"dane":"Działki (EGiB)","obszar":"Obszar pobierania"}
-run_command  plugin:dane-pl/przytnij      {}
-run_command  plugin:dane-pl/dem           {"area":"działki"}
-```
-
-`describe_tool` i `search_tools` widzą wtyczkę po instalacji. `script.run` (łączenie kilku
-poleceń w jednym wywołaniu) jest zarezerwowane dla użytkownika i agent go nie użyje, dlatego
-`przytnij` działa bez argumentów.
-
-Kliknięcie podkładu drugi raz usuwa warstwę. Jeśli widok nie obejmuje Polski, wtyczka najpierw
-przybliża mapę do Polski, bo usługi GUGiK pokrywają tylko Polskę i poza nią zwracają puste kafle.
-
-Zakresy skalowe usług (sprawdzone na kaflach 256 i 512 px):
-
-| Warstwa | Widoczna od | Kafel |
-| --- | --- | --- |
-| BDOT10k | z13 | 512 px (kompozycja rysuje dopiero od tej skali) |
-| Działki (KIEG), Adresy | z15 | 256 px |
-| Ortofoto, PRG, PRNG, NMT | z0 | 256 px |
-
-### Pobieranie: dwa kliknięcia, bez zamrażania okna
-
-1. **Narysuj obszar**: wtyczka tworzy warstwę „Obszar pobierania”, ustawia ją jako aktywną i włącza narzędzie poligonu. Klikaj narożniki, zakończ dwuklikiem.
-2. **Pobierz dane…**: wybierz zestaw danych i warstwę obszaru, uruchom.
-
-Narzędzie działa **w tle** (panel Narzędzia pokazuje postęp i ma przycisk przerwania), bo
-polecenia wtyczek wykonują się w wątku interfejsu, a pobieranie jako polecenie zamrażało okno.
-
-Zamiast prostokąta można wskazać własną warstwę (np. wcześniej pobrane granice gminy); jeśli
-ma zaznaczenie, liczy się tylko zaznaczenie.
-
 ### Ile to trwa i ile waży
 
 GUGiK wysyła geometrię w pełnej rozdzielczości i ignoruje parametry uogólniania
@@ -189,12 +189,57 @@ GUGiK wysyła geometrię w pełnej rozdzielczości i ignoruje parametry uogólni
 | Województwa | 16 | 8 MB | ~10 s |
 | Powiaty | 380 | 42 MB | ~30 s |
 
-Dlatego obszar większy niż 1,5° jest dzielony na 4 części pobierane **równolegle**
-(ok. 2–3× szybciej), a duplikaty z sąsiednich części są usuwane po `gml:id` lub zasięgu
-geometrii. Do samego tła kartograficznego w całej Polsce lepiej użyć nakładki **Granice PRG**
-(WMS), bo jest natychmiastowa.
+Dlatego obszar większy niż 1,5° jest dzielony na 4 części pobierane **równolegle** (ok. 2–3×
+szybciej), a duplikaty z sąsiednich części są usuwane po `gml:id` lub zasięgu geometrii. Do samego
+tła kartograficznego w całej Polsce lepiej użyć nakładki **Granice PRG** (WMS), bo jest natychmiastowa.
 
 Limity: działki i budynki do **0,15°**, granice administracyjne do **20°**, maks. 6000 obiektów.
+
+## Sterowanie z agenta (MCP)
+
+Wtyczka jest dostępna przez MCP bez osobnej warstwy, bo RustGIS uruchamia ją jako polecenia
+i narzędzia geoprzetwarzania. Agent używa `run_command` i `run_tool`:
+
+```
+run_command  plugin:dane-pl/obszar-widok  {}
+run_tool     plugin:dane-pl/pobierz-granice  {"dane": "A03_Granice_gmin", "obszar": "Obszar pobierania"}
+run_command  plugin:dane-pl/przytnij  {}
+run_command  plugin:dane-pl/dem  {"area": "obszar"}
+```
+
+Cztery polecenia pytają usługi GUGiK wprost i są przede wszystkim dla agentów (na wstędze jest
+tylko Wysokość w punkcie, bo reszta potrzebuje argumentu, którego nie ma gdzie wpisać):
+
+```
+run_command  plugin:dane-pl/geokoduj    {"adres": "Poznań, Głogowska 10"}
+run_command  plugin:dane-pl/wysokosc    {"x": 357873, "y": 506191}
+run_command  plugin:dane-pl/dzialka-id  {"id": "306401_1.0001.14/4"}
+run_command  plugin:dane-pl/eziudp      {"instytucja": "Geolog"}
+```
+
+- **Geokoduj** — UUG GUGiK, `services.gugik.gov.pl/uug`, JSON; dodaje punkt z miejscowością,
+  ulicą, numerem, kodem i pozycją PL-1992.
+- **Wysokość w punkcie** — `services.gugik.gov.pl/nmt`, `GetHByXY`, PL-KRON86-NH.
+- **Działka z numeru** — ULDK `GetParcelById`, identyfikator w postaci `TERYT_R.OBRĘB.NUMER/ARK`.
+- **Rejestr EZiUDP** — `integracja.gugik.gov.pl/eziudp/api.php?format=json`: kto zgłasza jaki
+  zbiór i pod jakim adresem są jego WMS, WFS i CSW. Bez filtra rejestr ma 12 000 rekordów i 9 MB,
+  więc polecenie **odmawia** i prosi o zawężenie, zamiast go pobierać.
+
+Agent zaczyna od katalogu, więc nie musi czytać manifestu:
+
+```
+run_command  plugin:dane-pl/katalog  {}
+run_command  plugin:dane-pl/katalog  {"instytucja": "pig"}
+run_command  plugin:dane-pl/katalog  {"szukaj": "geolog"}
+```
+
+Odpowiedź to `services` (identyfikator polecenia, nazwa, instytucja, menu), `datasets`
+(identyfikator, tytuł, narzędzie, limit obszaru), `indexes` (skorowidze) oraz `counts`.
+Identyfikatory z tej odpowiedzi są dokładnie tymi, które przyjmuje `run_command` i `gp.run`.
+
+`describe_tool` i `search_tools` widzą wtyczkę po instalacji. `script.run` (łączenie kilku
+poleceń w jednym wywołaniu) jest zarezerwowane dla użytkownika i agent go nie użyje, dlatego
+`przytnij` działa bez argumentów.
 
 ## Dlaczego proces, a nie WebAssembly
 
@@ -206,6 +251,52 @@ GIS Support*).
 
 Wtyczka procesowa **nie jest sandboxowana**: instalując ją, świadomie uruchamiasz program.
 Nie wymaga Pythona ani GDAL-a: to jeden statyczny plik `.exe`.
+
+## Języki
+
+Wtyczka mówi dwoma językami: angielskim (baza) i polskim (tłumaczenie). Innych nie ma i nie
+będzie: kod języka innego niż `pl` daje angielski.
+
+- **Tekst interfejsu**: angielski w polach manifestu, polski w `i18n.pl`. Obejmuje `name`,
+  `description`, etykiety i podpowiedzi poleceń, nazwy i opisy narzędzi, etykiety parametrów,
+  zakładkę, grupy, menu, panel oraz wartości `choices`.
+- **Tekst w czasie działania**: `src/text.rs`. Każde zdanie ma tam wersję angielską i polską,
+  a wybiera ją `lang` z żądania. Dotyczy to meldunków, nazw warstw, postępu pobierania, błędów
+  HTTP, błędów protokołu i komunikatów ULDK.
+- **Liczebniki**: polskie formy są obsłużone (1 obiekt, 3 obiekty, 12 obiektów), angielskie też
+  (1 feature, 3 features).
+- **Nazwy zestawów danych zostają polskie w obu językach**: „Działki”, „Budynki”, „Ceny
+  nieruchomości” to nazwy własne zbiorów GUGiK, nie słowa do tłumaczenia. Tłumaczone jest to, co
+  wtyczka mówi od siebie: przyciski, menu, błędy, postęp.
+- **`choices`**: wartością jest polska nazwa zestawu, a kod przyjmuje też identyfikator i nazwę
+  typu, więc zapisane wywołanie działa niezależnie od języka interfejsu.
+
+`rustgis-cli` zawsze wysyła `lang: "en"`, bo język ustawia tylko aplikacja z interfejsem. Wersję
+polską sprawdza się na poziomie protokołu: podaj żądanie z `"lang": "pl"` na standardowe wejście
+razem z odpowiedziami gospodarza.
+
+## Katalog i manifest
+
+`data/services.json` i `data/wfs.json` to katalogi. `plugin.json` jest z nich **generowany**:
+
+```powershell
+python tools/manifest.py            # zapisuje plugin.json
+python tools/manifest.py --check    # kończy się kodem 1, gdy plik jest nieaktualny
+```
+
+Warstwa redakcyjna (co jest przyciskiem, w której grupie i menu, jak brzmią zdania, tłumaczenia)
+siedzi w `tools/manifest.base.json`. Generator rozwija listy zestawów w `choices` narzędzi i
+dokłada po jednym poleceniu na usługę WMS.
+
+Przynależność do instytucji siedzi w `data/services.json` (`institution`, a dla GUGiK
+`institutionMenu`), a nie w manifeście: nowa usługa trafia do właściwego menu sama. Klasy
+menu (nazwa, ikona, podpowiedź) są w `tools/manifest.base.json`.
+
+Ręcznie pisany manifest rozjechał się z katalogami: 162 z 270 typów WFS nie miało żadnego
+polecenia, 211 poleceń niosło klucz `command`, którego gospodarz nie czyta (czyta `params`), a dwie
+osnowy występowały pod jednym tytułem. Teraz brak zestawu w grupie albo nieznany identyfikator
+w grupie zatrzymuje budowę manifestu, a test `the_download_tools_offer_every_dataset_exactly_once`
+pilnuje tego samego od strony Rusta.
 
 ## Budowanie
 
@@ -224,7 +315,7 @@ Pakowanie jest osobnym crate'em `packaging/`, w całości w Rust. Tworzy on:
 | Plik | Co to |
 | --- | --- |
 | `dist\dane-pl\` | folder wtyczki (do ładowania w trakcie pracy) |
-| `dist\dane-pl-0.1.0.rgplugin` | paczka do instalacji i publikacji |
+| `dist\dane-pl-0.6.0.rgplugin` | paczka do instalacji i publikacji |
 | `dist\dane-pl.json` | wpis do rejestru w formacie, który przyjmuje `rustgis-plugins` |
 
 Paczka jest **deterministyczna**: wpisy w archiwum są posortowane, znaczniki czasu stałe, prawa
@@ -237,53 +328,25 @@ Trzy platformy buduje `.github/workflows/release.yml` na tagu `v*`: Windows (`da
 Workflow pakuje je razem, sprawdza, że drugi przebieg daje ten sam SHA-256, i dołącza `.rgplugin`
 oraz wpis rejestru do wydania.
 
-## Języki
-
-Wtyczka mówi dwoma językami: angielskim (baza) i polskim (tłumaczenie). Innych nie ma i nie
-będzie: kod języka innego niż `pl` daje angielski.
-
-- **Tekst manifestu**: angielski w polach, polski w `i18n.pl`. Obejmuje `name`, `description`,
-  etykiety i podpowiedzi poleceń, nazwę i opis narzędzia, etykiety parametrów, zakładkę, grupy
-  oraz wartości `choices`. Dzięki temu interfejs angielski pokazuje angielskie nazwy, a polski
-  polskie (RustGIS tłumaczy nazwę i opis wtyczki przez `i18n`).
-- **Tekst w czasie działania**: `src/text.rs`. Każde zdanie ma tam wersję angielską i polską,
-  a wybiera ją `lang` z żądania. Dotyczy to meldunków, nazw warstw, postępu pobierania, błędów
-  HTTP, błędów protokołu i komunikatów ULDK.
-- **Liczebniki**: polskie formy są obsłużone (1 obiekt, 3 obiekty, 12 obiektów), angielskie też
-  (1 feature, 3 features).
-- **Nazwy warstw**: warstwa dodana po polsku nosi polską nazwę, po angielsku angielską. Warstwa
-  dodana w jednym języku jest rozpoznawana także po przełączeniu na drugi, więc `przytnij` i
-  `obszar-widok` działają dalej.
-- **`choices`**: wartości są angielskie, a polskie etykiety siedzą w `i18n.pl`. Kod przyjmuje
-  nazwę zestawu w obu językach i po identyfikatorze, więc zapisane wywołanie narzędzia działa
-  niezależnie od języka interfejsu.
-
-`rustgis-cli` zawsze wysyła `lang: "en"`, bo język ustawia tylko aplikacja z interfejsem. Wersję
-polską sprawdza się na poziomie protokołu: podaj żądanie z `"lang": "pl"` na standardowe wejście
-razem z odpowiedziami gospodarza.
-
 ## Zgodność z rejestrem
 
 - `runtime: "process"`, bez `entry`; `run` wskazuje osobną binarkę na każdą platformę
   (`windows`, `macos`, `linux`) i każda z nich jest w paczce.
-- Uprawnienia zminimalizowane do `edit` i `network`. `files` nie jest potrzebne: wtyczka nie
-  używa poleceń gospodarza czytających pliki użytkownika, a własny cache trzyma poza RustGIS.
-- Ikony to nazwy ikon RustGIS (`basemap`, `buffer`, `bookmark`, `label`, `relief`); nieznana nazwa
-  dawałaby puzzel.
-- Tekst manifestu jest po angielsku, a polski siedzi w `i18n.pl` (łącznie z `name` i
-  `description`, które rejestr kopiuje do `registry.json`). Dlatego interfejs angielski pokazuje
-  angielskie nazwy, a polski polskie.
-- `choices` w narzędziu zostają po polsku, bo kod dopasowuje je po wartości; tłumaczenie ich
-  w `i18n` zmieniłoby wartość podawaną wtyczce.
+- Uprawnienia: `edit`, `network` i `files`. `files` jest potrzebne, bo siatki ASCII wysokości
+  wchodzą na mapę przez `layer.addData` z `path`; `network` przez `map.addTiles` i `layer.addUrl`.
+- Ikony to nazwy ikon RustGIS (`basemap`, `buffer`, `bookmark`, `label`, `relief`, `erase`,
+  `g_rect`, `polygon_tool`, `line_tool`, `globe_view`, `table`, `map`, `zoom_world`, `history`);
+  nieznana nazwa dawałaby puzzel.
+- `params` każdego polecenia opisuje jego argumenty dla skryptów i agentów; wcześniej ten opis
+  leżał w kluczu `command`, który gospodarz ignoruje.
 - Wpis rejestru ma kształt wymagany przez `rustgis-plugins`: `id`, `source.url`, `source.sha256`
   i `categories`.
-
 
 ## Próba bez instalacji
 
 ```powershell
 rustgis-cli run --plugin .\dist\dane-pl --sample `
-  --cmd 'plugin:dane-pl/dzialki={"bbox":[18.76,52.00,18.79,52.02]}'
+  --cmd 'plugin:dane-pl/obszar-widok={}'
 ```
 
 W aplikacji: **Plugins › Plugin Manager › Settings › Add Plugin Folder…** i wskaż
@@ -293,7 +356,7 @@ W aplikacji: **Plugins › Plugin Manager › Settings › Add Plugin Folder…*
 
 Dane: Główny Urząd Geodezji i Kartografii, [geoportal.gov.pl](https://www.geoportal.gov.pl),
 udostępniane nieodpłatnie. Przy każdej warstwie ustawiana jest atrybucja
-„GUGiK · geoportal.gov.pl”. Wtyczka nie pośredniczy w danych i nie cache'uje ich poza RustGIS.
+„GUGiK · geoportal.gov.pl”. Wtyczka nie pośredniczy w danych.
 
 | Usługa | Adres |
 | --- | --- |
@@ -313,8 +376,14 @@ udostępniane nieodpłatnie. Przy każdej warstwie ustawiana jest atrybucja
 - Narzędzie tnie po **zasięgu (bbox)** warstwy obszaru; nie przycina geometrii do jej poligonów.
 - Limit obiektów: 6000 na pobranie (po 4 strony równolegle, po 500 obiektów). Większy obszar =
   komunikat o przerwaniu.
-- Brak pobierania paczek LAZ / NMT / ortofoto na dysk (to materiał na wersję 2).
+- Skorowidzów (162 typy) nie da się pobrać: to indeksy paczek, nie dane mapowe.
+- Brak pobierania paczek LAZ / NMT / ortofoto na dysk (to materiał na kolejną wersję).
 - WFS GUGiK nie ma GeoJSON-u, więc konwersja jest lokalna; geometrie inne niż
   Point/LineString/Polygon i ich wersje multi nie są obsługiwane.
 - ULDK przyjmuje tylko EPSG:2180, więc wtyczka sama rzutuje współrzędne (Transverse Mercator,
   zgodność z PROJ na poziomie < 1 mm dla punktu testowego).
+- Prostokąta nie da się narysować przeciągnięciem: RustGIS nie ma narzędzia prostokąta dla
+  warstw edytowalnych. Prostokąt bierze się z widoku (**Obszar prostokąt**), a rysowanie zostawia
+  kształt, jaki narysujesz.
+- Wtyczka nie dodaje pozycji do menu kontekstowego mapy: manifest RustGIS 0.4 nie ma na to pola.
+  Pobieranie idzie więc przez grupę **Dane › Pobieranie**, a nie spod prawego przycisku.

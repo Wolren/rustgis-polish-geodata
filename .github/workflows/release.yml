@@ -78,6 +78,12 @@ jobs:
           pattern: binary-*
           merge-multiple: true
 
+      - name: test
+        run: cargo test --locked
+
+      - name: check the manifest
+        run: python3 tools/manifest.py --check
+
       - name: make the package
         run: |
           chmod +x dist/bin/dane-pl-linux dist/bin/dane-pl-macos
