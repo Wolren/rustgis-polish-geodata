@@ -341,12 +341,20 @@
         ]
       },
       {
+        "label": "Area",
+        "items": [
+          "obszar-widok",
+          "obszar-rysuj",
+          "obszar-anuluj",
+          "obszar-wyczysc"
+        ]
+      },
+      {
         "label": "Tools",
         "items": [
           "panel",
           "przytnij",
           "zoom-polska",
-          "wyczysc-cache",
           "katalog"
         ]
       },
@@ -365,6 +373,16 @@
         ]
       },
       {
+        "label": "Downloads",
+        "items": [
+          "tool:pobierz-adresy",
+          "tool:pobierz-granice",
+          "tool:pobierz-osnowy",
+          "tool:pobierz-urzedy",
+          "tool:pobierz-pozostale"
+        ]
+      },
+      {
         "label": "Elevation",
         "items": [
           {
@@ -378,25 +396,6 @@
             ]
           },
           "dem-style"
-        ]
-      },
-      {
-        "label": "Area",
-        "items": [
-          "obszar-widok",
-          "obszar-rysuj",
-          "obszar-anuluj",
-          "obszar-wyczysc"
-        ]
-      },
-      {
-        "label": "Downloads",
-        "items": [
-          "tool:pobierz-adresy",
-          "tool:pobierz-granice",
-          "tool:pobierz-osnowy",
-          "tool:pobierz-urzedy",
-          "tool:pobierz-pozostale"
         ]
       },
       {
