@@ -24,6 +24,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = os.path.join(ROOT, "tools", "manifest.base.json")
 SERVICES = os.path.join(ROOT, "data", "services.json")
 WFS = os.path.join(ROOT, "data", "wfs.json")
+WODY = os.path.join(ROOT, "data", "wody.json")
 OUT = os.path.join(ROOT, "plugin.json")
 
 # The host's limits (docs/plugins.md, "plugin.json").
@@ -124,6 +125,44 @@ def build():
         )
     commands.extend(sorted(service_commands, key=lambda c: c["id"]))
 
+    # Wody Polskie: one command per service, its 900-odd layers behind the `warstwa` parameter.
+    wody = load(WODY)
+    wody_commands = []
+    for service in wody:
+        for key in ("id", "name", "url", "menu", "default", "layers"):
+            if key not in service:
+                raise Bad(f"data/wody.json: {service.get('id', '?')} has no '{key}'")
+        if not service["layers"]:
+            raise Bad(f"data/wody.json: {service['id']} has no layer")
+        default = next(
+            (layer for layer in service["layers"] if layer["id"] == service["default"]), None
+        )
+        if default is None:
+            raise Bad(f"data/wody.json: {service['id']} default is not one of its layers")
+        if service["menu"] not in base.get("wodyMenus", {}):
+            raise Bad(f"data/wody.json: {service['id']} names an unknown menu {service['menu']}")
+        wody_commands.append(
+            {
+                "id": service["id"],
+                "label": service["name"],
+                "icon": "basemap",
+                "help": (
+                    f"{len(service['layers'])} warstw · domyślnie: {default['name']} · "
+                    "inne warstwy przez parametr warstwa"
+                ),
+                "params": json.dumps(
+                    {
+                        "warstwa": (
+                            "layer name or id, comma-separated (optional; "
+                            f"default: {default['name']})"
+                        )
+                    },
+                    ensure_ascii=False,
+                ),
+            }
+        )
+    commands.extend(sorted(wody_commands, key=lambda c: c["id"]))
+
     ids = [c["id"] for c in commands]
     for command_id in ids:
         if not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", command_id):
@@ -160,6 +199,21 @@ def build():
     if stale:
         raise Bad(f"menu '{stale[0]}' has no service in the catalogue")
 
+    # The Wody Polskie menus group their services the same way, from the menu each service names.
+    by_wody_menu = {}
+    for service in wody:
+        by_wody_menu.setdefault(service["menu"], []).append(service["id"])
+    for key, cmds in by_wody_menu.items():
+        meta = base["wodyMenus"][key]
+        if not 1 <= len(cmds) <= MAX_MENU_ITEMS:
+            raise Bad(
+                f"menu {meta['label']}: {len(cmds)} entries, the host allows {MAX_MENU_ITEMS}"
+            )
+        menus[key] = {**meta, "items": sorted(cmds)}
+    stale_wody = [key for key in base["wodyMenus"] if key not in by_wody_menu]
+    if stale_wody:
+        raise Bad(f"menu '{stale_wody[0]}' has no service in the Wody catalogue")
+
     known = (
         set(ids)
         | {f"tool:{t['id']}" for t in tools}
@@ -170,7 +224,11 @@ def build():
         raise Bad(f"{len(tab['groups'])} tab groups, the host allows 1 to {MAX_GROUPS}")
     for group in tab["groups"]:
         if "menus" in group:
-            group["items"] = [{"menuRef": key} for key in group["menus"]]
+            # A group may hold plain commands as well as menus: the Wody group lists the layer
+            # command first and its four menus after it.
+            group["items"] = list(group.get("items", [])) + [
+                {"menuRef": key} for key in group["menus"]
+            ]
         if not 1 <= len(group["items"]) <= MAX_GROUP_ITEMS:
             raise Bad(f"group {group['label']}: {len(group['items'])} items")
         resolved = []
@@ -243,8 +301,9 @@ def interface_strings(manifest):
                 if item.get("help"):
                     strings.add(item["help"])
     for command in manifest["commands"]:
-        # A service's label is its official GUGiK name, the same in both languages.
-        if command["id"].startswith("usluga-"):
+        # A service's label is its official name, the same in both languages, and a Wody
+        # service's help is a fact line: how many layers, and which one is the default.
+        if command["id"].startswith(("usluga-", "wody-")):
             continue
         strings.add(command["label"])
         if command.get("help"):

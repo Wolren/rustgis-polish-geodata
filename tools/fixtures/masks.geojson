@@ -1,0 +1,37 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "west" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [21.0040, 52.2350],
+            [21.0080, 52.2350],
+            [21.0080, 52.2410],
+            [21.0040, 52.2410],
+            [21.0040, 52.2350]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "east" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [21.0090, 52.2350],
+            [21.0140, 52.2350],
+            [21.0140, 52.2410],
+            [21.0090, 52.2410],
+            [21.0090, 52.2350]
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -143,8 +143,11 @@ pub fn add(host: &mut Host, lang: Lang, request: &Value, kind: Kind) -> Result<V
         resolved_name(host, &wanted)
     };
 
-    let look = look(&name, colours(request));
-    let styled = host.call("raster.symbology", look).is_ok();
+    let look = look_of(request);
+    let styled = host.call("raster.symbology", look_json(&name, look)).is_ok();
+    // Styling draws the heights; the terrain call is what lets a tilted scene stand on them.
+    let terrain = set_terrain(host, &name, request);
+    let heights = height_range(host, &name);
     tidy(host, &source, boxes.lon);
     host.notify(&text::nmt_added(
         lang,
@@ -153,7 +156,9 @@ pub fn add(host: &mut Host, lang: Lang, request: &Value, kind: Kind) -> Result<V
         (width, height),
         megabytes,
         &source,
-        colours(request),
+        look.name(),
+        terrain,
+        heights,
     ));
     // A model is a rectangle: when the area was drawn as something else, say which rectangle it
     // turned into, because the layer now shows that box instead of the shape.
@@ -167,12 +172,15 @@ pub fn add(host: &mut Host, lang: Lang, request: &Value, kind: Kind) -> Result<V
         "datum": kind.datum(),
         "format": if kind.tiff() { "GeoTIFF" } else { "ASCII grid" },
         "resolution": 1,
+        "heights": heights.map(|(min, max)| json!({ "min": min, "max": max })),
         "width": width,
         "height": height,
         "box": [x0, y0, x0 + i64::from(width), y0 + i64::from(height)],
         "megabytes": megabytes.round(),
         "styled": styled,
-        "look": if colours(request) { "colours" } else { "shading" },
+        "terrain": terrain,
+        "look": look.name(),
+        "exaggeration": exaggeration(request),
     }))
 }
 
@@ -198,33 +206,116 @@ pub fn style(host: &mut Host, lang: Lang, request: &Value) -> Result<Value, Stri
     } else {
         named.to_string()
     };
-    host.call("raster.symbology", look(&layer, colours(request)))?;
-    host.notify(&text::nmt_styled(lang, &layer, colours(request)));
-    Ok(json!({ "layer": layer, "look": if colours(request) { "colours" } else { "shading" } }))
+    let look = look_of(request);
+    host.call("raster.symbology", look_json(&layer, look))?;
+    host.notify(&text::nmt_styled(lang, &layer, look.name()));
+    Ok(json!({ "layer": layer, "look": look.name() }))
 }
 
-/// A shaded relief shows the ground's shape, which is what a model is for. Colours are the second
-/// choice, and they band by equal intervals: quantiles bunch on flat ground.
-fn look(layer: &str, colours: bool) -> Value {
-    if colours {
-        json!({
-            "layer": layer, "type": "classify", "classes": 12,
-            "ramp": "terrain", "method": "equalinterval"
-        })
-    } else {
-        json!({
-            "layer": layer, "type": "shadedRelief", "band": 1,
-            "azimuth": 315, "altitude": 45, "grey": true
-        })
+/// How the model is drawn. Heights read best as a hypsometric tint: a grey relief hides the very
+/// numbers the model carries, and in a tilted 3D scene it looks like a photograph of the ground
+/// rather than the ground itself.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum Look {
+    /// Continuous colours by height, the default.
+    Colours,
+    /// A dozen bands of equal height, for reading contour-like steps.
+    Classes,
+    /// A grey hillshade, for the shape of the ground alone.
+    Shading,
+}
+
+impl Look {
+    pub fn name(self) -> &'static str {
+        match self {
+            Look::Colours => "colours",
+            Look::Classes => "classes",
+            Look::Shading => "shading",
+        }
     }
 }
 
-fn colours(request: &Value) -> bool {
+/// The look a request asks for: `look`, or the older `colours` flag, else colours.
+pub fn look_of(request: &Value) -> Look {
+    let params = request.get("params");
+    if let Some(named) = params.and_then(|p| p.get("look")).and_then(Value::as_str) {
+        return match named.to_ascii_lowercase().as_str() {
+            "shading" | "hillshade" => Look::Shading,
+            "classes" | "classify" | "bands" => Look::Classes,
+            _ => Look::Colours,
+        };
+    }
+    match params.and_then(|p| p.get("colours")).and_then(Value::as_bool) {
+        // `colours: true` banded the heights; it keeps meaning that.
+        Some(true) => Look::Classes,
+        Some(false) => Look::Shading,
+        None => Look::Colours,
+    }
+}
+
+fn exaggeration(request: &Value) -> Option<f64> {
     request
         .get("params")
-        .and_then(|params| params.get("colours"))
+        .and_then(|params| params.get("exaggeration"))
+        .and_then(Value::as_f64)
+        .filter(|value| (0.0..=20.0).contains(value))
+}
+
+fn terrain_wanted(request: &Value) -> bool {
+    request
+        .get("params")
+        .and_then(|params| params.get("terrain"))
         .and_then(Value::as_bool)
-        .unwrap_or(false)
+        .unwrap_or(true)
+}
+
+/// Makes the model the 3D scene's terrain.
+///
+/// A raster layer alone has no place in a tilted scene — the ground stays flat and the model is
+/// draped over it as a picture. `map.terrain` is what tells the app which raster carries the
+/// heights, and the exaggeration the scene should draw them at.
+fn set_terrain(host: &mut Host, name: &str, request: &Value) -> bool {
+    if !terrain_wanted(request) {
+        return false;
+    }
+    let mut params = json!({ "layer": name });
+    if let Some(value) = exaggeration(request) {
+        params["exaggeration"] = json!(value);
+    }
+    host.call("map.terrain", params).is_ok()
+}
+
+/// The raster look, as `raster.symbology` takes it.
+fn look_json(layer: &str, look: Look) -> Value {
+    match look {
+        Look::Colours => json!({
+            "layer": layer, "type": "stretch", "ramp": "terrain", "band": 1
+        }),
+        Look::Classes => json!({
+            "layer": layer, "type": "classify", "classes": 12,
+            "ramp": "terrain", "method": "equalinterval"
+        }),
+        Look::Shading => json!({
+            "layer": layer, "type": "shadedRelief", "band": 1,
+            "azimuth": 315, "altitude": 45, "grey": true
+        }),
+    }
+}
+
+/// Turns the 3D terrain off, so a removed model cannot leave the scene standing on nothing.
+pub fn terrain_off(host: &mut Host, lang: Lang) -> Result<Value, String> {
+    host.call("map.terrain", json!({ "off": true }))?;
+    host.notify(&text::nmt_terrain_off(lang));
+    Ok(json!({ "terrain": false }))
+}
+
+/// The model's height range, when the app can report it: what the colours and the 3D scene use.
+fn height_range(host: &mut Host, layer: &str) -> Option<(f64, f64)> {
+    let info = host.call("raster.info", json!({ "layer": layer })).ok()?;
+    let band = info.get("bands")?.as_array()?.first()?.clone();
+    let min = band.get("min").and_then(Value::as_f64)?;
+    let max = band.get("max").and_then(Value::as_f64)?;
+    (min.is_finite() && max.is_finite()).then_some((min, max))
 }
 
 /// The area the user pointed at, and whether only its selection counts.
@@ -648,17 +739,57 @@ mod tests {
     }
 
     #[test]
-    fn a_shaded_relief_is_grey_and_banded_colours_are_not() {
-        let shaded = look("NMT", false);
+    fn the_default_look_colours_heights_instead_of_shading_them() {
+        let colours = look_json("NMT", Look::Colours);
+        assert_eq!(colours["type"], "stretch");
+        assert_eq!(colours["ramp"], "terrain");
+        let shaded = look_json("NMT", Look::Shading);
         assert_eq!(shaded["type"], "shadedRelief");
         assert_eq!(shaded["grey"], true, "a ramp turns a relief into bands");
-        let coloured = look("NMT", true);
-        assert_eq!(coloured["type"], "classify");
+        let classes = look_json("NMT", Look::Classes);
+        assert_eq!(classes["type"], "classify");
         assert_eq!(
-            coloured["method"], "equalinterval",
+            classes["method"], "equalinterval",
             "quantiles bunch on flat ground"
         );
-        assert_eq!(coloured["ramp"], "terrain");
+        assert_eq!(classes["ramp"], "terrain");
+    }
+
+    #[test]
+    fn a_request_names_its_look_and_keeps_the_old_flag_working() {
+        assert_eq!(look_of(&json!({})), Look::Colours, "colours by default");
+        assert_eq!(
+            look_of(&json!({"params": {"look": "shading"}})),
+            Look::Shading
+        );
+        assert_eq!(
+            look_of(&json!({"params": {"look": "classes"}})),
+            Look::Classes
+        );
+        // The flag the ribbon used before: true banded the heights, false shaded them.
+        assert_eq!(
+            look_of(&json!({"params": {"colours": true}})),
+            Look::Classes
+        );
+        assert_eq!(
+            look_of(&json!({"params": {"colours": false}})),
+            Look::Shading
+        );
+        // An explicit `look` wins over the flag.
+        assert_eq!(
+            look_of(&json!({"params": {"colours": false, "look": "colours"}})),
+            Look::Colours
+        );
+    }
+
+    #[test]
+    fn the_exaggeration_stays_within_what_the_scene_takes() {
+        assert_eq!(exaggeration(&json!({"params": {"exaggeration": 3}})), Some(3.0));
+        assert_eq!(exaggeration(&json!({"params": {"exaggeration": 25}})), None);
+        assert_eq!(exaggeration(&json!({"params": {"exaggeration": -1}})), None);
+        assert_eq!(exaggeration(&json!({})), None);
+        assert!(terrain_wanted(&json!({})), "a model becomes the terrain");
+        assert!(!terrain_wanted(&json!({"params": {"terrain": false}})));
     }
 
     #[test]

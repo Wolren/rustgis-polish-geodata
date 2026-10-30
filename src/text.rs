@@ -154,15 +154,29 @@ pub fn clipped_suffix(lang: Lang) -> &'static str {
     pick!(lang, " (clipped)", " (przycięte)")
 }
 
-pub fn clipped(lang: Lang, layer: &str, area: &str, kept: usize) -> String {
+pub fn clipped(lang: Lang, layer: &str, area: &str, kept: usize, from_view: bool) -> String {
+    // A view rectangle is a boundary too, but nobody drew it: say which one was used.
+    let note = if from_view {
+        pick!(lang, " (the view rectangle)", " (prostokąt z widoku)")
+    } else {
+        ""
+    };
     pick!(
         lang,
         format!(
-            "Clipped \"{layer}\" to \"{area}\": {}",
+            "Clipped \"{layer}\" to \"{area}\"{note}: {}",
             features(lang, kept)
         ),
-        format!("Przycięto „{layer}” do „{area}”: {}", features(lang, kept))
+        format!(
+            "Przycięto „{layer}” do „{area}”{note}: {}",
+            features(lang, kept)
+        )
     )
+}
+
+/// The temporary layer a selection is copied into, so the clip follows the picked shapes only.
+pub fn clip_boundary_layer(lang: Lang) -> String {
+    pick!(lang, "Clip boundary (selection)", "Granica cięcia (zaznaczenie)").to_string()
 }
 
 pub fn removed(lang: Lang, name: &str) -> String {
@@ -536,8 +550,8 @@ pub fn area_from_view(lang: Lang, name: &str, size: (f64, f64)) -> String {
     pick!(
         lang,
         format!(
-            "Rectangle from the view written to {name}: {:.1} by {:.1} km. It is the area a \
-             download and the elevation model use.",
+            "The view rectangle is now {name}: {:.1} by {:.1} km. It is the area a download and \
+             the elevation model use; it is not drawn, it is whatever the map shows.",
             size.0, size.1
         ),
         format!(
@@ -665,19 +679,47 @@ pub fn nmt_added(
     size: (u32, u32),
     megabytes: f64,
     source: &str,
-    colours: bool,
+    look: &str,
+    terrain: bool,
+    heights: Option<(f64, f64)>,
 ) -> String {
     let (width, height) = size;
-    let look = if colours {
-        pick!(lang, "colours", "barwy")
+    let look = match (lang, look) {
+        (Lang::En, "shading") => "shaded",
+        (Lang::En, "classes") => "in bands",
+        (Lang::En, _) => "in height colours",
+        (Lang::Pl, "shading") => "cieniowany",
+        (Lang::Pl, "classes") => "w pasmach",
+        (Lang::Pl, _) => "w barwach wysokosci",
+    };
+    let terrain = if terrain {
+        pick!(lang, ", set as the 3D terrain", ", ustawiony jako teren 3D")
     } else {
-        pick!(lang, "shaded", "cieniowany")
+        ""
+    };
+    let heights = match heights {
+        Some((min, max)) => pick!(
+            lang,
+            format!(", {min:.0} to {max:.0} m"),
+            format!(", {min:.0} do {max:.0} m")
+        ),
+        None => String::new(),
     };
     pick!(
         lang,
-        format!("{name} added from {source}: {datum}, {width} by {height} cells, {megabytes:.1} MB, {look}."),
-        format!("Dodano {name} z {source}: {datum}, {width} na {height} komorek, {megabytes:.1} MB, {look}.")
+        format!("{name} added from {source}: {datum}, {width} by {height} cells, {megabytes:.1} MB{heights}, {look}{terrain}."),
+        format!("Dodano {name} z {source}: {datum}, {width} na {height} komorek, {megabytes:.1} MB{heights}, {look}{terrain}.")
     )
+}
+
+/// The 3D scene no longer stands on a model.
+pub fn nmt_terrain_off(lang: Lang) -> String {
+    pick!(
+        lang,
+        "3D terrain off: the map is flat again.",
+        "Teren 3D wylaczony: mapa jest znowu plaska.",
+    )
+    .to_string()
 }
 
 /// The model is built from what the user pointed at, so the view plays no part.
@@ -721,19 +763,14 @@ pub fn nmt_nothing_to_style(lang: Lang) -> String {
     .to_string()
 }
 
-pub fn nmt_styled(lang: Lang, layer: &str, colours: bool) -> String {
-    if !colours {
-        pick!(
-            lang,
-            format!("{layer}: shaded."),
-            format!("{layer}: cieniowanie.")
-        )
-    } else {
-        pick!(
-            lang,
-            format!("{layer}: heights in colours."),
-            format!("{layer}: wysokości w barwach.")
-        )
+pub fn nmt_styled(lang: Lang, layer: &str, look: &str) -> String {
+    match (lang, look) {
+        (Lang::En, "shading") => format!("{layer}: shaded."),
+        (Lang::En, "classes") => format!("{layer}: heights in bands."),
+        (Lang::En, _) => format!("{layer}: heights in colours."),
+        (Lang::Pl, "shading") => format!("{layer}: cieniowanie."),
+        (Lang::Pl, "classes") => format!("{layer}: wysokości w pasmach."),
+        (Lang::Pl, _) => format!("{layer}: wysokości w barwach."),
     }
 }
 
@@ -817,8 +854,15 @@ pub fn eziudp_needs_query(lang: Lang) -> String {
     .to_string()
 }
 
-pub fn eziudp_unreadable(lang: Lang) -> String {
+pub fn rejestr_view(lang: Lang, county: &str, total: u64, returned: u64) -> String {
     pick!(
+        lang,
+        format!("{county}: {total} datasets in the register, {returned} listed"),
+        format!("{county}: {total} zbiorow w rejestrze, {returned} wypisanych"),
+    )
+}
+
+pub fn eziudp_unreadable(lang: Lang) -> String {    pick!(
         lang,
         "the register answered something that is not JSON",
         "rejestr odpowiedział czymś, co nie jest JSON-em",
@@ -833,6 +877,124 @@ pub fn uldk_needs_id(lang: Lang) -> String {
         "podaj działkę jako {\"id\": \"306401_1.0001.14/4\"} albo przez \"teryt\" i \"numer\" (z \"obreb\", \"arkusz\")",
     )
     .to_string()
+}
+
+pub fn wody_unknown(lang: Lang, count: usize) -> String {
+    pick!(
+        lang,
+        format!("no such Wody Polskie service; the catalogue has {count}. List them with warstwy {{}} and its layers with warstwy {{\"usluga\": \"…\"}}"),
+        format!("nie ma takiej uslugi Wod Polskich; katalog ma {count}. Wypisz je przez warstwy {{}} , a warstwy jednej przez warstwy {{\"usluga\": \"…\"}}"),
+    )
+}
+
+pub fn wody_layer_unknown(lang: Lang, service: &str, wanted: &str, sample: &str) -> String {
+    pick!(
+        lang,
+        format!("{service} has no layer '{wanted}'; for example: {sample}. warstwy {{\"usluga\": \"{service}\"}} lists them all"),
+        format!("{service} nie ma warstwy '{wanted}'; na przyklad: {sample}. warstwy {{\"usluga\": \"{service}\"}} wypisze wszystkie"),
+    )
+}
+
+pub fn wody_added(lang: Lang, name: &str, layers: usize) -> String {
+    let english = noun(lang, layers, ["layer", "layers", "layers"]);
+    let polish = noun(lang, layers, ["warstwa", "warstwy", "warstw"]);
+    pick!(
+        lang,
+        format!("Wody Polskie: {name} ({layers} {english})."),
+        format!("Wody Polskie: {name} ({layers} {polish})."),
+    )
+}
+
+/// One noun with Polish's three plural forms, chosen by the count.
+fn noun(lang: Lang, n: usize, forms: [&'static str; 3]) -> &'static str {
+    let [one, few, many] = forms;
+    match (lang, form(lang, n)) {
+        (Lang::En, 0) => one,
+        (Lang::En, _) => few,
+        (Lang::Pl, 0) => one,
+        (Lang::Pl, 1) => few,
+        (Lang::Pl, _) => many,
+    }
+}
+
+/// The parcels-and-buildings lookup needs a street-level view: a county's whole WFS is not a view.
+pub fn egib_scale(lang: Lang, scale: f64, max: f64) -> String {
+    pick!(
+        lang,
+        format!(
+            "zoom in to 1:{max:.0} or closer to read parcels from the county WFS (now 1:{scale:.0})"
+        ),
+        format!(
+            "przybliż mapę do skali 1:{max:.0} lub bliżej, żeby wczytać działki z WFS powiatu (teraz 1:{scale:.0})"
+        ),
+    )
+}
+
+pub fn egib_no_county(lang: Lang, detail: &str) -> String {
+    pick!(
+        lang,
+        format!("ULDK did not name a county under the map centre: {detail}"),
+        format!("ULDK nie wskazało powiatu pod środkiem mapy: {detail}"),
+    )
+}
+
+pub fn egib_no_wfs(lang: Lang, county: &str, teryt: &str) -> String {
+    pick!(
+        lang,
+        format!("the register has no EGiB WFS for {county} (TERYT {teryt}); use the Parcels (KIEG) overlay"),
+        format!("rejestr nie ma WFS EGiB dla {county} (TERYT {teryt}); użyj nakładki Działki (KIEG)"),
+    )
+}
+
+pub fn egib_no_layers(lang: Lang, area: &str) -> String {
+    pick!(
+        lang,
+        format!("the WFS of {area} publishes no parcel or building layer; use the Parcels (KIEG) overlay"),
+        format!("WFS dla {area} nie publikuje warstwy działek ani budynków; użyj nakładki Działki (KIEG)"),
+    )
+}
+
+pub fn egib_unreadable(lang: Lang, address: &str) -> String {
+    pick!(
+        lang,
+        format!("{address} answered something that is not WFS capabilities"),
+        format!("{address} odpowiedział czymś, co nie jest capabilities WFS"),
+    )
+}
+
+pub fn egib_not_geojson(lang: Lang, area: &str, detail: &str) -> String {
+    pick!(
+        lang,
+        format!("the WFS of {area} answered nothing for this view, neither GeoJSON nor GML ({detail}); use the Parcels (KIEG) overlay"),
+        format!("WFS dla {area} nic nie zwrocil dla tego widoku, ani GeoJSON, ani GML ({detail}); uzyj nakladki Dzialki (KIEG)"),
+    )
+}
+
+/// The layer's name: what it holds and which county it came from.
+pub fn egib_layer(lang: Lang, parcels: bool, area: &str) -> String {
+    match (lang, parcels) {
+        (Lang::En, true) => format!("Parcels – {area}"),
+        (Lang::En, false) => format!("Buildings – {area}"),
+        (Lang::Pl, true) => format!("Działki – {area}"),
+        (Lang::Pl, false) => format!("Budynki – {area}"),
+    }
+}
+
+pub fn egib_added(lang: Lang, parcels: usize, buildings: usize, area: &str, truncated: bool) -> String {
+    let parcels_noun = noun(lang, parcels, ["parcel", "parcels", "parcels"]);
+    let buildings_noun = noun(lang, buildings, ["building", "buildings", "buildings"]);
+    let parcels_pl = noun(lang, parcels, ["działka", "działki", "działek"]);
+    let buildings_pl = noun(lang, buildings, ["budynek", "budynki", "budynków"]);
+    let body = pick!(
+        lang,
+        format!("EGiB from the county WFS ({area}): {parcels} {parcels_noun}, {buildings} {buildings_noun}"),
+        format!("EGiB z WFS powiatu ({area}): {parcels} {parcels_pl}, {buildings} {buildings_pl}"),
+    );
+    if truncated {
+        body + &pick!(lang, " (limit reached)", " (osiągnięto limit)")
+    } else {
+        body
+    }
 }
 
 #[cfg(test)]
@@ -871,5 +1033,15 @@ mod tests {
             count(Lang::En, "Parcels (EGiB)", 5),
             "Parcels (EGiB): 5 features"
         );
+    }
+
+    #[test]
+    fn a_clip_says_when_the_boundary_was_the_view() {
+        let drawn = clipped(Lang::En, "parcels", "gminy", 3, false);
+        assert_eq!(drawn, "Clipped \"parcels\" to \"gminy\": 3 features");
+        let view = clipped(Lang::En, "parcels", "Area to download", 3, true);
+        assert!(view.contains("(the view rectangle)"), "{view}");
+        let polish = clipped(Lang::Pl, "dzialki", "Obszar pobierania", 3, true);
+        assert!(polish.contains("prostokąt z widoku"), "{polish}");
     }
 }

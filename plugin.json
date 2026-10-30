@@ -1,7 +1,7 @@
 {
   "id": "dane-pl",
   "name": "Polish Geodata",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Polish national geodetic data from GUGiK in one tab: orthophoto, BDOT10k, parcels, addresses, PRG boundaries, place names and hillshade as map layers; the national WFS catalogue through background download tools with progress and Cancel; a 1 m elevation model built from the area you point at; and a ULDK parcel lookup at the map centre.",
   "author": "Wolren",
   "license": "MIT",
@@ -74,9 +74,9 @@
     },
     {
       "id": "obszar-widok",
-      "label": "Rectangle\narea",
-      "icon": "g_rect",
-      "help": "Copies the map view into the area layer as a rectangle: one click, and the rectangle is exactly what you see. It is the area a download and the elevation model use."
+      "label": "Area from\nview",
+      "icon": "map",
+      "help": "Takes the current map view as the area: one click, exactly what you see. It is not a drawing tool — the host has no rectangle tool for editable layers yet. Use Draw area to shape the boundary yourself."
     },
     {
       "id": "obszar-rysuj",
@@ -106,8 +106,8 @@
       "id": "przytnij",
       "label": "Clip\nto area",
       "icon": "buffer",
-      "help": "Clips a layer to the area layer's boundary, or to a named one. A WFS answer returns whole features that touch the area; this cuts them.",
-      "params": "{\"layer\": \"layer name (optional, the newest vector layer when left out)\", \"obszar\": \"area layer name (optional)\"}"
+      "help": "Cuts a layer to a boundary layer: the one you name (obszar, or granica), else the area layer. A selection on the boundary counts on its own — select one gmina and the clip follows that gmina, not the whole layer. A boundary made from the view is reported as the view rectangle, because nobody drew it.",
+      "params": "{\"layer\": \"the layer to cut (optional, the newest vector layer when left out)\", \"warstwa\": \"the same, under its Polish name\", \"obszar\": \"the boundary layer (optional, the area layer when left out)\", \"granica\": \"the same, under its Polish name\"}"
     },
     {
       "id": "wyczysc-cache",
@@ -166,29 +166,54 @@
       "id": "dem",
       "label": "Terrain\nKRON86",
       "icon": "relief",
-      "help": "Adds the 1 m terrain model of the area, shaded. GUGiK serves PL-KRON86-NH as GeoTIFF.",
-      "params": "{\"area\": \"area layer name (optional)\", \"colours\": \"false\"}"
+      "help": "Adds the 1 m terrain model of the area, in height colours, and makes it the 3D scene's terrain. GUGiK serves PL-KRON86-NH as GeoTIFF.",
+      "params": "{\"area\": \"area layer name (optional)\", \"look\": \"colours (default) | classes | shading\", \"exaggeration\": \"3D vertical exaggeration, 0 to 20 (default 1)\", \"terrain\": \"false leaves the 3D terrain unchanged\", \"colours\": \"the older flag: true = classes, false = shading\"}"
     },
     {
       "id": "dem-evr",
       "label": "Terrain\nEVRF2007",
       "icon": "relief",
-      "help": "The terrain model in PL-EVRF2007-NH. GUGiK serves it as an ASCII grid, so one click covers less ground than the GeoTIFF.",
-      "params": "{\"area\": \"area layer name (optional)\", \"colours\": \"false\"}"
+      "help": "The terrain model in PL-EVRF2007-NH, in height colours, set as the 3D terrain. GUGiK serves it as an ASCII grid, so one click covers less ground than the GeoTIFF.",
+      "params": "{\"area\": \"area layer name (optional)\", \"look\": \"colours (default) | classes | shading\", \"exaggeration\": \"3D vertical exaggeration, 0 to 20 (default 1)\", \"terrain\": \"false leaves the 3D terrain unchanged\", \"colours\": \"the older flag: true = classes, false = shading\"}"
     },
     {
       "id": "dem-nmpt",
       "label": "Surface\nNMPT",
       "icon": "relief",
-      "help": "The surface model, buildings and trees kept, in PL-KRON86-NH. An ASCII grid.",
-      "params": "{\"area\": \"area layer name (optional)\", \"colours\": \"false\"}"
+      "help": "The surface model, buildings and trees kept, in PL-KRON86-NH, in height colours. An ASCII grid.",
+      "params": "{\"area\": \"area layer name (optional)\", \"look\": \"colours (default) | classes | shading\", \"exaggeration\": \"3D vertical exaggeration, 0 to 20 (default 1)\", \"terrain\": \"false leaves the 3D terrain unchanged\", \"colours\": \"the older flag: true = classes, false = shading\"}"
     },
     {
       "id": "dem-style",
       "label": "Style the model",
       "icon": "map",
-      "help": "Shades the newest elevation model again. Pass colours to band the heights instead.",
-      "params": "{\"layer\": \"elevation model layer (optional)\", \"colours\": \"false\"}"
+      "help": "Redraws the newest elevation model: height colours by default, bands or a grey hillshade on request.",
+      "params": "{\"layer\": \"elevation model layer (optional)\", \"look\": \"colours (default) | classes | shading\"}"
+    },
+    {
+      "id": "dzialki-z-widoku",
+      "label": "Parcels\nfrom view",
+      "icon": "vector_layer",
+      "help": "Asks ULDK which county the map centre is in, finds that county's own WFS EGiB in the national register, and adds the parcels and buildings of the visible area. Works at scale 1:25 000 or closer."
+    },
+    {
+      "id": "warstwy",
+      "label": "Layers of\na service",
+      "icon": "table",
+      "help": "Lists the Wody Polskie services, or the layers of one service with the names the warstwa parameter takes. Give usluga to see one service's layers, szukaj to narrow them by a word.",
+      "params": "{\"usluga\": \"a service name or id (optional)\", \"szukaj\": \"a word of a layer name\"}"
+    },
+    {
+      "id": "dem-terrain-off",
+      "label": "Terrain\noff",
+      "icon": "map",
+      "help": "Flattens the 3D scene again, for when the elevation model it stood on is gone."
+    },
+    {
+      "id": "rejestr-widok",
+      "label": "Register\nfor view",
+      "icon": "table",
+      "help": "Asks ULDK which county the map centre is in and lists what that county reports to the national register: datasets, the body that holds them, and their WMS, WFS and CSW addresses. The typed version is the eziudp command."
     },
     {
       "id": "usluga-ceny-nieruchomosci",
@@ -420,13 +445,6 @@
       "icon": "basemap",
       "help": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
       "params": "{\"service\": \"Ortofotomapa - skorowidze wg aktualności\"}"
-    },
-    {
-      "id": "usluga-ortofotomapa-standardowa",
-      "label": "Ortofoto standardowe",
-      "icon": "basemap",
-      "help": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
-      "params": "{\"service\": \"Ortofotomapa standardowa\"}"
     },
     {
       "id": "usluga-ortofotomapa-wysokiej-rozdzielczosci",
@@ -807,13 +825,6 @@
       "params": "{\"service\": \"Usługa przeglądania treści Bazy Danych Ogólnogeograficznych dla obszaru Polski\"}"
     },
     {
-      "id": "usluga-usluga-przegladania-umozliwiajaca-przegladanie-hipsometri",
-      "label": "Hipsometria NMT",
-      "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / NUMERYCZNY MODEL TERENU",
-      "params": "{\"service\": \"Usługa przeglądania umożliwiająca przeglądanie hipsometrii NMT o dynamicznej skali barw\"}"
-    },
-    {
       "id": "usluga-usluga-przegladania-wms-danych-banku-danych-o-lasach",
       "label": "BDL lasy",
       "icon": "basemap",
@@ -952,6 +963,230 @@
       "icon": "basemap",
       "help": "Państwowy Instytut Geologiczny (PIG)",
       "params": "{\"service\": \"Złoża. obszary i tereny górnicze (MIDAS)\"}"
+    },
+    {
+      "id": "wody-apgw",
+      "label": "aPGW · plan gospodarowania wodami",
+      "icon": "basemap",
+      "help": "11 warstw · domyślnie: Główne rzeki · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: Główne rzeki)\"}"
+    },
+    {
+      "id": "wody-iiapgw-2023",
+      "label": "IIaPGW 2023 · aktualizacja planów",
+      "icon": "basemap",
+      "help": "17 warstw · domyślnie: Ekoregiony · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: Ekoregiony)\"}"
+    },
+    {
+      "id": "wody-mrp-ludzie-02",
+      "label": "MRP · ludzie i straty, 0,2%",
+      "icon": "basemap",
+      "help": "22 warstw · domyślnie: cieki naturalne i kanały · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: cieki naturalne i kanały)\"}"
+    },
+    {
+      "id": "wody-mrp-ludzie-1",
+      "label": "MRP · ludzie i straty, 1%",
+      "icon": "basemap",
+      "help": "22 warstw · domyślnie: cieki naturalne i kanały · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: cieki naturalne i kanały)\"}"
+    },
+    {
+      "id": "wody-mrp-ludzie-10",
+      "label": "MRP · ludzie i straty, 10%",
+      "icon": "basemap",
+      "help": "9 warstw · domyślnie: cieki naturalne i kanały · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: cieki naturalne i kanały)\"}"
+    },
+    {
+      "id": "wody-mrp-ludzie-budowla",
+      "label": "MRP · ludzie i straty, zniszczenie budowli",
+      "icon": "basemap",
+      "help": "187 warstw · domyślnie: warstwy referencyjne-cieki naturalne i kanały · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: warstwy referencyjne-cieki naturalne i kanały)\"}"
+    },
+    {
+      "id": "wody-mrp-ludzie-wal",
+      "label": "MRP · ludzie i straty, zniszczenie wału",
+      "icon": "basemap",
+      "help": "9 warstw · domyślnie: cieki naturalne i kanały · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: cieki naturalne i kanały)\"}"
+    },
+    {
+      "id": "wody-mrp-ludzie-wal-sztormowy",
+      "label": "MRP · ludzie i straty, wał sztormowy",
+      "icon": "basemap",
+      "help": "12 warstw · domyślnie: cieki naturalne i kanały · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: cieki naturalne i kanały)\"}"
+    },
+    {
+      "id": "wody-mrp-srodowisko-02",
+      "label": "MRP · środowisko i gospodarka, 0,2%",
+      "icon": "basemap",
+      "help": "40 warstw · domyślnie: cieki naturalne i kanały · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: cieki naturalne i kanały)\"}"
+    },
+    {
+      "id": "wody-mrp-srodowisko-1",
+      "label": "MRP · środowisko i gospodarka, 1%",
+      "icon": "basemap",
+      "help": "40 warstw · domyślnie: cieki naturalne i kanały · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: cieki naturalne i kanały)\"}"
+    },
+    {
+      "id": "wody-mrp-srodowisko-10",
+      "label": "MRP · środowisko i gospodarka, 10%",
+      "icon": "basemap",
+      "help": "18 warstw · domyślnie: cieki naturalne i kanały · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: cieki naturalne i kanały)\"}"
+    },
+    {
+      "id": "wody-mrp-srodowisko-budowla",
+      "label": "MRP · środowisko i gospodarka, zniszczenie budowli",
+      "icon": "basemap",
+      "help": "145 warstw · domyślnie: Warstwy wspólne-ogrody zoologiczne · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: Warstwy wspólne-ogrody zoologiczne)\"}"
+    },
+    {
+      "id": "wody-mrp-srodowisko-wal",
+      "label": "MRP · środowisko i gospodarka, zniszczenie wału",
+      "icon": "basemap",
+      "help": "18 warstw · domyślnie: cieki naturalne i kanały · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: cieki naturalne i kanały)\"}"
+    },
+    {
+      "id": "wody-mrp-srodowisko-wal-sztormowy",
+      "label": "MRP · środowisko i gospodarka, wał sztormowy",
+      "icon": "basemap",
+      "help": "22 warstw · domyślnie: cieki naturalne i kanały · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: cieki naturalne i kanały)\"}"
+    },
+    {
+      "id": "wody-mzp-glebokosc-02",
+      "label": "MZP · głębokość, 0,2%",
+      "icon": "basemap",
+      "help": "24 warstw · domyślnie: obszar zagrożenia powodziowego · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: obszar zagrożenia powodziowego)\"}"
+    },
+    {
+      "id": "wody-mzp-glebokosc-1",
+      "label": "MZP · głębokość, 1%",
+      "icon": "basemap",
+      "help": "24 warstw · domyślnie: obszar szczególnego zagrożenia powodzią · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: obszar szczególnego zagrożenia powodzią)\"}"
+    },
+    {
+      "id": "wody-mzp-glebokosc-10",
+      "label": "MZP · głębokość, 10%",
+      "icon": "basemap",
+      "help": "10 warstw · domyślnie: obszar szczególnego zagrożenia powodzią · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: obszar szczególnego zagrożenia powodzią)\"}"
+    },
+    {
+      "id": "wody-mzp-orientacyjna",
+      "label": "MZP · mapa orientacyjna zasięgów",
+      "icon": "basemap",
+      "help": "8 warstw · domyślnie: Zasięg MZP-zniszczenie lub uszkodzenie budowli pietrzącej · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: Zasięg MZP-zniszczenie lub uszkodzenie budowli pietrzącej)\"}"
+    },
+    {
+      "id": "wody-mzp-oszp",
+      "label": "MZP · obszary szczególnego zagrożenia",
+      "icon": "basemap",
+      "help": "2 warstw · domyślnie: OSZP 1% z map zagrożenia powodziowego od rzeki · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: OSZP 1% z map zagrożenia powodziowego od rzeki)\"}"
+    },
+    {
+      "id": "wody-mzp-predkosc-02",
+      "label": "MZP · prędkość, 0,2%",
+      "icon": "basemap",
+      "help": "10 warstw · domyślnie: obszar zagrożenia powodziowego · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: obszar zagrożenia powodziowego)\"}"
+    },
+    {
+      "id": "wody-mzp-predkosc-1",
+      "label": "MZP · prędkość, 1%",
+      "icon": "basemap",
+      "help": "10 warstw · domyślnie: obszar szczególnego zagrożenia powodzią · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: obszar szczególnego zagrożenia powodzią)\"}"
+    },
+    {
+      "id": "wody-mzp-predkosc-10",
+      "label": "MZP · prędkość, 10%",
+      "icon": "basemap",
+      "help": "10 warstw · domyślnie: obszar szczególnego zagrożenia powodzią · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: obszar szczególnego zagrożenia powodzią)\"}"
+    },
+    {
+      "id": "wody-mzp-zniszczenie-budowli",
+      "label": "MZP · głębokość, zniszczenie budowli piętrzącej",
+      "icon": "basemap",
+      "help": "162 warstw · domyślnie: Warstwy wspólne-zapora boczna · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: Warstwy wspólne-zapora boczna)\"}"
+    },
+    {
+      "id": "wody-mzp-zniszczenie-walu",
+      "label": "MZP · głębokość, zniszczenie wału",
+      "icon": "basemap",
+      "help": "8 warstw · domyślnie: obszar zagrożenia powodziowego · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: obszar zagrożenia powodziowego)\"}"
+    },
+    {
+      "id": "wody-mzp-zniszczenie-walu-sztormowego",
+      "label": "MZP · głębokość, zniszczenie wału sztormowego",
+      "icon": "basemap",
+      "help": "13 warstw · domyślnie: obszar zagrożenia powodziowego · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: obszar zagrożenia powodziowego)\"}"
+    },
+    {
+      "id": "wody-pgw-struktura",
+      "label": "PGW · nadzory, zarządy zlewni, RZGW",
+      "icon": "basemap",
+      "help": "3 warstw · domyślnie: PGWWP-Nadzory Wodne · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: PGWWP-Nadzory Wodne)\"}"
+    },
+    {
+      "id": "wody-ppss",
+      "label": "PPSS · przeciwdziałanie skutkom suszy",
+      "icon": "basemap",
+      "help": "8 warstw · domyślnie: Lista zadań inwestycyjnych związanych ze zwiększeniem retencji korytowej w zlewniach na obszarach wiejskich-Załącznik 2 · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: Lista zadań inwestycyjnych związanych ze zwiększeniem retencji korytowej w zlewniach na obszarach wiejskich-Załącznik 2)\"}"
+    },
+    {
+      "id": "wody-pzrp",
+      "label": "PZRP · plan zarządzania ryzykiem powodziowym",
+      "icon": "basemap",
+      "help": "27 warstw · domyślnie: Obszary problemowe - powódź rzeczna · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: Obszary problemowe - powódź rzeczna)\"}"
+    },
+    {
+      "id": "wody-worp-budowle",
+      "label": "WORP · obszary narażone, budowle piętrzące",
+      "icon": "basemap",
+      "help": "1 warstw · domyślnie: Obszary narażone na niebezpieczeństwo powodzi-zniszczenie budowli piętrzących · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: Obszary narażone na niebezpieczeństwo powodzi-zniszczenie budowli piętrzących)\"}"
+    },
+    {
+      "id": "wody-worp-morze",
+      "label": "WORP · obszary narażone, od morza",
+      "icon": "basemap",
+      "help": "1 warstw · domyślnie: Obszary narażone na niebezpieczeństwo powodzi-od morza · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: Obszary narażone na niebezpieczeństwo powodzi-od morza)\"}"
+    },
+    {
+      "id": "wody-worp-rzeki",
+      "label": "WORP · obszary narażone, rzeczne",
+      "icon": "basemap",
+      "help": "1 warstw · domyślnie: Obszary narażone na niebezpieczeństwo powodzi-rzeczne · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: Obszary narażone na niebezpieczeństwo powodzi-rzeczne)\"}"
+    },
+    {
+      "id": "wody-worp-v2",
+      "label": "WORP · zagrożenie i ryzyko (v2)",
+      "icon": "basemap",
+      "help": "10 warstw · domyślnie: Powodzie prawdopodobne rzeczne w wyniku awarii budowli hydrotechnicznycht · inne warstwy przez parametr warstwa",
+      "params": "{\"warstwa\": \"layer name or id, comma-separated (optional; default: Powodzie prawdopodobne rzeczne w wyniku awarii budowli hydrotechnicznycht)\"}"
     }
   ],
   "tools": [
@@ -1218,17 +1453,12 @@
         ]
       },
       {
-        "label": "Area",
+        "label": "Tools",
         "items": [
           "obszar-widok",
           "obszar-rysuj",
           "obszar-anuluj",
-          "obszar-wyczysc"
-        ]
-      },
-      {
-        "label": "Tools",
-        "items": [
+          "obszar-wyczysc",
           "panel",
           "przytnij",
           "zoom-polska",
@@ -1236,17 +1466,12 @@
         ]
       },
       {
-        "label": "WMS (view only)",
+        "label": "GUGiK",
         "menus": [
           "gugik-orto",
           "gugik-mapy",
           "gugik-kataster",
-          "gugik-inne",
-          "cartomatic",
-          "pig",
-          "nid",
-          "lasy",
-          "other"
+          "gugik-inne"
         ],
         "items": [
           {
@@ -1259,7 +1484,6 @@
               "usluga-obrazy-intensywnosci",
               "usluga-ortofotomapa-prawdziwa",
               "usluga-ortofotomapa-skorowidze-wg-aktualnosci",
-              "usluga-ortofotomapa-standardowa",
               "usluga-ortofotomapa-wysokiej-rozdzielczosci",
               "usluga-polsa-klasyfikacja-pokrycia-terenu-2019",
               "usluga-polsa-klasyfikacja-pokrycia-terenu-2020",
@@ -1271,7 +1495,6 @@
               "usluga-polsa-ortofotomapa-satelitarna-2021",
               "usluga-polsa-ortofotomapa-satelitarna-2022",
               "usluga-polsa-ortofotomapa-satelitarna-2024",
-              "usluga-usluga-przegladania-umozliwiajaca-przegladanie-hipsometri",
               "usluga-usluga-przegladania-wms-ortofotomap-archiwalnych-dla-obsz",
               "usluga-wskaznik-wegetacji-analiza-ndvi-wykonana-na-podstawie-zdj"
             ]
@@ -1352,7 +1575,19 @@
               "usluga-wykaz-szkol-i-placowek-oswiatowych",
               "usluga-zasiegi-i-placowki-zus"
             ]
-          },
+          }
+        ]
+      },
+      {
+        "label": "Institutions",
+        "menus": [
+          "cartomatic",
+          "pig",
+          "nid",
+          "lasy",
+          "other"
+        ],
+        "items": [
           {
             "menu": "Historical maps",
             "icon": "history",
@@ -1424,6 +1659,78 @@
         ]
       },
       {
+        "label": "Wody",
+        "items": [
+          "warstwy",
+          {
+            "menu": "MZP\n(hazard)",
+            "icon": "water",
+            "help": "Flood hazard maps: depth and velocity at 10%, 1% and 0.2% probability, and where a levee or a dam fails.",
+            "items": [
+              "wody-mzp-glebokosc-02",
+              "wody-mzp-glebokosc-1",
+              "wody-mzp-glebokosc-10",
+              "wody-mzp-orientacyjna",
+              "wody-mzp-oszp",
+              "wody-mzp-predkosc-02",
+              "wody-mzp-predkosc-1",
+              "wody-mzp-predkosc-10",
+              "wody-mzp-zniszczenie-budowli",
+              "wody-mzp-zniszczenie-walu",
+              "wody-mzp-zniszczenie-walu-sztormowego"
+            ]
+          },
+          {
+            "menu": "MRP\n(risk)",
+            "icon": "water",
+            "help": "Flood risk maps: people at risk, potential losses, environment, culture and the economy.",
+            "items": [
+              "wody-mrp-ludzie-02",
+              "wody-mrp-ludzie-1",
+              "wody-mrp-ludzie-10",
+              "wody-mrp-ludzie-budowla",
+              "wody-mrp-ludzie-wal",
+              "wody-mrp-ludzie-wal-sztormowy",
+              "wody-mrp-srodowisko-02",
+              "wody-mrp-srodowisko-1",
+              "wody-mrp-srodowisko-10",
+              "wody-mrp-srodowisko-budowla",
+              "wody-mrp-srodowisko-wal",
+              "wody-mrp-srodowisko-wal-sztormowy"
+            ]
+          },
+          {
+            "menu": "WORP",
+            "icon": "water",
+            "help": "Areas exposed to flooding, and the maps of hazard and risk before the 2020 update.",
+            "items": [
+              "wody-worp-budowle",
+              "wody-worp-morze",
+              "wody-worp-rzeki",
+              "wody-worp-v2"
+            ]
+          },
+          {
+            "menu": "Plans and\ndrought",
+            "icon": "water",
+            "help": "Water management plans, river basin districts, the flood risk plan and the drought plan.",
+            "items": [
+              "wody-apgw",
+              "wody-iiapgw-2023",
+              "wody-pgw-struktura",
+              "wody-ppss",
+              "wody-pzrp"
+            ]
+          }
+        ],
+        "menus": [
+          "wody-mzp",
+          "wody-mrp",
+          "wody-worp",
+          "wody-plan"
+        ]
+      },
+      {
         "label": "Downloads",
         "items": [
           "tool:pobierz-adresy",
@@ -1446,14 +1753,17 @@
               "dem-nmpt"
             ]
           },
-          "dem-style"
+          "dem-style",
+          "dem-terrain-off"
         ]
       },
       {
         "label": "Lookups",
         "items": [
           "parcel",
-          "wysokosc"
+          "wysokosc",
+          "dzialki-z-widoku",
+          "rejestr-widok"
         ]
       }
     ]
@@ -1462,9 +1772,7 @@
     "pl": {
       "Address points and streets from the national address numbering service.": "Punkty adresowe i ulice (Krajowa Integracja Numeracji Adresowej).",
       "Addresses": "Adresy",
-      "Adds the 1 m terrain model of the area, shaded. GUGiK serves PL-KRON86-NH as GeoTIFF.": "Dodaje model terenu 1 m dla obszaru, cieniowany. GUGiK udostępnia PL-KRON86-NH jako GeoTIFF.",
       "Adds the parcel an identifier names, without pointing at the map: id as ULDK writes it, or teryt and numer.": "Dodaje działkę wskazaną identyfikatorem, bez klikan ia w mapę: id w postaci ULDK albo teryt i numer.",
-      "Area": "Obszar",
       "Area (layer)": "Obszar (warstwa)",
       "Area to download": "Obszar pobierania",
       "BDOT10k": "BDOT10k",
@@ -1479,8 +1787,6 @@
       "Clear the stored answers after a download": "Wyczyść zapisane odpowiedzi po pobraniu",
       "Click the corners, then double-click to close the ring, or press Escape to stop. The shape stays as drawn: a download follows it, and the elevation model covers the rectangle around it.": "Klikaj narożniki, a na końcu kliknij dwukrotnie, aby zamknąć obwód, albo naciśnij Escape, aby przerwać. Kształt zostaje taki, jak narysowany: pobieranie idzie za nim, a model wysokości obejmuje prostokąt wokół niego.",
       "Clip\nto area": "Przytnij\ndo obszaru",
-      "Clips a layer to the area layer's boundary, or to a named one. A WFS answer returns whole features that touch the area; this cuts them.": "Przycina warstwę do granicy warstwy obszaru albo wskazanej warstwy. WFS zwraca całe obiekty dotykające obszaru; to je tnie.",
-      "Copies the map view into the area layer as a rectangle: one click, and the rectangle is exactly what you see. It is the area a download and the elevation model use.": "Kopiuje widok mapy do warstwy obszaru jako prostokąt: jedno kliknięcie i prostokąt jest dokładnie tym, co widać. To obszar, którego używa pobieranie i model wysokości.",
       "Country, voivodeship, county, commune and city boundaries.": "Granice państwa, województw, powiatów, gmin i miast.",
       "DEM\nhillshade": "NMT\ncieniowanie",
       "Dataset": "Zestaw",
@@ -1543,12 +1849,10 @@
       "Public offices, courts, schools, forests and other institutions.": "Urzędy, sądy, szkoły, nadleśnictwa i inne instytucje.",
       "Raster": "Rastry",
       "Reads the terrain model's height at the map centre, or at x/y given in PL-1992. PL-KRON86-NH, in metres above sea level.": "Odczytuje wysokość modelu terenu pod środkiem mapy albo pod x/y w PL-1992. PL-KRON86-NH, w metrach nad poziomem morza.",
-      "Rectangle\narea": "Obszar\nprostokąt",
       "Refresh the panel": "Odśwież panel",
       "Register\nEZiUDP": "Rejestr\nEZiUDP",
       "Removes the area layer, so the next rectangle or drawn shape starts empty.": "Usuwa warstwę obszaru, żeby następny prostokąt albo rysowany kształt zaczynał od zera.",
       "Searches the national register of spatial data sets and services: which body holds what, and the address of its WMS, WFS and CSW. Narrows the register, never dumps it.": "Przeszukuje krajową ewidencję zbiorów i usług danych przestrzennych: kto co ma i pod jakim adresem są jego WMS, WFS i CSW. Zawęża rejestr, nigdy nie pobiera go całego.",
-      "Shades the newest elevation model again. Pass colours to band the heights instead.": "Ponownie cieniuje najnowszy model wysokości. Podaj colours, aby pokazać wysokości w barwach.",
       "Statistics, ASG-EUPOS, archiving, elections and the rest.": "Statystyki, ASG-EUPOS, archiwizacja, wybory i pozostałe.",
       "Stored answers": "Zapisane odpowiedzi",
       "Style the model": "Stylizuj model",
@@ -1560,16 +1864,39 @@
       "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time.": "Odpowiedzi są trzymane 7 dni, więc powtórne pobranie nic nie kosztuje. Zaznacz, aby następnym razem pobrać świeże dane.",
       "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download.": "Warstwa, której zasięg jest pobierany. Narysuj ją przyciskiem Obszar prostokąt albo wskaż własną warstwę; zaznaczenie na niej zawęża pobieranie.",
       "The map view, the area to download, the catalogue and the stored answers, with the buttons that act on them.": "Widok mapy, obszar pobierania, katalog i zapisane odpowiedzi oraz przyciski, które na nich działają.",
-      "The surface model, buildings and trees kept, in PL-KRON86-NH. An ASCII grid.": "Model pokrycia, z budynkami i drzewami, w PL-KRON86-NH. Siatka ASCII.",
-      "The terrain model in PL-EVRF2007-NH. GUGiK serves it as an ASCII grid, so one click covers less ground than the GeoTIFF.": "Model terenu w PL-EVRF2007-NH. GUGiK udostępnia go jako siatkę ASCII, więc jedno kliknięcie obejmuje mniejszy obszar niż GeoTIFF.",
       "Tools": "Narzędzia",
       "Topographic object database as an overlay (visible from city scale).": "Baza Danych Obiektów Topograficznych jako warstwa nakładkowa (widoczna od skali miasta).",
       "Topographic, landscape, archival and thematic maps.": "Mapy topograficzne, krajobrazowe, archiwalne i tematyczne.",
       "Updates the panel: the view, the area layer, the catalogue and the stored answers.": "Odświeża panel: widok, warstwę obszaru, katalog i zapisane odpowiedzi.",
       "Vector": "Wektory",
       "WIG and German survey maps of the 19th and 20th centuries, as scans.": "Arkusze WIG i mapy niemieckie z XIX i XX wieku, jako skany.",
-      "WMS (view only)": "WMS (podgląd)",
-      "Zoom to Poland": "Przybliż do Polski"
+      "Zoom to Poland": "Przybliż do Polski",
+      "Parcels\nfrom view": "Działki\nz widoku",
+      "Asks ULDK which county the map centre is in, finds that county's own WFS EGiB in the national register, and adds the parcels and buildings of the visible area. Works at scale 1:25 000 or closer.": "Pyta ULDK, w jakim powiecie leży środek mapy, znajduje WFS EGiB tego powiatu w rejestrze krajowym i dodaje działki oraz budynki z widocznego obszaru. Działa w skali 1:25 000 lub bliżej.",
+      "Adds the 1 m terrain model of the area, in height colours, and makes it the 3D scene's terrain. GUGiK serves PL-KRON86-NH as GeoTIFF.": "Dodaje model terenu 1 m dla obszaru w barwach wysokosci i ustawia go jako teren sceny 3D. GUGiK oddaje PL-KRON86-NH jako GeoTIFF.",
+      "The terrain model in PL-EVRF2007-NH, in height colours, set as the 3D terrain. GUGiK serves it as an ASCII grid, so one click covers less ground than the GeoTIFF.": "Model terenu w PL-EVRF2007-NH w barwach wysokosci, ustawiany jako teren sceny 3D. GUGiK oddaje go jako siatke ASCII, wiec jedno klikniecie obejmuje mniejszy obszar niz GeoTIFF.",
+      "The surface model, buildings and trees kept, in PL-KRON86-NH, in height colours. An ASCII grid.": "Model pokrycia terenu z budynkami i drzewami, PL-KRON86-NH, w barwach wysokosci. Siatka ASCII.",
+      "Redraws the newest elevation model: height colours by default, bands or a grey hillshade on request.": "Rysuje najnowszy model wysokosci od nowa: domyslnie barwy wysokosci, na zadanie pasma albo cieniowanie.",
+      "MZP\n(hazard)": "MZP\n(zagrożenie)",
+      "MRP\n(risk)": "MRP\n(ryzyko)",
+      "WORP": "WORP",
+      "Plans and\ndrought": "Plany\ni susza",
+      "Flood hazard maps: depth and velocity at 10%, 1% and 0.2% probability, and where a levee or a dam fails.": "Mapy zagrożenia powodziowego: głębokość i prędkość przy 10%, 1% i 0,2% prawdopodobieństwa oraz scenariusze zniszczenia wału lub budowli piętrzącej.",
+      "Flood risk maps: people at risk, potential losses, environment, culture and the economy.": "Mapy ryzyka powodziowego: ludzie zagrożeni, potencjalne straty, środowisko, kultura i gospodarka.",
+      "Areas exposed to flooding, and the maps of hazard and risk before the 2020 update.": "Obszary narażone na niebezpieczeństwo powodzi oraz mapy zagrożenia i ryzyka sprzed aktualizacji 2020.",
+      "Water management plans, river basin districts, the flood risk plan and the drought plan.": "Plany gospodarowania wodami, dorzecza, plan zarządzania ryzykiem powodziowym i plan przeciwdziałania skutkom suszy.",
+      "Layers of\na service": "Warstwy\nusługi",
+      "Lists the Wody Polskie services, or the layers of one service with the names the warstwa parameter takes. Give usluga to see one service's layers, szukaj to narrow them by a word.": "Wypisuje usługi Wód Polskich albo warstwy jednej usługi z nazwami, które przyjmuje parametr warstwa. Podaj usluga, żeby zobaczyć warstwy jednej usługi, szukaj, żeby zawęzić je słowem.",
+      "GUGiK": "GUGiK",
+      "Institutions": "Instytucje",
+      "Wody": "Wody",
+      "Terrain\noff": "Teren\nwyłącz",
+      "Flattens the 3D scene again, for when the elevation model it stood on is gone.": "Wypłaszcza scenę 3D, gdy model wysokości, na którym stała, zniknął z projektu.",
+      "Register\nfor view": "Rejestr\ndla widoku",
+      "Asks ULDK which county the map centre is in and lists what that county reports to the national register: datasets, the body that holds them, and their WMS, WFS and CSW addresses. The typed version is the eziudp command.": "Pyta ULDK, w jakim powiecie leży środek mapy, i wypisuje, co ten powiat zgłasza do rejestru krajowego: zbiory, instytucję i adresy WMS, WFS oraz CSW. Wersja z parametrami to polecenie eziudp.",
+      "Area from\nview": "Obszar\nz widoku",
+      "Takes the current map view as the area: one click, exactly what you see. It is not a drawing tool — the host has no rectangle tool for editable layers yet. Use Draw area to shape the boundary yourself.": "Bierze bieżący widok mapy jako obszar: jedno kliknięcie, dokładnie to, co widać. To nie jest narzędzie rysowania — host nie ma jeszcze narzędzia prostokąta dla warstw edytowalnych. Użyj Narysuj obszar, żeby samemu wyznaczyć granicę.",
+      "Cuts a layer to a boundary layer: the one you name (obszar, or granica), else the area layer. A selection on the boundary counts on its own — select one gmina and the clip follows that gmina, not the whole layer. A boundary made from the view is reported as the view rectangle, because nobody drew it.": "Tnie warstwę do warstwy granicy: wskazanej (obszar albo granica), a bez niej do warstwy obszaru. Zaznaczenie na granicy liczy się samo — zaznacz jedną gminę, a cięcie pójdzie tą gminą, nie całą warstwą. Granica zrobiona z widoku jest zgłaszana jako prostokąt z widoku, bo nikt jej nie narysował."
     }
   },
   "panel": {
@@ -1632,6 +1959,10 @@
       {
         "kind": "button",
         "command": "wyczysc-cache"
+      },
+      {
+        "kind": "button",
+        "command": "rejestr-widok"
       }
     ]
   }

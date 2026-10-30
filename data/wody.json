@@ -1,0 +1,3906 @@
+[
+ {
+  "id": "wody-apgw",
+  "name": "aPGW · plan gospodarowania wodami",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/ISOK_PGW/MapServer/WMSServer",
+  "menu": "wody-plan",
+  "default": "8",
+  "layers": [
+   {
+    "id": "8",
+    "name": "Główne rzeki"
+   },
+   {
+    "id": "10",
+    "name": "JCWP Rzecznych"
+   },
+   {
+    "id": "5",
+    "name": "JCWP Jeziornych"
+   },
+   {
+    "id": "6",
+    "name": "JCWP Przejściowych"
+   },
+   {
+    "id": "7",
+    "name": "JCWP Przybrzeżnych"
+   },
+   {
+    "id": "9",
+    "name": "Główne jeziora"
+   },
+   {
+    "id": "0",
+    "name": "Ekoregiony"
+   },
+   {
+    "id": "2",
+    "name": "Regiony wodne"
+   },
+   {
+    "id": "1",
+    "name": "Obszary Dorzeczy"
+   },
+   {
+    "id": "3",
+    "name": "Zlewnie JCWP"
+   },
+   {
+    "id": "4",
+    "name": "Jednolite Części Wód Podziemnych"
+   }
+  ]
+ },
+ {
+  "id": "wody-iiapgw-2023",
+  "name": "IIaPGW 2023 · aktualizacja planów",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/ISOK_IIaPGW2023/MapServer/WMSServer",
+  "menu": "wody-plan",
+  "default": "0",
+  "layers": [
+   {
+    "id": "0",
+    "name": "Ekoregiony"
+   },
+   {
+    "id": "1",
+    "name": "Regiony wodne"
+   },
+   {
+    "id": "2",
+    "name": "Obszary Dorzeczy"
+   },
+   {
+    "id": "16",
+    "name": "JCWP rzecznych"
+   },
+   {
+    "id": "12",
+    "name": "JCWP zbiornikowych"
+   },
+   {
+    "id": "13",
+    "name": "JCWP przybrzeżnych"
+   },
+   {
+    "id": "14",
+    "name": "JCWP przejściowych"
+   },
+   {
+    "id": "15",
+    "name": "JCWP jeziornych"
+   },
+   {
+    "id": "5",
+    "name": "Zlewnie JCWP rzecznych"
+   },
+   {
+    "id": "4",
+    "name": "Zlewnie JCWP zbiornikowych"
+   },
+   {
+    "id": "6",
+    "name": "Zlewnie JCWP przybrzeżnych"
+   },
+   {
+    "id": "7",
+    "name": "Zlewnie JCWP przejściowych"
+   },
+   {
+    "id": "8",
+    "name": "Zlewnie JCWP jeziornych"
+   },
+   {
+    "id": "3",
+    "name": "Pozostałe obszary zlewni"
+   },
+   {
+    "id": "11",
+    "name": "JCWPd"
+   },
+   {
+    "id": "10",
+    "name": "Nieaktualne JCWP"
+   },
+   {
+    "id": "9",
+    "name": "Nieaktualne JCWPd"
+   }
+  ]
+ },
+ {
+  "id": "wody-mrp-ludzie-02",
+  "name": "MRP · ludzie i straty, 0,2%",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MRP20_SkutkiZycieZdrowiePotencjalneStraty_NiskiePrawdopodPowodzi/MapServer/WMSServer",
+  "menu": "wody-mrp",
+  "default": "16",
+  "layers": [
+   {
+    "id": "2",
+    "name": "cieki naturalne i kanały (MRP od morza)"
+   },
+   {
+    "id": "4",
+    "name": "obszar zagrożenia powodziowego (MRP od morza)"
+   },
+   {
+    "id": "5",
+    "name": "wał przeciwpowodziowy, przeciwsztormowy (MRP od morza)"
+   },
+   {
+    "id": "6",
+    "name": "miejscowości zagrożone powodzią (MRP od morza)"
+   },
+   {
+    "id": "7",
+    "name": "budynki (MRP od morza)"
+   },
+   {
+    "id": "8",
+    "name": "granica portu i przystani morskiej (MRP od morza)"
+   },
+   {
+    "id": "9",
+    "name": "granica pasa technicznego brzegu morskiego (MRP od morza)"
+   },
+   {
+    "id": "10",
+    "name": "granica pasa ochronnego brzegu morskiego (MRP od morza)"
+   },
+   {
+    "id": "11",
+    "name": "kilometraż brzegu morskiego (MRP od morza)"
+   },
+   {
+    "id": "12",
+    "name": "kilometraż rzeki (MRP od morza)"
+   },
+   {
+    "id": "13",
+    "name": "skorowidz arkuszy (MRP od morza)"
+   },
+   {
+    "id": "3",
+    "name": "wody powierzchniowe (MRP od morza)"
+   },
+   {
+    "id": "1",
+    "name": "wartości potencjalnych strat powodziowych (MRP od morza)"
+   },
+   {
+    "id": "16",
+    "name": "cieki naturalne i kanały"
+   },
+   {
+    "id": "18",
+    "name": "obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "19",
+    "name": "wał przeciwpowodziowy, zapora boczna"
+   },
+   {
+    "id": "20",
+    "name": "miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "21",
+    "name": "budynki"
+   },
+   {
+    "id": "22",
+    "name": "kilometraż rzeki"
+   },
+   {
+    "id": "23",
+    "name": "skorowidz arkuszy"
+   },
+   {
+    "id": "17",
+    "name": "wody powierzchniowe"
+   },
+   {
+    "id": "15",
+    "name": "wartości potencjalnych strat powodziowych"
+   }
+  ]
+ },
+ {
+  "id": "wody-mrp-ludzie-1",
+  "name": "MRP · ludzie i straty, 1%",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MRP20_SkutkiZycieZdrowiePotencjalneStraty_SredniePrawdopodPowodzi/MapServer/WMSServer",
+  "menu": "wody-mrp",
+  "default": "16",
+  "layers": [
+   {
+    "id": "2",
+    "name": "cieki naturalne i kanały (MRP od morza)"
+   },
+   {
+    "id": "4",
+    "name": "obszar szczególnego zagrożenia powodzią (MRP od morza)"
+   },
+   {
+    "id": "8",
+    "name": "wał przeciwpowodziowy, przeciwsztormowy (MRP od morza)"
+   },
+   {
+    "id": "5",
+    "name": "miejscowości zagrożone powodzią (MRP od morza)"
+   },
+   {
+    "id": "6",
+    "name": "budynki (MRP od morza)"
+   },
+   {
+    "id": "9",
+    "name": "granica portu i przystani morskiej (MRP od morza)"
+   },
+   {
+    "id": "10",
+    "name": "granica pasa technicznego brzegu morskiego (MRP od morza)"
+   },
+   {
+    "id": "11",
+    "name": "granica pasa ochronnego brzegu morskiego (MRP od morza)"
+   },
+   {
+    "id": "12",
+    "name": "kilometraż brzegu morskiego (MRP od morza)"
+   },
+   {
+    "id": "13",
+    "name": "kilometraż rzeki (MRP od morza)"
+   },
+   {
+    "id": "7",
+    "name": "skorowidz arkuszy (MRP od morza)"
+   },
+   {
+    "id": "3",
+    "name": "wody powierzchniowe (MRP od morza)"
+   },
+   {
+    "id": "1",
+    "name": "wartości potencjalnych strat powodziowych (MRP od morza)"
+   },
+   {
+    "id": "16",
+    "name": "cieki naturalne i kanały"
+   },
+   {
+    "id": "18",
+    "name": "obszar szczególnego zagrożenia powodzią"
+   },
+   {
+    "id": "19",
+    "name": "wał przeciwpowodziowy, zapora boczna"
+   },
+   {
+    "id": "20",
+    "name": "miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "21",
+    "name": "budynki"
+   },
+   {
+    "id": "22",
+    "name": "kilometraż rzeki"
+   },
+   {
+    "id": "23",
+    "name": "skorowidz arkuszy"
+   },
+   {
+    "id": "17",
+    "name": "wody powierzchniowe"
+   },
+   {
+    "id": "15",
+    "name": "wartości potencjalnych strat powodziowych"
+   }
+  ]
+ },
+ {
+  "id": "wody-mrp-ludzie-10",
+  "name": "MRP · ludzie i straty, 10%",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MRP20_SkutkiZycieZdrowiePotencjalneStraty_WysokiePrawdopodPowodzi/MapServer/WMSServer",
+  "menu": "wody-mrp",
+  "default": "2",
+  "layers": [
+   {
+    "id": "2",
+    "name": "cieki naturalne i kanały"
+   },
+   {
+    "id": "4",
+    "name": "obszar szczególnego zagrożenia powodzią"
+   },
+   {
+    "id": "5",
+    "name": "wał przeciwpowodziowy, zapora boczna"
+   },
+   {
+    "id": "6",
+    "name": "miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "7",
+    "name": "budynki"
+   },
+   {
+    "id": "8",
+    "name": "kilometraż rzeki"
+   },
+   {
+    "id": "9",
+    "name": "skorowidz arkuszy"
+   },
+   {
+    "id": "3",
+    "name": "wody powierzchniowe"
+   },
+   {
+    "id": "1",
+    "name": "wartości potencjalnych strat powodziowych"
+   }
+  ]
+ },
+ {
+  "id": "wody-mrp-ludzie-wal-sztormowy",
+  "name": "MRP · ludzie i straty, wał sztormowy",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MRP20_SkutkiZycieZdrowiePotencjalneStraty_ZniszczenieWaluSztormowego/MapServer/WMSServer",
+  "menu": "wody-mrp",
+  "default": "1",
+  "layers": [
+   {
+    "id": "1",
+    "name": "cieki naturalne i kanały"
+   },
+   {
+    "id": "3",
+    "name": "obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "6",
+    "name": "wał przeciwpowodziowy, przeciwsztormowy"
+   },
+   {
+    "id": "4",
+    "name": "budynki"
+   },
+   {
+    "id": "7",
+    "name": "granica portu i przystani morskiej"
+   },
+   {
+    "id": "8",
+    "name": "granica pasa technicznego brzegu morskiego"
+   },
+   {
+    "id": "9",
+    "name": "granica pasa ochronnego brzegu morskiego"
+   },
+   {
+    "id": "10",
+    "name": "kilometraż brzegu morskiego"
+   },
+   {
+    "id": "11",
+    "name": "kilometraż rzeki"
+   },
+   {
+    "id": "12",
+    "name": "skorowidz arkuszy"
+   },
+   {
+    "id": "2",
+    "name": "wody powierzchniowe"
+   },
+   {
+    "id": "0",
+    "name": "wartości potencjalnych strat powodziowych"
+   }
+  ]
+ },
+ {
+  "id": "wody-mrp-ludzie-budowla",
+  "name": "MRP · ludzie i straty, zniszczenie budowli",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MRP20_SkutkiZycieZdrowiePotencjalneStraty_ZniszczenieBudowliPietrzacej/MapServer/WMSServer",
+  "menu": "wody-mrp",
+  "default": "2",
+  "layers": [
+   {
+    "id": "2",
+    "name": "warstwy referencyjne-cieki naturalne i kanały"
+   },
+   {
+    "id": "213",
+    "name": "Warstwy wspólne-zapora boczna"
+   },
+   {
+    "id": "214",
+    "name": "Warstwy wspólne-wały przeciwpowodziowe"
+   },
+   {
+    "id": "215",
+    "name": "Warstwy wspólne-kilometraż rzeki"
+   },
+   {
+    "id": "6",
+    "name": "Zbiornik Świnna Poręba-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "7",
+    "name": "Zbiornik Świnna Poręba-budynki"
+   },
+   {
+    "id": "8",
+    "name": "Zbiornik Świnna Poręba-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "9",
+    "name": "Zbiornik Świnna Poręba-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "10",
+    "name": "Zbiornik Świnna Poręba-budowle piętrzące"
+   },
+   {
+    "id": "11",
+    "name": "Zbiornik Świnna Poręba-skorowidz arkuszy"
+   },
+   {
+    "id": "5",
+    "name": "Zbiornik Świnna Poręba-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "14",
+    "name": "Zbiornik Słup-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "15",
+    "name": "Zbiornik Słup-budynki"
+   },
+   {
+    "id": "16",
+    "name": "Zbiornik Słup-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "17",
+    "name": "Zbiornik Słup-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "18",
+    "name": "Zbiornik Słup-budowle piętrzące"
+   },
+   {
+    "id": "19",
+    "name": "Zbiornik Słup-skorowidz arkuszy"
+   },
+   {
+    "id": "13",
+    "name": "Zbiornik Słup-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "22",
+    "name": "Zbiornik Przeczyce-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "23",
+    "name": "Zbiornik Przeczyce-budynki"
+   },
+   {
+    "id": "24",
+    "name": "Zbiornik Przeczyce-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "25",
+    "name": "Zbiornik Przeczyce-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "26",
+    "name": "Zbiornik Przeczyce-budowle piętrzące"
+   },
+   {
+    "id": "27",
+    "name": "Zbiornik Przeczyce-skorowidz arkuszy"
+   },
+   {
+    "id": "21",
+    "name": "Zbiornik Przeczyce-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "30",
+    "name": "Zbiornik Mietków-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "31",
+    "name": "Zbiornik Mietków-budynki"
+   },
+   {
+    "id": "32",
+    "name": "Zbiornik Mietków-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "33",
+    "name": "Zbiornik Mietków-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "34",
+    "name": "Zbiornik Mietków-budowle piętrzące"
+   },
+   {
+    "id": "35",
+    "name": "Zbiornik Mietków-skorowidz arkuszy"
+   },
+   {
+    "id": "29",
+    "name": "Zbiornik Mietków-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "38",
+    "name": "Zbiornik Dobromierz-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "39",
+    "name": "Zbiornik Dobromierz-budynki"
+   },
+   {
+    "id": "40",
+    "name": "Zbiornik Dobromierz-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "41",
+    "name": "Zbiornik Dobromierz-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "42",
+    "name": "Zbiornik Dobromierz-budowle piętrzące"
+   },
+   {
+    "id": "43",
+    "name": "Zbiornik Dobromierz-skorowidz arkuszy"
+   },
+   {
+    "id": "37",
+    "name": "Zbiornik Dobromierz-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "46",
+    "name": "Zbiornik Chańcza-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "47",
+    "name": "Zbiornik Chańcza-budynki"
+   },
+   {
+    "id": "48",
+    "name": "Zbiornik Chańcza-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "49",
+    "name": "Zbiornik Chańcza-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "50",
+    "name": "Zbiornik Chańcza-budowle piętrzące"
+   },
+   {
+    "id": "51",
+    "name": "Zbiornik Chańcza-skorowidz arkuszy"
+   },
+   {
+    "id": "45",
+    "name": "Zbiornik Chańcza-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "54",
+    "name": "Zbiornik Besko-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "55",
+    "name": "Zbiornik Besko-budynki"
+   },
+   {
+    "id": "56",
+    "name": "Zbiornik Besko-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "57",
+    "name": "Zbiornik Besko-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "58",
+    "name": "Zbiornik Besko-budowle piętrzące"
+   },
+   {
+    "id": "59",
+    "name": "Zbiornik Besko-skorowidz arkuszy"
+   },
+   {
+    "id": "53",
+    "name": "Zbiornik Besko-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "62",
+    "name": "Zbiornik Bukówka-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "63",
+    "name": "Zbiornik Bukówka-budynki"
+   },
+   {
+    "id": "64",
+    "name": "Zbiornik Bukówka-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "65",
+    "name": "Zbiornik Bukówka-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "66",
+    "name": "Zbiornik Bukówka-budowle piętrzące"
+   },
+   {
+    "id": "67",
+    "name": "Zbiornik Bukówka-skorowidz arkuszy"
+   },
+   {
+    "id": "61",
+    "name": "Zbiornik Bukówka-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "70",
+    "name": "Zbiornik Czorsztyn-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "71",
+    "name": "Zbiornik Czorsztyn-budynki"
+   },
+   {
+    "id": "72",
+    "name": "Zbiornik Czorsztyn-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "73",
+    "name": "Zbiornik Czorsztyn-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "74",
+    "name": "Zbiornik Czorsztyn-budowle piętrzące"
+   },
+   {
+    "id": "75",
+    "name": "Zbiornik Czorsztyn-skorowidz arkuszy"
+   },
+   {
+    "id": "69",
+    "name": "Zbiornik Czorsztyn-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "78",
+    "name": "Zbiornik Dębe-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "79",
+    "name": "Zbiornik Dębe-budynki"
+   },
+   {
+    "id": "80",
+    "name": "Zbiornik Dębe-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "81",
+    "name": "Zbiornik Dębe-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "82",
+    "name": "Zbiornik Dębe-budowle piętrzące"
+   },
+   {
+    "id": "83",
+    "name": "Zbiornik Dębe-skorowidz arkuszy"
+   },
+   {
+    "id": "77",
+    "name": "Zbiornik Dębe-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "86",
+    "name": "Zbiornik Dobczyce-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "87",
+    "name": "Zbiornik Dobczyce-budynki"
+   },
+   {
+    "id": "88",
+    "name": "Zbiornik Dobczyce-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "89",
+    "name": "Zbiornik Dobczyce-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "90",
+    "name": "Zbiornik Dobczyce-budowle piętrzące"
+   },
+   {
+    "id": "91",
+    "name": "Zbiornik Dobczyce-skorowidz arkuszy"
+   },
+   {
+    "id": "85",
+    "name": "Zbiornik Dobczyce-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "94",
+    "name": "Zbiornik Goczałkowice-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "95",
+    "name": "Zbiornik Goczałkowice-budynki"
+   },
+   {
+    "id": "96",
+    "name": "Zbiornik Goczałkowice-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "97",
+    "name": "Zbiornik Goczałkowice-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "98",
+    "name": "Zbiornik Goczałkowice-budowle piętrzące"
+   },
+   {
+    "id": "99",
+    "name": "Zbiornik Goczałkowice-skorowidz arkuszy"
+   },
+   {
+    "id": "93",
+    "name": "Zbiornik Goczałkowice-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "102",
+    "name": "Zbiornik Jeziorsko-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "103",
+    "name": "Zbiornik Jeziorsko-budynki"
+   },
+   {
+    "id": "104",
+    "name": "Zbiornik Jeziorsko-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "105",
+    "name": "Zbiornik Jeziorsko-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "106",
+    "name": "Zbiornik Jeziorsko-budowle piętrzące"
+   },
+   {
+    "id": "107",
+    "name": "Zbiornik Jeziorsko-skorowidz arkuszy"
+   },
+   {
+    "id": "101",
+    "name": "Zbiornik Jeziorsko-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "110",
+    "name": "Zbiornik Koronowo-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "111",
+    "name": "Zbiornik Koronowo-budynki"
+   },
+   {
+    "id": "112",
+    "name": "Zbiornik Koronowo-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "113",
+    "name": "Zbiornik Koronowo-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "114",
+    "name": "Zbiornik Koronowo-budowle piętrzące"
+   },
+   {
+    "id": "115",
+    "name": "Zbiornik Koronowo-skorowidz arkuszy"
+   },
+   {
+    "id": "109",
+    "name": "Zbiornik Koronowo-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "118",
+    "name": "Zbiornik Mylof-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "119",
+    "name": "Zbiornik Mylof-budynki"
+   },
+   {
+    "id": "120",
+    "name": "Zbiornik Mylof-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "121",
+    "name": "Zbiornik Mylof-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "122",
+    "name": "Zbiornik Mylof-budowle piętrzące"
+   },
+   {
+    "id": "123",
+    "name": "Zbiornik Mylof-skorowidz arkuszy"
+   },
+   {
+    "id": "117",
+    "name": "Zbiornik Mylof-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "126",
+    "name": "Zbiornik Nysa-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "127",
+    "name": "Zbiornik Nysa-budynki"
+   },
+   {
+    "id": "128",
+    "name": "Zbiornik Nysa-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "129",
+    "name": "Zbiornik Nysa-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "130",
+    "name": "Zbiornik Nysa-budowle piętrzące"
+   },
+   {
+    "id": "131",
+    "name": "Zbiornik Nysa-skorowidz arkuszy"
+   },
+   {
+    "id": "125",
+    "name": "Zbiornik Nysa-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "134",
+    "name": "Zbiornik Otmuchów-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "135",
+    "name": "Zbiornik Otmuchów-budynki"
+   },
+   {
+    "id": "136",
+    "name": "Zbiornik Otmuchów-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "137",
+    "name": "Zbiornik Otmuchów-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "138",
+    "name": "Zbiornik Otmuchów-budowle piętrzące"
+   },
+   {
+    "id": "139",
+    "name": "Zbiornik Otmuchów-skorowidz arkuszy"
+   },
+   {
+    "id": "133",
+    "name": "Zbiornik Otmuchów-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "142",
+    "name": "Zbiornik Pakość-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "143",
+    "name": "Zbiornik Pakość-budynki"
+   },
+   {
+    "id": "144",
+    "name": "Zbiornik Pakość-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "145",
+    "name": "Zbiornik Pakość-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "146",
+    "name": "Zbiornik Pakość-budowle piętrzące"
+   },
+   {
+    "id": "147",
+    "name": "Zbiornik Pakość-skorowidz arkuszy"
+   },
+   {
+    "id": "141",
+    "name": "Zbiornik Pakość-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "150",
+    "name": "Zbiornik Porąbka-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "151",
+    "name": "Zbiornik Porąbka-budynki"
+   },
+   {
+    "id": "152",
+    "name": "Zbiornik Porąbka-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "153",
+    "name": "Zbiornik Porąbka-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "154",
+    "name": "Zbiornik Porąbka-budowle piętrzące"
+   },
+   {
+    "id": "155",
+    "name": "Zbiornik Porąbka-skorowidz arkuszy"
+   },
+   {
+    "id": "149",
+    "name": "Zbiornik Porąbka-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "158",
+    "name": "Zbiornik Poraj-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "159",
+    "name": "Zbiornik Poraj-budynki"
+   },
+   {
+    "id": "160",
+    "name": "Zbiornik Poraj-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "161",
+    "name": "Zbiornik Poraj-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "162",
+    "name": "Zbiornik Poraj-budowle piętrzące"
+   },
+   {
+    "id": "163",
+    "name": "Zbiornik Poraj-skorowidz arkuszy"
+   },
+   {
+    "id": "157",
+    "name": "Zbiornik Poraj-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "166",
+    "name": "Zbiornik Rożnów-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "167",
+    "name": "Zbiornik Rożnów-budynki"
+   },
+   {
+    "id": "168",
+    "name": "Zbiornik Rożnów-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "169",
+    "name": "Zbiornik Rożnów-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "170",
+    "name": "Zbiornik Rożnów-budowle piętrzące"
+   },
+   {
+    "id": "171",
+    "name": "Zbiornik Rożnów-skorowidz arkuszy"
+   },
+   {
+    "id": "165",
+    "name": "Zbiornik Rożnów-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "174",
+    "name": "Zbiornik Solina-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "175",
+    "name": "Zbiornik Solina-budynki"
+   },
+   {
+    "id": "176",
+    "name": "Zbiornik Solina-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "177",
+    "name": "Zbiornik Solina-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "178",
+    "name": "Zbiornik Solina-budowle piętrzące"
+   },
+   {
+    "id": "179",
+    "name": "Zbiornik Solina-skorowidz arkuszy"
+   },
+   {
+    "id": "173",
+    "name": "Zbiornik Solina-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "182",
+    "name": "Zbiornik Sulejów-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "183",
+    "name": "Zbiornik Sulejów-budynki"
+   },
+   {
+    "id": "184",
+    "name": "Zbiornik Sulejów-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "185",
+    "name": "Zbiornik Sulejów-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "186",
+    "name": "Zbiornik Sulejów-budowle piętrzące"
+   },
+   {
+    "id": "187",
+    "name": "Zbiornik Sulejów-skorowidz arkuszy"
+   },
+   {
+    "id": "181",
+    "name": "Zbiornik Sulejów-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "190",
+    "name": "Zbiornik Tresna-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "191",
+    "name": "Zbiornik Tresna-budynki"
+   },
+   {
+    "id": "192",
+    "name": "Zbiornik Tresna-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "193",
+    "name": "Zbiornik Tresna-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "194",
+    "name": "Zbiornik Tresna-budowle piętrzące"
+   },
+   {
+    "id": "195",
+    "name": "Zbiornik Tresna-skorowidz arkuszy"
+   },
+   {
+    "id": "189",
+    "name": "Zbiornik Tresna-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "198",
+    "name": "Zbiornik Turawa-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "199",
+    "name": "Zbiornik Turawa-budynki"
+   },
+   {
+    "id": "200",
+    "name": "Zbiornik Turawa-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "201",
+    "name": "Zbiornik Turawa-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "202",
+    "name": "Zbiornik Turawa-budowle piętrzące"
+   },
+   {
+    "id": "203",
+    "name": "Zbiornik Turawa-skorowidz arkuszy"
+   },
+   {
+    "id": "197",
+    "name": "Zbiornik Turawa-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "206",
+    "name": "Zbiornik Włocławek-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "207",
+    "name": "Zbiornik Włocławek-budynki"
+   },
+   {
+    "id": "208",
+    "name": "Zbiornik Włocławek-miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "209",
+    "name": "Zbiornik Włocławek-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "210",
+    "name": "Zbiornik Włocławek-budowle piętrzące"
+   },
+   {
+    "id": "211",
+    "name": "Zbiornik Włocławek-skorowidz arkuszy"
+   },
+   {
+    "id": "205",
+    "name": "Zbiornik Włocławek-wartości potencjalnych strat powodziowych"
+   },
+   {
+    "id": "3",
+    "name": "warstwy referencyjne-wody powierzchniowe"
+   }
+  ]
+ },
+ {
+  "id": "wody-mrp-ludzie-wal",
+  "name": "MRP · ludzie i straty, zniszczenie wału",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MRP20_SkutkiZycieZdrowiePotencjalneStraty_ZniszczenieWaluPowodziowego/MapServer/WMSServer",
+  "menu": "wody-mrp",
+  "default": "1",
+  "layers": [
+   {
+    "id": "1",
+    "name": "cieki naturalne i kanały"
+   },
+   {
+    "id": "3",
+    "name": "obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "4",
+    "name": "miejsce zniszczenia wału przeciwpowodziowego"
+   },
+   {
+    "id": "5",
+    "name": "miejscowości zagrożone powodzią"
+   },
+   {
+    "id": "6",
+    "name": "budynki"
+   },
+   {
+    "id": "7",
+    "name": "kilometraż rzeki"
+   },
+   {
+    "id": "8",
+    "name": "skorowidz arkuszy"
+   },
+   {
+    "id": "2",
+    "name": "wody powierzchniowe"
+   },
+   {
+    "id": "0",
+    "name": "wartości potencjalnych strat powodziowych"
+   }
+  ]
+ },
+ {
+  "id": "wody-mrp-srodowisko-02",
+  "name": "MRP · środowisko i gospodarka, 0,2%",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MRP20_SkutkiSrodowiskoKulturaGospodarka_NiskiePrawdopodPowodzi/MapServer/WMSServer",
+  "menu": "wody-mrp",
+  "default": "25",
+  "layers": [
+   {
+    "id": "11",
+    "name": "cieki naturalne i kanały (MRP od morza)"
+   },
+   {
+    "id": "3",
+    "name": "obszar zagrożenia powodziowego (MRP od morza)"
+   },
+   {
+    "id": "4",
+    "name": "ogród zoologiczny (MRP od morza)"
+   },
+   {
+    "id": "5",
+    "name": "obszar cenny kulturowo (MRP od morza)"
+   },
+   {
+    "id": "6",
+    "name": "składowisko odpadow (MRP od morza)"
+   },
+   {
+    "id": "7",
+    "name": "cmentarz (MRP od morza)"
+   },
+   {
+    "id": "8",
+    "name": "strefa ochronna ujęcia wody (MRP od morza)"
+   },
+   {
+    "id": "9",
+    "name": "formy ochrony przyrody (MRP od morza)"
+   },
+   {
+    "id": "12",
+    "name": "wał przeciwpowodziowy, przeciwsztormowy (MRP od morza)"
+   },
+   {
+    "id": "13",
+    "name": "granica portu i przystani morskiej (MRP od morza)"
+   },
+   {
+    "id": "14",
+    "name": "granica pasa technicznego brzegu morskiego (MRP od morza)"
+   },
+   {
+    "id": "15",
+    "name": "granica pasa ochronnego brzegu morskiego (MRP od morza)"
+   },
+   {
+    "id": "16",
+    "name": "oczyszczalnia, przepompownia (MRP od morza)"
+   },
+   {
+    "id": "17",
+    "name": "zakład przemysłowy (MRP od morza)"
+   },
+   {
+    "id": "18",
+    "name": "obiekt cenny kulturowo (MRP od morza)"
+   },
+   {
+    "id": "19",
+    "name": "kąpielisko (MRP od morza)"
+   },
+   {
+    "id": "20",
+    "name": "ujęcie wody (MRP od morza)"
+   },
+   {
+    "id": "21",
+    "name": "kilometraż brzegu morskiego (MRP od morza)"
+   },
+   {
+    "id": "22",
+    "name": "kilometraż rzeki (MRP od morza)"
+   },
+   {
+    "id": "10",
+    "name": "skorowidz arkuszy (MRP od morza)"
+   },
+   {
+    "id": "2",
+    "name": "wody powierzchniowe (MRP od morza)"
+   },
+   {
+    "id": "1",
+    "name": "klasy użytkowania terenu (MRP od morza)"
+   },
+   {
+    "id": "25",
+    "name": "cieki naturalne i kanały"
+   },
+   {
+    "id": "27",
+    "name": "obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "28",
+    "name": "ogród zoologiczny"
+   },
+   {
+    "id": "29",
+    "name": "obszar cenny kulturowo"
+   },
+   {
+    "id": "30",
+    "name": "składowisko odpadów"
+   },
+   {
+    "id": "31",
+    "name": "cmentarz"
+   },
+   {
+    "id": "32",
+    "name": "strefa ochronna ujęcia wody"
+   },
+   {
+    "id": "33",
+    "name": "formy ochrony przyrody"
+   },
+   {
+    "id": "34",
+    "name": "wał przeciwpowodziowy, zapora boczna"
+   },
+   {
+    "id": "35",
+    "name": "oczyszczalnia, przepompownia"
+   },
+   {
+    "id": "36",
+    "name": "zakład przemysłowy"
+   },
+   {
+    "id": "37",
+    "name": "obiekt cenny kulturowo"
+   },
+   {
+    "id": "38",
+    "name": "kąpielisko"
+   },
+   {
+    "id": "39",
+    "name": "ujęcie wody"
+   },
+   {
+    "id": "40",
+    "name": "kilometraż rzeki"
+   },
+   {
+    "id": "41",
+    "name": "skorowidz arkuszy"
+   },
+   {
+    "id": "26",
+    "name": "wody powierzchniowe"
+   },
+   {
+    "id": "24",
+    "name": "klasy użytkowania terenu"
+   }
+  ]
+ },
+ {
+  "id": "wody-mrp-srodowisko-1",
+  "name": "MRP · środowisko i gospodarka, 1%",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MRP20_SkutkiSrodowiskoKulturaGospodarka_SredniePrawdopodPowodzi/MapServer/WMSServer",
+  "menu": "wody-mrp",
+  "default": "25",
+  "layers": [
+   {
+    "id": "2",
+    "name": "cieki naturalne i kanały (MRP od morza)"
+   },
+   {
+    "id": "4",
+    "name": "obszar szczególnego zagrożenia powodzią (MRP od morza)"
+   },
+   {
+    "id": "5",
+    "name": "ogród zoologiczny (MRP od morza)"
+   },
+   {
+    "id": "6",
+    "name": "obszar cenny kulturowo (MRP od morza)"
+   },
+   {
+    "id": "7",
+    "name": "składowisko odpadow (MRP od morza)"
+   },
+   {
+    "id": "8",
+    "name": "cmentarz (MRP od morza)"
+   },
+   {
+    "id": "9",
+    "name": "strefa ochronna ujęcia wody (MRP od morza)"
+   },
+   {
+    "id": "10",
+    "name": "formy ochrony przyrody (MRP od morza)"
+   },
+   {
+    "id": "12",
+    "name": "wał przeciwpowodziowy, przeciwsztormowy (MRP od morza)"
+   },
+   {
+    "id": "13",
+    "name": "granica portu i przystani morskiej (MRP od morza)"
+   },
+   {
+    "id": "14",
+    "name": "granica pasa technicznego brzegu morskiego (MRP od morza)"
+   },
+   {
+    "id": "15",
+    "name": "granica pasa ochronnego brzegu morskiego (MRP od morza)"
+   },
+   {
+    "id": "16",
+    "name": "oczyszczalnia, przepompownia (MRP od morza)"
+   },
+   {
+    "id": "17",
+    "name": "zakład przemysłowy (MRP od morza)"
+   },
+   {
+    "id": "18",
+    "name": "obiekt cenny kulturowo (MRP od morza)"
+   },
+   {
+    "id": "19",
+    "name": "kąpielisko (MRP od morza)"
+   },
+   {
+    "id": "20",
+    "name": "ujęcie wody (MRP od morza)"
+   },
+   {
+    "id": "21",
+    "name": "kilometraż brzegu morskiego (MRP od morza)"
+   },
+   {
+    "id": "22",
+    "name": "kilometraż rzeki (MRP od morza)"
+   },
+   {
+    "id": "11",
+    "name": "skorowidz arkuszy (MRP od morza)"
+   },
+   {
+    "id": "3",
+    "name": "wody powierzchniowe (MRP od morza)"
+   },
+   {
+    "id": "1",
+    "name": "klasy użytkowania terenu (MRP od morza)"
+   },
+   {
+    "id": "25",
+    "name": "cieki naturalne i kanały"
+   },
+   {
+    "id": "27",
+    "name": "obszar szczególnego zagrożenia powodzią"
+   },
+   {
+    "id": "28",
+    "name": "ogród zoologiczny"
+   },
+   {
+    "id": "29",
+    "name": "obszar cenny kulturowo"
+   },
+   {
+    "id": "30",
+    "name": "składowisko odpadów"
+   },
+   {
+    "id": "31",
+    "name": "cmentarz"
+   },
+   {
+    "id": "32",
+    "name": "strefa ochronna ujęcia wody"
+   },
+   {
+    "id": "33",
+    "name": "formy ochrony przyrody"
+   },
+   {
+    "id": "34",
+    "name": "wał przeciwpowodziowy, zapora boczna"
+   },
+   {
+    "id": "35",
+    "name": "oczyszczalnia, przepompownia"
+   },
+   {
+    "id": "36",
+    "name": "zakład przemysłowy"
+   },
+   {
+    "id": "37",
+    "name": "obiekt cenny kulturowo"
+   },
+   {
+    "id": "38",
+    "name": "kąpielisko"
+   },
+   {
+    "id": "39",
+    "name": "ujęcie wody"
+   },
+   {
+    "id": "40",
+    "name": "kilometraż rzeki"
+   },
+   {
+    "id": "41",
+    "name": "skorowidz arkuszy"
+   },
+   {
+    "id": "26",
+    "name": "wody powierzchniowe"
+   },
+   {
+    "id": "24",
+    "name": "klasy użytkowania terenu"
+   }
+  ]
+ },
+ {
+  "id": "wody-mrp-srodowisko-10",
+  "name": "MRP · środowisko i gospodarka, 10%",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MRP20_SkutkiSrodowiskoKulturaGospodarka_WysokiePrawdopodPowodzi/MapServer/WMSServer",
+  "menu": "wody-mrp",
+  "default": "2",
+  "layers": [
+   {
+    "id": "2",
+    "name": "cieki naturalne i kanały"
+   },
+   {
+    "id": "4",
+    "name": "obszar szczególnego zagrożenia powodzią"
+   },
+   {
+    "id": "5",
+    "name": "ogród zoologiczny"
+   },
+   {
+    "id": "6",
+    "name": "obszar cenny kulturowo"
+   },
+   {
+    "id": "7",
+    "name": "składowisko odpadów"
+   },
+   {
+    "id": "8",
+    "name": "cmentarz"
+   },
+   {
+    "id": "9",
+    "name": "strefa ochronna ujęcia wody"
+   },
+   {
+    "id": "10",
+    "name": "formy ochrony przyrody"
+   },
+   {
+    "id": "11",
+    "name": "wał przeciwpowodziowy, zapora boczna"
+   },
+   {
+    "id": "12",
+    "name": "oczyszczalnia, przepompownia"
+   },
+   {
+    "id": "13",
+    "name": "zakład przemysłowy"
+   },
+   {
+    "id": "14",
+    "name": "obiekt cenny kulturowo"
+   },
+   {
+    "id": "15",
+    "name": "kąpielisko"
+   },
+   {
+    "id": "16",
+    "name": "ujęcie wody"
+   },
+   {
+    "id": "17",
+    "name": "kilometraż rzeki"
+   },
+   {
+    "id": "18",
+    "name": "skorowidz arkuszy"
+   },
+   {
+    "id": "3",
+    "name": "wody powierzchniowe"
+   },
+   {
+    "id": "1",
+    "name": "klasy użytkowania terenu"
+   }
+  ]
+ },
+ {
+  "id": "wody-mrp-srodowisko-wal-sztormowy",
+  "name": "MRP · środowisko i gospodarka, wał sztormowy",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MRP20_SkutkiSrodowiskoKulturaGospodarka_ZniszczenieWaluSztormowego/MapServer/WMSServer",
+  "menu": "wody-mrp",
+  "default": "9",
+  "layers": [
+   {
+    "id": "9",
+    "name": "cieki naturalne i kanały"
+   },
+   {
+    "id": "2",
+    "name": "obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "3",
+    "name": "ogród zoologiczny"
+   },
+   {
+    "id": "4",
+    "name": "obszar cenny kulturowo"
+   },
+   {
+    "id": "5",
+    "name": "składowisko odpadów"
+   },
+   {
+    "id": "6",
+    "name": "cmentarz"
+   },
+   {
+    "id": "7",
+    "name": "strefa ochronna ujęcia wody"
+   },
+   {
+    "id": "8",
+    "name": "formy ochrony przyrody"
+   },
+   {
+    "id": "10",
+    "name": "miejsce zniszczenia wału przeciwpow., przeciwsztormowego"
+   },
+   {
+    "id": "11",
+    "name": "granica portu i przystani morskiej"
+   },
+   {
+    "id": "12",
+    "name": "granica pasa technicznego brzegu morskiego"
+   },
+   {
+    "id": "13",
+    "name": "granica pasa ochronnego brzegu morskiego"
+   },
+   {
+    "id": "14",
+    "name": "oczyszczalnia, przepompownia"
+   },
+   {
+    "id": "15",
+    "name": "zakład przemysłowy"
+   },
+   {
+    "id": "16",
+    "name": "obiekt cenny kulturowo"
+   },
+   {
+    "id": "17",
+    "name": "kąpielisko"
+   },
+   {
+    "id": "18",
+    "name": "ujęcie wody"
+   },
+   {
+    "id": "19",
+    "name": "kilometraż brzegu morskiego"
+   },
+   {
+    "id": "20",
+    "name": "kilometraż rzeki"
+   },
+   {
+    "id": "21",
+    "name": "skorowidz arkuszy"
+   },
+   {
+    "id": "1",
+    "name": "wody powierzchniowe"
+   },
+   {
+    "id": "0",
+    "name": "klasy użytkowania terenu"
+   }
+  ]
+ },
+ {
+  "id": "wody-mrp-srodowisko-budowla",
+  "name": "MRP · środowisko i gospodarka, zniszczenie budowli",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MRP20_SkutkiSrodowiskoKulturaGospodarka_ZniszczenieBudowliPietrzacej/MapServer/WMSServer",
+  "menu": "wody-mrp",
+  "default": "161",
+  "layers": [
+   {
+    "id": "161",
+    "name": "Warstwy wspólne-ogrody zoologiczne"
+   },
+   {
+    "id": "162",
+    "name": "Warstwy wspólne-obszary cenne kulturowo"
+   },
+   {
+    "id": "163",
+    "name": "Warstwy wspólne-składowisko odpadów"
+   },
+   {
+    "id": "164",
+    "name": "Warstwy wspólne-cmentarze"
+   },
+   {
+    "id": "165",
+    "name": "Warstwy wspólne-strefy ochronne ujęcia wody"
+   },
+   {
+    "id": "166",
+    "name": "Warstwy wspólne-formy ochrony przyrody"
+   },
+   {
+    "id": "167",
+    "name": "Warstwy wspólne-zapora boczna"
+   },
+   {
+    "id": "168",
+    "name": "Warstwy wspólne-wały przeciwpowodziowe"
+   },
+   {
+    "id": "169",
+    "name": "Warstwy wspólne-oczyszczalnie i przepompownie"
+   },
+   {
+    "id": "170",
+    "name": "Warstwy wspólne-zakłady przemysłowe"
+   },
+   {
+    "id": "171",
+    "name": "Warstwy wspólne-obiekty cenne kulturowo"
+   },
+   {
+    "id": "172",
+    "name": "Warstwy wspólne-kąpieliska"
+   },
+   {
+    "id": "173",
+    "name": "Warstwy wspólne-ujęcia wody"
+   },
+   {
+    "id": "174",
+    "name": "Warstwy wspólne-kilometraż rzeki"
+   },
+   {
+    "id": "6",
+    "name": "Zbiornik Świnna Poręba-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "7",
+    "name": "Zbiornik Świnna Poręba-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "8",
+    "name": "Zbiornik Świnna Poręba-budowle piętrzące"
+   },
+   {
+    "id": "9",
+    "name": "Zbiornik Świnna Poręba-skorowidz arkuszy"
+   },
+   {
+    "id": "5",
+    "name": "Zbiornik Świnna Poręba-klasy użytkowania terenu"
+   },
+   {
+    "id": "12",
+    "name": "Zbiornik Słup-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "13",
+    "name": "Zbiornik Słup-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "14",
+    "name": "Zbiornik Słup-budowle piętrzące"
+   },
+   {
+    "id": "15",
+    "name": "Zbiornik Słup-skorowidz arkuszy"
+   },
+   {
+    "id": "11",
+    "name": "Zbiornik Słup-klasy użytkowania terenu"
+   },
+   {
+    "id": "18",
+    "name": "Zbiornik Przeczyce-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "19",
+    "name": "Zbiornik Przeczyce-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "20",
+    "name": "Zbiornik Przeczyce-budowle piętrzące"
+   },
+   {
+    "id": "21",
+    "name": "Zbiornik Przeczyce-skorowidz arkuszy"
+   },
+   {
+    "id": "17",
+    "name": "Zbiornik Przeczyce-klasy użytkowania terenu"
+   },
+   {
+    "id": "24",
+    "name": "Zbiornik Mietków-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "25",
+    "name": "Zbiornik Mietków-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "26",
+    "name": "Zbiornik Mietków-budowle piętrzące"
+   },
+   {
+    "id": "27",
+    "name": "Zbiornik Mietków-skorowidz arkuszy"
+   },
+   {
+    "id": "23",
+    "name": "Zbiornik Mietków-klasy użytkowania terenu"
+   },
+   {
+    "id": "30",
+    "name": "Zbiornik Dobromierz-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "31",
+    "name": "Zbiornik Dobromierz-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "32",
+    "name": "Zbiornik Dobromierz-budowle piętrzące"
+   },
+   {
+    "id": "33",
+    "name": "Zbiornik Dobromierz-skorowidz arkuszy"
+   },
+   {
+    "id": "29",
+    "name": "Zbiornik Dobromierz-klasy użytkowania terenu"
+   },
+   {
+    "id": "36",
+    "name": "Zbiornik Chańcza-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "37",
+    "name": "Zbiornik Chańcza-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "38",
+    "name": "Zbiornik Chańcza-budowle piętrzące"
+   },
+   {
+    "id": "39",
+    "name": "Zbiornik Chańcza-skorowidz arkuszy"
+   },
+   {
+    "id": "35",
+    "name": "Zbiornik Chańcza-klasy użytkowania terenu"
+   },
+   {
+    "id": "42",
+    "name": "Zbiornik Besko-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "43",
+    "name": "Zbiornik Besko-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "44",
+    "name": "Zbiornik Besko-budowle piętrzące"
+   },
+   {
+    "id": "45",
+    "name": "Zbiornik Besko-skorowidz arkuszy"
+   },
+   {
+    "id": "41",
+    "name": "Zbiornik Besko-klasy użytkowania terenu"
+   },
+   {
+    "id": "48",
+    "name": "Zbiornik Bukówka-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "49",
+    "name": "Zbiornik Bukówka-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "50",
+    "name": "Zbiornik Bukówka-budowle piętrzące"
+   },
+   {
+    "id": "51",
+    "name": "Zbiornik Bukówka-skorowidz arkuszy"
+   },
+   {
+    "id": "47",
+    "name": "Zbiornik Bukówka-klasy użytkowania terenu"
+   },
+   {
+    "id": "54",
+    "name": "Zbiornik Czorsztyn-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "55",
+    "name": "Zbiornik Czorsztyn-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "56",
+    "name": "Zbiornik Czorsztyn-budowle piętrzące"
+   },
+   {
+    "id": "57",
+    "name": "Zbiornik Czorsztyn-skorowidz arkuszy"
+   },
+   {
+    "id": "53",
+    "name": "Zbiornik Czorsztyn-klasy użytkowania terenu"
+   },
+   {
+    "id": "60",
+    "name": "Zbiornik Dębe-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "61",
+    "name": "Zbiornik Dębe-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "62",
+    "name": "Zbiornik Dębe-budowle piętrzące"
+   },
+   {
+    "id": "63",
+    "name": "Zbiornik Dębe-skorowidz arkuszy"
+   },
+   {
+    "id": "59",
+    "name": "Zbiornik Dębe-klasy użytkowania terenu"
+   },
+   {
+    "id": "66",
+    "name": "Zbiornik Dobczyce-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "67",
+    "name": "Zbiornik Dobczyce-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "68",
+    "name": "Zbiornik Dobczyce-budowle piętrzące"
+   },
+   {
+    "id": "69",
+    "name": "Zbiornik Dobczyce-skorowidz arkuszy"
+   },
+   {
+    "id": "65",
+    "name": "Zbiornik Dobczyce-klasy użytkowania terenu"
+   },
+   {
+    "id": "72",
+    "name": "Zbiornik Goczałkowice-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "73",
+    "name": "Zbiornik Goczałkowice-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "74",
+    "name": "Zbiornik Goczałkowice-budowle piętrzące"
+   },
+   {
+    "id": "75",
+    "name": "Zbiornik Goczałkowice-skorowidz arkuszy"
+   },
+   {
+    "id": "71",
+    "name": "Zbiornik Goczałkowice-klasy użytkowania terenu"
+   },
+   {
+    "id": "78",
+    "name": "Zbiornik Jeziorsko-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "79",
+    "name": "Zbiornik Jeziorsko-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "80",
+    "name": "Zbiornik Jeziorsko-budowle piętrzące"
+   },
+   {
+    "id": "81",
+    "name": "Zbiornik Jeziorsko-skorowidz arkuszy"
+   },
+   {
+    "id": "77",
+    "name": "Zbiornik Jeziorsko-klasy użytkowania terenu"
+   },
+   {
+    "id": "84",
+    "name": "Zbiornik Koronowo-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "85",
+    "name": "Zbiornik Koronowo-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "86",
+    "name": "Zbiornik Koronowo-budowle piętrzące"
+   },
+   {
+    "id": "87",
+    "name": "Zbiornik Koronowo-skorowidz arkuszy"
+   },
+   {
+    "id": "83",
+    "name": "Zbiornik Koronowo-klasy użytkowania terenu"
+   },
+   {
+    "id": "90",
+    "name": "Zbiornik Mylof-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "91",
+    "name": "Zbiornik Mylof-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "92",
+    "name": "Zbiornik Mylof-budowle piętrzące"
+   },
+   {
+    "id": "93",
+    "name": "Zbiornik Mylof-skorowidz arkuszy"
+   },
+   {
+    "id": "89",
+    "name": "Zbiornik Mylof-klasy użytkowania terenu"
+   },
+   {
+    "id": "96",
+    "name": "Zbiornik Nysa-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "97",
+    "name": "Zbiornik Nysa-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "98",
+    "name": "Zbiornik Nysa-budowle piętrzące"
+   },
+   {
+    "id": "99",
+    "name": "Zbiornik Nysa-skorowidz arkuszy"
+   },
+   {
+    "id": "95",
+    "name": "Zbiornik Nysa-klasy użytkowania terenu"
+   },
+   {
+    "id": "102",
+    "name": "Zbiornik Otmuchów-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "103",
+    "name": "Zbiornik Otmuchów-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "104",
+    "name": "Zbiornik Otmuchów-budowle piętrzące"
+   },
+   {
+    "id": "105",
+    "name": "Zbiornik Otmuchów-skorowidz arkuszy"
+   },
+   {
+    "id": "101",
+    "name": "Zbiornik Otmuchów-klasy użytkowania terenu"
+   },
+   {
+    "id": "108",
+    "name": "Zbiornik Pakość-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "109",
+    "name": "Zbiornik Pakość-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "110",
+    "name": "Zbiornik Pakość-budowle piętrzące"
+   },
+   {
+    "id": "111",
+    "name": "Zbiornik Pakość-skorowidz arkuszy"
+   },
+   {
+    "id": "107",
+    "name": "Zbiornik Pakość-klasy użytkowania terenu"
+   },
+   {
+    "id": "114",
+    "name": "Zbiornik Porąbka-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "115",
+    "name": "Zbiornik Porąbka-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "116",
+    "name": "Zbiornik Porąbka-budowle piętrzące"
+   },
+   {
+    "id": "117",
+    "name": "Zbiornik Porąbka-skorowidz arkuszy"
+   },
+   {
+    "id": "113",
+    "name": "Zbiornik Porąbka-klasy użytkowania terenu"
+   },
+   {
+    "id": "120",
+    "name": "Zbiornik Poraj-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "121",
+    "name": "Zbiornik Poraj-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "122",
+    "name": "Zbiornik Poraj-budowle piętrzące"
+   },
+   {
+    "id": "123",
+    "name": "Zbiornik Poraj-skorowidz arkuszy"
+   },
+   {
+    "id": "119",
+    "name": "Zbiornik Poraj-klasy użytkowania terenu"
+   },
+   {
+    "id": "126",
+    "name": "Zbiornik Rożnów-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "127",
+    "name": "Zbiornik Rożnów-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "128",
+    "name": "Zbiornik Rożnów-budowle piętrzące"
+   },
+   {
+    "id": "129",
+    "name": "Zbiornik Rożnów-skorowidz arkuszy"
+   },
+   {
+    "id": "125",
+    "name": "Zbiornik Rożnów-klasy użytkowania terenu"
+   },
+   {
+    "id": "132",
+    "name": "Zbiornik Solina-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "133",
+    "name": "Zbiornik Solina-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "134",
+    "name": "Zbiornik Solina-budowle piętrzące"
+   },
+   {
+    "id": "135",
+    "name": "Zbiornik Solina-skorowidz arkuszy"
+   },
+   {
+    "id": "131",
+    "name": "Zbiornik Solina-klasy użytkowania terenu"
+   },
+   {
+    "id": "138",
+    "name": "Zbiornik Sulejów-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "139",
+    "name": "Zbiornik Sulejów-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "140",
+    "name": "Zbiornik Sulejów-budowle piętrzące"
+   },
+   {
+    "id": "141",
+    "name": "Zbiornik Sulejów-skorowidz arkuszy"
+   },
+   {
+    "id": "137",
+    "name": "Zbiornik Sulejów-klasy użytkowania terenu"
+   },
+   {
+    "id": "144",
+    "name": "Zbiornik Tresna-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "145",
+    "name": "Zbiornik Tresna-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "146",
+    "name": "Zbiornik Tresna-budowle piętrzące"
+   },
+   {
+    "id": "147",
+    "name": "Zbiornik Tresna-skorowidz arkuszy"
+   },
+   {
+    "id": "143",
+    "name": "Zbiornik Tresna-klasy użytkowania terenu"
+   },
+   {
+    "id": "150",
+    "name": "Zbiornik Turawa-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "151",
+    "name": "Zbiornik Turawa-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "152",
+    "name": "Zbiornik Turawa-budowle piętrzące"
+   },
+   {
+    "id": "153",
+    "name": "Zbiornik Turawa-skorowidz arkuszy"
+   },
+   {
+    "id": "149",
+    "name": "Zbiornik Turawa-klasy użytkowania terenu"
+   },
+   {
+    "id": "156",
+    "name": "Zbiornik Włocławek-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "157",
+    "name": "Zbiornik Włocławek-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "158",
+    "name": "Zbiornik Włocławek-budowle piętrzące"
+   },
+   {
+    "id": "159",
+    "name": "Zbiornik Włocławek-skorowidz arkuszy"
+   },
+   {
+    "id": "155",
+    "name": "Zbiornik Włocławek-klasy użytkowania terenu"
+   },
+   {
+    "id": "3",
+    "name": "warstwy referencyjne-wody powierzchniowe"
+   }
+  ]
+ },
+ {
+  "id": "wody-mrp-srodowisko-wal",
+  "name": "MRP · środowisko i gospodarka, zniszczenie wału",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MRP20_SkutkiSrodowiskoKulturaGospodarka_ZniszczenieWaluPowodziowego/MapServer/WMSServer",
+  "menu": "wody-mrp",
+  "default": "1",
+  "layers": [
+   {
+    "id": "1",
+    "name": "cieki naturalne i kanały"
+   },
+   {
+    "id": "3",
+    "name": "obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "4",
+    "name": "ogród zoologiczny"
+   },
+   {
+    "id": "5",
+    "name": "obszar cenny kulturowo"
+   },
+   {
+    "id": "6",
+    "name": "składowisko odpadow"
+   },
+   {
+    "id": "7",
+    "name": "cmentarz"
+   },
+   {
+    "id": "8",
+    "name": "strefa ochronna ujęcia wody"
+   },
+   {
+    "id": "9",
+    "name": "formy ochrony przyrody"
+   },
+   {
+    "id": "10",
+    "name": "miejsce zniszczenia wału przeciwpowodziowego"
+   },
+   {
+    "id": "11",
+    "name": "oczyszczalnia, przepompownia"
+   },
+   {
+    "id": "12",
+    "name": "zakład przemysłowy"
+   },
+   {
+    "id": "13",
+    "name": "obiekt cenny kulturowo"
+   },
+   {
+    "id": "14",
+    "name": "kąpielisko"
+   },
+   {
+    "id": "15",
+    "name": "ujęcie wody"
+   },
+   {
+    "id": "16",
+    "name": "kilometraż rzeki"
+   },
+   {
+    "id": "17",
+    "name": "skorowidz arkuszy"
+   },
+   {
+    "id": "2",
+    "name": "wody powierzchniowe"
+   },
+   {
+    "id": "0",
+    "name": "klasy użytkowania terenu"
+   }
+  ]
+ },
+ {
+  "id": "wody-mzp-glebokosc-02",
+  "name": "MZP · głębokość, 0,2%",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MZP20_Glebokosc_NiskiePrawdopodPowodzi/MapServer/WMSServer",
+  "menu": "wody-mzp",
+  "default": "17",
+  "layers": [
+   {
+    "id": "2",
+    "name": "obszar zagrożenia powodziowego (MZP od morza)"
+   },
+   {
+    "id": "5",
+    "name": "wał przeciwpowodziowy, przeciwsztormowy (MZP od morza)"
+   },
+   {
+    "id": "6",
+    "name": "miejsca przelania się wód przez wał przeciwpowodziowy, przeciwsztormowy (MZP od morza)"
+   },
+   {
+    "id": "7",
+    "name": "granica portu i przystani morskiej (MZP od morza)"
+   },
+   {
+    "id": "8",
+    "name": "granica pasa technicznego brzegu morskiego (MZP od morza)"
+   },
+   {
+    "id": "9",
+    "name": "granica pasa ochronnego brzegu morskiego (MZP od morza)"
+   },
+   {
+    "id": "10",
+    "name": "kilometraż brzegu morskiego (MZP od morza)"
+   },
+   {
+    "id": "11",
+    "name": "kilometraż rzeki (MZP od morza)"
+   },
+   {
+    "id": "12",
+    "name": "rzędna korony wału przeciwpowodziowego, przeciwsztormowego (MZP od morza)"
+   },
+   {
+    "id": "13",
+    "name": "maksymalna rzędna zwierciadła wody (MZP od morza)"
+   },
+   {
+    "id": "14",
+    "name": "skorowidz arkuszy (MZP od morza)"
+   },
+   {
+    "id": "3",
+    "name": "cieki naturalne i kanały (MZP od morza)"
+   },
+   {
+    "id": "4",
+    "name": "wody powierzchniowe (MZP od morza)"
+   },
+   {
+    "id": "1",
+    "name": "głębokość wody w [m] (MZP od morza)"
+   },
+   {
+    "id": "17",
+    "name": "obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "20",
+    "name": "wał przeciwpowodziowy, zapora boczna"
+   },
+   {
+    "id": "21",
+    "name": "miejsca przelania się wód przez wał przeciwpowodziowy lub zaporę boczną"
+   },
+   {
+    "id": "22",
+    "name": "rzędna korony wału przeciwpowodziowego"
+   },
+   {
+    "id": "23",
+    "name": "kilometraż rzeki"
+   },
+   {
+    "id": "24",
+    "name": "maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "25",
+    "name": "skorowidz arkuszy"
+   },
+   {
+    "id": "18",
+    "name": "cieki naturalne i kanały"
+   },
+   {
+    "id": "19",
+    "name": "wody powierzchniowe"
+   },
+   {
+    "id": "16",
+    "name": "głębokość wody w [m]"
+   }
+  ]
+ },
+ {
+  "id": "wody-mzp-glebokosc-1",
+  "name": "MZP · głębokość, 1%",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MZP20_Glebokosc_SredniePrawdopodPowodzi/MapServer/WMSServer",
+  "menu": "wody-mzp",
+  "default": "17",
+  "layers": [
+   {
+    "id": "2",
+    "name": "obszar szczególnego zagrożenia powodzią (MZP od morza)"
+   },
+   {
+    "id": "5",
+    "name": "wał przeciwpowodziowy, przeciwsztormowy (MZP od morza)"
+   },
+   {
+    "id": "6",
+    "name": "miejsca przelania się wód przez wał przeciwpowodziowy, przeciwsztormowy (MZP od morza)"
+   },
+   {
+    "id": "7",
+    "name": "granica portu i przystani morskiej (MZP od morza)"
+   },
+   {
+    "id": "8",
+    "name": "granica pasa technicznego brzegu morskiego (MZP od morza)"
+   },
+   {
+    "id": "9",
+    "name": "granica pasa ochronnego brzegu morskiego (MZP od morza)"
+   },
+   {
+    "id": "10",
+    "name": "kilometraż brzegu morskiego (MZP od morza)"
+   },
+   {
+    "id": "11",
+    "name": "kilometraż rzeki (MZP od morza)"
+   },
+   {
+    "id": "12",
+    "name": "rzędna korony wału przeciwpowodziowego, przeciwsztormowego (MZP od morza)"
+   },
+   {
+    "id": "13",
+    "name": "maksymalna rzędna zwierciadła wody (MZP od morza)"
+   },
+   {
+    "id": "14",
+    "name": "skorowidz arkuszy (MZP od morza)"
+   },
+   {
+    "id": "3",
+    "name": "cieki naturalne i kanały (MZP od morza)"
+   },
+   {
+    "id": "4",
+    "name": "wody powierzchniowe (MZP od morza)"
+   },
+   {
+    "id": "1",
+    "name": "głębokość wody w [m] (MZP od morza)"
+   },
+   {
+    "id": "17",
+    "name": "obszar szczególnego zagrożenia powodzią"
+   },
+   {
+    "id": "20",
+    "name": "wał przeciwpowodziowy, zapora boczna"
+   },
+   {
+    "id": "21",
+    "name": "miejsca przelania się wód przez wał przeciwpowodziowy lub zaporę boczną"
+   },
+   {
+    "id": "22",
+    "name": "kilometraż rzeki"
+   },
+   {
+    "id": "23",
+    "name": "rzędna korony wału przeciwpowodziowego"
+   },
+   {
+    "id": "24",
+    "name": "maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "25",
+    "name": "skorowidz arkuszy"
+   },
+   {
+    "id": "18",
+    "name": "cieki naturalne i kanały"
+   },
+   {
+    "id": "19",
+    "name": "wody powierzchniowe"
+   },
+   {
+    "id": "16",
+    "name": "głębokość wody w [m]"
+   }
+  ]
+ },
+ {
+  "id": "wody-mzp-glebokosc-10",
+  "name": "MZP · głębokość, 10%",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MZP20_Glebokosc_WysokiePrawdopodPowodzi/MapServer/WMSServer",
+  "menu": "wody-mzp",
+  "default": "2",
+  "layers": [
+   {
+    "id": "2",
+    "name": "obszar szczególnego zagrożenia powodzią"
+   },
+   {
+    "id": "5",
+    "name": "wał przeciwpowodziowy, zapora boczna"
+   },
+   {
+    "id": "6",
+    "name": "miejsca przelania się wód przez wał przeciwpowodziowy lub zaporę boczną"
+   },
+   {
+    "id": "7",
+    "name": "kilometraż rzeki"
+   },
+   {
+    "id": "8",
+    "name": "rzędna korony wału przeciwpowodziowego"
+   },
+   {
+    "id": "9",
+    "name": "maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "10",
+    "name": "skorowidz arkuszy"
+   },
+   {
+    "id": "3",
+    "name": "cieki naturalne i kanały"
+   },
+   {
+    "id": "4",
+    "name": "wody powierzchniowe"
+   },
+   {
+    "id": "1",
+    "name": "głębokość wody w [m]"
+   }
+  ]
+ },
+ {
+  "id": "wody-mzp-zniszczenie-budowli",
+  "name": "MZP · głębokość, zniszczenie budowli piętrzącej",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MZP20_Glebokosc_ZniszczenieBudowliPietrzacejj/MapServer/WMSServer",
+  "menu": "wody-mzp",
+  "default": "186",
+  "layers": [
+   {
+    "id": "186",
+    "name": "Warstwy wspólne-zapora boczna"
+   },
+   {
+    "id": "187",
+    "name": "Warstwy wspólne-wały przeciwpowodziowe"
+   },
+   {
+    "id": "188",
+    "name": "Warstwy wspólne-rzędna korony wału przeciwpowodziowego"
+   },
+   {
+    "id": "189",
+    "name": "Warstwy wspólne-kilometraż rzeki"
+   },
+   {
+    "id": "1",
+    "name": "warstwy referencyjne-cieki naturalne i kanały"
+   },
+   {
+    "id": "5",
+    "name": "Zbiornik Świnna Poręba-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "6",
+    "name": "Zbiornik Świnna Poręba-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "7",
+    "name": "Zbiornik Świnna Poręba-budowle piętrzące"
+   },
+   {
+    "id": "8",
+    "name": "Zbiornik Świnna Poręba-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "9",
+    "name": "Zbiornik Świnna Poręba-skorowidz arkuszy"
+   },
+   {
+    "id": "4",
+    "name": "Zbiornik Świnna Poręba-głębokość wody w [m]"
+   },
+   {
+    "id": "12",
+    "name": "Zbiornik Słup-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "13",
+    "name": "Zbiornik Słup-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "14",
+    "name": "Zbiornik Słup-budowle piętrzące"
+   },
+   {
+    "id": "15",
+    "name": "Zbiornik Słup-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "16",
+    "name": "Zbiornik Słup-skorowidz arkuszy"
+   },
+   {
+    "id": "11",
+    "name": "Zbiornik Słup-głębokość wody w [m]"
+   },
+   {
+    "id": "19",
+    "name": "Zbiornik Przeczyce-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "20",
+    "name": "Zbiornik Przeczyce-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "21",
+    "name": "Zbiornik Przeczyce-budowle piętrzące"
+   },
+   {
+    "id": "22",
+    "name": "Zbiornik Przeczyce-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "23",
+    "name": "Zbiornik Przeczyce-skorowidz arkuszy"
+   },
+   {
+    "id": "18",
+    "name": "Zbiornik Przeczyce-głębokość wody w [m]"
+   },
+   {
+    "id": "26",
+    "name": "Zbiornik Mietków-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "27",
+    "name": "Zbiornik Mietków-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "28",
+    "name": "Zbiornik Mietków-budowle piętrzące"
+   },
+   {
+    "id": "29",
+    "name": "Zbiornik Mietków-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "30",
+    "name": "Zbiornik Mietków-skorowidz arkuszy"
+   },
+   {
+    "id": "25",
+    "name": "Zbiornik Mietków-głębokość wody w [m]"
+   },
+   {
+    "id": "33",
+    "name": "Zbiornik Dobromierz-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "34",
+    "name": "Zbiornik Dobromierz-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "35",
+    "name": "Zbiornik Dobromierz-budowle piętrzące"
+   },
+   {
+    "id": "36",
+    "name": "Zbiornik Dobromierz-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "37",
+    "name": "Zbiornik Dobromierz-skorowidz arkuszy"
+   },
+   {
+    "id": "32",
+    "name": "Zbiornik Dobromierz-głębokość wody w [m]"
+   },
+   {
+    "id": "40",
+    "name": "Zbiornik Chańcza-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "41",
+    "name": "Zbiornik Chańcza-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "42",
+    "name": "Zbiornik Chańcza-budowle piętrzące"
+   },
+   {
+    "id": "43",
+    "name": "Zbiornik Chańcza-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "44",
+    "name": "Zbiornik Chańcza-skorowidz arkuszy"
+   },
+   {
+    "id": "39",
+    "name": "Zbiornik Chańcza-głębokość wody w [m]"
+   },
+   {
+    "id": "47",
+    "name": "Zbiornik Besko-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "48",
+    "name": "Zbiornik Besko-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "49",
+    "name": "Zbiornik Besko-budowle piętrzące"
+   },
+   {
+    "id": "50",
+    "name": "Zbiornik Besko-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "51",
+    "name": "Zbiornik Besko-skorowidz arkuszy"
+   },
+   {
+    "id": "46",
+    "name": "Zbiornik Besko-głębokość wody w [m]"
+   },
+   {
+    "id": "54",
+    "name": "Zbiornik Bukówka-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "55",
+    "name": "Zbiornik Bukówka-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "56",
+    "name": "Zbiornik Bukówka-budowle piętrzące"
+   },
+   {
+    "id": "57",
+    "name": "Zbiornik Bukówka-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "58",
+    "name": "Zbiornik Bukówka-skorowidz arkuszy"
+   },
+   {
+    "id": "53",
+    "name": "Zbiornik Bukówka-głębokość wody w [m]"
+   },
+   {
+    "id": "61",
+    "name": "Zbiornik Czorsztyn-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "62",
+    "name": "Zbiornik Czorsztyn-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "63",
+    "name": "Zbiornik Czorsztyn-budowle piętrzące"
+   },
+   {
+    "id": "64",
+    "name": "Zbiornik Czorsztyn-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "65",
+    "name": "Zbiornik Czorsztyn-skorowidz arkuszy"
+   },
+   {
+    "id": "60",
+    "name": "Zbiornik Czorsztyn-głębokość wody w [m]"
+   },
+   {
+    "id": "68",
+    "name": "Zbiornik Dębe-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "69",
+    "name": "Zbiornik Dębe-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "70",
+    "name": "Zbiornik Dębe-budowle piętrzące"
+   },
+   {
+    "id": "71",
+    "name": "Zbiornik Dębe-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "72",
+    "name": "Zbiornik Dębe-skorowidz arkuszy"
+   },
+   {
+    "id": "67",
+    "name": "Zbiornik Dębe-głębokość wody w [m]"
+   },
+   {
+    "id": "75",
+    "name": "Zbiornik Dobczyce-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "76",
+    "name": "Zbiornik Dobczyce-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "77",
+    "name": "Zbiornik Dobczyce-budowle piętrzące"
+   },
+   {
+    "id": "78",
+    "name": "Zbiornik Dobczyce-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "79",
+    "name": "Zbiornik Dobczyce-skorowidz arkuszy"
+   },
+   {
+    "id": "74",
+    "name": "Zbiornik Dobczyce-głębokość wody w [m]"
+   },
+   {
+    "id": "82",
+    "name": "Zbiornik Goczałkowice-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "83",
+    "name": "Zbiornik Goczałkowice-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "84",
+    "name": "Zbiornik Goczałkowice-budowle piętrzące"
+   },
+   {
+    "id": "85",
+    "name": "Zbiornik Goczałkowice-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "86",
+    "name": "Zbiornik Goczałkowice-skorowidz arkuszy"
+   },
+   {
+    "id": "81",
+    "name": "Zbiornik Goczałkowice-głębokość wody w [m]"
+   },
+   {
+    "id": "89",
+    "name": "Zbiornik Jeziorsko-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "90",
+    "name": "Zbiornik Jeziorsko-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "91",
+    "name": "Zbiornik Jeziorsko-budowle piętrzące"
+   },
+   {
+    "id": "92",
+    "name": "Zbiornik Jeziorsko-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "93",
+    "name": "Zbiornik Jeziorsko-skorowidz arkuszy"
+   },
+   {
+    "id": "88",
+    "name": "Zbiornik Jeziorsko-głębokość wody w [m]"
+   },
+   {
+    "id": "96",
+    "name": "Zbiornik Koronowo-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "97",
+    "name": "Zbiornik Koronowo-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "98",
+    "name": "Zbiornik Koronowo-budowle piętrzące"
+   },
+   {
+    "id": "99",
+    "name": "Zbiornik Koronowo-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "100",
+    "name": "Zbiornik Koronowo-skorowidz arkuszy"
+   },
+   {
+    "id": "95",
+    "name": "Zbiornik Koronowo-głębokość wody w [m]"
+   },
+   {
+    "id": "103",
+    "name": "Zbiornik Mylof-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "104",
+    "name": "Zbiornik Mylof-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "105",
+    "name": "Zbiornik Mylof-budowle piętrzące"
+   },
+   {
+    "id": "106",
+    "name": "Zbiornik Mylof-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "107",
+    "name": "Zbiornik Mylof-skorowidz arkuszy"
+   },
+   {
+    "id": "102",
+    "name": "Zbiornik Mylof-głębokość wody w [m]"
+   },
+   {
+    "id": "110",
+    "name": "Zbiornik Nysa-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "111",
+    "name": "Zbiornik Nysa-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "112",
+    "name": "Zbiornik Nysa-budowle piętrzące"
+   },
+   {
+    "id": "113",
+    "name": "Zbiornik Nysa-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "114",
+    "name": "Zbiornik Nysa-skorowidz arkuszy"
+   },
+   {
+    "id": "109",
+    "name": "Zbiornik Nysa-głębokość wody w [m]"
+   },
+   {
+    "id": "117",
+    "name": "Zbiornik Otmuchów-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "118",
+    "name": "Zbiornik Otmuchów-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "119",
+    "name": "Zbiornik Otmuchów-budowle piętrzące"
+   },
+   {
+    "id": "120",
+    "name": "Zbiornik Otmuchów-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "121",
+    "name": "Zbiornik Otmuchów-skorowidz arkuszy"
+   },
+   {
+    "id": "116",
+    "name": "Zbiornik Otmuchów-głębokość wody w [m]"
+   },
+   {
+    "id": "124",
+    "name": "Zbiornik Pakość-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "125",
+    "name": "Zbiornik Pakość-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "126",
+    "name": "Zbiornik Pakość-budowle piętrzące"
+   },
+   {
+    "id": "127",
+    "name": "Zbiornik Pakość-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "128",
+    "name": "Zbiornik Pakość-skorowidz arkuszy"
+   },
+   {
+    "id": "123",
+    "name": "Zbiornik Pakość-głębokość wody w [m]"
+   },
+   {
+    "id": "131",
+    "name": "Zbiornik Porąbka-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "132",
+    "name": "Zbiornik Porąbka-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "133",
+    "name": "Zbiornik Porąbka-budowle piętrzące"
+   },
+   {
+    "id": "134",
+    "name": "Zbiornik Porąbka-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "135",
+    "name": "Zbiornik Porąbka-skorowidz arkuszy"
+   },
+   {
+    "id": "130",
+    "name": "Zbiornik Porąbka-głębokość wody w [m]"
+   },
+   {
+    "id": "138",
+    "name": "Zbiornik Poraj-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "139",
+    "name": "Zbiornik Poraj-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "140",
+    "name": "Zbiornik Poraj-budowle piętrzące"
+   },
+   {
+    "id": "141",
+    "name": "Zbiornik Poraj-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "142",
+    "name": "Zbiornik Poraj-skorowidz arkuszy"
+   },
+   {
+    "id": "137",
+    "name": "Zbiornik Poraj-głębokość wody w [m]"
+   },
+   {
+    "id": "145",
+    "name": "Zbiornik Rożnów-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "146",
+    "name": "Zbiornik Rożnów-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "147",
+    "name": "Zbiornik Rożnów-budowle piętrzące"
+   },
+   {
+    "id": "148",
+    "name": "Zbiornik Rożnów-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "149",
+    "name": "Zbiornik Rożnów-skorowidz arkuszy"
+   },
+   {
+    "id": "144",
+    "name": "Zbiornik Rożnów-głębokość wody w [m]"
+   },
+   {
+    "id": "152",
+    "name": "Zbiornik Solina-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "153",
+    "name": "Zbiornik Solina-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "154",
+    "name": "Zbiornik Solina-budowle piętrzące"
+   },
+   {
+    "id": "155",
+    "name": "Zbiornik Solina-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "156",
+    "name": "Zbiornik Solina-skorowidz arkuszy"
+   },
+   {
+    "id": "151",
+    "name": "Zbiornik Solina-głębokość wody w [m]"
+   },
+   {
+    "id": "159",
+    "name": "Zbiornik Sulejów-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "160",
+    "name": "Zbiornik Sulejów-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "161",
+    "name": "Zbiornik Sulejów-budowle piętrzące"
+   },
+   {
+    "id": "162",
+    "name": "Zbiornik Sulejów-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "163",
+    "name": "Zbiornik Sulejów-skorowidz arkuszy"
+   },
+   {
+    "id": "158",
+    "name": "Zbiornik Sulejów-głębokość wody w [m]"
+   },
+   {
+    "id": "166",
+    "name": "Zbiornik Tresna-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "167",
+    "name": "Zbiornik Tresna-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "168",
+    "name": "Zbiornik Tresna-budowle piętrzące"
+   },
+   {
+    "id": "169",
+    "name": "Zbiornik Tresna-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "170",
+    "name": "Zbiornik Tresna-skorowidz arkuszy"
+   },
+   {
+    "id": "165",
+    "name": "Zbiornik Tresna-głębokość wody w [m]"
+   },
+   {
+    "id": "173",
+    "name": "Zbiornik Turawa-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "174",
+    "name": "Zbiornik Turawa-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "175",
+    "name": "Zbiornik Turawa-budowle piętrzące"
+   },
+   {
+    "id": "176",
+    "name": "Zbiornik Turawa-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "177",
+    "name": "Zbiornik Turawa-skorowidz arkuszy"
+   },
+   {
+    "id": "172",
+    "name": "Zbiornik Turawa-głębokość wody w [m]"
+   },
+   {
+    "id": "180",
+    "name": "Zbiornik Włocławek-obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "181",
+    "name": "Zbiornik Włocławek-miejsce uszkodzenia budowli piętrzącej"
+   },
+   {
+    "id": "182",
+    "name": "Zbiornik Włocławek-budowle piętrzące"
+   },
+   {
+    "id": "183",
+    "name": "Zbiornik Włocławek-maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "184",
+    "name": "Zbiornik Włocławek-skorowidz arkuszy"
+   },
+   {
+    "id": "179",
+    "name": "Zbiornik Włocławek-głębokość wody w [m]"
+   },
+   {
+    "id": "2",
+    "name": "warstwy referencyjne-wody powierzchniowe"
+   }
+  ]
+ },
+ {
+  "id": "wody-mzp-zniszczenie-walu",
+  "name": "MZP · głębokość, zniszczenie wału",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MZP20_Glebokosc_ZniszczenieWaluPowodziowego/MapServer/WMSServer",
+  "menu": "wody-mzp",
+  "default": "1",
+  "layers": [
+   {
+    "id": "1",
+    "name": "obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "4",
+    "name": "miejsce zniszczenia wału przeciwpow."
+   },
+   {
+    "id": "5",
+    "name": "kilometraż rzeki"
+   },
+   {
+    "id": "6",
+    "name": "maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "7",
+    "name": "skorowidz arkuszy"
+   },
+   {
+    "id": "2",
+    "name": "cieki naturalne i kanały"
+   },
+   {
+    "id": "3",
+    "name": "wody powierzchniowe"
+   },
+   {
+    "id": "0",
+    "name": "głębokość wody w [m]"
+   }
+  ]
+ },
+ {
+  "id": "wody-mzp-zniszczenie-walu-sztormowego",
+  "name": "MZP · głębokość, zniszczenie wału sztormowego",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MZP20_Glebokosc_ZniszczenieWaluSztormowego/MapServer/WMSServer",
+  "menu": "wody-mzp",
+  "default": "1",
+  "layers": [
+   {
+    "id": "1",
+    "name": "obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "4",
+    "name": "miejsce zniszczenia wału przeciwpowodziowego, przeciwsztormowego"
+   },
+   {
+    "id": "5",
+    "name": "granica portu i przystani morskiej"
+   },
+   {
+    "id": "6",
+    "name": "granica pasa technicznego brzegu morskiego"
+   },
+   {
+    "id": "7",
+    "name": "granica pasa ochronnego brzegu morskiego"
+   },
+   {
+    "id": "8",
+    "name": "kilometraż brzegu morskiego"
+   },
+   {
+    "id": "9",
+    "name": "kilometraż rzeki"
+   },
+   {
+    "id": "10",
+    "name": "rzędna korony wału przeciwpowodziowego, przeciwsztormowego"
+   },
+   {
+    "id": "11",
+    "name": "maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "12",
+    "name": "skorowidz arkuszy"
+   },
+   {
+    "id": "2",
+    "name": "cieki naturalne i kanały"
+   },
+   {
+    "id": "3",
+    "name": "wody powierzchniowe"
+   },
+   {
+    "id": "0",
+    "name": "głębokość wody w [m]"
+   }
+  ]
+ },
+ {
+  "id": "wody-mzp-orientacyjna",
+  "name": "MZP · mapa orientacyjna zasięgów",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MZP20__MapaOrientacyjna/MapServer/WMSServer",
+  "menu": "wody-mzp",
+  "default": "0",
+  "layers": [
+   {
+    "id": "0",
+    "name": "Zasięg MZP-zniszczenie lub uszkodzenie budowli pietrzącej"
+   },
+   {
+    "id": "1",
+    "name": "Zasięg MZP od rzek-całkowite zniszczenie wału przeciwpowodziowego"
+   },
+   {
+    "id": "2",
+    "name": "Zasięg MZP od rzek-0,2%(raz na 500 lat)"
+   },
+   {
+    "id": "3",
+    "name": "Zasięg MZP od rzek-1%(raz na 100 lat)"
+   },
+   {
+    "id": "4",
+    "name": "Zasięg MZP od rzek-10%(raz na 10 lat)"
+   },
+   {
+    "id": "5",
+    "name": "Zasięg MZP od morza-całkowite zniszczenie wału przeciwsztormowego"
+   },
+   {
+    "id": "6",
+    "name": "Zasięg MZP od morza-0,2%(raz na 500 lat)"
+   },
+   {
+    "id": "7",
+    "name": "Zasięg MZP od morza-1%(raz na 100 lat)"
+   }
+  ]
+ },
+ {
+  "id": "wody-mzp-oszp",
+  "name": "MZP · obszary szczególnego zagrożenia",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MZP20_ObszarySzczegolnegoZagrozeniaPowodzia/MapServer/WMSServer",
+  "menu": "wody-mzp",
+  "default": "0",
+  "layers": [
+   {
+    "id": "0",
+    "name": "OSZP 1% z map zagrożenia powodziowego od rzeki"
+   },
+   {
+    "id": "1",
+    "name": "OSZP 1% z map zagrożenia powodziowego od morza"
+   }
+  ]
+ },
+ {
+  "id": "wody-mzp-predkosc-02",
+  "name": "MZP · prędkość, 0,2%",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MZP20_Predkosc_NiskiePrawdopodPowodzi/MapServer/WMSServer",
+  "menu": "wody-mzp",
+  "default": "2",
+  "layers": [
+   {
+    "id": "2",
+    "name": "obszar zagrożenia powodziowego"
+   },
+   {
+    "id": "3",
+    "name": "kierunki przepływu wody"
+   },
+   {
+    "id": "6",
+    "name": "wał przeciwpowodziowy, zapora boczna"
+   },
+   {
+    "id": "7",
+    "name": "kilometraż rzeki"
+   },
+   {
+    "id": "8",
+    "name": "rzędna korony wału przeciwpowodziowego"
+   },
+   {
+    "id": "9",
+    "name": "maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "10",
+    "name": "skorowidz arkuszy"
+   },
+   {
+    "id": "4",
+    "name": "cieki naturalne i kanały"
+   },
+   {
+    "id": "5",
+    "name": "wody powierzchniowe"
+   },
+   {
+    "id": "1",
+    "name": "prędkość przepływu wody [m/s]"
+   }
+  ]
+ },
+ {
+  "id": "wody-mzp-predkosc-1",
+  "name": "MZP · prędkość, 1%",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MZP20_Predkosc_SredniePrawdopodPowodzi/MapServer/WMSServer",
+  "menu": "wody-mzp",
+  "default": "2",
+  "layers": [
+   {
+    "id": "2",
+    "name": "obszar szczególnego zagrożenia powodzią"
+   },
+   {
+    "id": "3",
+    "name": "kierunki przepływu wody"
+   },
+   {
+    "id": "6",
+    "name": "wał przeciwpowodziowy, zapora boczna"
+   },
+   {
+    "id": "7",
+    "name": "kilometraż rzeki"
+   },
+   {
+    "id": "8",
+    "name": "rzędna korony wału przeciwpowodziowego"
+   },
+   {
+    "id": "9",
+    "name": "maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "10",
+    "name": "skorowidz arkuszy"
+   },
+   {
+    "id": "4",
+    "name": "cieki naturalne i kanały"
+   },
+   {
+    "id": "5",
+    "name": "wody powierzchniowe"
+   },
+   {
+    "id": "1",
+    "name": "prędkość przepływu wody [m/s]"
+   }
+  ]
+ },
+ {
+  "id": "wody-mzp-predkosc-10",
+  "name": "MZP · prędkość, 10%",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/MZP20_Predkosc_WysokiePrawdopodPowodzi/MapServer/WMSServer",
+  "menu": "wody-mzp",
+  "default": "2",
+  "layers": [
+   {
+    "id": "2",
+    "name": "obszar szczególnego zagrożenia powodzią"
+   },
+   {
+    "id": "3",
+    "name": "kierunki przepływu wody"
+   },
+   {
+    "id": "6",
+    "name": "wał przeciwpowodziowy, zapora boczna"
+   },
+   {
+    "id": "7",
+    "name": "kilometraż rzeki"
+   },
+   {
+    "id": "8",
+    "name": "rzędna korony wału przeciwpowodziowego"
+   },
+   {
+    "id": "9",
+    "name": "maksymalna rzędna zwierciadła wody"
+   },
+   {
+    "id": "10",
+    "name": "skorowidz arkuszy"
+   },
+   {
+    "id": "4",
+    "name": "cieki naturalne i kanały"
+   },
+   {
+    "id": "5",
+    "name": "wody powierzchniowe"
+   },
+   {
+    "id": "1",
+    "name": "prędkość przepływu wody [m/s]"
+   }
+  ]
+ },
+ {
+  "id": "wody-pgw-struktura",
+  "name": "PGW · nadzory, zarządy zlewni, RZGW",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW2/REG_ISOK_RZGW/MapServer/WMSServer",
+  "menu": "wody-plan",
+  "default": "0",
+  "layers": [
+   {
+    "id": "0",
+    "name": "PGWWP-Nadzory Wodne"
+   },
+   {
+    "id": "1",
+    "name": "PGWWP-Zarządy Zlewni"
+   },
+   {
+    "id": "2",
+    "name": "PGWWP-Regionalne Zarządy Gospodarki Wodnej"
+   }
+  ]
+ },
+ {
+  "id": "wody-ppss",
+  "name": "PPSS · przeciwdziałanie skutkom suszy",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/ISOK_PPSS_WMS/MapServer/WMSServer",
+  "menu": "wody-plan",
+  "default": "7",
+  "layers": [
+   {
+    "id": "7",
+    "name": "Lista zadań inwestycyjnych związanych ze zwiększeniem retencji korytowej w zlewniach na obszarach wiejskich-Załącznik 2"
+   },
+   {
+    "id": "8",
+    "name": "Lista zadań inwestycyjnych z PPI służących zwiększeniu retencji oraz wspierających przeciwdziałanie skutkom susz-Załącznik 1"
+   },
+   {
+    "id": "0",
+    "name": "Łączne zagrożenie suszą"
+   },
+   {
+    "id": "1",
+    "name": "Zagrożenie suszą hydrogeologiczną"
+   },
+   {
+    "id": "2",
+    "name": "Zagrożenie suszą hydrologiczną"
+   },
+   {
+    "id": "3",
+    "name": "Zagrożenie suszą rolniczą"
+   },
+   {
+    "id": "4",
+    "name": "Zagrożenie suszą atmosferyczną"
+   },
+   {
+    "id": "6",
+    "name": "Lista zadań inwestycyjnych zgłoszonych przez podmioty zew. (spoza PGWWP)-Załącznik 3"
+   }
+  ]
+ },
+ {
+  "id": "wody-pzrp",
+  "name": "PZRP · plan zarządzania ryzykiem powodziowym",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/ISOK_PZRP/MapServer/WMSServer",
+  "menu": "wody-plan",
+  "default": "0",
+  "layers": [
+   {
+    "id": "0",
+    "name": "Obszary problemowe - powódź rzeczna"
+   },
+   {
+    "id": "1",
+    "name": "Obszary problemowe - powódź od strony morza"
+   },
+   {
+    "id": "2",
+    "name": "Miejsce problemowe"
+   },
+   {
+    "id": "3",
+    "name": "Inne"
+   },
+   {
+    "id": "4",
+    "name": "Relokacje"
+   },
+   {
+    "id": "5",
+    "name": "Międzywala"
+   },
+   {
+    "id": "6",
+    "name": "Poldery"
+   },
+   {
+    "id": "7",
+    "name": "Retencje naturalne"
+   },
+   {
+    "id": "8",
+    "name": "Zbiorniki"
+   },
+   {
+    "id": "9",
+    "name": "Jazy"
+   },
+   {
+    "id": "10",
+    "name": "Kanały, rowy"
+   },
+   {
+    "id": "11",
+    "name": "Kanały ulgi"
+   },
+   {
+    "id": "12",
+    "name": "Koryta"
+   },
+   {
+    "id": "13",
+    "name": "Mosty, kładki"
+   },
+   {
+    "id": "14",
+    "name": "Nabrzeza, bulwary, falochrony, opaski"
+   },
+   {
+    "id": "15",
+    "name": "Opaski brzegowe"
+   },
+   {
+    "id": "16",
+    "name": "Ostrogi"
+   },
+   {
+    "id": "17",
+    "name": "Ostrogi, tamy"
+   },
+   {
+    "id": "18",
+    "name": "Przepusty"
+   },
+   {
+    "id": "19",
+    "name": "Wały"
+   },
+   {
+    "id": "20",
+    "name": "Wrota sztormowe"
+   },
+   {
+    "id": "21",
+    "name": "Bramy powodziowe"
+   },
+   {
+    "id": "22",
+    "name": "Pompownie"
+   },
+   {
+    "id": "23",
+    "name": "Progi, kaskady, stopnie"
+   },
+   {
+    "id": "24",
+    "name": "Zapory boczne"
+   },
+   {
+    "id": "25",
+    "name": "Działania od strony morza - dorzecze Wisły"
+   },
+   {
+    "id": "26",
+    "name": "Działania od strony morza - dorzecze Odry"
+   }
+  ]
+ },
+ {
+  "id": "wody-worp-budowle",
+  "name": "WORP · obszary narażone, budowle piętrzące",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/ISOK_WORP_ONNP_3/MapServer/WMSServer",
+  "menu": "wody-worp",
+  "default": "1",
+  "layers": [
+   {
+    "id": "1",
+    "name": "Obszary narażone na niebezpieczeństwo powodzi-zniszczenie budowli piętrzących"
+   }
+  ]
+ },
+ {
+  "id": "wody-worp-morze",
+  "name": "WORP · obszary narażone, od morza",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/ISOK_WORP_ONNP_1/MapServer/WMSServer",
+  "menu": "wody-worp",
+  "default": "1",
+  "layers": [
+   {
+    "id": "1",
+    "name": "Obszary narażone na niebezpieczeństwo powodzi-od morza"
+   }
+  ]
+ },
+ {
+  "id": "wody-worp-rzeki",
+  "name": "WORP · obszary narażone, rzeczne",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/ISOK_WORP_ONNP_2/MapServer/WMSServer",
+  "menu": "wody-worp",
+  "default": "1",
+  "layers": [
+   {
+    "id": "1",
+    "name": "Obszary narażone na niebezpieczeństwo powodzi-rzeczne"
+   }
+  ]
+ },
+ {
+  "id": "wody-worp-v2",
+  "name": "WORP · zagrożenie i ryzyko (v2)",
+  "url": "https://wody.isok.gov.pl/gpservices/KZGW/ISOK_WORP_v2/MapServer/WMSServer",
+  "menu": "wody-worp",
+  "default": "2",
+  "layers": [
+   {
+    "id": "1",
+    "name": "Powodzie prawdopodobne od morza o mechanizmie naturalnego wezbrania"
+   },
+   {
+    "id": "2",
+    "name": "Powodzie prawdopodobne rzeczne w wyniku awarii budowli hydrotechnicznycht"
+   },
+   {
+    "id": "3",
+    "name": "Powodzie prawdopodobne rzeczne o mechanizmie naturalnego wezbrania"
+   },
+   {
+    "id": "5",
+    "name": "Znaczące powodzie historyczne-od morza w wyniku awarii budowli przeciwpowodziowych"
+   },
+   {
+    "id": "6",
+    "name": "Znaczące powodzie historyczne-od morza o mechanizmie naturalnego wezbrania"
+   },
+   {
+    "id": "7",
+    "name": "Znaczące powodzie historyczne-rzeczne o nieznanym mechanizmie powstania"
+   },
+   {
+    "id": "8",
+    "name": "Znaczące powodzie historyczne-rzeczne o mechanizmie zatorowym"
+   },
+   {
+    "id": "9",
+    "name": "Znaczące powodzie historyczne-rzeczne w wyniku awarii budowli przeciwpowodziowych"
+   },
+   {
+    "id": "10",
+    "name": "Znaczące powodzie historyczne-rzeczne w wyniku przelania się wody przez budowle przeciwpowodziowe"
+   },
+   {
+    "id": "11",
+    "name": "Znaczące powodzie historyczne-rzeczne o mechanizmie naturalnego wezbrania"
+   }
+  ]
+ }
+]

@@ -389,18 +389,6 @@
     "institutionMenu": "gugik-orto"
   },
   {
-    "id": "ortofotomapa-standardowa",
-    "name": "Ortofotomapa standardowa",
-    "source": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
-    "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/StandardResolution?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Raster&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
-    "layer": "Raster",
-    "zoom": 18,
-    "cmd": "usluga-ortofotomapa-standardowa",
-    "label": "Ortofoto standardowe",
-    "institution": "gugik",
-    "institutionMenu": "gugik-orto"
-  },
-  {
     "id": "ortofotomapa-wysokiej-rozdzielczosci",
     "name": "Ortofotomapa wysokiej rozdzielczości",
     "source": "USŁUGI KRAJOWE / ORTOFOTOMAPA",
@@ -1073,18 +1061,6 @@
     "label": "BDOO",
     "institution": "gugik",
     "institutionMenu": "gugik-mapy"
-  },
-  {
-    "id": "usluga-przegladania-umozliwiajaca-przegladanie-hipsometrii-n",
-    "name": "Usługa przeglądania umożliwiająca przeglądanie hipsometrii NMT o dynamicznej skali barw",
-    "source": "USŁUGI KRAJOWE / NUMERYCZNY MODEL TERENU",
-    "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/NMT/GRID1/WMS/Hypsometry?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Raster&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
-    "layer": "Raster",
-    "zoom": 18,
-    "cmd": "usluga-usluga-przegladania-umozliwiajaca-przegladanie-hipsometri",
-    "label": "Hipsometria NMT",
-    "institution": "gugik",
-    "institutionMenu": "gugik-orto"
   },
   {
     "id": "usluga-wms-publikujca-wykaz-portali-mapowych",

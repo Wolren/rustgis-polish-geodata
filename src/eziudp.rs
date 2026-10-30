@@ -88,6 +88,31 @@ pub fn search(params: &Value, lang: Lang) -> Result<Value, String> {
     }))
 }
 
+/// The register's answer for the county under the map centre.
+///
+/// The register is the one place that knows about every Polish dataset, but it needs a filter:
+/// 12 000 records is 9 MB. A ribbon button cannot ask for a TERYT, so this command takes it from
+/// ULDK — the same step `Działki z widoku` uses — and answers with what that county reports.
+pub fn for_view(host: &mut crate::host::Host, lang: Lang) -> Result<Value, String> {
+    let extent = host.extent()?;
+    let (lon, lat) = ((extent[0] + extent[2]) / 2.0, (extent[1] + extent[3]) / 2.0);
+    let (teryt, county) = crate::egib::county_at(lon, lat, lang)?;
+    let answer = search(&json!({ "teryt": teryt }), lang)?;
+    let total = answer.get("total").and_then(Value::as_u64).unwrap_or(0);
+    let returned = answer
+        .get("returned")
+        .and_then(Value::as_u64)
+        .unwrap_or(0);
+    host.notify(&text::rejestr_view(lang, &county, total, returned));
+    Ok(json!({
+        "county": county,
+        "teryt": teryt,
+        "total": total,
+        "returned": returned,
+        "entries": answer.get("entries").cloned().unwrap_or(Value::Null),
+    }))
+}
+
 /// The first address of one service kind, which is what a click or a script can use.
 ///
 /// The register writes some of them as `WMS=http://…`, naming the protocol in the value; a caller

@@ -13,43 +13,72 @@ w panelu Narzędzia, działających w tle, z postępem i przerwaniem.
 | --- | --- | --- |
 | Podkłady | Rastry | Ortofoto (WMTS), Ortofoto Hi-Res (WMS), BDOT10k, cieniowanie NMT |
 | | Wektory | Działki (KIEG), Adresy, Granice PRG, Nazwy miejscowości |
-| **WMS (podgląd)** | GUGiK · Ortofoto i NMT | 20 usług — tylko podgląd na mapie |
+| **Narzędzia** | Obszar | Obszar z widoku (nie rysowanie), rysowanie, anulowanie, czyszczenie |
+| | Pozostałe | Panel, Przytnij do granicy, Przybliż do Polski, Katalog (JSON) |
+| **GUGiK** | GUGiK · Ortofoto i NMT | 19 usług — tylko podgląd na mapie |
 | | GUGiK · Mapy | 21 usług |
 | | GUGiK · Kataster i granice | 24 usługi |
 | | GUGiK · Pozostałe dane | 11 usług |
-| | Mapy historyczne | 11 arkuszy WIG i map niemieckich |
+| **Instytucje** | Mapy historyczne | 11 arkuszy WIG i map niemieckich |
 | | Geologia (PIG) | 9 usług |
 | | Zabytki (NID) | 4 usługi |
 | | Lasy (BDL) | 4 usługi |
-| | Pozostałe instytucje | GDOŚ, PKP PLK, GUS, Wody Polskie, IMGW-PIB |
+| | Pozostałe instytucje | GDOŚ, PKP PLK, GUS, IMGW-PIB |
+| **Wody** | Warstwy usługi | Wypisuje usługi Wód Polskich i warstwy jednej usługi |
+| | MZP (zagrożenie) | 11 usług: głębokość i prędkość przy 10%, 1% i 0,2%, zniszczenie wału i budowli |
+| | MRP (ryzyko) | 12 usług: ludzie i straty, środowisko, kultura, gospodarka |
+| | WORP | 4 usługi: obszary narażone i mapy sprzed 2020 |
+| | Plany i susza | 5 usług: aPGW, IIaPGW, PZRP, PPSS, struktura PGW |
 | **Pobieranie** | Pięć narzędzi | Jedyne miejsce, które ściąga dane: adresy i budynki, granice, osnowy, urzędy, pozostałe |
-| **Wyszukiwanie** | Działka z ULDK | Działka pod środkiem mapy |
-| | Wysokość w punkcie | Wysokość NMT w PL-1992 (środek mapy albo x/y) |
-| Obszar | **Obszar prostokąt** | Prostokąt z widoku mapy: jedno kliknięcie, bez rysowania. Dokładnie to, co widać |
-| | Narysuj obszar | Narzędzie poligonu na warstwie „Obszar pobierania”; kształt zostaje taki, jak narysowany |
-| | Anuluj rysowanie | Wyłącza narzędzie rysowania i wraca do przeglądania |
-| | Wyczyść obszar | Usuwa warstwę „Obszar pobierania”, żeby zacząć od pustej |
-| Dane | **Pobieranie** | Pięć narzędzi: adresy i budynki, granice i jednostki, osnowy i pomiary, urzędy i sądy, pozostałe dane |
-| | Działka z ULDK | Działka pod środkiem mapy: geometria + atrybuty |
-| | Przytnij do obszaru | Tnie warstwę do granicy „Obszar pobierania” |
-| Wysokości | Model terenu KRON86 | Model terenu 1 m (GeoTIFF) dla wskazanego obszaru |
+| **Wysokości** | Model terenu KRON86 | Model terenu 1 m (GeoTIFF) w barwach wysokości, od razu teren sceny 3D |
 | | Model terenu EVRF2007 | To samo w PL-EVRF2007-NH (siatka ASCII) |
 | | Model pokrycia NMPT | Model pokrycia 1 m, z budynkami i drzewami (siatka ASCII) |
-| | Stylizuj model | Cieniowanie najnowszego modelu, albo barwy |
-| Narzędzia | Panel | Panel z widokiem, obszarem, katalogiem i zapisanymi odpowiedziami |
-| | Przybliż do Polski | Cała Polska w widoku |
-| | Wyczyść cache | Usuwa zapisane odpowiedzi WFS i pobrane siatki wysokości |
+| | Stylizuj model | Barwy, pasma albo cieniowanie najnowszego modelu |
+| | Teren wyłącz | Wypłaszcza scenę 3D, gdy model zniknął z projektu |
+| **Wyszukiwanie** | Działka z ULDK | Działka pod środkiem mapy |
+| | Działki z widoku | Działki i budynki z WFS powiatu, tylko dla widocznego obszaru |
+| | Rejestr dla widoku | Co powiat pod środkiem mapy zgłasza do EZiUDP |
+| | Wysokość w punkcie | Wysokość NMT w PL-1992 (środek mapy albo x/y) |
+| | Panel | Widok, obszar, katalog i zapisane odpowiedzi; przyciski do poleceń |
 
-Łącznie: **130 poleceń** (21 własnych i 109 usług) i **5 narzędzi**. Wcześniej było 228 poleceń, z
-czego 108 pobierało dane natychmiast, blokując okno.
+Łącznie: **169 poleceń** (107 usług, 32 usługi Wód Polskich i 30 własnych) i **5 narzędzi**.
+Wcześniej było 228 poleceń, z czego 108 pobierało dane natychmiast, blokując okno.
+
+Wstęga ma osiem grup. Katalog usług siedzi w dwóch (**GUGiK** i **Instytucje**), a Wody Polskie
+mają własną grupę z czterema menu — wcześniej dziewięć menu w jednej grupie wypychało Pobieranie,
+Wysokości i Wyszukiwanie za strzałkę przewijania.
+
 
 ### Usługi krajowe
 
-Katalog obejmuje **109 usług WMS** z Geoportalu Krajowego i od innych instytucji: BDOT10k (w tym nowe
+Katalog obejmuje **107 usług WMS** z Geoportalu Krajowego i od innych instytucji: BDOT10k (w tym nowe
 budynki i statystyki), ortofotomapę prawdziwą, wysokiej rozdzielczości i archiwalną, cieniowanie
-NMT, hipsometrię NMT, EMUiA, PRG, PRNG, RCN, KIMPZP, ISOK, POLSA, osnowy, mapy geologiczne PIG,
-BDL Lasów Państwowych, zabytki NID i inne. Każda pozycja przeszła realne żądanie kafla, więc lista
-nie zawiera martwych adresów.
+NMT, EMUiA, PRG, PRNG, RCN, KIMPZP, ISOK, POLSA, osnowy, mapy geologiczne PIG, BDL Lasów
+Państwowych, zabytki NID i inne.
+
+Każda pozycja przechodzi realne żądanie kafla w EPSG:3857 i można to powtórzyć w każdej chwili:
+
+```
+python tools/probe.py            # audyt katalogu, kod wyjścia 1 gdy coś nie rysuje
+python tools/probe.py --prune    # to samo, plus usunięcie martwych pozycji
+python tools/probe.py --overlays # tylko wbudowane nakładki z src/catalog.rs
+python tools/smoke.py            # 165 poleceń w prywatnej sesji, kod 1 gdy któreś padnie
+```
+
+Sonda prosi o kafel w pięciu miejscach (Poznań, Gdańsk, Zakopane, Wrocław, Warszawa) w trzech
+skalach — cały kraj, 20 km i 1,2 km — bo część usług rysuje tylko z bliska, a część tylko w jednym
+regionie. Audyt z 30 października 2026 wykrył dwie martwe pozycje i obie zostały usunięte:
+`PZGIK/ORTO/WMS/StandardResolution` (cała usługa zwraca 404, ortofotomapę standardową daje WMTS
+w Podkładach) oraz `PZGIK/NMT/GRID1/WMS/Hypsometry` (oddaje wyjątek w 3857 — usługa istnieje tylko
+w EPSG:2180, którego RustGIS nie rysuje). Wcześniej katalog rósł i nigdy się nie kurczył, więc taka
+pozycja zostawała w nim na zawsze.
+
+`smoke.py` sprawdza drugą stronę: nie adresy, a polecenia. Uruchamia każde polecenie manifestu
+w prywatnej sesji `rustgis-cli mcp` (z fiksturą obszaru i działek), zdejmuje kafle między
+poleceniami — mapa mieści 32 warstwy kafelkowe, a katalog ma 139 — i traktuje jako błąd każdą
+odpowiedź, która nie jest JSON-em. Model wysokości pobiera tylko z `--slow`. Workflow
+`.github/workflows/catalogue.yml` uruchamia `probe.py` co poniedziałek, bo wydawcy wycofują usługi
+bez ostrzeżenia.
 
 Usługi stoją w dwóch grupach: **GUGiK** (cztery menu tematyczne) i **Instytucje** (pięć menu).
 Podział jest instytucjonalny, bo tak szukają danych użytkownicy: najpierw *kto publikuje*, potem
@@ -67,6 +96,34 @@ Osobne menu **Mapy historyczne** to jedenaście arkuszy z serwera Cartomatic: WI
 Meßtischblätter 1:25 000, Übersichtskarte von Mitteleuropa 1:300 000). Każdy arkusz przeszedł
 realne żądanie kafla, tak jak reszta katalogu. Serwer podaje 110 warstw (plany miast, mapy
 katastralne), z których wybrano te jedenaście — reszta czeka na osobną decyzję.
+
+### Wody Polskie: 32 usługi, 904 warstwy, jedno polecenie na usługę
+
+Mapy powodziowe, suszowe i planistyczne PGW Wody Polskie to 32 usługi WMS na
+`wody.isok.gov.pl/gpservices` i 904 warstwy. Jedno polecenie na warstwę dałoby 904 pozycje na
+wstędze, więc **polecenie to usługa, a warstwa to parametr**:
+
+```
+run_command  plugin:dane-pl/wody-mzp-glebokosc-1
+run_command  plugin:dane-pl/wody-mzp-glebokosc-1  {"warstwa": "wał przeciwpowodziowy"}
+```
+
+Bez `warstwa` polecenie kładzie warstwę domyślną usługi (dla map zagrożenia — obszar szczególnego
+zagrożenia, nie wariant „od morza”). Warstwy szuka się po nazwie albo numerze, po polsku i bez
+ogonków; przecinek łączy kilka w jedną nakładkę. **Warstwy usługi** wypisuje katalog:
+
+```
+run_command  plugin:dane-pl/warstwy
+run_command  plugin:dane-pl/warstwy  {"usluga": "wody-mzp-glebokosc-1"}
+run_command  plugin:dane-pl/warstwy  {"usluga": "wody-mzp-glebokosc-1", "szukaj": "wał"}
+```
+
+Nazwy warstw nie pochodzą z capabilities: te usługi to ArcGIS MapServery, które każdą warstwę
+nazywają numerem i tytułują tym samym numerem. Czytelna tabela 904 warstw jest w danych
+(`data/wody.json`), zbudowana z wtyczki QGIS „Wody Polskie — Baza WMS” przez `tools/wody.py`.
+
+Usługi przyjmują EPSG:3857 (sprawdzone żądaniem kafla), więc działają w RustGIS bez przeliczeń.
+Każda warstwa ma atrybucję „PGW Wody Polskie · wody.isok.gov.pl”.
 
 ### Dane z WFS
 
@@ -89,7 +146,7 @@ Pobieranie to **pięć narzędzi** w grupie **Dane › Pobieranie**. Każde ma l
 | Pobierz urzędy i sądy | 21 |
 | Pobierz pozostałe dane | 21 |
 
-1. Wskaż obszar: **Obszar prostokąt**, **Obszar z widoku** albo własna warstwa.
+1. Wskaż obszar: **Obszar z widoku**, **Narysuj obszar** albo własna warstwa.
 2. Otwórz **Dane › Pobieranie** i wybierz grupę.
 3. W panelu Narzędzia wybierz zestaw i warstwę obszaru, naciśnij **Uruchom**.
 
@@ -108,6 +165,43 @@ Typy spoza układu 4326 działają bez ustawień: wtyczka wysyła pierwsze żąd
 geograficznych, a gdy usługa odpowie pustą kolekcją, powtarza je w układzie 2180 i przelicza
 współrzędne z powrotem. Dotyczy to usługi adresowej KI NA.
 
+### Działki z widoku: WFS powiatu, nie kafel
+
+Nakładka **Działki (KIEG)** to raster: widać granice, ale nie da się z niej wybrać działki ani
+przefiltrować jej po własnej granicy. Każdy powiat prowadzi natomiast własny WFS EGiB i ten oddaje
+GeoJSON dla prostokąta. Polecenie **Działki z widoku** idzie tą drogą:
+
+1. ULDK `GetCountyByXY` mówi, w jakim powiecie leży środek mapy (`1465|Warszawa`).
+2. EZiUDP (`api.php?teryt=…&usluga=wfs`) podaje adres WFS EGiB tego powiatu — bez tabeli 380
+   powiatów w kodzie, więc nowa usługa w rejestrze działa od razu.
+3. Capabilities WFS dają wersję i nazwy typów; wtyczka bierze typ z `dzialk` i z `budynk` w nazwie.
+4. Jedno `GetFeature` na typ, z prostokątem widoku i limitem 5000 obiektów, wjeżdża na mapę jako
+   warstwa „Działki – <obszar>” i „Budynki – <obszar>”.
+
+Polecenie działa od skali 1:25 000 i bliżej; wyżej widok obejmowałby więcej działek, niż ma sens
+w jednym żądaniu. Nie pobiera całego powiatu (to do 50 000 obiektów), tylko to, co widać.
+
+```
+run_command  plugin:dane-pl/dzialki-z-widoku
+```
+
+Powiat, którego WFS nie oddaje GeoJSON, nie jest odsyłany z kwitkiem: wtyczka prosi wtedy o GML
+i czyta go parserem napisanym dla krajowego katalogu WFS. GeoJSON oddaje 163 z 380 powiatów
+(stan z października 2026), więc bez tego kroku dwie trzecie Polski nie miałoby działek z atrybutami.
+
+Kolejność prób jest zmierzona, nie zgadywana:
+
+1. GeoJSON (`OUTPUTFORMAT=application/json`, potem `json`),
+2. GML w stopniach (`SRSNAME=EPSG:4326`, bez `OUTPUTFORMAT` — serwery powiatowe odrzucają format,
+   którego nie ogłaszają),
+3. GML w układzie 1992: WFS 2.0 czyta ten układ jako northing, easting i tylko URN to wymusza,
+   WFS 1.x bierze easting, northing. Zmierzone na MapServerze powiatu poznańskiego: 2.0 z URN
+   zwraca 5 obiektów, 2.0 z gołym kodem — zero, 1.1 z URN — zero.
+
+Przykład: powiat poznański (tylko GML, 2180) — 1447 działek i 2054 budynki jednym żądaniem;
+Warszawa (GeoJSON) — 247 i 142.
+
+
 ### Obszar: nic nie jest zgadywane
 
 Narzędzie pobierania **wymaga warstwy obszaru**. Nie ma już łańcucha „aktywna warstwa, jej
@@ -119,15 +213,15 @@ Model wysokości (polecenie, więc działa natychmiast) bierze obszar w tej kole
 
 1. warstwa podana w argumencie `area`,
 2. zaznaczenie na aktywnej warstwie,
-3. warstwa „Obszar pobierania” z przycisku **Obszar prostokąt**,
+3. warstwa „Obszar pobierania” z przycisku **Obszar z widoku**,
 4. aktywna warstwa w całości.
 
 Zaznaczenie na innej warstwie nie jest brane pod uwagę. Zbyt duży obszar jest odrzucany z liczbami,
 zanim poleci jakiekolwiek żądanie.
 
-**Obszar prostokąt** to jedno kliknięcie: wtyczka bierze bieżący widok mapy i zapisuje go jako
-prostokąt na warstwie „Obszar pobierania”. Prostokąt jest dokładnie tym, co widać — żadnego
-rysowania i żadnego zgadywania. Chcesz inny obszar? Przybliż mapę i naciśnij ponownie.
+**Obszar z widoku** nie jest narzędziem rysowania i nie udaje go: bierze bieżący widok mapy i
+zapisuje go jako prostokąt na warstwie „Obszar pobierania”. Prostokąt jest dokładnie tym, co widać.
+Chcesz inny obszar? Przybliż mapę i naciśnij ponownie.
 
 **Narysuj obszar** zostawia kształt taki, jak narysowany: klikaj narożniki i zakończ dwuklikiem
 (kliknięcie w pierwszy narożnik nie zamyka obwodu — tak działa narzędzie RustGIS), albo przerwij
@@ -137,7 +231,8 @@ warstwa obszaru pokazuje go zamiast rysunku.
 
 To rozróżnienie jest jedyną prawdą, jaką wtyczka może powiedzieć: RustGIS rysuje obiekty
 edytowalne punkt po punkcie i nie ma narzędzia prostokąta (prostokąt „przeciągnij” istnieje tylko
-dla grafiki, nie dla warstwy wektorowej). Dlatego prostokąt bierze się z widoku, a nie z rysowania.
+dla grafiki, nie dla warstwy wektorowej). Dlatego prostokąt bierze się z widoku, a nie z rysowania,
+i przycisk nazywa się **Obszar z widoku**, nie „prostokąt”.
 
 **Wyczyść obszar** usuwa warstwę, więc kolejny prostokąt albo rysunek zaczyna od zera. Bez tego
 drugi rysunek dokłada kształt do istniejącego i obszar się powiększa.
@@ -146,8 +241,22 @@ drugi rysunek dokłada kształt do istniejącego i obszar się powiększa.
 
 Filtr WFS zwraca **całe** obiekty, które dotykają obszaru i nie przycina ich. Dlatego po pobraniu
 uruchom **Przytnij do obszaru**: wywołuje wbudowane narzędzie Clip i zastępuje warstwę wersją
-przyciętą (jedna warstwa, nie dwie). Uchwyt `layer` jest opcjonalny: bez niego bierze najnowszą
-warstwę wektorową.
+przyciętą (jedna warstwa, nie dwie).
+
+Granica jest zawsze **warstwą**, nigdy widokiem:
+
+```
+run_command  plugin:dane-pl/przytnij  {"obszar": "gminy", "layer": "budynki"}
+run_command  plugin:dane-pl/przytnij  {"granica": "gminy", "warstwa": "budynki"}
+```
+
+- `obszar` (albo `granica`) to warstwa granicy; bez niej wtyczka bierze warstwę „Obszar pobierania”.
+- `layer` (albo `warstwa`) to warstwa cięta; bez niej najnowsza warstwa wektorowa.
+- **Zaznaczenie na warstwie granicy liczy się samo**: zaznacz jedną gminę w warstwie 2478 gmin, a
+  cięcie pójdzie tą gminą. Wtyczka kopiuje zaznaczone obiekty do warstwy tymczasowej, tnie nią i
+  warstwę usuwa.
+- Gdy granicą jest prostokąt z widoku, komunikat mówi to wprost: „…(prostokąt z widoku)”. Nikt go
+  nie narysował, więc nie udaje rysunku.
 
 Pomiar: 5586 działek przecinało obszar, po przycięciu zostało 5583, dla działek różnica jest
 mała, dla dróg i obiektów wielkości gminy duża.
@@ -163,8 +272,28 @@ Grupa **Wysokości** ma trzy pokrycia:
 | Model pokrycia NMPT | `DSM_PL-KRON86-NH` | siatka ASCII |
 
 GeoTIFF pobiera sam RustGIS i bierze z niego układ odniesienia. Siatka ASCII nie niesie układu, więc
-wtyczka pobiera ją sama i dopisuje plik `.prj` z EPSG:2180. Model trafia na mapę z cieniowaniem,
-a **Stylizuj model** zmienia je na barwy.
+wtyczka pobiera ją sama i dopisuje plik `.prj` z EPSG:2180.
+
+Model wjeżdża na mapę **w barwach wysokości** (ciągła rampa hipsometryczna) i od razu jest
+ustawiany jako **teren sceny 3D** (`map.terrain`). Bez tego drugiego kroku przechylona mapa zostaje
+płaska: raster jest wtedy tylko obrazem położonym na płaszczyźnie i nie ma z czego wziąć wysokości.
+Cieniowanie jest jedną z opcji, nie domyślnym wyglądem, bo szary relief zasłania te liczby, które
+model ze sobą niesie.
+
+Parametry polecenia (wszystkie opcjonalne):
+
+| Parametr | Znaczenie |
+| --- | --- |
+| `area` | nazwa warstwy obszaru; bez niej wybór jak w sekcji „Obszar" |
+| `look` | `colours` (domyślnie), `classes` (pasma co 1/12 rozpiętości), `shading` (szary relief) |
+| `exaggeration` | pionowe wzmocnienie sceny 3D, 0–20; domyślnie 1, czyli prawdziwe wysokości |
+| `terrain` | `false` zostawia teren sceny bez zmian (sam raster, bez podnoszenia 3D) |
+| `colours` | starsza flaga: `true` = `classes`, `false` = `shading` |
+
+**Stylizuj model** zmienia wygląd najnowszego modelu: `{"look": "classes"}` albo `{"look": "shading"}`.
+**Teren wyłącz** (`dem-terrain-off`) wypłaszcza scenę, gdy model zniknął z projektu — inaczej scena
+stoi na warstwie, której już nie ma. Komunikat po dodaniu podaje też rozpiętość wysokości
+(na przykład „869 do 1113 m”), bo to ona decyduje, czy barwy i relief w ogóle coś pokażą.
 
 Każde kliknięcie prosi o komórki 1 m: zasięg obszaru idzie do PL-1992 w całych metrach, więc sąsiednie
 modele mają tę samą siatkę. Skorowidz arkuszy nie jest potrzebny, bo usługa WCS GUGiK zwraca dowolny
@@ -383,7 +512,7 @@ udostępniane nieodpłatnie. Przy każdej warstwie ustawiana jest atrybucja
 - ULDK przyjmuje tylko EPSG:2180, więc wtyczka sama rzutuje współrzędne (Transverse Mercator,
   zgodność z PROJ na poziomie < 1 mm dla punktu testowego).
 - Prostokąta nie da się narysować przeciągnięciem: RustGIS nie ma narzędzia prostokąta dla
-  warstw edytowalnych. Prostokąt bierze się z widoku (**Obszar prostokąt**), a rysowanie zostawia
+  warstw edytowalnych. Prostokąt bierze się z widoku (**Obszar z widoku**), a rysowanie zostawia
   kształt, jaki narysujesz.
 - Wtyczka nie dodaje pozycji do menu kontekstowego mapy: manifest RustGIS 0.4 nie ma na to pola.
   Pobieranie idzie więc przez grupę **Dane › Pobieranie**, a nie spod prawego przycisku.

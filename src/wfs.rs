@@ -256,6 +256,12 @@ fn fetch_pages(
     })
 }
 
+/// Turns features served in the national grid into longitude and latitude, for callers that fetch
+/// a county's WFS in EPSG:2180 because it answers nothing in 4326.
+pub fn grid_to_lon_lat(features: &mut [Value]) {
+    to_lon_lat(features)
+}
+
 /// Turns features served in the national grid into longitude and latitude.
 ///
 /// EPSG:2180 answers carry the northing first, so a pair is (northing, easting).

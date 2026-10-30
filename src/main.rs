@@ -10,6 +10,7 @@
 mod cache;
 mod catalog;
 mod clip;
+mod egib;
 mod filter;
 mod eziudp;
 mod gk92;
@@ -28,6 +29,7 @@ mod tool;
 mod uug;
 mod uldk;
 mod wfs;
+mod wody;
 
 use serde_json::{json, Value};
 use std::io::Write;
@@ -84,16 +86,21 @@ fn run(
         "obszar-anuluj" => obszar::abort(host, lang),
         "obszar-wyczysc" => obszar::clear(host, lang),
         other if other.starts_with("usluga-") => services::toggle(host, lang, request),
+        other if other.starts_with("wody-") => wody::toggle(host, lang, request),
+        "warstwy" => wody::list(params, lang),
         "katalog" => katalog::run(params, lang),
         "eziudp" => eziudp::search(params, lang),
+        "rejestr-widok" => eziudp::for_view(host, lang),
         "geokoduj" => uug::geocode(host, params, lang),
         "wysokosc" => uug::height(host, params, lang),
         "dzialka-id" => uldk::parcel_by_id(host, params, lang),
+        "dzialki-z-widoku" => egib::from_view(host, lang),
         "panel-state" => panel::state(host, lang, request),
         "dem" => nmt::add(host, lang, request, nmt::Kind::TerrainKron),
         "dem-evr" => nmt::add(host, lang, request, nmt::Kind::TerrainEvrf),
         "dem-nmpt" => nmt::add(host, lang, request, nmt::Kind::SurfaceKron),
         "dem-style" => nmt::style(host, lang, request),
+        "dem-terrain-off" => nmt::terrain_off(host, lang),
         "zoom-polska" => zoom_poland(host, lang),
         "wyczysc-cache" => clear_cache(host, lang),
         "przytnij" => cut(host, params, lang),
@@ -102,27 +109,31 @@ fn run(
     }
 }
 
-/// Cuts a layer to the area boundary. With no layer named it takes the newest one, so an agent
-/// can call it straight after a download without having to name the layer.
+/// Cuts a layer to a boundary layer.
+///
+/// The boundary is `obszar` (or `granica`), else the area layer; a selection on it is copied so
+/// only the picked shapes count. The layer to cut is `layer` (or `warstwa`), else the newest
+/// vector layer, so an agent can call it straight after a download without naming the layer.
 fn cut(host: &mut host::Host, params: &Value, lang: Lang) -> Result<Value, String> {
-    let area = match params
+    let named_boundary = params
         .get("obszar")
+        .or_else(|| params.get("granica"))
         .and_then(Value::as_str)
-        .filter(|s| !s.is_empty())
-    {
-        Some(named) => named.to_string(),
-        None => clip::existing_area(host, lang)?,
-    };
+        .map(str::trim)
+        .filter(|name| !name.is_empty());
+    let boundary = clip::boundary(host, named_boundary, lang)?;
+
     let named = params
         .get("layer")
+        .or_else(|| params.get("warstwa"))
         .and_then(Value::as_str)
         .unwrap_or_default();
     let layer = if named.is_empty() {
-        clip::newest_layer(host, &area, lang)?
+        clip::newest_layer(host, &boundary.layer, lang)?
     } else {
         named.to_string()
     };
-    clip::to_area(host, &layer, &area, lang)
+    clip::to_area(host, &layer, &boundary, lang)
 }
 
 /// Brings the map to Poland, the only area GUGiK serves.
