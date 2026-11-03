@@ -2007,6 +2007,13 @@
           "kind": "bool",
           "default": false,
           "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
+        },
+        {
+          "name": "confirm",
+          "label": "Download even if large",
+          "kind": "bool",
+          "default": false,
+          "help": "Files over 0,5 GB are refused until this is ticked, so a big run is a decision."
         }
       ]
     }
@@ -2550,7 +2557,9 @@
       "The folder the files and the CSV report are written to.": "Folder, do którego trafiają pliki i raport CSV.",
       "Lookup": "Wyszukiwanie",
       "A parcel under the map centre, or the terrain height at a point.": "Działka pod środkiem mapy albo wysokość terenu w punkcie.",
-      "Orthophoto": "Ortofoto"
+      "Orthophoto": "Ortofoto",
+      "Download even if large": "Pobierz mimo rozmiaru",
+      "Files over 0,5 GB are refused until this is ticked, so a big run is a decision.": "Powyżej 0,5 GB pobranie jest wstrzymane, dopóki tego nie zaznaczysz, żeby duży przebieg był decyzją."
     }
   },
   "panel": {

@@ -110,6 +110,64 @@ pub fn num(lang: Lang, value: f64, places: usize) -> String {
     }
 }
 
+/// A size in megabytes as a reader expects it: gigabytes above a thousand.
+pub fn size(lang: Lang, megabytes: f64) -> String {
+    if megabytes >= 1000.0 {
+        format!("{} GB", num(lang, megabytes / 1000.0, 1))
+    } else {
+        format!("{} MB", num(lang, megabytes, 0))
+    }
+}
+
+/// What a sheet run is about to fetch, before the first byte moves.
+pub fn sheets_estimate(lang: Lang, files: usize, megabytes: f64) -> String {
+    pick!(
+        lang,
+        format!(
+            "{} to fetch, at least {}",
+            self::files(lang, files),
+            size(lang, megabytes)
+        ),
+        format!(
+            "{} do pobrania, co najmniej {}",
+            self::files(lang, files),
+            size(lang, megabytes)
+        )
+    )
+}
+
+/// The run is larger than the form's threshold, so it needs the box that says it is meant.
+pub fn sheets_unconfirmed(lang: Lang, files: usize, megabytes: f64, limit: f64) -> String {
+    pick!(
+        lang,
+        format!(
+            "{} and at least {}, above the {} mark. Tick \"Download anyway\" and run again.",
+            self::files(lang, files),
+            size(lang, megabytes),
+            size(lang, limit)
+        ),
+        format!(
+            "{} i co najmniej {}, powyżej progu {}. Zaznacz \"Pobierz mimo rozmiaru\" i uruchom ponownie.",
+            self::files(lang, files),
+            size(lang, megabytes),
+            size(lang, limit)
+        )
+    )
+}
+
+/// A `d:` row points at the tool instead of starting it: a command cannot run one in the background.
+pub fn map_download(lang: Lang, dataset: &str) -> String {
+    pick!(
+        lang,
+        format!(
+            "{dataset} is a dataset to download: pick it in the Downloads group, whose tools run in the background with progress and Cancel"
+        ),
+        format!(
+            "„{dataset}” to zbiór do pobrania: wybierz go w grupie Pobieranie, której narzędzia działają w tle, z postępem i Anuluj"
+        )
+    )
+}
+
 /// The sheet downloader needs a folder to write the files into.
 pub fn folder_missing(lang: Lang) -> String {
     pick!(
@@ -1005,15 +1063,6 @@ pub fn map_unknown(lang: Lang, row: &str) -> String {
     )
 }
 
-/// A download takes its area from a layer, and the map has neither the area layer nor an active one.
-pub fn map_no_layer(lang: Lang) -> String {
-    pick!(
-        lang,
-        "a download needs a layer to take its area from: draw the area, or select a layer",
-        "pobieranie potrzebuje warstwy, z której bierze obszar: narysuj obszar albo wskaż warstwę"
-    )
-    .to_string()
-}
 
 /// The raster's name: the product and its grid, the same in both languages.
 pub fn nmt_layer_name(surface: bool, datum: &str) -> String {

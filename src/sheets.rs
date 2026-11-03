@@ -10,6 +10,8 @@ use crate::http;
 use crate::text::{self, Lang};
 use serde_json::{json, Value};
 use std::path::{Path, PathBuf};
+use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::Mutex;
 
 /// The property names that hold a file address, in the order this plugin trusts them.
 const URL_KEYS: [&str; 4] = ["url_do_pobrania", "url", "nazwa_pliku", "link"];
@@ -24,6 +26,10 @@ const SIZE_SLACK: f64 = 0.05;
 /// The report's status for a file already on disk, and the prefix of a failure's.
 const SKIPPED: &str = "pominieto";
 const FAILED: &str = "blad: ";
+/// Files fetched at once: a big run is many independent files on one host.
+const WORKERS: usize = 4;
+/// Above this many megabytes a run needs the form's confirmation, not a surprise.
+const LARGE_MB: f64 = 500.0;
 
 /// One feature's file: what the run fetches, and what its report row names.
 struct Sheet {
@@ -73,65 +79,96 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
         .ok_or_else(|| text::sheet_layer_missing(lang, layer))?;
     let entries = plan(collection);
     let total = ready(&entries, layer, lang)?;
+    let (files, megabytes) = estimate(&entries);
+    if megabytes > LARGE_MB
+        && !params
+            .get("confirm")
+            .and_then(Value::as_bool)
+            .unwrap_or(false)
+    {
+        return Err(text::sheets_unconfirmed(lang, files, megabytes, LARGE_MB));
+    }
+    host::progress_line(&text::sheets_estimate(lang, files, megabytes));
 
-    let mut rows = Vec::with_capacity(entries.len());
-    let mut downloaded = 0usize;
-    let mut bytes = 0u64;
-    let mut failed = 0usize;
-    let mut skipped = 0usize;
+    // Rows that need no network are settled first, so the parallel run sees only files to fetch.
+    let mut rows: Vec<Option<Row>> = (0..entries.len()).map(|_| None).collect();
     let mut missing = 0usize;
-    let mut done = 0usize;
-    for entry in &entries {
-        let sheet = match entry {
+    let mut todo: Vec<(usize, &Sheet)> = Vec::new();
+    for (index, entry) in entries.iter().enumerate() {
+        match entry {
             Entry::NoAddress(godlo) => {
                 missing += 1;
-                skipped += 1;
-                rows.push(Row {
+                rows[index] = Some(Row {
                     godlo: godlo.clone(),
                     url: String::new(),
                     bytes: 0,
                     status: SKIPPED.to_string(),
                 });
-                continue;
             }
-            Entry::Sheet(sheet) => sheet,
-        };
-        done += 1;
-        let path = folder.join(&sheet.name);
-        match existing_size(&path, sheet.expected) {
-            Some(size) => {
-                skipped += 1;
-                rows.push(Row {
-                    godlo: sheet.godlo.clone(),
-                    url: sheet.url.clone(),
-                    bytes: size,
-                    status: SKIPPED.to_string(),
-                });
+            Entry::Sheet(sheet) => {
+                let path = folder.join(&sheet.name);
+                match existing_size(&path, sheet.expected) {
+                    Some(size) => {
+                        rows[index] = Some(Row {
+                            godlo: sheet.godlo.clone(),
+                            url: sheet.url.clone(),
+                            bytes: size,
+                            status: SKIPPED.to_string(),
+                        });
+                    }
+                    None => todo.push((index, sheet)),
+                }
             }
-            None => match http::download(&sheet.url, &path, TIMEOUT_SECONDS, lang) {
-                Ok(size) => {
-                    downloaded += 1;
-                    bytes += size;
-                    rows.push(Row {
+        }
+    }
+
+    let count = todo.len();
+    let next = AtomicUsize::new(0);
+    let done = AtomicUsize::new(0);
+    let fetched: Mutex<Vec<(usize, Row)>> = Mutex::new(Vec::with_capacity(count));
+    std::thread::scope(|scope| {
+        for _ in 0..WORKERS.min(count) {
+            scope.spawn(|| loop {
+                let at = next.fetch_add(1, Ordering::SeqCst);
+                let Some((index, sheet)) = todo.get(at) else {
+                    break;
+                };
+                let path = folder.join(&sheet.name);
+                let row = match http::download(&sheet.url, &path, TIMEOUT_SECONDS, lang) {
+                    Ok(size) => Row {
                         godlo: sheet.godlo.clone(),
                         url: sheet.url.clone(),
                         bytes: size,
                         status: "ok".to_string(),
-                    });
-                }
-                Err(error) => {
-                    failed += 1;
-                    rows.push(Row {
+                    },
+                    Err(error) => Row {
                         godlo: sheet.godlo.clone(),
                         url: sheet.url.clone(),
                         bytes: 0,
-                        status: format!("{FAILED}{error}"),
-                    });
-                }
-            },
+                        status: format!("{FAILED}{}", clip(&error, 120)),
+                    },
+                };
+                let finished = done.fetch_add(1, Ordering::SeqCst) + 1;
+                host::progress_line(&text::sheet_progress(lang, finished, count, &sheet.name));
+                fetched
+                    .lock()
+                    .unwrap_or_else(|poison| poison.into_inner())
+                    .push((*index, row));
+            });
         }
-        host::progress_line(&text::sheet_progress(lang, done, total, &sheet.name));
+    });
+    if let Ok(got) = fetched.into_inner() {
+        for (index, row) in got {
+            rows[index] = Some(row);
+        }
     }
+
+    let rows: Vec<Row> = rows.into_iter().flatten().collect();
+    let downloaded = rows.iter().filter(|row| row.status == "ok").count();
+    let bytes: u64 = rows.iter().filter(|row| row.status == "ok").map(|row| row.bytes).sum();
+    let skipped = rows.iter().filter(|row| row.status == SKIPPED).count();
+    let failed = rows.iter().filter(|row| row.status.starts_with(FAILED)).count();
+    let _ = total;
 
     let report = folder.join(REPORT);
     std::fs::write(&report, csv(&rows))
@@ -157,6 +194,19 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
         "folder": folder.display().to_string(),
         "messages": messages,
     }))
+}
+
+/// The list's file count and its megabytes: the index rounds sizes, so this is a lower bound.
+fn estimate(entries: &[Entry]) -> (usize, f64) {
+    let mut files = 0usize;
+    let mut bytes = 0u64;
+    for entry in entries {
+        if let Entry::Sheet(sheet) = entry {
+            files += 1;
+            bytes += sheet.expected.unwrap_or(0);
+        }
+    }
+    (files, bytes as f64 / 1e6)
 }
 
 /// The number of files the list holds, or why the run cannot start.
@@ -294,10 +344,32 @@ fn csv(rows: &[Row]) -> String {
     for row in rows {
         text.push_str(&format!(
             "{};{};{};{}\r\n",
-            row.godlo, row.url, row.bytes, row.status
+            field(&row.godlo),
+            field(&row.url),
+            row.bytes,
+            field(&row.status)
         ));
     }
     text
+}
+
+/// An error short enough for one report cell.
+fn clip(text: &str, limit: usize) -> String {
+    let line = text.split_whitespace().collect::<Vec<_>>().join(" ");
+    if line.chars().count() <= limit {
+        return line;
+    }
+    let cut: String = line.chars().take(limit.saturating_sub(1)).collect();
+    format!("{cut}\u{2026}")
+}
+
+/// A report field, quoted when it could break the semicolon layout.
+fn field(text: &str) -> String {
+    if text.contains([';', '"', '\n', '\r']) {
+        format!("\"{}\"", text.replace('"', "\"\""))
+    } else {
+        text.to_string()
+    }
 }
 
 #[cfg(test)]
@@ -306,6 +378,32 @@ mod tests {
 
     fn feature(properties: Value) -> Value {
         json!({ "type": "Feature", "properties": properties, "geometry": null })
+    }
+
+    #[test]
+    fn a_big_list_is_refused_before_the_first_file() {
+        let mut features = Vec::new();
+        for n in 0..12 {
+            features.push(feature(json!({
+                "godlo": format!("S{n}"),
+                "url_do_pobrania": format!("https://x.pl/S{n}.zip"),
+                "wlk_pliku_mb": 500.0,
+            })));
+        }
+        let collection = json!({ "type": "FeatureCollection", "features": features });
+        let entries = plan(&collection);
+        let (files, megabytes) = estimate(&entries);
+        assert_eq!(files, 12);
+        assert!((megabytes - 6000.0).abs() < 0.1, "{megabytes}");
+        let request = json!({
+            "id": "pobierz-arkusze",
+            "params": { "folder": std::env::temp_dir().join("dane-pl-refused").display().to_string(), "skorowidz": "sheets" },
+            "layers": { "sheets": collection },
+            "lang": "en",
+        });
+        let error = run(&request, Lang::En).unwrap_err();
+        assert!(error.contains("6.0 GB"), "{error}");
+        assert!(error.contains("Download anyway"), "{error}");
     }
 
     #[test]

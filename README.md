@@ -161,7 +161,7 @@ Menu **Pakiety** w grupie **Pobieranie** zamienia skorowidz w listę arkuszy do 
 | Skorowidze: ortofoto | dodaje skorowidz ortofotomap jako warstwę | 54 zbiory, obszar |
 | Skorowidze: NMT | to samo dla modeli terenu i pokrycia | 44 zbiory, obszar |
 | Skorowidze: inne | LIDAR, zdjęcia lotnicze i siatki arkuszy | 64 zbiory, obszar |
-| Pobierz arkusze | pobiera pliki wskazane przez obiekty skorowidza | warstwa, folder, `clear` |
+| Pobierz arkusze | pobiera pliki wskazane przez obiekty skorowidza | warstwa, folder, `clear`, `confirm` |
 
 Kolejność jest zawsze ta sama:
 
@@ -173,6 +173,23 @@ Kolejność jest zawsze ta sama:
    obiekt.
 4. Uruchom **Pobierz arkusze**: wskaż warstwę skorowidza i folder.
 5. Pliki lądują w folderze, a obok nich raport CSV z listą arkuszy i wynikiem każdego pobrania.
+
+**Rozmiar przed pobraniem.** Pierwsza linia postępu mówi, ile plików i ile megabajtów (co najmniej,
+bo skorowidz zaokrągla `wlk_pliku_mb`). Powyżej 0,5 GB narzędzie odmawia i podaje policzony rozmiar;
+duży przebieg jest decyzją, więc trzeba zaznaczyć **Pobierz mimo rozmiaru** i uruchomić ponownie.
+Nic się wtedy jeszcze nie pobrało, więc to prawdziwe potwierdzenie, a nie ostrzeżenie po fakcie.
+
+**Cztery pliki naraz.** Pobieranie idzie czterema wątkami, bo to wiele niezależnych plików z jednego
+hosta: 3 GB w kilkaset sekund zamiast kilkunastu minut. Każdy plik leci do `.part` i wraca pod
+właściwą nazwę po skończeniu, więc przerwany przebieg nie zostawia połowy archiwum.
+
+**Tło i Anuluj.** Wszystkie narzędzia pobierania uruchamiane z panelu **Narzędzia** działają w tle:
+okno zostaje responsywne, widać postęp, jest **Anuluj**, który zabija proces. Dlatego wiersze
+„Pobieranie” w drzewie **Mapa** w panelu nie startują pobrania same: polecenie nie umie uruchomić
+narzędzia w tle, więc wiersz tylko wskazuje narzędzie i grupę, w której ono stoi. Wyjątkiem od tej
+zasady są trzy polecenia **Wysokości**: pobierają raster na wątku interfejsu, bo narzędzie nie umie
+dodać warstwy rastrowej, i dlatego mają budżet 12 s i próg rozmiaru.
+
 
 Adres każdego pliku bierze się z pola `url_do_pobrania` obiektu skorowidza. Wartością wyboru w
 trzech narzędziach skorowidza jest tytuł zbioru, więc dwa zbiory o tym samym tytule niosą

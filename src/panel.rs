@@ -21,7 +21,6 @@ const DOWNLOAD_TOOLS: &[(&str, &str, &str)] = &[
 ];
 
 /// The manifest's id: the host prefixes a tool id with it.
-const PLUGIN_ID: &str = "dane-pl";
 
 /// Copies the panel's state into a command's answer, so the pane shows what the command changed.
 pub fn attach(answer: &mut Value, state: Value) {
@@ -176,32 +175,20 @@ fn is_map(id: &str) -> bool {
         || catalog::cartomatic().iter().any(|map| map.id == id)
 }
 
-/// Starts the download tool of a `d:` row with the dataset's title and a layer to take the area from.
+/// Names the tool a `d:` row belongs to: a command cannot start a background run, so it points.
 fn download(host: &mut Host, tool: &str, dataset: &str, lang: Lang) -> Result<Value, String> {
     let layer = catalog::wfs_layers()
         .iter()
         .find(|layer| !layer.index && layer.id == dataset && layer.tool == tool)
         .ok_or_else(|| text::map_unknown(lang, &format!("d:{tool}:{dataset}")))?;
-    let list = clip::layers(host, lang)?;
-    let area = clip::area_in(&list)
-        .or_else(|| active(&list))
-        .ok_or_else(|| text::map_no_layer(lang))?;
-    host.call(
-        "gp.run",
-        json!({
-            "tool": format!("plugin:{}/{tool}", PLUGIN_ID),
-            "params": { "dane": layer.title, "obszar": area },
-        }),
-    )
+    let note = text::map_download(lang, &layer.name);
+    host.notify(&note);
+    Ok(json!({
+        "download": { "tool": tool, "dataset": layer.id, "title": layer.title },
+        "note": note,
+    }))
 }
 
-/// The layer the Contents pane has active, when one is.
-fn active(list: &[Value]) -> Option<String> {
-    let layer = list
-        .iter()
-        .find(|layer| layer.get("active").and_then(Value::as_bool) == Some(true))?;
-    layer.get("name").and_then(Value::as_str).map(str::to_string)
-}
 
 /// The panel's map list: every map under Podkłady, every downloadable dataset under Pobieranie.
 fn map_nodes(lang: Lang) -> Value {
