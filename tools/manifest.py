@@ -1,8 +1,9 @@
 """Build plugin.json from the catalogues and the editorial manifest.
 
-`data/services.json` holds the WMS services, `data/wfs.json` the WFS types. Both are built and
-verified by `tools/services.py` and `tools/wfs.py`. Everything that is not a catalogue entry lives
-in `tools/manifest.base.json`: the commands of the built-in layers, the download tools, the tab
+`data/services.json` holds the WMS services, `data/wfs.json` the WFS types, `data/wody.json` and
+`data/cartomatic.json` two further map families. The catalogues are built and verified by
+`tools/services.py` and `tools/wfs.py`. Everything that is not a catalogue entry lives in
+`tools/manifest.base.json`: the commands of the built-in layers, the download tools, the tab
 layout, the panel and the translations.
 
 Keeping the three apart is the point. A hand-written plugin.json drifted from the catalogues: 162
@@ -24,6 +25,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = os.path.join(ROOT, "tools", "manifest.base.json")
 SERVICES = os.path.join(ROOT, "data", "services.json")
 WFS = os.path.join(ROOT, "data", "wfs.json")
+WODY = os.path.join(ROOT, "data", "wody.json")
+CARTO = os.path.join(ROOT, "data", "cartomatic.json")
 OUT = os.path.join(ROOT, "plugin.json")
 
 # The host's limits (docs/plugins.md, "plugin.json").
@@ -35,6 +38,13 @@ MAX_GROUP_ITEMS = {"large": 16, "small": 48}
 MAX_MENU_ITEMS = 32
 MAX_MENU_DEPTH = 4
 MAX_CHOICES = 64
+
+# No 'zones' or 'polygon' in the host's icon set: 'polygon_layer' is the polygon glyph.
+MAP_ICON = "polygon_layer"
+
+# What the build had to change to fit the host's limits, printed by main.
+NOTICES = []
+
 
 
 class Bad(Exception):
@@ -60,6 +70,95 @@ def catalogue():
         if not entry.get("index", False):
             offered.append(entry["id"])
     return by_id, offered
+
+
+def family(path, name):
+    """A map family file: one attribution, one zoom, and the services or maps it lists."""
+    if not os.path.exists(path):
+        raise Bad(f"data/{name}.json is missing: it holds one map family of the tab")
+    file = load(path)
+    for key in ("attribution", "zoom"):
+        if not file.get(key):
+            raise Bad(f"data/{name}.json: no '{key}'")
+    return file
+
+
+def warstw(count):
+    """The Polish counted noun a number of WMS layers takes."""
+    if count == 1:
+        return "warstwa"
+    if count % 10 in (2, 3, 4) and count % 100 not in (12, 13, 14):
+        return "warstwy"
+    return "warstw"
+
+
+def index_theme(entry):
+    """The theme of a sheet index: the catalogue's field, or the title when the file has none."""
+    theme = (entry.get("theme") or "").strip()
+    if theme:
+        return theme
+    title = entry.get("title", "").lower()
+    if "ortofotomap" in title:
+        return "Ortofoto"
+    if "pokrycia terenu" in title:
+        return "Pokrycie"
+    if "modelu terenu" in title:
+        return "NMT"
+    return "Inne"
+
+
+def index_bucket(theme):
+    """The download tool a theme belongs to: flight imagery, elevation, or the rest."""
+    if theme.startswith("Ortofoto"):
+        return "orto"
+    if theme in ("NMT", "Pokrycie"):
+        return "nmt"
+    return "inne"
+
+
+def folders_of(label, leaves, titles, literal):
+    """One folder, or one per first word of the title when the host's 32 entries are not enough."""
+    if len(leaves) <= MAX_MENU_ITEMS:
+        return [{"menu": label, "icon": "map", "items": leaves}]
+    groups = {}
+    for leaf in leaves:
+        groups.setdefault(titles[leaf].split()[0], []).append(leaf)
+    folders = []
+    for word, group in groups.items():
+        chunks = [
+            group[start : start + MAX_MENU_ITEMS]
+            for start in range(0, len(group), MAX_MENU_ITEMS)
+        ]
+        for number, chunk in enumerate(chunks, start=1):
+            name = word if len(chunks) == 1 else f"{word} ({number})"
+            # A folder named after a title's first word carries that Polish word into both languages.
+            literal.add(name)
+            folders.append({"menu": name, "icon": "map", "items": chunk})
+    NOTICES.append(f"folder {label}: {len(leaves)} entries split into {len(folders)} folders")
+    return folders
+
+
+def more_maps(meta, wody, carto, titles, literal):
+    """The 'More maps' menu: the Wody Polskie services, then one folder per Cartomatic series."""
+    # The publisher's own name in both languages: Wody Polskie is not a word to translate.
+    literal.add(meta["wody"])
+    folders = folders_of(meta["wody"], [command["id"] for command in wody], titles, literal)
+    for series, label in carto["series"].items():
+        if series not in meta["series"]:
+            raise Bad(f"series '{series}' has no English label in tools/manifest.base.json")
+        leaves = [entry["id"] for entry in carto["maps"] if entry["series"] == series]
+        if not leaves:
+            raise Bad(f"data/cartomatic.json: series '{series}' names no map")
+        folders.extend(folders_of(meta["series"][series], leaves, titles, literal))
+    stale = [series for series in meta["series"] if series not in carto["series"]]
+    if stale:
+        raise Bad(f"series '{stale[0]}' has no map in data/cartomatic.json")
+    return {
+        "label": meta["label"],
+        "icon": meta["icon"],
+        "help": meta["help"],
+        "items": folders,
+    }
 
 
 def menu_decl(key, menus, folders, depth=1):
@@ -126,16 +225,59 @@ def service_help(service):
 def build():
     base = load(BASE)
     services = load(SERVICES)
+    wody_file = family(WODY, "wody")
+    carto_file = family(CARTO, "cartomatic")
+    if not wody_file.get("services"):
+        raise Bad("data/wody.json lists no service")
+    if not carto_file.get("maps"):
+        raise Bad("data/cartomatic.json lists no map")
     by_id, offered = catalogue()
 
     commands = list(base["commands"])
     tools = list(base["tools"])
     group_of_tool = {}
+    placed_index = {}
+    # A sheet index is chosen by its title, so a title that repeats is told apart by its id.
+    index_titles = {}
+    for entry in by_id.values():
+        if entry.get("index"):
+            index_titles[entry["title"]] = index_titles.get(entry["title"], 0) + 1
 
     # A tool's choices are the datasets whose catalogue entry names it, in the catalogue's order.
     for tool in tools:
-        here = [entry for entry in by_id.values() if entry.get("tool") == tool["id"]]
         param = next((p for p in tool.get("params", []) if p["name"] == "dane"), None)
+        theme = tool.pop("indexTheme", None)
+        if theme is not None:
+            # A sheet-index tool offers the index types of one theme; the catalogue decides which.
+            if param is None:
+                raise Bad(f"tool {tool['id']}: a sheet-index tool needs a 'dane' parameter")
+            here = [
+                entry
+                for entry in by_id.values()
+                if entry.get("index") and index_bucket(index_theme(entry)) == theme
+            ]
+            if not here:
+                raise Bad(f"tool {tool['id']}: no sheet index of theme '{theme}'")
+            if len(here) > MAX_CHOICES:
+                raise Bad(
+                    f"tool {tool['id']}: {len(here)} choices, the host allows {MAX_CHOICES}"
+                )
+            param["choices"] = [
+                entry["title"]
+                if index_titles[entry["title"]] == 1
+                else f"{entry['title']} ({entry['id']})"
+                for entry in here
+            ]
+            if len(set(param["choices"])) != len(param["choices"]):
+                raise Bad(f"tool {tool['id']}: two sheet indexes share a title")
+            for entry in here:
+                if entry["id"] in placed_index:
+                    raise Bad(
+                        f"'{entry['id']}' is in {placed_index[entry['id']]} and in {tool['id']}"
+                    )
+                placed_index[entry["id"]] = tool["id"]
+            continue
+        here = [entry for entry in by_id.values() if entry.get("tool") == tool["id"]]
         if param is None:
             continue
         labels = []
@@ -164,6 +306,16 @@ def build():
     missing = [dataset for dataset in offered if dataset not in placed]
     if missing:
         raise Bad(f"offered but in no download tool: {', '.join(missing[:5])}")
+    indexes = [key for key in by_id if by_id[key].get("index")]
+    missing_index = [dataset for dataset in indexes if dataset not in placed_index]
+    if missing_index:
+        raise Bad(f"sheet index in no download tool: {', '.join(missing_index[:5])}")
+    repeated = sorted(title for title, count in index_titles.items() if count > 1)
+    if repeated:
+        NOTICES.append(
+            f"{len(repeated)} sheet index titles repeat, so their choices carry the id: "
+            f"{'; '.join(repeated[:3])}"
+        )
     stray = [key for key in by_id if by_id[key].get("tool") not in group_of_tool and by_id[key].get("tool")]
     if stray:
         raise Bad(f"dataset names a tool that does not exist: {by_id[stray[0]]['tool']}")
@@ -184,6 +336,45 @@ def build():
             }
         )
     commands.extend(sorted(service_commands, key=lambda c: c["id"]))
+
+    # Two further map families, one command per service or map, with their own publisher line. The
+    # labels and the help lines are proper names and stay Polish in both languages.
+    literal = set()
+    wody_commands, carto_commands = [], []
+    for service in wody_file["services"]:
+        for key in ("id", "title", "url", "layers"):
+            if not service.get(key):
+                raise Bad(f"data/wody.json: {service.get('id', '?')} has no '{key}'")
+        count = len(service["layers"])
+        help_text = f"{wody_file['attribution']} \u00b7 {count} {warstw(count)}"
+        wody_commands.append(
+            {
+                "id": service["id"],
+                "label": service["title"],
+                "icon": MAP_ICON,
+                "help": help_text,
+                "params": json.dumps({"service": service["id"]}, ensure_ascii=False),
+            }
+        )
+        literal.update((service["title"], help_text))
+    for entry in carto_file["maps"]:
+        for key in ("id", "title", "layer", "series"):
+            if not entry.get(key):
+                raise Bad(f"data/cartomatic.json: {entry.get('id', '?')} has no '{key}'")
+        if entry["series"] not in carto_file["series"]:
+            raise Bad(f"data/cartomatic.json: {entry['id']} names series '{entry['series']}'")
+        carto_commands.append(
+            {
+                "id": entry["id"],
+                "label": entry["title"],
+                "icon": "map",
+                "help": carto_file["attribution"],
+                "params": json.dumps({"service": entry["id"]}, ensure_ascii=False),
+            }
+        )
+        literal.update((entry["title"], carto_file["attribution"]))
+    commands.extend(wody_commands + carto_commands)
+    titles = {command["id"]: command["label"] for command in wody_commands + carto_commands}
 
     ids = [c["id"] for c in commands]
     for command_id in ids:
@@ -227,6 +418,10 @@ def build():
             if child not in menus:
                 raise Bad(f"menu {meta['label']}: '{child}' is not a menu of services")
 
+    # The map families are not institution menus: one folder per family and per Cartomatic series.
+    map_meta = base["moreMaps"]
+    menus["more-maps"] = more_maps(map_meta, wody_commands, carto_file, titles, literal)
+
     known = (
         set(ids)
         | {f"tool:{t['id']}" for t in tools}
@@ -257,6 +452,10 @@ def build():
     unlisted = [s["cmd"] for s in services if s["cmd"] not in listed]
     if unlisted:
         raise Bad(f"service not in a menu: {', '.join(unlisted[:5])}")
+    for name, family_commands in (("wody", wody_commands), ("cartomatic", carto_commands)):
+        unlisted = [c["id"] for c in family_commands if c["id"] not in listed]
+        if unlisted:
+            raise Bad(f"{name} command in no menu: {', '.join(unlisted[:5])}")
 
     for tool in tools:
         if len(tool.get("params", [])) > MAX_TOOL_PARAMS:
@@ -270,7 +469,7 @@ def build():
     manifest["tab"] = tab
     manifest["i18n"] = base["i18n"]
     manifest["panel"] = base["panel"]
-    check_translations(manifest)
+    check_translations(manifest, literal)
     return manifest
 
 
@@ -284,8 +483,8 @@ def menu_strings(items, strings):
             menu_strings(item.get("items", []), strings)
 
 
-def interface_strings(manifest):
-    """The strings the interface shows from the manifest, minus GUGiK's own service names."""
+def interface_strings(manifest, literal):
+    """The strings the interface shows, minus the proper names that stay Polish in both languages."""
     strings = {manifest["name"], manifest["description"], manifest["tab"]["label"]}
     for group in manifest["tab"]["groups"]:
         strings.add(group["label"])
@@ -313,12 +512,12 @@ def interface_strings(manifest):
         for key in ("label", "help", "text"):
             if item.get(key):
                 strings.add(item[key])
-    return strings
+    return strings - literal
 
 
-def check_translations(manifest):
+def check_translations(manifest, literal):
     """Every interface string has a Polish translation, and no translation is orphaned."""
-    strings = interface_strings(manifest)
+    strings = interface_strings(manifest, literal)
     polish = manifest["i18n"].get("pl", {})
     missing = sorted(s for s in strings if s not in polish)
     if missing:
@@ -344,6 +543,8 @@ def main():
     except Bad as error:
         print(f"manifest: {error}")
         return 1
+    for notice in NOTICES:
+        print(f"manifest: {notice}")
     body = text(manifest)
     if "--check" in sys.argv:
         current = io.open(OUT, encoding="utf-8").read() if os.path.exists(OUT) else ""

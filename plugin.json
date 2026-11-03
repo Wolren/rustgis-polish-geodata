@@ -952,6 +952,531 @@
       "icon": "basemap",
       "help": "Złoża i tereny górnicze · Państwowy Instytut Geologiczny (PIG)",
       "params": "{\"service\": \"Złoża. obszary i tereny górnicze (MIDAS)\"}"
+    },
+    {
+      "id": "wody-apgw",
+      "label": "aPGW",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 11 warstw",
+      "params": "{\"service\": \"wody-apgw\"}"
+    },
+    {
+      "id": "wody-apgw2",
+      "label": "IIaPGW",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 17 warstw",
+      "params": "{\"service\": \"wody-apgw2\"}"
+    },
+    {
+      "id": "wody-mrp3",
+      "label": "MRP 0,2% (raz na 500lat) negatywne konsekwencje dla życia i zdrowia ludzi",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 22 warstwy",
+      "params": "{\"service\": \"wody-mrp3\"}"
+    },
+    {
+      "id": "wody-mrp8",
+      "label": "MRP 0,2%(raz na 500lat) negatywne konsekwencje dla środowiska, dziedzictwa kult. i działalności gosp.",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 40 warstw",
+      "params": "{\"service\": \"wody-mrp8\"}"
+    },
+    {
+      "id": "wody-mrp2",
+      "label": "MRP 1% (raz na 100lat) negatywne konsekwencje dla życia i zdrowia ludzi",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 22 warstwy",
+      "params": "{\"service\": \"wody-mrp2\"}"
+    },
+    {
+      "id": "wody-mrp7",
+      "label": "MRP 1%(raz na 100lat) negatywne konsekwencje dla środowiska, dziedzictwa kult. i działalności gosp.",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 40 warstw",
+      "params": "{\"service\": \"wody-mrp7\"}"
+    },
+    {
+      "id": "wody-mrp1",
+      "label": "MRP 10% (raz na 10lat) negatywne konsekwencje dla życia i zdrowia ludzi",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 9 warstw",
+      "params": "{\"service\": \"wody-mrp1\"}"
+    },
+    {
+      "id": "wody-mrp6",
+      "label": "MRP 10%(raz na 10lat) negatywne konsekwencje dla środowiska, dziedzictwa kulturowego i działalności gosp.",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 18 warstw",
+      "params": "{\"service\": \"wody-mrp6\"}"
+    },
+    {
+      "id": "wody-mrp12",
+      "label": "MRP-zniszczenie lub uszkodzenie budowli piętrzącej-negatywne skutki dla środowiska, dziedzictwa kult. i działalności gosp.",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 146 warstw",
+      "params": "{\"service\": \"wody-mrp12\"}"
+    },
+    {
+      "id": "wody-mrp11",
+      "label": "MRP-zniszczenie lub uszkodzenie budowli piętrzącej-negatywne skutki dla życia i zdrowia ludzi",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 187 warstw",
+      "params": "{\"service\": \"wody-mrp11\"}"
+    },
+    {
+      "id": "wody-mrp9",
+      "label": "MRP-zniszczenie wału przeciwpow.-negatywne skutki dla środowiska, dziedzictwa kult. i działalności gosp.",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 18 warstw",
+      "params": "{\"service\": \"wody-mrp9\"}"
+    },
+    {
+      "id": "wody-mrp4",
+      "label": "MRP-zniszczenie wału przeciwpow.-negatywne skutki dla życia i zdrowia ludzi",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 9 warstw",
+      "params": "{\"service\": \"wody-mrp4\"}"
+    },
+    {
+      "id": "wody-mrp10",
+      "label": "MRP-zniszczenie wału przeciwsztorm.-negatywne skutki dla środowiska, dziedzictwa kult. i działalności gosp.",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 22 warstwy",
+      "params": "{\"service\": \"wody-mrp10\"}"
+    },
+    {
+      "id": "wody-mrp5",
+      "label": "MRP-zniszczenie wału przeciwsztorm.-negatywne skutki dla życia i zdrowia ludzi",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 12 warstw",
+      "params": "{\"service\": \"wody-mrp5\"}"
+    },
+    {
+      "id": "wody-mzp9",
+      "label": "MZP od strony morza-całkowite zniszczenie wału przeciwsztormowego",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 13 warstw",
+      "params": "{\"service\": \"wody-mzp9\"}"
+    },
+    {
+      "id": "wody-mzp1",
+      "label": "MZP z głębokością wody-0,2%(raz na 500 lat)",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 24 warstwy",
+      "params": "{\"service\": \"wody-mzp1\"}"
+    },
+    {
+      "id": "wody-mzp2",
+      "label": "MZP z głębokością wody-1%(raz na 100 lat)",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 24 warstwy",
+      "params": "{\"service\": \"wody-mzp2\"}"
+    },
+    {
+      "id": "wody-mzp3",
+      "label": "MZP z głębokością wody-10%(raz na 10 lat)",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 10 warstw",
+      "params": "{\"service\": \"wody-mzp3\"}"
+    },
+    {
+      "id": "wody-mzp4",
+      "label": "MZP z prędkością wody-0,2%(raz na 500 lat)",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 9 warstw",
+      "params": "{\"service\": \"wody-mzp4\"}"
+    },
+    {
+      "id": "wody-mzp5",
+      "label": "MZP z prędkością wody-1%(raz na 100 lat)",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 9 warstw",
+      "params": "{\"service\": \"wody-mzp5\"}"
+    },
+    {
+      "id": "wody-mzp6",
+      "label": "MZP z prędkością wody-10%(raz na 10 lat)",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 9 warstw",
+      "params": "{\"service\": \"wody-mzp6\"}"
+    },
+    {
+      "id": "wody-mzp10",
+      "label": "MZP-Obszary szczególnego zagrożenia powodzią",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 2 warstwy",
+      "params": "{\"service\": \"wody-mzp10\"}"
+    },
+    {
+      "id": "wody-mzp8",
+      "label": "MZP-zniszczenie lub uszkodzenie budowli piętrzącej",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 162 warstwy",
+      "params": "{\"service\": \"wody-mzp8\"}"
+    },
+    {
+      "id": "wody-mzp7",
+      "label": "MZP-zniszczenie wału przeciwpowodziowego",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 8 warstw",
+      "params": "{\"service\": \"wody-mzp7\"}"
+    },
+    {
+      "id": "wody-pgwwp",
+      "label": "PGWWP",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 3 warstwy",
+      "params": "{\"service\": \"wody-pgwwp\"}"
+    },
+    {
+      "id": "wody-ppss",
+      "label": "PPSS",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 8 warstw",
+      "params": "{\"service\": \"wody-ppss\"}"
+    },
+    {
+      "id": "wody-pzrp",
+      "label": "PZRP",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 26 warstw",
+      "params": "{\"service\": \"wody-pzrp\"}"
+    },
+    {
+      "id": "wody-worp-onnp-od-morza",
+      "label": "WORP-ONNP od morza",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 1 warstwa",
+      "params": "{\"service\": \"wody-worp-onnp-od-morza\"}"
+    },
+    {
+      "id": "wody-worp-onnp-zniszczenie-budowli-pietrzacych",
+      "label": "WORP-ONNP zniszczenie budowli piętrzących",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 1 warstwa",
+      "params": "{\"service\": \"wody-worp-onnp-zniszczenie-budowli-pietrzacych\"}"
+    },
+    {
+      "id": "wody-worp4",
+      "label": "WORP-powodzie historyczne, prawdopodobne",
+      "icon": "polygon_layer",
+      "help": "PGW Wody Polskie (ISOK) · 8 warstw",
+      "params": "{\"service\": \"wody-worp4\"}"
+    },
+    {
+      "id": "carto-administrativ-karte-von-den-konigreichen-galizien-und",
+      "label": "Administrativ Karte von den Königreichen Galizien und Lodomerien 1:115 200 (1855)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-administrativ-karte-von-den-konigreichen-galizien-und\"}"
+    },
+    {
+      "id": "carto-drogi-w-drugiej-polowie-xvi-w",
+      "label": "Drogi w drugiej połowie XVI w.",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-drogi-w-drugiej-polowie-xvi-w\"}"
+    },
+    {
+      "id": "carto-dwuwiorstowka-1-84-000-1908-1936",
+      "label": "Dwuwiorstówka 1:84 000 (1908-1936)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-dwuwiorstowka-1-84-000-1908-1936\"}"
+    },
+    {
+      "id": "carto-karta-dawnej-polski-1-300-000-1859",
+      "label": "Karta Dawnej Polski 1:300 000 (1859)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-karta-dawnej-polski-1-300-000-1859\"}"
+    },
+    {
+      "id": "carto-karte-des-deutschen-reiches-1-100-000-ok-1900",
+      "label": "Karte des Deutschen Reiches 1:100 000 (ok. 1900)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-karte-des-deutschen-reiches-1-100-000-ok-1900\"}"
+    },
+    {
+      "id": "carto-karte-des-deutschen-reiches-1-100-000-ok-1944",
+      "label": "Karte des Deutschen Reiches 1:100 000 (ok. 1944)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-karte-des-deutschen-reiches-1-100-000-ok-1944\"}"
+    },
+    {
+      "id": "carto-karte-des-westlichen-russlands-1-100-000-1914-1921",
+      "label": "Karte des Westlichen Russlands 1:100 000 (1914-1921)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-karte-des-westlichen-russlands-1-100-000-1914-1921\"}"
+    },
+    {
+      "id": "carto-mapa-gaula-raczynskiego-1-125-000-1807-1812",
+      "label": "Mapa Gaula/Raczyńskiego 1:125 000 (1807-1812)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-mapa-gaula-raczynskiego-1-125-000-1807-1812\"}"
+    },
+    {
+      "id": "carto-mapa-gilly-ego-1-150-000-1802-1803",
+      "label": "Mapa Gilly'ego 1:150 000 (1802-1803)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-mapa-gilly-ego-1-150-000-1802-1803\"}"
+    },
+    {
+      "id": "carto-mapa-operacyjna-wig-1-300-000-1918-1939",
+      "label": "Mapa operacyjna WIG 1:300 000 (1918-1939)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-mapa-operacyjna-wig-1-300-000-1918-1939\"}"
+    },
+    {
+      "id": "carto-mapa-polski-i-krajow-osciennych-wig-1-500-000-1939",
+      "label": "Mapa Polski i Krajów Ościennych WIG 1:500 000 (1939)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-mapa-polski-i-krajow-osciennych-wig-1-500-000-1939\"}"
+    },
+    {
+      "id": "carto-mapa-polski-i-krajow-osciennych-wig-1-500-000-1947",
+      "label": "Mapa Polski i Krajów Ościennych WIG 1:500 000 (1947)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-mapa-polski-i-krajow-osciennych-wig-1-500-000-1947\"}"
+    },
+    {
+      "id": "carto-mapa-schroettera-1-150-000-1796-1802",
+      "label": "Mapa Schroettera 1:150 000 (1796-1802)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-mapa-schroettera-1-150-000-1796-1802\"}"
+    },
+    {
+      "id": "carto-mapa-szczegolowa-wig-1-25-000-1918-1939",
+      "label": "Mapa szczegółowa WIG 1:25 000 (1918-1939)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-mapa-szczegolowa-wig-1-25-000-1918-1939\"}"
+    },
+    {
+      "id": "carto-mapa-taktyczna-wig-1-100-000-1918-1939",
+      "label": "Mapa taktyczna WIG 1:100 000 (1918-1939)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-mapa-taktyczna-wig-1-100-000-1918-1939\"}"
+    },
+    {
+      "id": "carto-mapa-textora-sotzmanna-1-150-000-1806-1808",
+      "label": "Mapa Textora-Sotzmanna 1:150 000 (1806-1808)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-mapa-textora-sotzmanna-1-150-000-1806-1808\"}"
+    },
+    {
+      "id": "carto-mapa-wig-1-100-000-w-ukladzie-borowa-gora",
+      "label": "Mapa WIG 1:100 000 w układzie \"Borowa Góra\"",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-mapa-wig-1-100-000-w-ukladzie-borowa-gora\"}"
+    },
+    {
+      "id": "carto-messtichblatter-1-25-000-1870-1945",
+      "label": "Messtichblätter 1:25 000 (1870-1945)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-messtichblatter-1-25-000-1870-1945\"}"
+    },
+    {
+      "id": "carto-plan-bialegostoku-1-25-000-1943",
+      "label": "Plan Białegostoku 1:25 000 (1943)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-bialegostoku-1-25-000-1943\"}"
+    },
+    {
+      "id": "carto-plan-bydgoszczy-1-25-000-1943",
+      "label": "Plan Bydgoszczy 1:25 000 (1943)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-bydgoszczy-1-25-000-1943\"}"
+    },
+    {
+      "id": "carto-plan-czestochowy-1-25-000-1943",
+      "label": "Plan Częstochowy 1:25 000 (1943)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-czestochowy-1-25-000-1943\"}"
+    },
+    {
+      "id": "carto-plan-gdanska-1-25-000-1944",
+      "label": "Plan Gdańska 1:25 000 (1944)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-gdanska-1-25-000-1944\"}"
+    },
+    {
+      "id": "carto-plan-grudziadza-1-25-000-1943",
+      "label": "Plan Grudziądza 1:25 000 (1943)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-grudziadza-1-25-000-1943\"}"
+    },
+    {
+      "id": "carto-plan-inowroclawia-1-25-000-1943",
+      "label": "Plan Inowrocławia 1:25 000 (1943)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-inowroclawia-1-25-000-1943\"}"
+    },
+    {
+      "id": "carto-plan-jasla-1-25-000-1943",
+      "label": "Plan Jasła 1:25 000 (1943)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-jasla-1-25-000-1943\"}"
+    },
+    {
+      "id": "carto-plan-katowic-1-25-000-1943",
+      "label": "Plan Katowic 1:25 000 (1943)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-katowic-1-25-000-1943\"}"
+    },
+    {
+      "id": "carto-plan-kielc-1-25-000-1943",
+      "label": "Plan Kielc 1:25 000 (1943)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-kielc-1-25-000-1943\"}"
+    },
+    {
+      "id": "carto-plan-krakowa-1-25-000-1943",
+      "label": "Plan Krakowa 1:25 000 (1943)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-krakowa-1-25-000-1943\"}"
+    },
+    {
+      "id": "carto-plan-lublina-1-25-000-1943",
+      "label": "Plan Lublina 1:25 000 (1943)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-lublina-1-25-000-1943\"}"
+    },
+    {
+      "id": "carto-plan-poznania-1-25-000-1943",
+      "label": "Plan Poznania 1:25 000 (1943)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-poznania-1-25-000-1943\"}"
+    },
+    {
+      "id": "carto-plan-radomia-1-25-000-1943",
+      "label": "Plan Radomia 1:25 000 (1943)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-radomia-1-25-000-1943\"}"
+    },
+    {
+      "id": "carto-plan-rzeszowa-1-25-000-1943",
+      "label": "Plan Rzeszowa 1:25 000 (1943)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-rzeszowa-1-25-000-1943\"}"
+    },
+    {
+      "id": "carto-plan-siedlec-1-25-000-1943",
+      "label": "Plan Siedlec 1:25 000 (1943)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-siedlec-1-25-000-1943\"}"
+    },
+    {
+      "id": "carto-plan-tarnowa-1-25-000-1943",
+      "label": "Plan Tarnowa 1:25 000 (1943)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-tarnowa-1-25-000-1943\"}"
+    },
+    {
+      "id": "carto-plan-torunia-1-25-000-1943",
+      "label": "Plan Torunia 1:25 000 (1943)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-torunia-1-25-000-1943\"}"
+    },
+    {
+      "id": "carto-plan-warszawy-1-25-000-1944",
+      "label": "Plan Warszawy 1:25 000 (1944)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-warszawy-1-25-000-1944\"}"
+    },
+    {
+      "id": "carto-plan-wroclawia-1-25-000-1944",
+      "label": "Plan Wrocławia 1:25 000 (1944)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-wroclawia-1-25-000-1944\"}"
+    },
+    {
+      "id": "carto-plan-lodzi-1-25-000-1943",
+      "label": "Plan Łodzi 1:25 000 (1943)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-plan-lodzi-1-25-000-1943\"}"
+    },
+    {
+      "id": "carto-podzialy-koscielne-w-drugiej-polowie-xvi-w",
+      "label": "Podziały kościelne w drugiej połowie XVI w.",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-podzialy-koscielne-w-drugiej-polowie-xvi-w\"}"
+    },
+    {
+      "id": "carto-reymann-s-special-karte-von-central-europa-1-200-000",
+      "label": "Reymann's Special-Karte von Central Europa, 1:200 000 (druga połowa XIX w.)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-reymann-s-special-karte-von-central-europa-1-200-000\"}"
+    },
+    {
+      "id": "carto-rozmieszczenie-wlanosci-w-drugiej-polowie-xvi-w",
+      "label": "Rozmieszczenie właności w drugiej połowie XVI w.",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-rozmieszczenie-wlanosci-w-drugiej-polowie-xvi-w\"}"
+    },
+    {
+      "id": "carto-topograficzna-karta-krolestwa-polskiego-1-126-000",
+      "label": "Topograficzna Karta Królestwa Polskiego 1:126 000 (1839-1843)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-topograficzna-karta-krolestwa-polskiego-1-126-000\"}"
+    },
+    {
+      "id": "carto-warszawa-mapa-lindleyow-1-2-500",
+      "label": "Warszawa - mapa Lindleyów (1:2,500)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-warszawa-mapa-lindleyow-1-2-500\"}"
+    },
+    {
+      "id": "carto-ziemie-polskie-korony-w-drugiej-polowie-xvi-w",
+      "label": "Ziemie polskie Korony w drugiej połowie XVI w.",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-ziemie-polskie-korony-w-drugiej-polowie-xvi-w\"}"
+    },
+    {
+      "id": "carto-ubersichtskarte-von-mitteleuropa-1-300-000-ok-1900",
+      "label": "Übersichtskarte von Mitteleuropa 1:300 000 (ok. 1900)",
+      "icon": "map",
+      "help": "Cartomatic / IH PAN",
+      "params": "{\"service\": \"carto-ubersichtskarte-von-mitteleuropa-1-300-000-ok-1900\"}"
     }
   ],
   "tools": [
@@ -1220,6 +1745,269 @@
           "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         }
       ]
+    },
+    {
+      "id": "pobierz-skorowidz-orto",
+      "name": "Sheet indexes: orthophoto",
+      "summary": "The orthophoto sheet indexes: one dataset per year or flight mission.",
+      "toolbox": "Polish Geodata",
+      "params": [
+        {
+          "name": "dane",
+          "label": "Dataset",
+          "kind": "choice",
+          "required": true,
+          "help": "The sheet index to add as a layer, so its sheets can be picked.",
+          "choices": [
+            "Skorowidz prawdziwej ortofotomapy",
+            "Skorowidz ortofotomapy 1957",
+            "Skorowidz ortofotomapy 1958",
+            "Skorowidz ortofotomapy 1961",
+            "Skorowidz ortofotomapy 1965",
+            "Skorowidz ortofotomapy 1967",
+            "Skorowidz ortofotomapy 1969",
+            "Skorowidz ortofotomapy 1971",
+            "Skorowidz ortofotomapy 1972",
+            "Skorowidz ortofotomapy 1973",
+            "Skorowidz ortofotomapy 1976",
+            "Skorowidz ortofotomapy 1979",
+            "Skorowidz ortofotomapy 1980",
+            "Skorowidz ortofotomapy 1982",
+            "Skorowidz ortofotomapy 1984",
+            "Skorowidz ortofotomapy 1987",
+            "Skorowidz ortofotomapy 1990",
+            "Skorowidz ortofotomapy 1992",
+            "Skorowidz ortofotomapy 1995",
+            "Skorowidz ortofotomapy 1996",
+            "Skorowidz ortofotomapy 1997",
+            "Skorowidz ortofotomapy 1998",
+            "Skorowidz ortofotomapy 1999",
+            "Skorowidz ortofotomapy 2000",
+            "Skorowidz ortofotomapy 2001",
+            "Skorowidz ortofotomapy 2002",
+            "Skorowidz ortofotomapy 2003",
+            "Skorowidz ortofotomapy 2004",
+            "Skorowidz ortofotomapy 2005",
+            "Skorowidz ortofotomapy 2006",
+            "Skorowidz ortofotomapy 2007",
+            "Skorowidz ortofotomapy 2008",
+            "Skorowidz ortofotomapy 2009",
+            "Skorowidz ortofotomapy 2010",
+            "Skorowidz ortofotomapy 2011",
+            "Skorowidz ortofotomapy 2012",
+            "Skorowidz ortofotomapy 2013",
+            "Skorowidz ortofotomapy 2014",
+            "Skorowidz ortofotomapy 2015",
+            "Skorowidz ortofotomapy 2016",
+            "Skorowidz ortofotomapy 2017",
+            "Skorowidz ortofotomapy 2018",
+            "Skorowidz ortofotomapy 2019",
+            "Skorowidz ortofotomapy 2020",
+            "Skorowidz ortofotomapy 2021",
+            "Skorowidz ortofotomapy 2022",
+            "Skorowidz ortofotomapy 2023",
+            "Skorowidz ortofotomapy 2024",
+            "Skorowidz ortofotomapy 2025",
+            "Skorowidz ortofotomapy 2026",
+            "WFS Ortofotomapa ukośna - Zachód",
+            "WFS Ortofotomapa ukosna - Poludnie",
+            "WFS Ortofotomapa ukośna - Wschod",
+            "WFS Ortofotomapa ukośna - Północ"
+          ]
+        },
+        {
+          "name": "obszar",
+          "label": "Area (layer)",
+          "kind": "vectorLayer",
+          "required": true,
+          "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        }
+      ]
+    },
+    {
+      "id": "pobierz-skorowidz-nmt",
+      "name": "Sheet indexes: NMT",
+      "summary": "The elevation sheet indexes: terrain and surface models, one dataset per year.",
+      "toolbox": "Polish Geodata",
+      "params": [
+        {
+          "name": "dane",
+          "label": "Dataset",
+          "kind": "choice",
+          "required": true,
+          "help": "The sheet index to add as a layer, so its sheets can be picked.",
+          "choices": [
+            "Skorowidz Numerycznego Modelu Pokrycia Terenu 2019 (EVRF2007)",
+            "Skorowidz Numerycznego Modelu Pokrycia Terenu 2020",
+            "Skorowidz Numerycznego Modelu Pokrycia Terenu 2021",
+            "Skorowidz Numerycznego Modelu Pokrycia Terenu 2022",
+            "Skorowidz Numerycznego Modelu Pokrycia Terenu 2023",
+            "Skorowidz Numerycznego Modelu Pokrycia Terenu 2024",
+            "Skorowidz Numerycznego Modelu Pokrycia Terenu 2025",
+            "Skorowidz Numerycznego Modelu Pokrycia Terenu 2026",
+            "Skorowidz Numerycznego Modelu Pokrycia Terenu 2010",
+            "Skorowidz Numerycznego Modelu Pokrycia Terenu 2011",
+            "Skorowidz Numerycznego Modelu Pokrycia Terenu 2012",
+            "Skorowidz Numerycznego Modelu Pokrycia Terenu 2013",
+            "Skorowidz Numerycznego Modelu Pokrycia Terenu 2014",
+            "Skorowidz Numerycznego Modelu Pokrycia Terenu 2015",
+            "Skorowidz Numerycznego Modelu Pokrycia Terenu 2016",
+            "Skorowidz Numerycznego Modelu Pokrycia Terenu 2017",
+            "Skorowidz Numerycznego Modelu Pokrycia Terenu 2018",
+            "Skorowidz Numerycznego Modelu Pokrycia Terenu 2019 (KRON86)",
+            "Skorowidz Numerycznego Modelu Terenu 2018 (EVRF2007)",
+            "Skorowidz Numerycznego Modelu Terenu 2019 (EVRF2007)",
+            "Skorowidz Numerycznego Modelu Terenu 2020",
+            "Skorowidz Numerycznego Modelu Terenu 2021",
+            "Skorowidz Numerycznego Modelu Terenu 2022",
+            "Skorowidz Numerycznego Modelu Terenu 2023",
+            "Skorowidz Numerycznego Modelu Terenu 2024",
+            "Skorowidz Numerycznego Modelu Terenu 2025",
+            "Skorowidz Numerycznego Modelu Terenu 2026",
+            "Skorowidz Numerycznego Modelu Terenu 2000",
+            "Skorowidz Numerycznego Modelu Terenu 2004",
+            "Skorowidz Numerycznego Modelu Terenu 2005",
+            "Skorowidz Numerycznego Modelu Terenu 2006",
+            "Skorowidz Numerycznego Modelu Terenu 2007",
+            "Skorowidz Numerycznego Modelu Terenu 2008",
+            "Skorowidz Numerycznego Modelu Terenu 2009",
+            "Skorowidz Numerycznego Modelu Terenu 2010",
+            "Skorowidz Numerycznego Modelu Terenu 2011",
+            "Skorowidz Numerycznego Modelu Terenu 2012",
+            "Skorowidz Numerycznego Modelu Terenu 2013",
+            "Skorowidz Numerycznego Modelu Terenu 2014",
+            "Skorowidz Numerycznego Modelu Terenu 2015",
+            "Skorowidz Numerycznego Modelu Terenu 2016",
+            "Skorowidz Numerycznego Modelu Terenu 2017",
+            "Skorowidz Numerycznego Modelu Terenu 2018 (KRON86)",
+            "Skorowidz Numerycznego Modelu Terenu 2019 (KRON86)"
+          ]
+        },
+        {
+          "name": "obszar",
+          "label": "Area (layer)",
+          "kind": "vectorLayer",
+          "required": true,
+          "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        }
+      ]
+    },
+    {
+      "id": "pobierz-skorowidz-inne",
+      "name": "Sheet indexes: other",
+      "summary": "The remaining sheet indexes: LIDAR missions, aerial photographs and sheet grids.",
+      "toolbox": "Polish Geodata",
+      "params": [
+        {
+          "name": "dane",
+          "label": "Dataset",
+          "kind": "choice",
+          "required": true,
+          "help": "The sheet index to add as a layer, so its sheets can be picked.",
+          "choices": [
+            "Skorowidz danych pomiarowych LIDAR 2018 (EVRF2007)",
+            "Skorowidz danych pomiarowych LIDAR 2019 (EVRF2007)",
+            "Skorowidz danych pomiarowych LIDAR 2020",
+            "Skorowidz danych pomiarowych LIDAR 2021",
+            "Skorowidz danych pomiarowych LIDAR 2022",
+            "Skorowidz danych pomiarowych LIDAR 2023",
+            "Skorowidz danych pomiarowych LIDAR 2024",
+            "Skorowidz danych pomiarowych LIDAR 2025",
+            "Skorowidz danych pomiarowych LIDAR 2026",
+            "Skorowidz danych pomiarowych LIDAR 2010",
+            "Skorowidz danych pomiarowych LIDAR 2011",
+            "Skorowidz danych pomiarowych LIDAR 2012",
+            "Skorowidz danych pomiarowych LIDAR 2013",
+            "Skorowidz danych pomiarowych LIDAR 2014",
+            "Skorowidz danych pomiarowych LIDAR 2015",
+            "Skorowidz danych pomiarowych LIDAR 2016",
+            "Skorowidz danych pomiarowych LIDAR 2017",
+            "Skorowidz danych pomiarowych LIDAR 2018 (KRON86)",
+            "Skorowidz danych pomiarowych LIDAR 2019 (KRON86)",
+            "Układ 1992 - arkusze 1:1 250",
+            "Układ 1992 - arkusze 1:2 500",
+            "Układ 1992 - arkusze 1:5 000",
+            "Układ 1992 - arkusze 1:10 000 (PL1992_10000)",
+            "WFS Skorowidze obrazów intensywności",
+            "Układ 1992 - arkusze 1:2 500, piksel 3cm",
+            "Układ 1992 - arkusze 1:2 500, piksel 5cm",
+            "Układ 1992 - arkusze 1:2 500, piksel 7cm",
+            "Układ 1992 - arkusze 1:2 500, piksel 8cm",
+            "Układ 1992 - arkusze 1:2 500, piksel 10cm",
+            "Układ 1992 - arkusze 1:5 000, piksel 5cm",
+            "Układ 1992 - arkusze 1:5 000, piksel 7cm",
+            "Układ 1992 - arkusze 1:5 000, piksel 10cm",
+            "Układ 1992 - arkusze 1:5 000, piksel 25cm",
+            "Układ 1992 - arkusze 1:5 000, piksel 50cm",
+            "Układ 1992 - arkusze 1:10 000, piksel 10cm",
+            "Układ 1992 - arkusze 1:10 000, piksel 25cm",
+            "Układ 1992 - arkusze 1:10 000, piksel 50cm",
+            "Skorowidz Aerotriangulacji",
+            "Fotopunkty",
+            "Skorowidz zdjęć lotniczych 1951-1955",
+            "Skorowidz zdjęć lotniczych 1956-1960",
+            "Skorowidz zdjęć lotniczych 1961-1965",
+            "Skorowidz zdjęć lotniczych 1966-1970",
+            "Skorowidz zdjęć lotniczych 1971-1975",
+            "Skorowidz zdjęć lotniczych 1976-1980",
+            "Skorowidz zdjęć lotniczych 1981-1985",
+            "Skorowidz zdjęć lotniczych 1986-1990",
+            "Skorowidz zdjęć lotniczych 1991-1995",
+            "Skorowidz zdjęć lotniczych 1996-2000",
+            "Skorowidz zdjęć lotniczych 2001-2005",
+            "Skorowidz zdjęć lotniczych 2006-2010",
+            "Skorowidz zdjęć lotniczych 2011-2015",
+            "Skorowidz zdjęć lotniczych 2016-2020",
+            "Skorowidz zdjęć lotniczych 2021-2025",
+            "Skorowidz zdjęć lotniczych 2026",
+            "Układ GUGIK80 - arkusze 1:100 000",
+            "Układ WGS84 - arkusze 1:50 000",
+            "Układ 1942 - arkusze 1:50 000",
+            "Układ 1942 - arkusze 1:10 000",
+            "Układ 1965 - arkusze 1:50 000",
+            "Układ 1965 - arkusze 1:25 000",
+            "Układ 1965 - arkusze 1:10 000",
+            "Układ 1992 - arkusze 1:50 000",
+            "Układ 1992 - arkusze 1:10 000 (Ark_10k_92)"
+          ]
+        },
+        {
+          "name": "obszar",
+          "label": "Area (layer)",
+          "kind": "vectorLayer",
+          "required": true,
+          "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        }
+      ]
+    },
+    {
+      "id": "pobierz-arkusze",
+      "name": "Download sheets",
+      "summary": "Downloads the files the selected index features name in url_do_pobrania into a folder, with a CSV report.",
+      "toolbox": "Polish Geodata",
+      "params": [
+        {
+          "name": "skorowidz",
+          "label": "Sheet index layer",
+          "kind": "vectorLayer",
+          "required": true,
+          "help": "A sheet-index layer: its selected features name the files. Without a selection every feature counts."
+        },
+        {
+          "name": "folder",
+          "label": "Folder",
+          "kind": "text",
+          "required": true,
+          "help": "The folder the files and the CSV report are written to."
+        },
+        {
+          "name": "clear",
+          "label": "Clear the stored answers first",
+          "kind": "bool",
+          "default": false,
+          "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
+        }
+      ]
     }
   ],
   "tab": {
@@ -1268,8 +2056,7 @@
         "layout": "small",
         "items": [
           "panel",
-          "przytnij",
-          "zoom-polska"
+          "przytnij"
         ]
       },
       {
@@ -1454,6 +2241,106 @@
               "usluga-mapa-zagrozenia-powodziowego",
               "usluga-strefy-zagrozenia-naturalnego-zjawiska-meteorologiczne-w"
             ]
+          },
+          {
+            "menu": "More maps",
+            "icon": "map",
+            "help": "Wody Polskie and the Cartomatic series, one button per service.",
+            "items": [
+              {
+                "menu": "Wody Polskie",
+                "icon": "map",
+                "items": [
+                  "wody-apgw",
+                  "wody-apgw2",
+                  "wody-mrp3",
+                  "wody-mrp8",
+                  "wody-mrp2",
+                  "wody-mrp7",
+                  "wody-mrp1",
+                  "wody-mrp6",
+                  "wody-mrp12",
+                  "wody-mrp11",
+                  "wody-mrp9",
+                  "wody-mrp4",
+                  "wody-mrp10",
+                  "wody-mrp5",
+                  "wody-mzp9",
+                  "wody-mzp1",
+                  "wody-mzp2",
+                  "wody-mzp3",
+                  "wody-mzp4",
+                  "wody-mzp5",
+                  "wody-mzp6",
+                  "wody-mzp10",
+                  "wody-mzp8",
+                  "wody-mzp7",
+                  "wody-pgwwp",
+                  "wody-ppss",
+                  "wody-pzrp",
+                  "wody-worp-onnp-od-morza",
+                  "wody-worp-onnp-zniszczenie-budowli-pietrzacych",
+                  "wody-worp4"
+                ]
+              },
+              {
+                "menu": "City plans and atlases",
+                "icon": "map",
+                "items": [
+                  "carto-plan-bialegostoku-1-25-000-1943",
+                  "carto-plan-bydgoszczy-1-25-000-1943",
+                  "carto-plan-czestochowy-1-25-000-1943",
+                  "carto-plan-gdanska-1-25-000-1944",
+                  "carto-plan-grudziadza-1-25-000-1943",
+                  "carto-plan-inowroclawia-1-25-000-1943",
+                  "carto-plan-jasla-1-25-000-1943",
+                  "carto-plan-katowic-1-25-000-1943",
+                  "carto-plan-kielc-1-25-000-1943",
+                  "carto-plan-krakowa-1-25-000-1943",
+                  "carto-plan-lublina-1-25-000-1943",
+                  "carto-plan-poznania-1-25-000-1943",
+                  "carto-plan-radomia-1-25-000-1943",
+                  "carto-plan-rzeszowa-1-25-000-1943",
+                  "carto-plan-siedlec-1-25-000-1943",
+                  "carto-plan-tarnowa-1-25-000-1943",
+                  "carto-plan-torunia-1-25-000-1943",
+                  "carto-plan-warszawy-1-25-000-1944",
+                  "carto-plan-wroclawia-1-25-000-1944",
+                  "carto-plan-lodzi-1-25-000-1943"
+                ]
+              },
+              {
+                "menu": "Topographic and survey maps",
+                "icon": "map",
+                "items": [
+                  "carto-administrativ-karte-von-den-konigreichen-galizien-und",
+                  "carto-drogi-w-drugiej-polowie-xvi-w",
+                  "carto-dwuwiorstowka-1-84-000-1908-1936",
+                  "carto-karta-dawnej-polski-1-300-000-1859",
+                  "carto-karte-des-deutschen-reiches-1-100-000-ok-1900",
+                  "carto-karte-des-deutschen-reiches-1-100-000-ok-1944",
+                  "carto-karte-des-westlichen-russlands-1-100-000-1914-1921",
+                  "carto-mapa-gaula-raczynskiego-1-125-000-1807-1812",
+                  "carto-mapa-gilly-ego-1-150-000-1802-1803",
+                  "carto-mapa-operacyjna-wig-1-300-000-1918-1939",
+                  "carto-mapa-polski-i-krajow-osciennych-wig-1-500-000-1939",
+                  "carto-mapa-polski-i-krajow-osciennych-wig-1-500-000-1947",
+                  "carto-mapa-schroettera-1-150-000-1796-1802",
+                  "carto-mapa-szczegolowa-wig-1-25-000-1918-1939",
+                  "carto-mapa-taktyczna-wig-1-100-000-1918-1939",
+                  "carto-mapa-textora-sotzmanna-1-150-000-1806-1808",
+                  "carto-mapa-wig-1-100-000-w-ukladzie-borowa-gora",
+                  "carto-messtichblatter-1-25-000-1870-1945",
+                  "carto-podzialy-koscielne-w-drugiej-polowie-xvi-w",
+                  "carto-reymann-s-special-karte-von-central-europa-1-200-000",
+                  "carto-rozmieszczenie-wlanosci-w-drugiej-polowie-xvi-w",
+                  "carto-topograficzna-karta-krolestwa-polskiego-1-126-000",
+                  "carto-warszawa-mapa-lindleyow-1-2-500",
+                  "carto-ziemie-polskie-korony-w-drugiej-polowie-xvi-w",
+                  "carto-ubersichtskarte-von-mitteleuropa-1-300-000-ok-1900"
+                ]
+              }
+            ]
           }
         ]
       },
@@ -1465,7 +2352,18 @@
           "tool:pobierz-granice",
           "tool:pobierz-osnowy",
           "tool:pobierz-urzedy",
-          "tool:pobierz-pozostale"
+          "tool:pobierz-pozostale",
+          {
+            "menu": "Packages",
+            "icon": "package",
+            "help": "Sheet indexes and the package files they point at.",
+            "items": [
+              "tool:pobierz-skorowidz-orto",
+              "tool:pobierz-skorowidz-nmt",
+              "tool:pobierz-skorowidz-inne",
+              "tool:pobierz-arkusze"
+            ]
+          }
         ]
       },
       {
@@ -1489,8 +2387,15 @@
         "label": "Lookups",
         "layout": "small",
         "items": [
-          "parcel",
-          "wysokosc"
+          {
+            "menu": "Lookup",
+            "icon": "bookmark",
+            "help": "A parcel under the map centre, or the terrain height at a point.",
+            "items": [
+              "parcel",
+              "wysokosc"
+            ]
+          }
         ]
       }
     ]
@@ -1611,7 +2516,28 @@
       "WIG and German survey maps of the 19th and 20th centuries, as scans.": "Arkusze WIG i mapy niemieckie z XIX i XX wieku, jako skany.",
       "WMS (view only)": "WMS (podgląd)",
       "Zoom to Poland": "Przybliż do Polski",
-      "Boundary layer": "Warstwa graniczna"
+      "Boundary layer": "Warstwa graniczna",
+      "More maps": "Więcej map",
+      "Wody Polskie and the Cartomatic series, one button per service.": "Wody Polskie i serie Cartomatic, po jednym przycisku na usługę.",
+      "City plans and atlases": "Plany miast i atlasy",
+      "Topographic and survey maps": "Mapy topograficzne i przeglądowe",
+      "Packages": "Pakiety",
+      "Sheet indexes and the package files they point at.": "Skorowidze arkuszy i paczki, na które wskazują.",
+      "Sheet indexes: orthophoto": "Skorowidze: ortofoto",
+      "Sheet indexes: NMT": "Skorowidze: NMT",
+      "Sheet indexes: other": "Skorowidze: inne",
+      "Download sheets": "Pobierz arkusze",
+      "The orthophoto sheet indexes: one dataset per year or flight mission.": "Skorowidze ortofotomap: po jednym zbiorze na rok albo nalot.",
+      "The elevation sheet indexes: terrain and surface models, one dataset per year.": "Skorowidze wysokości: modele terenu i pokrycia, po jednym na rok.",
+      "The remaining sheet indexes: LIDAR missions, aerial photographs and sheet grids.": "Pozostałe skorowidze: naloty LIDAR, zdjęcia lotnicze i siatki arkuszy.",
+      "The sheet index to add as a layer, so its sheets can be picked.": "Skorowidz do dodania jako warstwa, żeby można było wybrać arkusze.",
+      "Downloads the files the selected index features name in url_do_pobrania into a folder, with a CSV report.": "Pobiera pliki wskazane przez zaznaczone obiekty skorowidza w polu url_do_pobrania do folderu, z raportem CSV.",
+      "Sheet index layer": "Warstwa skorowidza",
+      "A sheet-index layer: its selected features name the files. Without a selection every feature counts.": "Warstwa skorowidza: zaznaczone obiekty wskazują pliki. Bez zaznaczenia liczy się każdy obiekt.",
+      "Folder": "Folder",
+      "The folder the files and the CSV report are written to.": "Folder, do którego trafiają pliki i raport CSV.",
+      "Lookup": "Wyszukiwanie",
+      "A parcel under the map centre, or the terrain height at a point.": "Działka pod środkiem mapy albo wysokość terenu w punkcie."
     }
   },
   "panel": {

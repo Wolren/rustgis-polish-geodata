@@ -1,14 +1,15 @@
 # Dane PL: polskie dane geodezyjne w RustGIS
 
-Wtyczka do [RustGIS](https://rustgis.app): jedna zakładka **Dane PL** z podkładami, usługami i
-danymi GUGiK, bez kluczy API i bez pośredników.
+Wtyczka do [RustGIS](https://rustgis.app): jedna zakładka **Dane PL** z podkładami, usługami
+i danymi GUGiK, Wody Polskie oraz Cartomatic, bez kluczy API i bez pośredników.
 
 Zasada, która trzyma tę wtyczkę w kupie: **polecenie tylko pokazuje coś na mapie, a pobiera
 narzędzie.** Wstęga mówi to wprost nazwami grup: **WMS (podgląd)** tylko wyświetla, **Pobieranie**
-jako jedyne ściąga dane wektorowe, **Wyszukiwanie** pyta usługę punktową, **Narzędzia** zmieniają
-projekt. Polecenie wykonuje się w wątku interfejsu, więc pobieranie jako polecenie zamrażało okno
-na czas transferu. Dlatego na wstędze nie ma już 108 przycisków pobierania: są pięć narzędzi
-w panelu Narzędzia, działających w tle, z postępem i przyciskiem Anuluj.
+jako jedyne ściąga dane wektorowe i pliki, **Wyszukiwanie** pyta usługę punktową, **Narzędzia**
+zmieniają projekt. Polecenie wykonuje się w wątku interfejsu, więc pobieranie jako polecenie
+zamrażało okno na czas transferu. Dlatego na wstędze nie ma już 108 przycisków pobierania: jest
+dziewięć narzędzi w panelu Narzędzia, wszystkie w tle, z postępem i przyciskiem Anuluj, w tym pięć
+pobierających zbiory WFS i cztery od paczek.
 
 Jeden wyjątek jest opisany niżej: trzy przyciski **Wysokości** to polecenia, które pobierają
 raster. Narzędzie geoprzetwarzania nie umie dodać warstwy rastrowej, więc raster pobiera i kładzie
@@ -16,8 +17,9 @@ na mapie polecenie.
 
 Wszystkie grupy jadą w układzie `small`, czyli trzy kontrolki w kolumnie, a katalog jest zwinięty
 najpierw według instytucji: GUGiK to jedna pozycja z czterema tematami w podmenu. Wstęga ma przez
-to 10 kolumn zamiast 28 i mieści się w oknie 1480 px bez strzałki przewijania; w polskim
-interfejsie kończy się na 1353 px.
+to 11 kolumn zamiast 28 i mieści się w oknie 1480 px bez strzałki przewijania. Przy dziesięciu
+kolumnach polski interfejs kończył się na zmierzonych 1353 px; jedenasta kolumna to jedno wąskie
+menu **Więcej map**, czyli zmierzone 1439 px bez strzałki przewijania.
 
 | Grupa | Pozycja | Co robi |
 | --- | --- | --- |
@@ -29,25 +31,27 @@ interfejsie kończy się na 1353 px.
 | | Usuń obszar | Usuwa warstwę „Obszar pobierania”, żeby zacząć od pustej |
 | **Narzędzia** | Panel | Panel ze statusami (widok, obszar, para warstwa → granica), przyciskami, drzewem warstw granicznych, katalogiem i zapisanymi odpowiedziami; **Odśwież panel** czyta je od nowa |
 | | Przytnij do warstwy | Tnie warstwę do wybranej w panelu granicy, domyślnie do „Obszar pobierania” |
-| | Przybliż do Polski | Cała Polska w widoku |
 | **WMS (podgląd)** | GUGiK | 76 usług w czterech tematach: Ortofoto i NMT (20), Mapy (21), Kataster i granice (24), Pozostałe dane (11) |
 | | Mapy historyczne | 11 arkuszy WIG i map niemieckich |
 | | Geologia (PIG) | 9 usług |
 | | Zabytki (NID) | 4 usługi |
 | | Lasy (BDL) | 4 usługi |
 | | Pozostałe instytucje | GDOŚ, PKP PLK, GUS, Wody Polskie, IMGW-PIB |
+| | Więcej map | 30 usług Wody Polskie (890 warstw) i 45 map Cartomatic w trzech folderach |
 | **Pobieranie** | Adresy i budynki | 19 zbiorów WFS |
 | | Granice i jednostki | 24 zbiory |
 | | Osnowy i pomiary | 21 zbiorów |
 | | Urzędy i sądy | 21 zbiorów |
 | | Pozostałe dane | 21 zbiorów |
+| | Pakiety | Trzy skorowidze arkuszy (ortofoto, NMT, pozostałe) i pobieranie arkuszy do folderu |
 | **Wysokości** | Model | Teren KRON86 (GeoTIFF), teren EVRF2007, pokrycie NMPT |
 | | Ustaw styl modelu | Cieniowanie najnowszego modelu, albo barwy |
 | **Wyszukiwanie** | Działka z ULDK | Działka pod środkiem mapy: geometria + atrybuty |
 | | Wysokość w punkcie | Wysokość NMT w PL-1992 (środek mapy albo x/y) |
 
-Łącznie: **135 poleceń** (26 własnych i 109 usług) i **5 narzędzi**. Wcześniej było 228 poleceń, z
-czego 108 pobierało dane natychmiast, blokując okno.
+Łącznie: **210 poleceń** (26 własnych, 109 usług katalogu krajowego, 30 usług Wody Polskie i 45 map
+Cartomatic) oraz **9 narzędzi**. Wcześniej było 228 poleceń, z czego 108 pobierało dane natychmiast,
+blokując okno.
 
 ### Usługi krajowe
 
@@ -71,8 +75,27 @@ run_command  plugin:dane-pl/usluga-ceny-nieruchomosci
 Osobne menu **Mapy historyczne** to jedenaście arkuszy z serwera Cartomatic: WIG 1:25 000,
 1:100 000, 1:300 000 i 1:500 000 oraz mapy niemieckie (Karte des Deutschen Reiches 1:100 000,
 Meßtischblätter 1:25 000, Übersichtskarte von Mitteleuropa 1:300 000). Każdy arkusz przeszedł
-realne żądanie kafla, tak jak reszta katalogu. Serwer podaje 110 warstw (plany miast, mapy
-katastralne), z których wybrano te jedenaście — reszta czeka na osobną decyzję.
+realne żądanie kafla, tak jak reszta katalogu. Serwer podaje 110 warstw, z których wtyczka bierze
+56: jedenaście historycznych stoi w tym menu, a 45 (plany miast i atlasy oraz mapy topograficzne
+i przeglądowe) w menu **Więcej map**.
+
+### Wody Polskie i seria Cartomatic
+
+Menu **Więcej map** zbiera dwie rodziny, które nie mieszczą się w katalogu instytucji:
+
+| Folder | Co się w nim kryje | Przycisków |
+| --- | --- | --- |
+| Wody Polskie | 30 usług WMS PGW Wody Polskie (ISOK), razem 890 warstw | 30 |
+| Plany miast i atlasy | plany miast i atlasy z serwera Cartomatic | 20 |
+| Mapy topograficzne i przeglądowe | mapy topograficzne i przeglądowe z tego samego serwera | 25 |
+
+Przycisk to jedna usługa albo jedna mapa: naciśnięcie kładzie na mapę wszystkie jej warstwy, drugie
+je zdejmuje. Podpowiedź niesie atrybucję wydawcy („PGW Wody Polskie (ISOK) · 11 warstw”,
+„Cartomatic / IH PAN”), więc wiadomo, kto publikuje obraz.
+
+Warstwy dobiera się po usłudze, nie pojedynczo. Serwer ISOK trzyma po kilkadziesiąt warstw pod
+jednym adresem, a „jedna warstwa = jedno polecenie” dałoby 890 przycisków, więc jedna usługa to
+jedno polecenie. Wybór pojedynczej warstwy w środku usługi zostaje na później (patrz Ograniczenia).
 
 ### Dane z WFS
 
@@ -81,9 +104,10 @@ i działki z EGiB, granice z PRG, osnowy, urzędy, sądy, kolej, obiekty morskie
 Każdy typ przeszedł realne żądanie GetFeature, więc lista nie zawiera martwych adresów.
 
 **106 z nich to dane mapowe** i te pokazują się w narzędziach pobierania. Pozostałe **162 to
-skorowidze** (arkusze i siatki, które wskazują paczki do pobrania z Geoportalu) — wtyczka ich nie
-pobiera, bo nie umie ściągać paczek, ale zostają w katalogu: skrypt może je wskazać po
-identyfikatorze, np. `dane-skorowidz-danych-pomiarowych-lidar-2024`.
+skorowidze** (arkusze i siatki, które wskazują paczki do pobrania z Geoportalu) i te stoją w menu
+**Pakiety**: trzy narzędzia dodają skorowidz jako warstwę, a czwarte pobiera pliki, które wskazują
+jego obiekty. Skorowidz nadal da się wskazać po identyfikatorze, np.
+`dane-skorowidz-danych-pomiarowych-lidar-2024`.
 
 Pobieranie to **pięć narzędzi**, każde jako osobny przycisk w grupie **Pobieranie**. Każde ma listę
 swoich zbiorów:
@@ -115,6 +139,37 @@ run_tool  plugin:dane-pl/pobierz-granice  {"dane": "A03_Granice_gmin", "obszar":
 Typy spoza układu 4326 działają bez ustawień: wtyczka wysyła pierwsze żądanie we współrzędnych
 geograficznych, a gdy usługa odpowie pustą kolekcją, powtarza je w układzie 2180 i przelicza
 współrzędne z powrotem. Dotyczy to usługi adresowej KI NA.
+
+### Pakiety: skorowidz, folder, CSV
+
+Menu **Pakiety** w grupie **Pobieranie** zamienia skorowidz w listę arkuszy do pobrania:
+
+| Narzędzie | Co robi | Wybór |
+| --- | --- | --- |
+| Skorowidze: ortofoto | dodaje skorowidz ortofotomap jako warstwę | 54 zbiory |
+| Skorowidze: NMT | to samo dla modeli terenu i pokrycia | 44 zbiory |
+| Skorowidze: inne | LIDAR, zdjęcia lotnicze i siatki arkuszy | 64 zbiory |
+| Pobierz arkusze | pobiera pliki wskazane przez obiekty skorowidza | warstwa, folder, `clear` |
+
+Kolejność jest zawsze ta sama:
+
+1. Uruchom jedno z trzech narzędzi skorowidza i wybierz zbiór, np. „Skorowidz ortofotomapy 2024”.
+   Skorowidz wjeżdża na mapę jako warstwa arkuszy.
+2. Zaznacz arkusze, które chcesz mieć, albo zostaw całą warstwę: bez zaznaczenia liczy się każdy
+   obiekt.
+3. Uruchom **Pobierz arkusze**: wskaż warstwę skorowidza i folder.
+4. Pliki lądują w folderze, a obok nich raport CSV z listą arkuszy i wynikiem każdego pobrania.
+
+Adres każdego pliku bierze się z pola `url_do_pobrania` obiektu skorowidza. Wartością wyboru w
+trzech narzędziach skorowidza jest tytuł zbioru, a gdy dwa zbiory mają ten sam tytuł, wybór niesie
+w nawiasie identyfikator, żeby dało się je rozróżnić.
+
+Skrypt robi to samo:
+
+```
+run_tool  plugin:dane-pl/pobierz-skorowidz-orto  {"dane": "Skorowidz ortofotomapy 2024"}
+run_tool  plugin:dane-pl/pobierz-arkusze  {"skorowidz": "Skorowidz ortofotomapy 2024", "folder": "D:/orto"}
+```
 
 ### Obszar: nic nie jest zgadywane
 
@@ -293,8 +348,8 @@ będzie: kod języka innego niż `pl` daje angielski.
 - **Nazwy zbiorów danych zostają polskie w obu językach**: „Działki”, „Budynki”, „Ceny
   nieruchomości” to nazwy własne zbiorów GUGiK, nie słowa do tłumaczenia. Tłumaczone jest to, co
   wtyczka mówi od siebie: przyciski, menu, błędy, postęp.
-- **`choices`**: wartością jest polska nazwa zbioru, a kod przyjmuje też identyfikator i nazwę
-  typu, więc zapisane wywołanie działa niezależnie od języka interfejsu.
+- **`choices`**: wartością jest polska nazwa zbioru albo tytuł skorowidza, a kod przyjmuje też
+  identyfikator i nazwę typu, więc zapisane wywołanie działa niezależnie od języka interfejsu.
 
 `rustgis-cli` zawsze wysyła `lang: "en"`, bo język ustawia tylko aplikacja z interfejsem. Wersję
 polską sprawdza się na poziomie protokołu: podaj żądanie z `"lang": "pl"` na standardowe wejście
@@ -310,12 +365,17 @@ python tools/manifest.py --check    # kończy się kodem 1, gdy plik jest nieakt
 ```
 
 Warstwa redakcyjna (co jest przyciskiem, w której grupie i menu, jak brzmią zdania, tłumaczenia)
-siedzi w `tools/manifest.base.json`. Generator rozwija listy zbiorów w `choices` narzędzi i
-dokłada po jednym poleceniu na usługę WMS.
+siedzi w `tools/manifest.base.json`. Generator rozwija listy zbiorów w `choices` narzędzi,
+dokłada po jednym poleceniu na usługę WMS, na usługę Wody Polskie i na mapę Cartomatic, i składa
+menu **Więcej map**: foldery serii Cartomatic biorą angielską nazwę z manifestu, a polską z `i18n`.
 
 Przynależność do instytucji siedzi w `data/services.json` (`institution`, a dla GUGiK
-`institutionMenu`), a nie w manifeście: nowa usługa trafia do właściwego menu sama. Klasy
-menu (nazwa, ikona, podpowiedź) są w `tools/manifest.base.json`.
+`institutionMenu`), a nie w manifeście: nowa usługa trafia do właściwego menu sama. Dwie nowe
+rodziny mają własne pliki, `data/wody.json` i `data/cartomatic.json`, z atrybucją i głębokością
+zbliżenia dla całej rodziny. Klasy menu (nazwa, ikona, podpowiedź) są w `tools/manifest.base.json`.
+
+Tytuły usług Wody Polskie i map Cartomatic są nazwami własnymi, więc zostają polskie w obu
+językach i nie mają wpisów w `i18n`; generator pomija je razem z etykietami usług GUGiK.
 
 Ręcznie pisany manifest rozjechał się z katalogami: 162 z 270 typów WFS nie miało żadnego
 polecenia, 211 poleceń niosło klucz `command`, którego gospodarz nie czyta (czyta `params`), a dwie
@@ -360,8 +420,8 @@ oraz wpis rejestru do wydania.
 - Uprawnienia: `edit`, `network` i `files`. `files` jest potrzebne, bo siatki ASCII wysokości
   wchodzą na mapę przez `layer.addData` z `path`; `network` przez `map.addTiles` i `layer.addUrl`.
 - Ikony to nazwy ikon RustGIS (`basemap`, `buffer`, `bookmark`, `label`, `relief`, `erase`,
-  `g_rect`, `polygon_tool`, `line_tool`, `globe_view`, `table`, `map`, `zoom_world`, `history`);
-  nieznana nazwa dawałaby puzzel.
+  `g_rect`, `polygon_tool`, `line_tool`, `polygon_layer`, `globe_view`, `table`, `map`, `package`,
+  `zoom_world`, `history`); nieznana nazwa dawałaby puzzel.
 - `params` każdego polecenia opisuje jego argumenty dla skryptów i agentów; wcześniej ten opis
   leżał w kluczu `command`, który gospodarz ignoruje.
 - Wpis rejestru ma kształt wymagany przez `rustgis-plugins`: `id`, `source.url`, `source.sha256`
@@ -401,8 +461,12 @@ udostępniane nieodpłatnie. Przy każdej warstwie ustawiana jest atrybucja
 - Narzędzie tnie po **zasięgu (bbox)** warstwy obszaru; nie przycina geometrii do jej poligonów.
 - Limit obiektów: 6000 na pobranie (po 4 strony równolegle, po 500 obiektów). Większy obszar =
   komunikat o przerwaniu.
-- Skorowidzów (162 typy) nie da się pobrać: to indeksy paczek, nie dane mapowe.
-- Brak pobierania paczek LAZ / NMT / ortofoto na dysk (to materiał na kolejną wersję).
+- Skorowidz (162 typy) sam nie jest danymi mapowymi: to siatka arkuszy. Wtyczka doda go jako
+  warstwę i pobierze pliki, które wskazują jego obiekty, ale nie narysuje arkuszy na mapie.
+- Nie pobieramy LAZ ani geobaz z dane.gov.pl (PGW, WORP, PZRP, PPSS, MZP): pobierane jest tylko to,
+  co skorowidz wskazuje w polu `url_do_pobrania`.
+- Usługa Wody Polskie włącza się w całości: nie ma wyboru pojedynczej warstwy w środku usługi, więc
+  jeden przycisk to wszystkie jej warstwy naraz.
 - WFS GUGiK nie ma GeoJSON-u, więc konwersja jest lokalna; geometrie inne niż
   Point/LineString/Polygon i ich wersje multi nie są obsługiwane.
 - ULDK przyjmuje tylko EPSG:2180, więc wtyczka sama rzutuje współrzędne (Transverse Mercator,

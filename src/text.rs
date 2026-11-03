@@ -110,6 +110,136 @@ pub fn num(lang: Lang, value: f64, places: usize) -> String {
     }
 }
 
+/// The sheet downloader needs a folder to write the files into.
+pub fn folder_missing(lang: Lang) -> String {
+    pick!(
+        lang,
+        "give the folder to download into, for example {\"folder\": \"D:/dane\"}",
+        "podaj folder do pobrania, np. {\"folder\": \"D:/dane\"}"
+    )
+    .to_string()
+}
+
+/// The folder could not be made, so nothing is downloaded into it.
+pub fn folder_failed(lang: Lang, folder: &str, error: &str) -> String {
+    pick!(
+        lang,
+        format!("the folder {folder} cannot be made: {error}"),
+        format!("nie można utworzyć folderu {folder}: {error}")
+    )
+}
+
+/// The layer the tool names as its sheet index is not in the request.
+pub fn sheet_layer_missing(lang: Lang, layer: &str) -> String {
+    if layer.trim().is_empty() {
+        return pick!(
+            lang,
+            "the sheet index was not passed in",
+            "nie przekazano skorowidza"
+        )
+        .to_string();
+    }
+    pick!(
+        lang,
+        format!("the sheet index \"{layer}\" was not passed in"),
+        format!("nie przekazano skorowidza „{layer}”")
+    )
+}
+
+/// The index holds no address at all, so a run would fetch nothing.
+pub fn nothing_to_download(lang: Lang, layer: &str, count: usize) -> String {
+    pick!(
+        lang,
+        format!(
+            "\"{layer}\" lists no file to download: 0 addresses, the layer has no url_do_pobrania or url ({})",
+            features(lang, count)
+        ),
+        format!(
+            "„{layer}” nie wskazuje plików do pobrania: 0 adresów, w warstwie nie ma url_do_pobrania ani url ({})",
+            features(lang, count)
+        )
+    )
+}
+
+/// The list is longer than one run takes, and a selection is how the user splits it.
+pub fn too_many_files(lang: Lang, count: usize, limit: usize) -> String {
+    pick!(
+        lang,
+        format!(
+            "the list holds {}, more than one run takes ({}): select a part of the index on the map and run the tool again",
+            files(lang, count),
+            files(lang, limit)
+        ),
+        format!(
+            "lista ma {}, a jedno pobranie bierze najwyżej {}: zaznacz na mapie część skorowidza i uruchom narzędzie ponownie",
+            files(lang, count),
+            files(lang, limit)
+        )
+    )
+}
+
+/// The features that carried no address, counted beside the files that were fetched.
+pub fn sheets_shortfall(lang: Lang, count: usize) -> String {
+    pick!(
+        lang,
+        format!("left out {} in the index with no file address", features(lang, count)),
+        format!("pominięto {} w skorowidzu bez adresu pliku", features(lang, count))
+    )
+}
+
+/// What the run did: files fetched, their size, the kept and the failed ones, the report.
+pub fn sheets_summary(
+    lang: Lang,
+    written: usize,
+    megabytes: f64,
+    skipped: usize,
+    failed: usize,
+    report: &str,
+) -> String {
+    let size = num(lang, megabytes, 1);
+    let kept_words = pick!(
+        lang,
+        ["skipped", "skipped", "skipped"],
+        ["pominięty", "pominięte", "pominiętych"]
+    );
+    let failed_words = pick!(
+        lang,
+        ["failed", "failed", "failed"],
+        ["błąd", "błędy", "błędów"]
+    );
+    let kept = format!("{skipped} {}", kept_words[form(lang, skipped)]);
+    let errors = format!("{failed} {}", failed_words[form(lang, failed)]);
+    pick!(
+        lang,
+        format!(
+            "Downloaded {} ({size} MB), {kept}, {errors}. Report: {report}",
+            files(lang, written)
+        ),
+        format!(
+            "Pobrano {} ({size} MB), {kept}, {errors}. Raport: {report}",
+            files(lang, written)
+        )
+    )
+}
+
+/// The per-file progress line: its place in the list, then its name.
+pub fn sheet_progress(lang: Lang, done: usize, total: usize, name: &str) -> String {
+    pick!(
+        lang,
+        format!("{done}/{total}: {name}"),
+        format!("{done}/{total}: {name}")
+    )
+}
+
+/// The report could not be written, though the files may have arrived.
+pub fn report_failed(lang: Lang, path: &str, error: &str) -> String {
+    pick!(
+        lang,
+        format!("the report {path} could not be written: {error}"),
+        format!("nie można zapisać raportu {path}: {error}")
+    )
+}
+
 /// "Layer: 12 features".
 pub fn count(lang: Lang, name: &str, n: usize) -> String {
     format!("{name}: {}", features(lang, n))
@@ -1139,6 +1269,23 @@ mod tests {
         assert_eq!(num(Lang::Pl, 54_267.0, 0), "54267");
         assert!(area_from_view(Lang::Pl, "Obszar", (1.5, 2.0)).contains("1,5 × 2,0 km"));
         assert!(catalogue_text(Lang::Pl, 106, 268).contains("106 zbiorów"));
+    }
+
+    #[test]
+    fn sums_a_sheet_run_in_both_languages() {
+        assert_eq!(
+            sheets_summary(Lang::Pl, 12, 45.3, 2, 1, "pobrane.csv"),
+            "Pobrano 12 plików (45,3 MB), 2 pominięte, 1 błąd. Raport: pobrane.csv"
+        );
+        assert_eq!(
+            sheets_summary(Lang::En, 12, 45.3, 2, 1, "pobrane.csv"),
+            "Downloaded 12 files (45.3 MB), 2 skipped, 1 failed. Report: pobrane.csv"
+        );
+        assert_eq!(
+            sheets_summary(Lang::Pl, 1, 0.2, 1, 5, "pobrane.csv"),
+            "Pobrano 1 plik (0,2 MB), 1 pominięty, 5 błędów. Raport: pobrane.csv"
+        );
+        assert_eq!(sheet_progress(Lang::En, 3, 120, "godlo.zip"), "3/120: godlo.zip");
     }
 
     #[test]

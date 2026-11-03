@@ -343,6 +343,104 @@
           "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         }
       ]
+    },
+    {
+      "id": "pobierz-skorowidz-orto",
+      "name": "Sheet indexes: orthophoto",
+      "summary": "The orthophoto sheet indexes: one dataset per year or flight mission.",
+      "toolbox": "Polish Geodata",
+      "indexTheme": "orto",
+      "params": [
+        {
+          "name": "dane",
+          "label": "Dataset",
+          "kind": "choice",
+          "required": true,
+          "help": "The sheet index to add as a layer, so its sheets can be picked."
+        },
+        {
+          "name": "obszar",
+          "label": "Area (layer)",
+          "kind": "vectorLayer",
+          "required": true,
+          "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        }
+      ]
+    },
+    {
+      "id": "pobierz-skorowidz-nmt",
+      "name": "Sheet indexes: NMT",
+      "summary": "The elevation sheet indexes: terrain and surface models, one dataset per year.",
+      "toolbox": "Polish Geodata",
+      "indexTheme": "nmt",
+      "params": [
+        {
+          "name": "dane",
+          "label": "Dataset",
+          "kind": "choice",
+          "required": true,
+          "help": "The sheet index to add as a layer, so its sheets can be picked."
+        },
+        {
+          "name": "obszar",
+          "label": "Area (layer)",
+          "kind": "vectorLayer",
+          "required": true,
+          "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        }
+      ]
+    },
+    {
+      "id": "pobierz-skorowidz-inne",
+      "name": "Sheet indexes: other",
+      "summary": "The remaining sheet indexes: LIDAR missions, aerial photographs and sheet grids.",
+      "toolbox": "Polish Geodata",
+      "indexTheme": "inne",
+      "params": [
+        {
+          "name": "dane",
+          "label": "Dataset",
+          "kind": "choice",
+          "required": true,
+          "help": "The sheet index to add as a layer, so its sheets can be picked."
+        },
+        {
+          "name": "obszar",
+          "label": "Area (layer)",
+          "kind": "vectorLayer",
+          "required": true,
+          "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        }
+      ]
+    },
+    {
+      "id": "pobierz-arkusze",
+      "name": "Download sheets",
+      "summary": "Downloads the files the selected index features name in url_do_pobrania into a folder, with a CSV report.",
+      "toolbox": "Polish Geodata",
+      "params": [
+        {
+          "name": "skorowidz",
+          "label": "Sheet index layer",
+          "kind": "vectorLayer",
+          "required": true,
+          "help": "A sheet-index layer: its selected features name the files. Without a selection every feature counts."
+        },
+        {
+          "name": "folder",
+          "label": "Folder",
+          "kind": "text",
+          "required": true,
+          "help": "The folder the files and the CSV report are written to."
+        },
+        {
+          "name": "clear",
+          "label": "Clear the stored answers first",
+          "kind": "bool",
+          "default": false,
+          "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
+        }
+      ]
     }
   ],
   "tab": {
@@ -391,8 +489,7 @@
         "layout": "small",
         "items": [
           "panel",
-          "przytnij",
-          "zoom-polska"
+          "przytnij"
         ]
       },
       {
@@ -404,7 +501,8 @@
           "pig",
           "nid",
           "lasy",
-          "other"
+          "other",
+          "more-maps"
         ]
       },
       {
@@ -415,7 +513,18 @@
           "tool:pobierz-granice",
           "tool:pobierz-osnowy",
           "tool:pobierz-urzedy",
-          "tool:pobierz-pozostale"
+          "tool:pobierz-pozostale",
+          {
+            "menu": "Packages",
+            "icon": "package",
+            "help": "Sheet indexes and the package files they point at.",
+            "items": [
+              "tool:pobierz-skorowidz-orto",
+              "tool:pobierz-skorowidz-nmt",
+              "tool:pobierz-skorowidz-inne",
+              "tool:pobierz-arkusze"
+            ]
+          }
         ]
       },
       {
@@ -439,8 +548,15 @@
         "label": "Lookups",
         "layout": "small",
         "items": [
-          "parcel",
-          "wysokosc"
+          {
+            "menu": "Lookup",
+            "icon": "bookmark",
+            "help": "A parcel under the map centre, or the terrain height at a point.",
+            "items": [
+              "parcel",
+              "wysokosc"
+            ]
+          }
         ]
       }
     ]
@@ -643,7 +759,38 @@
       "WIG and German survey maps of the 19th and 20th centuries, as scans.": "Arkusze WIG i mapy niemieckie z XIX i XX wieku, jako skany.",
       "WMS (view only)": "WMS (podgląd)",
       "Zoom to Poland": "Przybliż do Polski",
-      "Boundary layer": "Warstwa graniczna"
+      "Boundary layer": "Warstwa graniczna",
+      "More maps": "Więcej map",
+      "Wody Polskie and the Cartomatic series, one button per service.": "Wody Polskie i serie Cartomatic, po jednym przycisku na usługę.",
+      "City plans and atlases": "Plany miast i atlasy",
+      "Topographic and survey maps": "Mapy topograficzne i przeglądowe",
+      "Packages": "Pakiety",
+      "Sheet indexes and the package files they point at.": "Skorowidze arkuszy i paczki, na które wskazują.",
+      "Sheet indexes: orthophoto": "Skorowidze: ortofoto",
+      "Sheet indexes: NMT": "Skorowidze: NMT",
+      "Sheet indexes: other": "Skorowidze: inne",
+      "Download sheets": "Pobierz arkusze",
+      "The orthophoto sheet indexes: one dataset per year or flight mission.": "Skorowidze ortofotomap: po jednym zbiorze na rok albo nalot.",
+      "The elevation sheet indexes: terrain and surface models, one dataset per year.": "Skorowidze wysokości: modele terenu i pokrycia, po jednym na rok.",
+      "The remaining sheet indexes: LIDAR missions, aerial photographs and sheet grids.": "Pozostałe skorowidze: naloty LIDAR, zdjęcia lotnicze i siatki arkuszy.",
+      "The sheet index to add as a layer, so its sheets can be picked.": "Skorowidz do dodania jako warstwa, żeby można było wybrać arkusze.",
+      "Downloads the files the selected index features name in url_do_pobrania into a folder, with a CSV report.": "Pobiera pliki wskazane przez zaznaczone obiekty skorowidza w polu url_do_pobrania do folderu, z raportem CSV.",
+      "Sheet index layer": "Warstwa skorowidza",
+      "A sheet-index layer: its selected features name the files. Without a selection every feature counts.": "Warstwa skorowidza: zaznaczone obiekty wskazują pliki. Bez zaznaczenia liczy się każdy obiekt.",
+      "Folder": "Folder",
+      "The folder the files and the CSV report are written to.": "Folder, do którego trafiają pliki i raport CSV.",
+      "Lookup": "Wyszukiwanie",
+      "A parcel under the map centre, or the terrain height at a point.": "Działka pod środkiem mapy albo wysokość terenu w punkcie."
+    }
+  },
+  "moreMaps": {
+    "label": "More maps",
+    "icon": "map",
+    "help": "Wody Polskie and the Cartomatic series, one button per service.",
+    "wody": "Wody Polskie",
+    "series": {
+      "plans": "City plans and atlases",
+      "topo": "Topographic and survey maps"
     }
   },
   "institutionMenus": {

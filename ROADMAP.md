@@ -21,8 +21,9 @@ instytucji, potem według tematu — i którą w całości da się sterować prz
 - 109 usług WMS, w tym 11 arkuszy historycznych (WIG, mapy niemieckie) z Cartomatic.
 - Wstęga mieści się w oknie: wszystkie grupy w układzie `small`, katalog zwinięty według
   instytucji (**GUGiK** z czterema tematami w podmenu, pięć menu pozostałych instytucji), a
-  pobieranie to pięć osobnych przycisków. 10 kolumn zamiast 28; w polskim interfejsie wstęga
-  kończy się na 1353 px z 1480. Wymaga RustGIS 0.5.0 (zagnieżdżone menu i kolumny `small`),
+  pobieranie to pięć osobnych przycisków i menu **Pakiety**. 11 kolumn zamiast 28; przy dziesięciu
+  kolumnach polski interfejs kończył się na 1353 px z 1480, a jedenasta kolumna to jedno wąskie
+  menu **Więcej map** (około 1450 px). Wymaga RustGIS 0.5.0 (zagnieżdżone menu i kolumny `small`),
   stąd `minRustgisVersion`.
 - **Przycinanie do dowolnej granicy.** Panel ma drzewo warstw poligonowych z liczbą obiektów
   i wyszukiwarką; wybór ustawia granicę, a wiersz **Przytnij** pokazuje parę
@@ -30,21 +31,29 @@ instytucji, potem według tematu — i którą w całości da się sterować prz
 - **Panel bez wypychania przycisków.** Statusy, para „warstwa → granica” i drzewo granicy stoją
   nad przyciskami, a **Odśwież panel** czyta widok, obszar, katalog i zapisane odpowiedzi od nowa.
   Każde narzędzie pobierania ma parametr `clear` zamiast pola wyboru w panelu.
+- **Wody Polskie: 30 usług, 890 warstw.** Menu **Więcej map** ma folder **Wody Polskie** z jednym
+  poleceniem na usługę: przycisk kładzie na mapę wszystkie warstwy tej usługi, drugie naciśnięcie je
+  zdejmuje, a podpowiedź niesie atrybucję i liczbę warstw („PGW Wody Polskie (ISOK) · 11 warstw”).
+  Generuje to `tools/manifest.py` z `data/wody.json`, więc nowa usługa trafia na wstęgę sama.
+  Nie zrobione: wybór pojedynczej warstwy w środku usługi (jedna usługa to nadal jedno polecenie).
+- **Cartomatic: 45 map.** Pozostałe warstwy serwera (plany miast i atlasy, mapy topograficzne
+  i przeglądowe) stoją w dwóch folderach tego samego menu, obok jedenastu arkuszy historycznych
+  w menu **Mapy historyczne**. Etykieta folderu jest angielska w manifeście, a polska w `i18n`,
+  więc oba języki pokazują swoją nazwę serii. Gdy folder przekroczy 32 pozycje, generator dzieli
+  go po pierwszym słowie tytułu i wypisuje, co podzielił.
+- **Pakiety: skorowidz, folder, CSV.** Menu **Pakiety** w grupie **Pobieranie** ma trzy narzędzia
+  skorowidzy (ortofoto 54 zbiory, NMT 44, pozostałe 64, według `theme` z katalogu WFS) i czwarte,
+  **Pobierz arkusze**: bierze warstwę skorowidza, folder i `clear`, pobiera pliki wskazane w polu
+  `url_do_pobrania` zaznaczonych obiektów i pisze raport CSV. Wybór w trzech narzędziach to tytuł
+  zbioru; przy powtarzającym się tytule wybór niesie w nawiasie identyfikator.
+  Nie zrobione: LAZ i geobazy z dane.gov.pl (PGW, WORP, PZRP, PPSS, MZP) oraz wybór pojedynczych
+  arkuszy w środku usługi.
 
 ## Następne
 
 ### Dane
 
-- **Wody Polskie: ~900 warstw w 32 usługach WMS.** Dziś w katalogu jest 1 z nich (MZP20,
-  zagrożenie powodziowe), a rejestr eZiUDP zna 19 zbiorów Wody Polskie, 15 z adresem WMS.
-  Jedyna instytucja, przy której model
-  „jedna usługa = jedno polecenie" się nie skaluje. Potrzebny wybór warstwy wewnątrz usługi
-  (parametr `warstwa` w poleceniu + lista z capabilities), zamiast 900 poleceń.
-  Wejście: `wody.isok.gov.pl/gpservices/...`, wtyczka QGIS „Wody Polskie — Baza WMS".
-- **Wody Polskie: geobazy do pobrania** (PGW, WORP, PZRP, PPSS, MZP) — pliki, nie WMS.
-- **Pozostałe warstwy Cartomatic** — serwer podaje 110 warstw, wciągnięto 11 (WIG i mapy
-  niemieckie). Zostały plany miast i mapy katastralne.
-- **Wody/geologia/ochrona środowiska** — przejrzeć EZiUDP po instytucjach i dobrać brakujące
+- **Wody/geologia/ochrona środowiska** - przejrzeć EZiUDP po instytucjach i dobrać brakujące
   usługi narodowe; wszystko przez `tools/services.py` (weryfikacja realnym kafliem). Zmierzone:
   IMGW ma w rejestrze 3 zbiory (mamy 1), GUS 2 (mamy 1), GUNB i KOWR rejestr nie zna pod tą nazwą.
 
@@ -58,13 +67,6 @@ instytucji, potem według tematu — i którą w całości da się sterować prz
 - **Obszar z jednostki administracyjnej** — gmina/powiat jako obszar pobierania, bez rysowania.
   Wymaga kaskady (dwa narzędzia: województwo, potem jednostka po nazwie), bo formularz
   narzędzi nie ma pól zależnych.
-
-### Pobieranie paczek
-
-- **LAZ / NMT / ortofoto jako paczki** — parytet z „Pobieracz danych GUGiK": wybór arkuszy
-  z warstwy skorowidza (te 162 typy `index` w katalogu WFS są właśnie po to), pobranie na
-  dysk, raport CSV. Osobna architektura: indeks + wiele arkuszy + zapis plików.
-- **Wybór skorowidza w interfejsie** — 162 typy są dziś osiągalne tylko po identyfikatorze.
 
 ### Host (RustGIS)
 

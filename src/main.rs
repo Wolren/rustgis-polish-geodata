@@ -21,6 +21,7 @@ mod nmt;
 mod obszar;
 mod panel;
 mod services;
+mod sheets;
 mod text;
 mod tile;
 mod tm;
@@ -77,6 +78,13 @@ fn run(
 ) -> Result<Value, String> {
     if let Some(overlay) = catalog::overlay(id) {
         return tile::toggle(host, overlay, lang);
+    }
+    // The family files name their own commands, one per service or map.
+    if id.starts_with("wody-") {
+        return tile::toggle_wody(host, id, lang);
+    }
+    if id.starts_with("carto-") {
+        return tile::toggle_carto(host, id, lang);
     }
     let mut answer = match id {
         "obszar-rysuj" => obszar::draw(host, lang),

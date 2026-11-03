@@ -1,0 +1,280 @@
+{
+  "attribution": "Cartomatic / IH PAN",
+  "zoom": 18,
+  "series": {
+    "plans": "Plany miast i atlasy",
+    "topo": "Mapy topograficzne i przeglądowe"
+  },
+  "maps": [
+    {
+      "id": "carto-administrativ-karte-von-den-konigreichen-galizien-und",
+      "title": "Administrativ Karte von den Königreichen Galizien und Lodomerien 1:115 200 (1855)",
+      "layer": "kummersberg_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-drogi-w-drugiej-polowie-xvi-w",
+      "title": "Drogi w drugiej połowie XVI w.",
+      "layer": "ahp_drogi_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-dwuwiorstowka-1-84-000-1908-1936",
+      "title": "Dwuwiorstówka 1:84 000 (1908-1936)",
+      "layer": "dwuwiorstowka_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-karta-dawnej-polski-1-300-000-1859",
+      "title": "Karta Dawnej Polski 1:300 000 (1859)",
+      "layer": "chrzanowski_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-karte-des-deutschen-reiches-1-100-000-ok-1900",
+      "title": "Karte des Deutschen Reiches 1:100 000 (ok. 1900)",
+      "layer": "kdr_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-karte-des-deutschen-reiches-1-100-000-ok-1944",
+      "title": "Karte des Deutschen Reiches 1:100 000 (ok. 1944)",
+      "layer": "kdr_gb_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-karte-des-westlichen-russlands-1-100-000-1914-1921",
+      "title": "Karte des Westlichen Russlands 1:100 000 (1914-1921)",
+      "layer": "kdwr_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-mapa-gaula-raczynskiego-1-125-000-1807-1812",
+      "title": "Mapa Gaula/Raczyńskiego 1:125 000 (1807-1812)",
+      "layer": "gaul_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-mapa-gilly-ego-1-150-000-1802-1803",
+      "title": "Mapa Gilly'ego 1:150 000 (1802-1803)",
+      "layer": "gilly_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-mapa-operacyjna-wig-1-300-000-1918-1939",
+      "title": "Mapa operacyjna WIG 1:300 000 (1918-1939)",
+      "layer": "wig300k_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-mapa-polski-i-krajow-osciennych-wig-1-500-000-1939",
+      "title": "Mapa Polski i Krajów Ościennych WIG 1:500 000 (1939)",
+      "layer": "wig500k1939_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-mapa-polski-i-krajow-osciennych-wig-1-500-000-1947",
+      "title": "Mapa Polski i Krajów Ościennych WIG 1:500 000 (1947)",
+      "layer": "wig500k_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-mapa-schroettera-1-150-000-1796-1802",
+      "title": "Mapa Schroettera 1:150 000 (1796-1802)",
+      "layer": "schroetter_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-mapa-szczegolowa-wig-1-25-000-1918-1939",
+      "title": "Mapa szczegółowa WIG 1:25 000 (1918-1939)",
+      "layer": "wig25k_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-mapa-taktyczna-wig-1-100-000-1918-1939",
+      "title": "Mapa taktyczna WIG 1:100 000 (1918-1939)",
+      "layer": "wig100k_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-mapa-textora-sotzmanna-1-150-000-1806-1808",
+      "title": "Mapa Textora-Sotzmanna 1:150 000 (1806-1808)",
+      "layer": "textor_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-mapa-wig-1-100-000-w-ukladzie-borowa-gora",
+      "title": "Mapa WIG 1:100 000 w układzie \"Borowa Góra\"",
+      "layer": "wig_1947_1952_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-messtichblatter-1-25-000-1870-1945",
+      "title": "Messtichblätter 1:25 000 (1870-1945)",
+      "layer": "m25k_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-plan-bialegostoku-1-25-000-1943",
+      "title": "Plan Białegostoku 1:25 000 (1943)",
+      "layer": "bialystok__3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-bydgoszczy-1-25-000-1943",
+      "title": "Plan Bydgoszczy 1:25 000 (1943)",
+      "layer": "bydgoszcz_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-czestochowy-1-25-000-1943",
+      "title": "Plan Częstochowy 1:25 000 (1943)",
+      "layer": "czestochowa_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-gdanska-1-25-000-1944",
+      "title": "Plan Gdańska 1:25 000 (1944)",
+      "layer": "gdansk_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-grudziadza-1-25-000-1943",
+      "title": "Plan Grudziądza 1:25 000 (1943)",
+      "layer": "grudziadz_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-inowroclawia-1-25-000-1943",
+      "title": "Plan Inowrocławia 1:25 000 (1943)",
+      "layer": "inowroclaw_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-jasla-1-25-000-1943",
+      "title": "Plan Jasła 1:25 000 (1943)",
+      "layer": "jaslo_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-katowic-1-25-000-1943",
+      "title": "Plan Katowic 1:25 000 (1943)",
+      "layer": "katowice_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-kielc-1-25-000-1943",
+      "title": "Plan Kielc 1:25 000 (1943)",
+      "layer": "kielce_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-krakowa-1-25-000-1943",
+      "title": "Plan Krakowa 1:25 000 (1943)",
+      "layer": "krakow_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-lublina-1-25-000-1943",
+      "title": "Plan Lublina 1:25 000 (1943)",
+      "layer": "lublin_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-poznania-1-25-000-1943",
+      "title": "Plan Poznania 1:25 000 (1943)",
+      "layer": "poznan_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-radomia-1-25-000-1943",
+      "title": "Plan Radomia 1:25 000 (1943)",
+      "layer": "radom_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-rzeszowa-1-25-000-1943",
+      "title": "Plan Rzeszowa 1:25 000 (1943)",
+      "layer": "rzeszow_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-siedlec-1-25-000-1943",
+      "title": "Plan Siedlec 1:25 000 (1943)",
+      "layer": "siedlce_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-tarnowa-1-25-000-1943",
+      "title": "Plan Tarnowa 1:25 000 (1943)",
+      "layer": "tarnow_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-torunia-1-25-000-1943",
+      "title": "Plan Torunia 1:25 000 (1943)",
+      "layer": "torun_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-warszawy-1-25-000-1944",
+      "title": "Plan Warszawy 1:25 000 (1944)",
+      "layer": "warszawa_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-wroclawia-1-25-000-1944",
+      "title": "Plan Wrocławia 1:25 000 (1944)",
+      "layer": "wroclaw_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-plan-lodzi-1-25-000-1943",
+      "title": "Plan Łodzi 1:25 000 (1943)",
+      "layer": "lodz_3857",
+      "series": "plans"
+    },
+    {
+      "id": "carto-podzialy-koscielne-w-drugiej-polowie-xvi-w",
+      "title": "Podziały kościelne w drugiej połowie XVI w.",
+      "layer": "ahp_koscielne_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-reymann-s-special-karte-von-central-europa-1-200-000",
+      "title": "Reymann's Special-Karte von Central Europa, 1:200 000 (druga połowa XIX w.)",
+      "layer": "reymann_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-rozmieszczenie-wlanosci-w-drugiej-polowie-xvi-w",
+      "title": "Rozmieszczenie właności w drugiej połowie XVI w.",
+      "layer": "ahp_wlasnosc_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-topograficzna-karta-krolestwa-polskiego-1-126-000",
+      "title": "Topograficzna Karta Królestwa Polskiego 1:126 000 (1839-1843)",
+      "layer": "TKKP_126k_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-warszawa-mapa-lindleyow-1-2-500",
+      "title": "Warszawa - mapa Lindleyów (1:2,500)",
+      "layer": "lindley_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-ziemie-polskie-korony-w-drugiej-polowie-xvi-w",
+      "title": "Ziemie polskie Korony w drugiej połowie XVI w.",
+      "layer": "ahp_ziemie_polskie_3857",
+      "series": "topo"
+    },
+    {
+      "id": "carto-ubersichtskarte-von-mitteleuropa-1-300-000-ok-1900",
+      "title": "Übersichtskarte von Mitteleuropa 1:300 000 (ok. 1900)",
+      "layer": "ukvme_3857",
+      "series": "topo"
+    }
+  ]
+}

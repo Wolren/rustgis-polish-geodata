@@ -14,6 +14,7 @@ use crate::catalog;
 use crate::filter;
 use crate::host;
 use crate::http;
+use crate::sheets;
 use crate::text::{self, Lang};
 use crate::wfs;
 use serde_json::{json, Value};
@@ -22,6 +23,10 @@ use serde_json::{json, Value};
 const UNLIMITED_SPAN: f64 = 20.0;
 
 pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
+    // The sheet downloader names its own layer and has no `dane`, so it runs before the dataset.
+    if request.get("id").and_then(Value::as_str) == Some("pobierz-arkusze") {
+        return sheets::run(request, lang);
+    }
     let params = request.get("params").cloned().unwrap_or_else(|| json!({}));
     let label = params
         .get("dane")
@@ -204,6 +209,20 @@ fn coordinates(value: &Value, bbox: &mut [f64; 4], found: &mut bool) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn the_sheet_tool_runs_before_the_dataset_lookup() {
+        // No `dane`, and a blank folder: the route must reach the sheet tool, not the catalogue.
+        let request = json!({
+            "kind": "tool",
+            "id": "pobierz-arkusze",
+            "lang": "en",
+            "params": { "skorowidz": "Skorowidz", "folder": "  " },
+            "layers": {}
+        });
+        let error = run(&request, Lang::En).unwrap_err();
+        assert!(error.contains("folder"), "{error}");
+    }
 
     #[test]
     fn takes_the_bbox_of_a_collection() {
