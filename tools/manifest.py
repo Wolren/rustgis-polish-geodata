@@ -76,7 +76,9 @@ def menu_decl(key, menus, folders, depth=1):
             "help": meta.get("help", ""),
             "items": [menu_decl(child, menus, folders, depth + 1) for child in meta["children"]],
         }
-    meta = menus[key]
+    meta = menus.get(key)
+    if meta is None:
+        raise Bad(f"the tab names menu '{key}', which no service and no folder defines")
     return {
         "menu": meta["label"],
         "icon": meta.get("icon", ""),

@@ -18,9 +18,10 @@ instytucji, potem według tematu — i którą w całości da się sterować prz
   `eziudp` (krajowy rejestr zbiorów i usług).
 - 109 usług WMS, w tym 11 arkuszy historycznych (WIG, mapy niemieckie) z Cartomatic.
 - Wstęga mieści się w oknie: wszystkie grupy w układzie `small`, katalog zwinięty według
-  instytucji (**GUGiK** z czterema tematami w podmenu, pięć menu pozostałych instytucji),
-  pobieranie jako jedno menu **Zestawy**. 10 kolumn zamiast 28. Wymaga RustGIS 0.5.0
-  (zagnieżdżone menu i kolumny `small`), stąd `minRustgisVersion`.
+  instytucji (**GUGiK** z czterema tematami w podmenu, pięć menu pozostałych instytucji), a
+  pobieranie to pięć osobnych przycisków. 10 kolumn zamiast 28; w polskim interfejsie wstęga
+  kończy się na 1347 px z 1480. Wymaga RustGIS 0.5.0 (zagnieżdżone menu i kolumny `small`),
+  stąd `minRustgisVersion`.
 
 ## Następne
 

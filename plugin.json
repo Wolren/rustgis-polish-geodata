@@ -957,7 +957,7 @@
   "tools": [
     {
       "id": "pobierz-adresy",
-      "name": "Download addresses and buildings",
+      "name": "Addresses and buildings",
       "summary": "GUGiK types for addresses, buildings and their statistics.",
       "toolbox": "Polish Geodata",
       "params": [
@@ -1001,7 +1001,7 @@
     },
     {
       "id": "pobierz-granice",
-      "name": "Download boundaries and units",
+      "name": "Boundaries and units",
       "summary": "PRG boundaries, place names and the administrative units around them.",
       "toolbox": "Polish Geodata",
       "params": [
@@ -1050,7 +1050,7 @@
     },
     {
       "id": "pobierz-osnowy",
-      "name": "Download control points and measurements",
+      "name": "Control points",
       "summary": "Geodetic, gravimetric and magnetic control networks, with their measurements.",
       "toolbox": "Polish Geodata",
       "params": [
@@ -1096,7 +1096,7 @@
     },
     {
       "id": "pobierz-urzedy",
-      "name": "Download offices and courts",
+      "name": "Offices and courts",
       "summary": "Public offices, courts, schools, forests and other institutions.",
       "toolbox": "Polish Geodata",
       "params": [
@@ -1142,7 +1142,7 @@
     },
     {
       "id": "pobierz-pozostale",
-      "name": "Download other data",
+      "name": "Other data",
       "summary": "Maritime zones, road and rail statistics, historic monuments and the rest.",
       "toolbox": "Polish Geodata",
       "params": [
@@ -1234,8 +1234,7 @@
         "items": [
           "panel",
           "przytnij",
-          "zoom-polska",
-          "katalog"
+          "zoom-polska"
         ]
       },
       {
@@ -1435,18 +1434,11 @@
         "label": "Downloads",
         "layout": "small",
         "items": [
-          {
-            "menu": "Datasets",
-            "icon": "toolbox",
-            "help": "The five background downloads: addresses and buildings, boundaries, control networks, offices and the rest.",
-            "items": [
-              "tool:pobierz-adresy",
-              "tool:pobierz-granice",
-              "tool:pobierz-osnowy",
-              "tool:pobierz-urzedy",
-              "tool:pobierz-pozostale"
-            ]
-          }
+          "tool:pobierz-adresy",
+          "tool:pobierz-granice",
+          "tool:pobierz-osnowy",
+          "tool:pobierz-urzedy",
+          "tool:pobierz-pozostale"
         ]
       },
       {
@@ -1480,6 +1472,7 @@
     "pl": {
       "Address points and streets from the national address numbering service.": "Punkty adresowe i ulice (Krajowa Integracja Numeracji Adresowej).",
       "Addresses": "Adresy",
+      "Addresses and buildings": "Adresy i budynki",
       "Adds the 1 m terrain model of the area, shaded. GUGiK serves PL-KRON86-NH as GeoTIFF.": "Dodaje model terenu 1 m dla obszaru, cieniowany. GUGiK udostępnia PL-KRON86-NH jako GeoTIFF.",
       "Adds the parcel an identifier names, without pointing at the map: id as ULDK writes it, or teryt and numer.": "Dodaje działkę wskazaną identyfikatorem, bez klikan ia w mapę: id w postaci ULDK albo teryt i numer.",
       "Area": "Obszar",
@@ -1487,6 +1480,7 @@
       "Area to download": "Obszar pobierania",
       "BDOT10k": "BDOT10k",
       "Basemaps": "Podkłady",
+      "Boundaries and units": "Granice i jednostki",
       "Brings the map to the whole of Poland, the area GUGiK serves.": "Przybliża mapę do całej Polski, obszaru obsługiwanego przez GUGiK.",
       "Cadastre and boundaries": "Kataster i granice",
       "Cancel\ndrawing": "Anuluj\nrysowanie",
@@ -1495,20 +1489,15 @@
       "Clear\narea": "Wyczyść\nobszar",
       "Clear\ncache": "Wyczyść\ncache",
       "Clear the stored answers after a download": "Wyczyść zapisane odpowiedzi po pobraniu",
-      "Datasets": "Zestawy",
       "Click the corners, then double-click to close the ring, or press Escape to stop. The shape stays as drawn: a download follows it, and the elevation model covers the rectangle around it.": "Klikaj narożniki, a na końcu kliknij dwukrotnie, aby zamknąć obwód, albo naciśnij Escape, aby przerwać. Kształt zostaje taki, jak narysowany: pobieranie idzie za nim, a model wysokości obejmuje prostokąt wokół niego.",
       "Clip\nto area": "Przytnij\ndo obszaru",
       "Clips a layer to the area layer's boundary, or to a named one. A WFS answer returns whole features that touch the area; this cuts them.": "Przycina warstwę do granicy warstwy obszaru albo wskazanej warstwy. WFS zwraca całe obiekty dotykające obszaru; to je tnie.",
+      "Control points": "Osnowy i pomiary",
       "Copies the map view into the area layer as a rectangle: one click, and the rectangle is exactly what you see. It is the area a download and the elevation model use.": "Kopiuje widok mapy do warstwy obszaru jako prostokąt: jedno kliknięcie i prostokąt jest dokładnie tym, co widać. To obszar, którego używa pobieranie i model wysokości.",
       "Country, voivodeship, county, commune and city boundaries.": "Granice państwa, województw, powiatów, gmin i miast.",
       "DEM\nhillshade": "NMT\ncieniowanie",
       "Dataset": "Zestaw",
       "Deletes the stored WFS answers (kept for 7 days by default) and the downloaded elevation grids, so the data is fetched again.": "Usuwa zapisane odpowiedzi WFS (domyślnie trzymane 7 dni) i pobrane siatki wysokości, żeby pobrać dane od nowa.",
-      "Download addresses and buildings": "Pobierz adresy i budynki",
-      "Download boundaries and units": "Pobierz granice i jednostki",
-      "Download control points and measurements": "Pobierz osnowy i pomiary",
-      "Download offices and courts": "Pobierz urzędy i sądy",
-      "Download other data": "Pobierz pozostałe dane",
       "Downloads": "Pobieranie",
       "Draw\narea": "Narysuj\nobszar",
       "Drops the drawing tool and leaves the map in the explore tool. Escape does the same.": "Wyłącza narzędzie rysowania i zostawia mapę w trybie przeglądania. Escape robi to samo.",
@@ -1540,6 +1529,7 @@
       "Measured when the panel opens.": "Mierzone przy otwarciu panelu.",
       "Model": "Model",
       "Monuments, archaeological records and UNESCO sites.": "Zabytki, rejestr archeologiczny i obiekty UNESCO.",
+      "Offices and courts": "Urzędy i sądy",
       "Open the panel to read the view.": "Otwórz panel, aby odczytać widok.",
       "Orthophoto": "Ortofoto",
       "Orthophoto\nHi-Res": "Ortofoto\nHi-Res",
@@ -1547,6 +1537,7 @@
       "Orthophoto, elevation, vegetation and archive imagery.": "Ortofoto, wysokości, wegetacja i zdjęcia archiwalne.",
       "Orthophoto, hillshade and the topographic overlay.": "Ortofoto, cieniowanie i nakładka topograficzna.",
       "Other GUGiK data": "Pozostałe dane GUGiK",
+      "Other data": "Pozostałe dane",
       "Other institutions": "Pozostałe instytucje",
       "PRG\nboundaries": "Granice\nPRG",
       "PRG boundaries, place names and the administrative units around them.": "Granice PRG, nazwy miejscowości i jednostki administracyjne.",
@@ -1579,7 +1570,6 @@
       "The 1 m elevation model of the area, as GeoTIFF or ASCII grid.": "Model wysokości 1 m dla obszaru, jako GeoTIFF albo siatka ASCII.",
       "The GUGiK feature type to download.": "Typ obiektów GUGiK do pobrania.",
       "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time.": "Odpowiedzi są trzymane 7 dni, więc powtórne pobranie nic nie kosztuje. Zaznacz, aby następnym razem pobrać świeże dane.",
-      "The five background downloads: addresses and buildings, boundaries, control networks, offices and the rest.": "Pięć pobrań w tle: adresy i budynki, granice, osnowy, urzędy i pozostałe.",
       "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download.": "Warstwa, której zasięg jest pobierany. Narysuj ją przyciskiem Obszar prostokąt albo wskaż własną warstwę; zaznaczenie na niej zawęża pobieranie.",
       "The map view, the area to download, the catalogue and the stored answers, with the buttons that act on them.": "Widok mapy, obszar pobierania, katalog i zapisane odpowiedzi oraz przyciski, które na nich działają.",
       "The surface model, buildings and trees kept, in PL-KRON86-NH. An ASCII grid.": "Model pokrycia, z budynkami i drzewami, w PL-KRON86-NH. Siatka ASCII.",

@@ -11,35 +11,35 @@ w panelu Narzędzia, działających w tle, z postępem i przerwaniem.
 
 Wszystkie grupy jadą w układzie `small`, czyli trzy kontrolki w kolumnie, a katalog jest zwinięty
 najpierw według instytucji: GUGiK to jedna pozycja z czterema tematami w podmenu. Wstęga ma przez
-to 10 kolumn zamiast 28 i mieści się w oknie 1480 px, bez strzałki przewijania.
+to 10 kolumn zamiast 28 i mieści się w oknie 1480 px bez strzałki przewijania; w polskim
+interfejsie kończy się na 1347 px.
 
-| Grupa | Przycisk | Co robi |
+| Grupa | Pozycja | Co robi |
 | --- | --- | --- |
-| Podkłady | Rastry | Ortofoto (WMTS), Ortofoto Hi-Res (WMS), BDOT10k, cieniowanie NMT |
+| **Podkłady** | Rastry | Ortofoto (WMTS), Ortofoto Hi-Res (WMS), BDOT10k, cieniowanie NMT |
 | | Wektory | Działki (KIEG), Adresy, Granice PRG, Nazwy miejscowości |
+| **Obszar** | **Obszar prostokąt** | Prostokąt z widoku mapy: jedno kliknięcie, bez rysowania. Dokładnie to, co widać |
+| | Narysuj obszar | Narzędzie poligonu na warstwie „Obszar pobierania”; kształt zostaje taki, jak narysowany |
+| | Anuluj rysowanie | Wyłącza narzędzie rysowania i wraca do przeglądania |
+| | Wyczyść obszar | Usuwa warstwę „Obszar pobierania”, żeby zacząć od pustej |
+| **Narzędzia** | Panel | Panel z widokiem, obszarem, katalogiem, zapisanymi odpowiedziami i przyciskiem czyszczenia cache |
+| | Przytnij do obszaru | Tnie warstwę do granicy „Obszar pobierania” |
+| | Przybliż do Polski | Cała Polska w widoku |
 | **WMS (podgląd)** | GUGiK | 76 usług w czterech tematach: Ortofoto i NMT (20), Mapy (21), Kataster i granice (24), Pozostałe dane (11) |
 | | Mapy historyczne | 11 arkuszy WIG i map niemieckich |
 | | Geologia (PIG) | 9 usług |
 | | Zabytki (NID) | 4 usługi |
 | | Lasy (BDL) | 4 usługi |
 | | Pozostałe instytucje | GDOŚ, PKP PLK, GUS, Wody Polskie, IMGW-PIB |
-| **Pobieranie** | Zestawy | Jedyne miejsce, które ściąga dane: pięć narzędzi w tle — adresy i budynki, granice, osnowy, urzędy, pozostałe |
-| **Wyszukiwanie** | Działka z ULDK | Działka pod środkiem mapy |
-| | Wysokość w punkcie | Wysokość NMT w PL-1992 (środek mapy albo x/y) |
-| Obszar | **Obszar prostokąt** | Prostokąt z widoku mapy: jedno kliknięcie, bez rysowania. Dokładnie to, co widać |
-| | Narysuj obszar | Narzędzie poligonu na warstwie „Obszar pobierania”; kształt zostaje taki, jak narysowany |
-| | Anuluj rysowanie | Wyłącza narzędzie rysowania i wraca do przeglądania |
-| | Wyczyść obszar | Usuwa warstwę „Obszar pobierania”, żeby zacząć od pustej |
-| Dane | **Pobieranie** | Pięć narzędzi: adresy i budynki, granice i jednostki, osnowy i pomiary, urzędy i sądy, pozostałe dane |
-| | Działka z ULDK | Działka pod środkiem mapy: geometria + atrybuty |
-| | Przytnij do obszaru | Tnie warstwę do granicy „Obszar pobierania” |
-| Wysokości | Model terenu KRON86 | Model terenu 1 m (GeoTIFF) dla wskazanego obszaru |
-| | Model terenu EVRF2007 | To samo w PL-EVRF2007-NH (siatka ASCII) |
-| | Model pokrycia NMPT | Model pokrycia 1 m, z budynkami i drzewami (siatka ASCII) |
+| **Pobieranie** | Adresy i budynki | 19 zestawów WFS |
+| | Granice i jednostki | 24 zestawy |
+| | Osnowy i pomiary | 21 zestawów |
+| | Urzędy i sądy | 21 zestawów |
+| | Pozostałe dane | 21 zestawów |
+| **Wysokości** | Model | Teren KRON86 (GeoTIFF), teren EVRF2007, pokrycie NMPT |
 | | Stylizuj model | Cieniowanie najnowszego modelu, albo barwy |
-| Narzędzia | Panel | Panel z widokiem, obszarem, katalogiem i zapisanymi odpowiedziami |
-| | Przybliż do Polski | Cała Polska w widoku |
-| | Wyczyść cache | Usuwa zapisane odpowiedzi WFS i pobrane siatki wysokości |
+| **Wyszukiwanie** | Działka z ULDK | Działka pod środkiem mapy: geometria + atrybuty |
+| | Wysokość w punkcie | Wysokość NMT w PL-1992 (środek mapy albo x/y) |
 
 Łącznie: **135 poleceń** (26 własnych i 109 usług) i **5 narzędzi**. Wcześniej było 228 poleceń, z
 czego 108 pobierało dane natychmiast, blokując okno.
@@ -80,18 +80,19 @@ skorowidze** (arkusze i siatki, które wskazują paczki do pobrania z Geoportalu
 pobiera, bo nie umie ściągać paczek, ale zostają w katalogu: skrypt może je wskazać po
 identyfikatorze, np. `dane-skorowidz-danych-pomiarowych-lidar-2024`.
 
-Pobieranie to **pięć narzędzi** w grupie **Dane › Pobieranie**. Każde ma listę swoich zestawów:
+Pobieranie to **pięć narzędzi**, każde jako osobny przycisk w grupie **Pobieranie**. Każde ma listę
+swoich zestawów:
 
 | Narzędzie | Zestawy |
 | --- | --- |
-| Pobierz adresy i budynki | 19 |
-| Pobierz granice i jednostki | 24 |
-| Pobierz osnowy i pomiary | 21 |
-| Pobierz urzędy i sądy | 21 |
-| Pobierz pozostałe dane | 21 |
+| Adresy i budynki | 19 |
+| Granice i jednostki | 24 |
+| Osnowy i pomiary | 21 |
+| Urzędy i sądy | 21 |
+| Pozostałe dane | 21 |
 
 1. Wskaż obszar: **Obszar prostokąt**, **Obszar z widoku** albo własna warstwa.
-2. Otwórz **Dane › Pobieranie** i wybierz grupę.
+2. Naciśnij przycisk w grupie **Pobieranie**, na przykład **Adresy i budynki**.
 3. W panelu Narzędzia wybierz zestaw i warstwę obszaru, naciśnij **Uruchom**.
 
 Narzędzie działa w tle: panel pokazuje postęp i ma przycisk przerwania. Wynik wjeżdża na mapę jako
