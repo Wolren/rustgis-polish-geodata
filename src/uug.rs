@@ -4,6 +4,7 @@
 //! first and the answer is projected back. Neither is cached: an address is looked up because the
 //! user wants it now, and a height is a property of the terrain, not of a document.
 
+use crate::catalog;
 use crate::host::Host;
 use crate::http;
 use crate::text::{self, Lang};
@@ -39,20 +40,26 @@ pub fn geocode(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, Str
     let body = http::fetch(&url, 25, lang)?;
     let answer: Value = serde_json::from_str(&body).map_err(|_| text::uug_unreadable(lang))?;
 
-    let found = answer
+    let candidates: Vec<&Value> = answer
         .get("results")
         .and_then(Value::as_object)
-        .and_then(|results| results.values().next())
-        .ok_or_else(|| text::uug_no_address(lang, address))?;
-    let number = |key: &str| {
-        found
-            .get(key)
-            .and_then(Value::as_str)
-            .and_then(|v| v.parse::<f64>().ok())
+        .map(|results| results.values().collect())
+        .unwrap_or_default();
+    if candidates.is_empty() {
+        return Err(text::uug_no_address(lang, address));
+    }
+    let near = match (
+        params.get("x").and_then(Value::as_f64),
+        params.get("y").and_then(Value::as_f64),
+    ) {
+        (Some(x), Some(y)) => Some((x, y)),
+        _ => None,
     };
+    let found = choose(&candidates, near);
+    let found_count = candidates.len();
     let (x, y) = (
-        number("x").ok_or_else(|| text::uug_unreadable(lang))?,
-        number("y").ok_or_else(|| text::uug_unreadable(lang))?,
+        found.get("x").and_then(number).ok_or_else(|| text::uug_unreadable(lang))?,
+        found.get("y").and_then(number).ok_or_else(|| text::uug_unreadable(lang))?,
     );
     let [lon, lat] = tm::to_wgs84(x, y);
 
@@ -86,18 +93,75 @@ pub fn geocode(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, Str
     host.add_layer(&name, collection)?;
     host.call("layer.zoomTo", json!({ "layer": name }))?;
     host.notify(&text::uug_found(lang, address, lon, lat));
-    Ok(json!({ "layer": name, "lon": lon, "lat": lat, "x": x, "y": y }))
+    if found_count > 1 {
+        host.notify(&text::uug_candidates(lang, found_count));
+    }
+    Ok(json!({
+        "layer": name,
+        "lon": lon,
+        "lat": lat,
+        "x": x,
+        "y": y,
+        "candidates": found_count,
+    }))
+}
+
+/// The candidate to show: nearest to a given PL-1992 point, else the most accurate.
+fn choose<'a>(candidates: &[&'a Value], near: Option<(f64, f64)>) -> &'a Value {
+    let coords = |value: &Value| {
+        Some((
+            value.get("x").and_then(number)?,
+            value.get("y").and_then(number)?,
+        ))
+    };
+    if let Some((x, y)) = near {
+        let nearest = candidates
+            .iter()
+            .filter_map(|value| {
+                let (px, py) = coords(value)?;
+                Some((*value, (px - x).powi(2) + (py - y).powi(2)))
+            })
+            .min_by(|a, b| a.1.total_cmp(&b.1));
+        if let Some((value, _)) = nearest {
+            return value;
+        }
+    }
+    let accuracy = |value: &Value| value.get("accuracy").and_then(number).unwrap_or(0.0);
+    candidates
+        .iter()
+        .copied()
+        .max_by(|a, b| accuracy(a).total_cmp(&accuracy(b)))
+        .unwrap_or(candidates[0])
+}
+
+/// A number sent as JSON text or a number, comma decimal allowed.
+fn number(value: &Value) -> Option<f64> {
+    match value {
+        Value::Number(n) => n.as_f64(),
+        Value::String(s) => metres_of(s),
+        _ => None,
+    }
+}
+
+/// A height written as text, with a comma decimal allowed.
+fn metres_of(answer: &str) -> Option<f64> {
+    answer.trim().replace(',', ".").parse().ok()
 }
 
 /// Reads the terrain model's height at a point, in metres above sea level.
 pub fn height(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String> {
     let (x, y) = point(host, params)?;
+    // The service answers 0 for a point outside the country, which reads as sea level.
+    let [lon, lat] = tm::to_wgs84(x, y);
+    let [west, south, east, north] = catalog::POLAND;
+    if !(west..=east).contains(&lon) || !(south..=north).contains(&lat) {
+        return Err(text::height_outside(lang));
+    }
     let url = format!("{NMT}?request=GetHByXY&x={x:.2}&y={y:.2}");
     let body = http::fetch(&url, 20, lang)?;
     let answer = body.trim();
-    let metres: f64 = answer
-        .parse()
-        .map_err(|_| text::height_failed(lang, &answer.chars().take(80).collect::<String>()))?;
+    let metres = metres_of(answer)
+        .ok_or_else(|| text::height_failed(lang, &answer.chars().take(80).collect::<String>()))?;
     host.notify(&text::height_at(lang, metres, x, y));
     Ok(json!({ "height": metres, "x": x, "y": y, "datum": "PL-KRON86-NH" }))
 }
@@ -130,8 +194,34 @@ mod tests {
     }
 
     #[test]
-    fn reads_a_height() {
-        let metres: f64 = "214.3".trim().parse().unwrap();
-        assert_eq!(metres, 214.3);
+    fn reads_a_height_with_either_decimal_comma() {
+        assert_eq!(metres_of("214.3"), Some(214.3));
+        assert_eq!(metres_of("214,3\n"), Some(214.3));
+        assert_eq!(metres_of("no height"), None);
+    }
+
+    #[test]
+    fn reads_numbers_written_as_text_or_numbers() {
+        assert_eq!(number(&json!(359579.19)), Some(359579.19));
+        assert_eq!(number(&json!("359579,19")), Some(359579.19));
+        assert_eq!(number(&json!(null)), None);
+    }
+
+    fn candidate(x: f64, y: f64, accuracy: &str) -> Value {
+        json!({"x": x, "y": y, "accuracy": accuracy})
+    }
+
+    #[test]
+    fn chooses_the_most_accurate_candidate() {
+        let rough = candidate(0.0, 0.0, "0.5");
+        let exact = candidate(0.0, 0.0, "1");
+        assert_eq!(choose(&[&rough, &exact], None), &exact);
+    }
+
+    #[test]
+    fn chooses_the_candidate_nearest_a_given_point() {
+        let far = candidate(500_000.0, 500_000.0, "1");
+        let near = candidate(100.0, 100.0, "0.4");
+        assert_eq!(choose(&[&far, &near], Some((0.0, 0.0))), &near);
     }
 }

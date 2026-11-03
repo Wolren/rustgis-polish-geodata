@@ -5,25 +5,30 @@ danymi GUGiK, bez kluczy API i bez pośredników.
 
 Zasada, która trzyma tę wtyczkę w kupie: **polecenie tylko pokazuje coś na mapie, a pobiera
 narzędzie.** Wstęga mówi to wprost nazwami grup: **WMS (podgląd)** tylko wyświetla, **Pobieranie**
-jako jedyne ściąga dane, **Wyszukiwanie** pyta usługę punktową, **Narzędzia** zmieniają projekt. Polecenie wykonuje się w wątku interfejsu, więc pobieranie jako polecenie zamrażało
-okno na czas transferu. Dlatego na wstędze nie ma już 108 przycisków pobierania: są pięć narzędzi
-w panelu Narzędzia, działających w tle, z postępem i przerwaniem.
+jako jedyne ściąga dane wektorowe, **Wyszukiwanie** pyta usługę punktową, **Narzędzia** zmieniają
+projekt. Polecenie wykonuje się w wątku interfejsu, więc pobieranie jako polecenie zamrażało okno
+na czas transferu. Dlatego na wstędze nie ma już 108 przycisków pobierania: są pięć narzędzi
+w panelu Narzędzia, działających w tle, z postępem i przyciskiem Anuluj.
+
+Jeden wyjątek jest opisany niżej: trzy przyciski **Wysokości** to polecenia, które pobierają
+raster. Narzędzie geoprzetwarzania nie umie dodać warstwy rastrowej, więc raster pobiera i kładzie
+na mapie polecenie.
 
 Wszystkie grupy jadą w układzie `small`, czyli trzy kontrolki w kolumnie, a katalog jest zwinięty
 najpierw według instytucji: GUGiK to jedna pozycja z czterema tematami w podmenu. Wstęga ma przez
 to 10 kolumn zamiast 28 i mieści się w oknie 1480 px bez strzałki przewijania; w polskim
-interfejsie kończy się na 1347 px.
+interfejsie kończy się na 1353 px.
 
 | Grupa | Pozycja | Co robi |
 | --- | --- | --- |
-| **Podkłady** | Rastry | Ortofoto (WMTS), Ortofoto Hi-Res (WMS), BDOT10k, cieniowanie NMT |
-| | Wektory | Działki (KIEG), Adresy, Granice PRG, Nazwy miejscowości |
-| **Obszar** | **Obszar prostokąt** | Prostokąt z widoku mapy: jedno kliknięcie, bez rysowania. Dokładnie to, co widać |
+| **Podkłady** | Rastry | Ortofoto (WMTS), Ortofoto Hi-Res (WMS), BDOT10k (nakładka), Cieniowanie (NMT) |
+| | Wektory | Działki (KIEG), Adresy, Granice PRG, Nazwy geograficzne |
+| **Obszar** | **Obszar z widoku** | Prostokąt z widoku mapy: jedno kliknięcie, bez rysowania. Dokładnie to, co widać |
 | | Narysuj obszar | Narzędzie poligonu na warstwie „Obszar pobierania”; kształt zostaje taki, jak narysowany |
 | | Anuluj rysowanie | Wyłącza narzędzie rysowania i wraca do przeglądania |
-| | Wyczyść obszar | Usuwa warstwę „Obszar pobierania”, żeby zacząć od pustej |
-| **Narzędzia** | Panel | Panel z widokiem, obszarem, listą warstw do przycięcia, katalogiem, zapisanymi odpowiedziami i przyciskiem czyszczenia cache |
-| | Przytnij do obszaru | Tnie warstwę do wybranej w panelu granicy, domyślnie do „Obszar pobierania” |
+| | Usuń obszar | Usuwa warstwę „Obszar pobierania”, żeby zacząć od pustej |
+| **Narzędzia** | Panel | Panel ze statusami (widok, obszar, para warstwa → granica), przyciskami, drzewem warstw granicznych, katalogiem i zapisanymi odpowiedziami; **Odśwież panel** czyta je od nowa |
+| | Przytnij do warstwy | Tnie warstwę do wybranej w panelu granicy, domyślnie do „Obszar pobierania” |
 | | Przybliż do Polski | Cała Polska w widoku |
 | **WMS (podgląd)** | GUGiK | 76 usług w czterech tematach: Ortofoto i NMT (20), Mapy (21), Kataster i granice (24), Pozostałe dane (11) |
 | | Mapy historyczne | 11 arkuszy WIG i map niemieckich |
@@ -31,13 +36,13 @@ interfejsie kończy się na 1347 px.
 | | Zabytki (NID) | 4 usługi |
 | | Lasy (BDL) | 4 usługi |
 | | Pozostałe instytucje | GDOŚ, PKP PLK, GUS, Wody Polskie, IMGW-PIB |
-| **Pobieranie** | Adresy i budynki | 19 zestawów WFS |
-| | Granice i jednostki | 24 zestawy |
-| | Osnowy i pomiary | 21 zestawów |
-| | Urzędy i sądy | 21 zestawów |
-| | Pozostałe dane | 21 zestawów |
+| **Pobieranie** | Adresy i budynki | 19 zbiorów WFS |
+| | Granice i jednostki | 24 zbiory |
+| | Osnowy i pomiary | 21 zbiorów |
+| | Urzędy i sądy | 21 zbiorów |
+| | Pozostałe dane | 21 zbiorów |
 | **Wysokości** | Model | Teren KRON86 (GeoTIFF), teren EVRF2007, pokrycie NMPT |
-| | Stylizuj model | Cieniowanie najnowszego modelu, albo barwy |
+| | Ustaw styl modelu | Cieniowanie najnowszego modelu, albo barwy |
 | **Wyszukiwanie** | Działka z ULDK | Działka pod środkiem mapy: geometria + atrybuty |
 | | Wysokość w punkcie | Wysokość NMT w PL-1992 (środek mapy albo x/y) |
 
@@ -81,9 +86,9 @@ pobiera, bo nie umie ściągać paczek, ale zostają w katalogu: skrypt może je
 identyfikatorze, np. `dane-skorowidz-danych-pomiarowych-lidar-2024`.
 
 Pobieranie to **pięć narzędzi**, każde jako osobny przycisk w grupie **Pobieranie**. Każde ma listę
-swoich zestawów:
+swoich zbiorów:
 
-| Narzędzie | Zestawy |
+| Narzędzie | Zbiory |
 | --- | --- |
 | Adresy i budynki | 19 |
 | Granice i jednostki | 24 |
@@ -91,13 +96,14 @@ swoich zestawów:
 | Urzędy i sądy | 21 |
 | Pozostałe dane | 21 |
 
-1. Wskaż obszar: **Obszar prostokąt**, **Obszar z widoku** albo własna warstwa.
+1. Wskaż obszar: **Obszar z widoku**, **Narysuj obszar** albo własna warstwa.
 2. Naciśnij przycisk w grupie **Pobieranie**, na przykład **Adresy i budynki**.
-3. W panelu Narzędzia wybierz zestaw i warstwę obszaru, naciśnij **Uruchom**.
+3. W panelu Narzędzia wybierz zbiór i warstwę obszaru, naciśnij **Uruchom**.
 
 Narzędzie działa w tle: panel pokazuje postęp i ma przycisk przerwania. Wynik wjeżdża na mapę jako
-warstwa wektorowa, jednym krokiem cofania. Opcje w formularzu to tylko zestaw i warstwa obszaru —
-nic więcej nie trzeba ustawiać, bo nic więcej nie jest zgadywane.
+warstwa wektorowa, jednym krokiem cofania. Opcje w formularzu to zbiór, warstwa obszaru i
+opcjonalne **Najpierw usuń zapisane odpowiedzi**: nic więcej nie trzeba ustawiać, bo nic więcej nie
+jest zgadywane.
 
 Skrypt albo agent uruchamia to samo przez `gp.run`:
 
@@ -117,17 +123,17 @@ zaznaczenie, największe zaznaczenie w projekcie, warstwa obszaru, a w ostateczn
 warstwa”. To ostatnie ogniwo potrafiło pobrać województwo po kliknięciu w przycisk, a przedostatnie
 brało obszar z warstwy, której użytkownik nie widział.
 
-Model wysokości (polecenie, więc działa natychmiast) bierze obszar w tej kolejności:
+Model wysokości (polecenie, nie narzędzie) bierze obszar w tej kolejności:
 
 1. warstwa podana w argumencie `area`,
 2. zaznaczenie na aktywnej warstwie,
-3. warstwa „Obszar pobierania” z przycisku **Obszar prostokąt**,
+3. warstwa „Obszar pobierania” z przycisku **Obszar z widoku**,
 4. aktywna warstwa w całości.
 
 Zaznaczenie na innej warstwie nie jest brane pod uwagę. Zbyt duży obszar jest odrzucany z liczbami,
 zanim poleci jakiekolwiek żądanie.
 
-**Obszar prostokąt** to jedno kliknięcie: wtyczka bierze bieżący widok mapy i zapisuje go jako
+**Obszar z widoku** to jedno kliknięcie: wtyczka bierze bieżący widok mapy i zapisuje go jako
 prostokąt na warstwie „Obszar pobierania”. Prostokąt jest dokładnie tym, co widać — żadnego
 rysowania i żadnego zgadywania. Chcesz inny obszar? Przybliż mapę i naciśnij ponownie.
 
@@ -141,20 +147,24 @@ To rozróżnienie jest jedyną prawdą, jaką wtyczka może powiedzieć: RustGIS
 edytowalne punkt po punkcie i nie ma narzędzia prostokąta (prostokąt „przeciągnij” istnieje tylko
 dla grafiki, nie dla warstwy wektorowej). Dlatego prostokąt bierze się z widoku, a nie z rysowania.
 
-**Wyczyść obszar** usuwa warstwę, więc kolejny prostokąt albo rysunek zaczyna od zera. Bez tego
+**Usuń obszar** usuwa warstwę, więc kolejny prostokąt albo rysunek zaczyna od zera. Bez tego
 drugi rysunek dokłada kształt do istniejącego i obszar się powiększa.
 
 ### Przycinanie do granicy
 
 Filtr WFS zwraca **całe** obiekty, które dotykają obszaru i nie przycina ich. Dlatego po pobraniu
-uruchom **Przytnij do obszaru**: wywołuje wbudowane narzędzie Clip i zastępuje warstwę wersją
+uruchom **Przytnij do warstwy**: wywołuje wbudowane narzędzie Clip i zastępuje warstwę wersją
 przyciętą (jedna warstwa, nie dwie).
 
-Granicą nie musi być warstwa obszaru. W panelu, w sekcji **Przytnij**, jest lista warstw
-poligonowych z liczbą obiektów: wybierz dowolną (gminę, obręb, działkę, własny poligon), a wiersz
-nad listą pokaże, co zostanie przycięte i do czego, na przykład `Adresy → Gmina Poznań`. Przycisk
-**Przytnij do obszaru** robi wtedy to, co widać. Bez wyboru granicą jest warstwa „Obszar
-pobierania”.
+Granicą nie musi być warstwa obszaru. Panel ma na górze statusy (widok, obszar, para
+„warstwa → granica”), pod nimi drzewo warstw poligonowych z liczbą obiektów i wyszukiwarką, a pod
+drzewem przyciski, katalog i zapisane odpowiedzi. Wybierz w drzewie dowolną warstwę graniczną
+(gminę, obręb, działkę, własny poligon), a wiersz **Przytnij** pokaże, co zostanie przycięte i do
+czego, na przykład `Adresy → Gmina Poznań`. Przycisk **Przytnij do warstwy** robi wtedy to, co
+widać. Bez wyboru granicą jest warstwa „Obszar pobierania”.
+
+**Odśwież panel** czyta od nowa widok, warstwę obszaru, katalog i zapisane odpowiedzi, więc
+odświeża panel także wtedy, gdy mapa zmieniła się poza nim.
 
 Cięta jest warstwa aktywna w panelu **Warstwy**, a gdy żadna nie jest aktywna — najnowsza warstwa
 wektorowa. Uchwyt `layer` (albo `obszar`) w poleceniu nadpisuje jedno i drugie, więc skrypt nie
@@ -173,9 +183,13 @@ Grupa **Wysokości** ma trzy pokrycia:
 | Model terenu EVRF2007 | `DTM_PL-EVRF2007-NH` | siatka ASCII |
 | Model pokrycia NMPT | `DSM_PL-KRON86-NH` | siatka ASCII |
 
+Te trzy przyciski to **polecenia**, nie narzędzia: pobierają raster i od razu kładą go na mapie.
+To jedyny wyjątek od zasady „polecenie pokazuje, narzędzie pobiera”, bo narzędzie nie umie dodać
+warstwy rastrowej.
+
 GeoTIFF pobiera sam RustGIS i bierze z niego układ odniesienia. Siatka ASCII nie niesie układu, więc
 wtyczka pobiera ją sama i dopisuje plik `.prj` z EPSG:2180. Model trafia na mapę z cieniowaniem,
-a **Stylizuj model** zmienia je na barwy.
+a **Ustaw styl modelu** zmienia je na barwy.
 
 Każde kliknięcie prosi o komórki 1 m: zasięg obszaru idzie do PL-1992 w całych metrach, więc sąsiednie
 modele mają tę samą siatkę. Skorowidz arkuszy nie jest potrzebny, bo usługa WCS GUGiK zwraca dowolny
@@ -195,7 +209,7 @@ albo pobierz kilka modeli obok siebie. Pobrane siatki ASCII zostają w
 GUGiK wysyła geometrię w pełnej rozdzielczości i ignoruje parametry uogólniania
 (`MAP_RESOLUTION`, `resolution`), sprawdzone. Dla całego kraju:
 
-| Zestaw | Obiekty | Rozmiar odpowiedzi | Czas serwera |
+| Zbiór | Obiekty | Rozmiar odpowiedzi | Czas serwera |
 | --- | --- | --- | --- |
 | Województwa | 16 | 8 MB | ~10 s |
 | Powiaty | 380 | 42 MB | ~30 s |
@@ -276,10 +290,10 @@ będzie: kod języka innego niż `pl` daje angielski.
   HTTP, błędów protokołu i komunikatów ULDK.
 - **Liczebniki**: polskie formy są obsłużone (1 obiekt, 3 obiekty, 12 obiektów), angielskie też
   (1 feature, 3 features).
-- **Nazwy zestawów danych zostają polskie w obu językach**: „Działki”, „Budynki”, „Ceny
+- **Nazwy zbiorów danych zostają polskie w obu językach**: „Działki”, „Budynki”, „Ceny
   nieruchomości” to nazwy własne zbiorów GUGiK, nie słowa do tłumaczenia. Tłumaczone jest to, co
   wtyczka mówi od siebie: przyciski, menu, błędy, postęp.
-- **`choices`**: wartością jest polska nazwa zestawu, a kod przyjmuje też identyfikator i nazwę
+- **`choices`**: wartością jest polska nazwa zbioru, a kod przyjmuje też identyfikator i nazwę
   typu, więc zapisane wywołanie działa niezależnie od języka interfejsu.
 
 `rustgis-cli` zawsze wysyła `lang: "en"`, bo język ustawia tylko aplikacja z interfejsem. Wersję
@@ -296,7 +310,7 @@ python tools/manifest.py --check    # kończy się kodem 1, gdy plik jest nieakt
 ```
 
 Warstwa redakcyjna (co jest przyciskiem, w której grupie i menu, jak brzmią zdania, tłumaczenia)
-siedzi w `tools/manifest.base.json`. Generator rozwija listy zestawów w `choices` narzędzi i
+siedzi w `tools/manifest.base.json`. Generator rozwija listy zbiorów w `choices` narzędzi i
 dokłada po jednym poleceniu na usługę WMS.
 
 Przynależność do instytucji siedzi w `data/services.json` (`institution`, a dla GUGiK
@@ -305,7 +319,7 @@ menu (nazwa, ikona, podpowiedź) są w `tools/manifest.base.json`.
 
 Ręcznie pisany manifest rozjechał się z katalogami: 162 z 270 typów WFS nie miało żadnego
 polecenia, 211 poleceń niosło klucz `command`, którego gospodarz nie czyta (czyta `params`), a dwie
-osnowy występowały pod jednym tytułem. Teraz brak zestawu w grupie albo nieznany identyfikator
+osnowy występowały pod jednym tytułem. Teraz brak zbioru w grupie albo nieznany identyfikator
 w grupie zatrzymuje budowę manifestu, a test `the_download_tools_offer_every_dataset_exactly_once`
 pilnuje tego samego od strony Rusta.
 
@@ -394,7 +408,7 @@ udostępniane nieodpłatnie. Przy każdej warstwie ustawiana jest atrybucja
 - ULDK przyjmuje tylko EPSG:2180, więc wtyczka sama rzutuje współrzędne (Transverse Mercator,
   zgodność z PROJ na poziomie < 1 mm dla punktu testowego).
 - Prostokąta nie da się narysować przeciągnięciem: RustGIS nie ma narzędzia prostokąta dla
-  warstw edytowalnych. Prostokąt bierze się z widoku (**Obszar prostokąt**), a rysowanie zostawia
+  warstw edytowalnych. Prostokąt bierze się z widoku (**Obszar z widoku**), a rysowanie zostawia
   kształt, jaki narysujesz.
-- Wtyczka nie dodaje pozycji do menu kontekstowego mapy: manifest RustGIS 0.4 nie ma na to pola.
+- Wtyczka nie dodaje pozycji do menu kontekstowego mapy: manifest RustGIS 0.5.0 nie ma na to pola.
   Pobieranie idzie więc przez grupę **Dane › Pobieranie**, a nie spod prawego przycisku.

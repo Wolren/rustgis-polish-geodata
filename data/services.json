@@ -2,7 +2,7 @@
   {
     "id": "ceny-nieruchomosci",
     "name": "Ceny nieruchomości",
-    "source": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaCenNieruchomosci?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=lokale,budynki,dzialki,powiaty&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "lokale,budynki,dzialki,powiaty",
     "zoom": 18,
@@ -14,7 +14,7 @@
   {
     "id": "cieniowanie-wms",
     "name": "Cieniowanie (WMS)",
-    "source": "USŁUGI KRAJOWE / NUMERYCZNY MODEL TERENU",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/NMT/GRID1/WMS/ShadedRelief?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Raster&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Raster",
     "zoom": 18,
@@ -26,7 +26,7 @@
   {
     "id": "dane-hydrologiczne-polski-w-ukladzie-1992-zgeneralizowane-z-",
     "name": "Dane hydrologiczne Polski w układzie 1992, zgeneralizowane z precyzją 1 m",
-    "source": "USŁUGI KRAJOWE / DANE ARCHIWALNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/img/guest/HYDRO/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Raster,Raster_enviDMS_50k,Raster_enviDMS_10k&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Raster,Raster_enviDMS_50k,Raster_enviDMS_10k",
     "zoom": 18,
@@ -38,7 +38,7 @@
   {
     "id": "dane-o-projektowanych-planach-ogolnych-dla-gmin",
     "name": "Dane o projektowanych planach ogólnych dla gmin",
-    "source": "USŁUGI KRAJOWE / PLANY OGÓLNE GMIN",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/ext/ProjektowanePlanyOgolneGmin?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=strefaPlanistyczna,obszarStandardowDostepnosciInfrastrukturySpolecznej,obszarUzupelnieniaZabudowy,obszarZabSrodmiejskiej,aktPlanowaniaprzestrzennego&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "strefaPlanistyczna,obszarStandardowDostepnosciInfrastrukturySpolecznej,obszarUzupelnieniaZabudowy,obszarZabSrodmiejskiej,aktPlanowaniaprzestrzennego",
     "zoom": 18,
@@ -50,7 +50,7 @@
   {
     "id": "dane-o-uchwalonych-planach-ogolnych-dla-gmin",
     "name": "Dane o uchwalonych planach ogólnych dla gmin",
-    "source": "USŁUGI KRAJOWE / PLANY OGÓLNE GMIN",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/ext/PlanyOgolneGmin?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=strefaPlanistyczna,obszarUzupelnieniaZabudowy,obszarZabSrodmiejskiej,aktPlanowaniaprzestrzennego&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "strefaPlanistyczna,obszarUzupelnieniaZabudowy,obszarZabSrodmiejskiej,aktPlanowaniaprzestrzennego",
     "zoom": 18,
@@ -62,7 +62,7 @@
   {
     "id": "formy-ochrony-przyrody",
     "name": "Formy Ochrony Przyrody",
-    "source": "Generalna Dyrekcja Ochrony Środowiska (GDOŚ) - Geoserwis",
+    "source": "Generalna Dyrekcja Ochrony Środowiska (GDOŚ)",
     "url": "https://sdi.gdos.gov.pl/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=GDOS:ObszaryChronionegoKrajobrazu,GDOS:ObszarySpecjalnejOchrony,GDOS:ParkiKrajobrazowe,GDOS:ParkiNarodowe,GDOS:PomnikiPrzyrody,GDOS:Rezerwaty,GDOS:SpecjalneObszaryOchrony,GDOS:StanowiskaDokumentacyjne,GDOS:UzytkiEkologiczne,GDOS:ZespolyPrzyrodniczoKrajobrazowe&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "GDOS:ObszaryChronionegoKrajobrazu,GDOS:ObszarySpecjalnejOchrony,GDOS:ParkiKrajobrazowe,GDOS:ParkiNarodowe,GDOS:PomnikiPrzyrody,GDOS:Rezerwaty,GDOS:SpecjalneObszaryOchrony,GDOS:StanowiskaDokumentacyjne,GDOS:UzytkiEkologiczne,GDOS:ZespolyPrzyrodniczoKrajobrazowe",
     "zoom": 18,
@@ -74,7 +74,7 @@
   {
     "id": "grossblatt-1-100-000-karte-des-deutschen-reiches",
     "name": "Grossblatt 1:100 000 Karte des Deutschen Reiches",
-    "source": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+    "source": "Cartomatic",
     "url": "https://pastmaps.cenagis.edu.pl/geoserver/ihpan/wms/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=kdr_gb_3857&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "kdr_gb_3857",
     "zoom": 16,
@@ -85,7 +85,7 @@
   {
     "id": "grunty-skarbu-panstwa",
     "name": "Grunty Skarbu Państwa",
-    "source": "USŁUGI KRAJOWE / SPECJALISTYCZNE INFORMACJE GEODEZYJNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/ext/ZSIN/WMS/GruntySP?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=dzialki,dzialki_pkt,powiaty,wojewodztwa&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "dzialki,dzialki_pkt,powiaty,wojewodztwa",
     "zoom": 18,
@@ -120,7 +120,7 @@
   {
     "id": "inspire-tn-sieci-transportowe-bdot",
     "name": "INSPIRE_TN: Sieci transportowe (BDOT)",
-    "source": "USŁUGI INSPIRE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/geosrv/wmsTN/ows?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=TN.AirTransportNetwork.AerodromeArea,TN.AirTransportNetwork.RunwayArea,TN.CableTransportNetwork.CablewayLink,TN.CommonTransportElements.TransportArea,TN.CommonTransportElements.TransportLink,TN.CommonTransportElements.TransportNode,TN.RailTransportNetwork.RailwayArea,TN.RailTransportNetwork.RailwayLink,TN.RailTransportNetwork.RailwayStationArea,TN.RoadTransportNetwork.RoadArea,TN.RoadTransportNetwork.RoadLink,TN.RoadTransportNetwork.RoadServiceArea,TN.WaterTransportNetwork.PortArea,TN.WaterTransportNetwork.WaterwayLink&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "TN.AirTransportNetwork.AerodromeArea,TN.AirTransportNetwork.RunwayArea,TN.CableTransportNetwork.CablewayLink,TN.CommonTransportElements.TransportArea,TN.CommonTransportElements.TransportLink,TN.CommonTransportElements.TransportNode,TN.RailTransportNetwork.RailwayArea,TN.RailTransportNetwork.RailwayLink,TN.RailTransportNetwork.RailwayStationArea,TN.RoadTransportNetwork.RoadArea,TN.RoadTransportNetwork.RoadLink,TN.RoadTransportNetwork.RoadServiceArea,TN.WaterTransportNetwork.PortArea,TN.WaterTransportNetwork.WaterwayLink",
     "zoom": 18,
@@ -155,7 +155,7 @@
   {
     "id": "karte-des-deutschen-reiches-1-100-000",
     "name": "Karte des Deutschen Reiches 1:100 000",
-    "source": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+    "source": "Cartomatic",
     "url": "https://pastmaps.cenagis.edu.pl/geoserver/ihpan/wms/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=kdr_3857&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "kdr_3857",
     "zoom": 16,
@@ -166,7 +166,7 @@
   {
     "id": "karte-des-westlichen-russlands-1-100-000",
     "name": "Karte des westlichen Rußlands 1:100 000",
-    "source": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+    "source": "Cartomatic",
     "url": "https://pastmaps.cenagis.edu.pl/geoserver/ihpan/wms/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=kdwr_3857&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "kdwr_3857",
     "zoom": 16,
@@ -177,7 +177,7 @@
   {
     "id": "krajowa-integracja-miejscowych-planow-zagospodarowania-przes",
     "name": "Krajowa Integracja Miejscowych Planów Zagospodarowania Przestrzennego (KIMP)",
-    "source": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaMiejscowychPlanowZagospodarowaniaPrzestrzennego?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=plany,plany_granice,raster,wektor-str,wektor-lzb,wektor-pow,wektor-lin,wektor-pkt,granice&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "plany,plany_granice,raster,wektor-str,wektor-lzb,wektor-pow,wektor-lin,wektor-pkt,granice",
     "zoom": 18,
@@ -189,7 +189,7 @@
   {
     "id": "krajowa-integracja-studium-uwarunkowan-i-kierunkow-zagospoda",
     "name": "Krajowa Integracja Studium Uwarunkowań i Kierunków Zagospodarowania Przestrzennego (KISKZP)",
-    "source": "USŁUGI KRAJOWE / ELEMENTY MAPY ZASADNICZEJ I ZAGOSPODAROWANIA PRZESTRZENNEGO",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/ext/KrajowaIntegracjaStudiumKierunkowZagospodarowaniaPrzestrzennego?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=gminy,studium&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "gminy,studium",
     "zoom": 18,
@@ -201,7 +201,7 @@
   {
     "id": "krajowa-integracja-szczegolowych-osnow-geodezyjnych-kisog",
     "name": "Krajowa Integracja Szczegółowych Osnów Geodezyjnych (KISOG)",
-    "source": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaSzczegolowychOsnowGeodezyjnych?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=wdrozenia,osnowa-XY,osnowa-H,osnowa-XYH,osnowa-&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "wdrozenia,osnowa-XY,osnowa-H,osnowa-XYH,osnowa-",
     "zoom": 18,
@@ -213,7 +213,7 @@
   {
     "id": "krajowy-osrodek-wsparcia-rolnictwa-dzialki",
     "name": "Krajowy Ośrodek Wsparcia Rolnictwa - działki",
-    "source": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / KRAJOWY OŚRODEK WSPARCIA ROLNICTWA",
+    "source": "Krajowy Ośrodek Wsparcia Rolnictwa",
     "url": "https://mapy.geoportal.gov.pl/wss/ext/kowr?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=dzialki_pkt,dzialki,powiaty,wojewodztwa&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "dzialki_pkt,dzialki,powiaty,wojewodztwa",
     "zoom": 18,
@@ -225,7 +225,7 @@
   {
     "id": "mapa-wlasnosci-grupy-rejestrowe",
     "name": "Mapa własności - grupy rejestrowe",
-    "source": "USŁUGI KRAJOWE / DANE POZYSKIWANE Z POWIATOWYCH USŁUG",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/ext/MapaWlasnosci?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=dzialki_stats,dzialki,dzialki_stats_pan_polygon,dzialki_stats_woj_polygon,dzialki_stats_pow_polygon,dzialki_prev,dzialki_polygon&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "dzialki_stats,dzialki,dzialki_stats_pan_polygon,dzialki_stats_woj_polygon,dzialki_stats_pow_polygon,dzialki_prev,dzialki_polygon",
     "zoom": 18,
@@ -237,7 +237,7 @@
   {
     "id": "mapa-zagrozenia-powodziowego",
     "name": "Mapa zagrożenia powodziowego",
-    "source": "PGW Wody Polskie (dawniej KZGW)",
+    "source": "PGW Wody Polskie",
     "url": "https://wody.isok.gov.pl/gpservices/KZGW/MZP20_ObszarySzczegolnegoZagrozeniaPowodzia/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=0,1&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "0,1",
     "zoom": 18,
@@ -249,7 +249,7 @@
   {
     "id": "mapy-sozologiczne-do-przegladania",
     "name": "Mapy sozologiczne do przeglądania",
-    "source": "USŁUGI KRAJOWE / DANE ARCHIWALNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/mapy/WMS/MapySozologiczne?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Skorowidze,MapySozologiczne&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Skorowidze,MapySozologiczne",
     "zoom": 18,
@@ -261,7 +261,7 @@
   {
     "id": "messtischblatter-1-25-000",
     "name": "Meßtischblätter 1:25 000",
-    "source": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+    "source": "Cartomatic",
     "url": "https://pastmaps.cenagis.edu.pl/geoserver/ihpan/wms/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=m25k_3857&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "m25k_3857",
     "zoom": 17,
@@ -272,7 +272,7 @@
   {
     "id": "modele-roznic-wysokosci",
     "name": "Modele różnic wysokości",
-    "source": "USŁUGI KRAJOWE / SPECJALISTYCZNE INFORMACJE GEODEZYJNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/RozniceWysokosci_Kronsztad86_EVRF2007?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=raster,punkty&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "raster,punkty",
     "zoom": 18,
@@ -284,7 +284,7 @@
   {
     "id": "nowe-budynki-w-bdot10k",
     "name": "Nowe budynki w BDOT10k",
-    "source": "USŁUGI KRAJOWE / DANE TOPOGRAFICZNE I OGÓLNOGEOGRAFICZNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WMS/NoweBudynki?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=aktualnosc,budynki_2018,budynki_2019,budynki_2020,budynki_2021,budynki_2022,budynki_2023,budynki_2024,budynki_2025&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "aktualnosc,budynki_2018,budynki_2019,budynki_2020,budynki_2021,budynki_2022,budynki_2023,budynki_2024,budynki_2025",
     "zoom": 18,
@@ -296,7 +296,7 @@
   {
     "id": "obiekty-panstwowego-rejestru-nazw-geograficznych",
     "name": "Obiekty Państwowego Rejestru Nazw Geograficznych",
-    "source": "USŁUGI KRAJOWE / DANE TOPOGRAFICZNE I OGÓLNOGEOGRAFICZNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGiK/PRNG/WMS/GeographicalNames?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=O3_PozostaleNazwyObiektowFizjograficznych,O2_ZestandaryzowaneNazwyObiektowFizjograficznych,O1_UrzedoweNazwyObiektowFizjograficznych,M2_PozostaleNazwyMiejscowosci,M1_UrzedoweNazwyMiejscowosci&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "O3_PozostaleNazwyObiektowFizjograficznych,O2_ZestandaryzowaneNazwyObiektowFizjograficznych,O1_UrzedoweNazwyObiektowFizjograficznych,M2_PozostaleNazwyMiejscowosci,M1_UrzedoweNazwyMiejscowosci",
     "zoom": 18,
@@ -308,7 +308,7 @@
   {
     "id": "obiekty-uzytecznosci-publicznej-defibrylatory",
     "name": "Obiekty użyteczności publicznej - Defibrylatory",
-    "source": "USŁUGI KRAJOWE / OBIEKTY UŻYTECZNOŚCI PUBLICZNEJ",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/ext/OSM/Defibrylatory?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=DEFIBRYLATORY&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "DEFIBRYLATORY",
     "zoom": 18,
@@ -320,7 +320,7 @@
   {
     "id": "obiekty-uzytecznosci-publicznej-zdrowie",
     "name": "Obiekty użyteczności publicznej - Zdrowie",
-    "source": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/ext/GUGIK/Zdrowie?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=szpitale,apteki,sor,nocna_pomoc,zdrowie&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "szpitale,apteki,sor,nocna_pomoc,zdrowie",
     "zoom": 18,
@@ -332,7 +332,7 @@
   {
     "id": "obrazy-intensywnosci",
     "name": "Obrazy intensywności",
-    "source": "USŁUGI KRAJOWE / ORTOFOTOMAPA",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/OI/WMS/ObrazyIntensywnosci?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Skorowidze,ObrazyIntensywnosci&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Skorowidze,ObrazyIntensywnosci",
     "zoom": 18,
@@ -344,7 +344,7 @@
   {
     "id": "obreby-modernizacja",
     "name": "Obręby - modernizacja",
-    "source": "USŁUGI KRAJOWE / MODERNIZACJA EWIDENCJI GRUNTÓW I BUDYNKÓW",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/ext/ObrebyModernizacja?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=ObrebyModernizacjaWTrakcieCluster,ObrebyModernizacjaWTrakcie,ObrebyUzgodnionaModernizacjaCluster,ObrebyUzgodnionaModernizacja&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "ObrebyModernizacjaWTrakcieCluster,ObrebyModernizacjaWTrakcie,ObrebyUzgodnionaModernizacjaCluster,ObrebyUzgodnionaModernizacja",
     "zoom": 18,
@@ -367,7 +367,7 @@
   {
     "id": "ortofotomapa-skorowidze-wg-aktualnosci",
     "name": "Ortofotomapa - skorowidze wg aktualności",
-    "source": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/SkorowidzeWgAktualnosci?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=SkorowidzeOrtofotomapy2026,SkorowidzeOrtofotomapy2025,SkorowidzeOrtofotomapy2024,SkorowidzeOrtofotomapyStarsze,SkorowidzeOrtofotomapyZasiegi2026,SkorowidzeOrtofotomapyZasiegi2025,SkorowidzeOrtofotomapyZasiegi2024,SkorowidzeOrtofotomapyZasiegiStarsze&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "SkorowidzeOrtofotomapy2026,SkorowidzeOrtofotomapy2025,SkorowidzeOrtofotomapy2024,SkorowidzeOrtofotomapyStarsze,SkorowidzeOrtofotomapyZasiegi2026,SkorowidzeOrtofotomapyZasiegi2025,SkorowidzeOrtofotomapyZasiegi2024,SkorowidzeOrtofotomapyZasiegiStarsze",
     "zoom": 18,
@@ -379,7 +379,7 @@
   {
     "id": "ortofotomapa-prawdziwa",
     "name": "Ortofotomapa prawdziwa",
-    "source": "USŁUGI KRAJOWE / ORTOFOTOMAPA",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/TrueOrtho?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Skorowidze,PrawdziwaOrtofotomapa&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Skorowidze,PrawdziwaOrtofotomapa",
     "zoom": 18,
@@ -391,7 +391,7 @@
   {
     "id": "ortofotomapa-standardowa",
     "name": "Ortofotomapa standardowa",
-    "source": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/StandardResolution?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Raster&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Raster",
     "zoom": 18,
@@ -403,7 +403,7 @@
   {
     "id": "ortofotomapa-wysokiej-rozdzielczosci",
     "name": "Ortofotomapa wysokiej rozdzielczości",
-    "source": "USŁUGI KRAJOWE / ORTOFOTOMAPA",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/HighResolution?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Raster&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Raster",
     "zoom": 18,
@@ -415,7 +415,7 @@
   {
     "id": "osnowa-magnetyczna",
     "name": "Osnowa magnetyczna",
-    "source": "USŁUGI KRAJOWE / SPECJALISTYCZNE INFORMACJE GEODEZYJNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/OsnowaMagnetyczna?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=izogony_etykiety,izogony,Fundamentalna_magnetyczna,Fudnamentalna_magnetyczna_etykiety,Bazowa_magnetyczna,Bazowa_magnetyczna_etykiety&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "izogony_etykiety,izogony,Fundamentalna_magnetyczna,Fudnamentalna_magnetyczna_etykiety,Bazowa_magnetyczna,Bazowa_magnetyczna_etykiety",
     "zoom": 18,
@@ -460,7 +460,7 @@
   {
     "id": "paczki-powiatowe-z-archiwalnymi-danymi-bdot10k",
     "name": "Paczki powiatowe z archiwalnymi danymi BDOT10k",
-    "source": "USŁUGI KRAJOWE / DANE ARCHIWALNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WMS/DaneArchiwalne?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=powiaty&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "powiaty",
     "zoom": 18,
@@ -472,7 +472,7 @@
   {
     "id": "panstwowy-rejestr-granic-adresy",
     "name": "Państwowy Rejestr Granic - Adresy",
-    "source": "USŁUGI KRAJOWE / PAŃSTWOWY REJESTR GRANIC",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGiK/PRG/WMS/Addresses?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Miejscowosci,PunktyAdresowe,UlicePow,UliceL&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Miejscowosci,PunktyAdresowe,UlicePow,UliceL",
     "zoom": 18,
@@ -484,7 +484,7 @@
   {
     "id": "podstawowa-osnowa-geodezyjna-pozioma",
     "name": "Podstawowa osnowa geodezyjna pozioma",
-    "source": "USŁUGI KRAJOWE / SPECJALISTYCZNE INFORMACJE GEODEZYJNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PodstawowaOsnowaGeodezyjnaPozioma?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Fundamentalna_pozioma,Fudnamentalna_pozioma_etykiety,Bazowa_pozioma,Bazowa_pozioma_etykiety&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Fundamentalna_pozioma,Fudnamentalna_pozioma_etykiety,Bazowa_pozioma,Bazowa_pozioma_etykiety",
     "zoom": 18,
@@ -496,7 +496,7 @@
   {
     "id": "podstawowa-osnowa-geodezyjna-wysokosciowa",
     "name": "Podstawowa osnowa geodezyjna wysokościowa",
-    "source": "USŁUGI KRAJOWE / SPECJALISTYCZNE INFORMACJE GEODEZYJNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PodstawowaOsnowaGeodezyjnaWysokosciowa?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Fundamentalna_wysokosciowa,Fudnamentalna_wysokosciowa_etykiety,Bazowa_wysokosciowa,Bazowa_wysokosciowa_etykiety&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Fundamentalna_wysokosciowa,Fudnamentalna_wysokosciowa_etykiety,Bazowa_wysokosciowa,Bazowa_wysokosciowa_etykiety",
     "zoom": 18,
@@ -519,7 +519,7 @@
   {
     "id": "polsa-klasyfikacja-pokrycia-terenu-2019",
     "name": "POLSA Klasyfikacja pokrycia terenu 2019",
-    "source": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+    "source": "Polska Agencja Kosmiczna",
     "url": "https://mapy.geoportal.gov.pl/wss/service/img/guest/POLSA2019/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=0&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "0",
     "zoom": 18,
@@ -531,7 +531,7 @@
   {
     "id": "polsa-klasyfikacja-pokrycia-terenu-2020",
     "name": "POLSA Klasyfikacja pokrycia terenu 2020",
-    "source": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+    "source": "Polska Agencja Kosmiczna",
     "url": "https://mapy.geoportal.gov.pl/wss/service/img/guest/POLSA2020/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=0&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "0",
     "zoom": 18,
@@ -543,7 +543,7 @@
   {
     "id": "polsa-klasyfikacja-pokrycia-terenu-2021",
     "name": "POLSA Klasyfikacja pokrycia terenu 2021",
-    "source": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+    "source": "Polska Agencja Kosmiczna",
     "url": "https://mapy.geoportal.gov.pl/wss/service/img/guest/POLSA2021/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=0&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "0",
     "zoom": 18,
@@ -555,7 +555,7 @@
   {
     "id": "polsa-klasyfikacja-pokrycia-terenu-2022",
     "name": "POLSA Klasyfikacja pokrycia terenu 2022",
-    "source": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+    "source": "Polska Agencja Kosmiczna",
     "url": "https://mapy.geoportal.gov.pl/wss/service/img/guest/POLSA2022/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=0&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "0",
     "zoom": 18,
@@ -567,7 +567,7 @@
   {
     "id": "polsa-klasyfikacja-pokrycia-terenu-2023",
     "name": "POLSA Klasyfikacja pokrycia terenu 2023",
-    "source": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+    "source": "Polska Agencja Kosmiczna",
     "url": "https://mapy.geoportal.gov.pl/wss/service/img/guest/POLSA2023/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=0&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "0",
     "zoom": 18,
@@ -579,7 +579,7 @@
   {
     "id": "polsa-klasyfikacja-pokrycia-terenu-2024",
     "name": "POLSA Klasyfikacja pokrycia terenu 2024",
-    "source": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+    "source": "Polska Agencja Kosmiczna",
     "url": "https://mapy.geoportal.gov.pl/wss/service/img/guest/POLSA2024/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=0&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "0",
     "zoom": 18,
@@ -591,7 +591,7 @@
   {
     "id": "polsa-klasyfikacja-pokrycia-terenu-2025",
     "name": "POLSA Klasyfikacja pokrycia terenu 2025",
-    "source": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+    "source": "Polska Agencja Kosmiczna",
     "url": "https://mapy.geoportal.gov.pl/wss/service/img/guest/POLSA2025/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=0&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "0",
     "zoom": 18,
@@ -603,7 +603,7 @@
   {
     "id": "polsa-ortofotomapa-satelitarna-2021",
     "name": "POLSA Ortofotomapa satelitarna 2021",
-    "source": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+    "source": "Polska Agencja Kosmiczna",
     "url": "https://mapy.geoportal.gov.pl/wss/service/img/guest/POLSA2021_OrtofotomapaSatelitarna/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=2,1,0&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "2,1,0",
     "zoom": 18,
@@ -615,7 +615,7 @@
   {
     "id": "polsa-ortofotomapa-satelitarna-2022",
     "name": "POLSA Ortofotomapa satelitarna 2022",
-    "source": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+    "source": "Polska Agencja Kosmiczna",
     "url": "https://mapy.geoportal.gov.pl/wss/service/img/guest/POLSA2022_OrtofotomapaSatelitarna/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=1,0&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "1,0",
     "zoom": 18,
@@ -627,7 +627,7 @@
   {
     "id": "polsa-ortofotomapa-satelitarna-2024",
     "name": "POLSA Ortofotomapa satelitarna 2024",
-    "source": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+    "source": "Polska Agencja Kosmiczna",
     "url": "https://mapy.geoportal.gov.pl/wss/service/img/guest/POLSA2024_OrtofotomapaSatelitarna/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=1,4&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "1,4",
     "zoom": 18,
@@ -650,7 +650,7 @@
   {
     "id": "prg-jednostki-terytorialne-panstwowy-rejestr-granic",
     "name": "PRG Jednostki Terytorialne (Państwowy Rejestr Granic)",
-    "source": "USŁUGI KRAJOWE / PAŃSTWOWY REJESTR GRANIC",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WMS/AdministrativeBoundaries?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=W12_Przystan_morska,W11_Port_morski,W10_Reda,W09_Pas_techniczny,W08_Pas_ochronny,W07_Pas_nadbrzezny,W06_Morskie_linie_brzegowe,W05_Strefa_przylegla,W04_Wylaczna_strefa_ekonomiczna,W03_Morskie_wody_wewnetrzne,W02_Morze_terytorialne_RP,W01_Linia_podstawowa_morza_terytorialnego,U11_Urzad_zeglugi_srodladowej,U10_Urzad_morski,U09_Regionalny_zarzad_gospodarki_wodnej_PGWWP,U08_Zarzad_zlewni_PGWWP,U07_Regionalna_dyrekcja_lasow_panstwowych,U06_Nadlesnictwo,U05_Izba_administracji_skarbowej,U04_Urzad_celno-skarbowy,U03_Wyspecjalizowany_urzad_skarbowy,U02_Urzad_skarbowy,U01_Archiwum_panstwowe,K13_Obszar_dzialania_szefa_obrony_cywilnej_gminy,K12_Obszar_dzialania_szefa_obrony_cywilnej_powiatu,K11_Obszar_dzialania_szefa_obrony_cywilnej_wojewodztwa,K10_Dywizjon_strazy_granicznej,K09_Placowka_strazy_granicznej,K08_Oddzial_strazy_granicznej,K07_Komenda_powiatowa_strazy_pozarnej,K06_Komenda_wojewodzka_strazy_pozarnej,K05_Komisariat_policji,K04_Komenda_rejonowa_policji,K03_Komenda_stoleczna_policji,K02_Komenda_powiatowa_policji,K01_Komenda_wojewodzka_policji,P03_Prokuratura_rejonowa,P02_Prokuratura_okregowa,P01_Prokuratura_regionalna,S04_Wojewodzki_sad_administracyjny&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "W12_Przystan_morska,W11_Port_morski,W10_Reda,W09_Pas_techniczny,W08_Pas_ochronny,W07_Pas_nadbrzezny,W06_Morskie_linie_brzegowe,W05_Strefa_przylegla,W04_Wylaczna_strefa_ekonomiczna,W03_Morskie_wody_wewnetrzne,W02_Morze_terytorialne_RP,W01_Linia_podstawowa_morza_terytorialnego,U11_Urzad_zeglugi_srodladowej,U10_Urzad_morski,U09_Regionalny_zarzad_gospodarki_wodnej_PGWWP,U08_Zarzad_zlewni_PGWWP,U07_Regionalna_dyrekcja_lasow_panstwowych,U06_Nadlesnictwo,U05_Izba_administracji_skarbowej,U04_Urzad_celno-skarbowy,U03_Wyspecjalizowany_urzad_skarbowy,U02_Urzad_skarbowy,U01_Archiwum_panstwowe,K13_Obszar_dzialania_szefa_obrony_cywilnej_gminy,K12_Obszar_dzialania_szefa_obrony_cywilnej_powiatu,K11_Obszar_dzialania_szefa_obrony_cywilnej_wojewodztwa,K10_Dywizjon_strazy_granicznej,K09_Placowka_strazy_granicznej,K08_Oddzial_strazy_granicznej,K07_Komenda_powiatowa_strazy_pozarnej,K06_Komenda_wojewodzka_strazy_pozarnej,K05_Komisariat_policji,K04_Komenda_rejonowa_policji,K03_Komenda_stoleczna_policji,K02_Komenda_powiatowa_policji,K01_Komenda_wojewodzka_policji,P03_Prokuratura_rejonowa,P02_Prokuratura_okregowa,P01_Prokuratura_regionalna,S04_Wojewodzki_sad_administracyjny",
     "zoom": 18,
@@ -662,7 +662,7 @@
   {
     "id": "rastrowa-krajobrazowa-mapa-polski-do-przegladania",
     "name": "Rastrowa Krajobrazowa Mapa Polski do przeglądania",
-    "source": "USŁUGI KRAJOWE / DANE ARCHIWALNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/img/guest/Krajobrazowa/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Krajobrazowa&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Krajobrazowa",
     "zoom": 18,
@@ -674,7 +674,7 @@
   {
     "id": "rastrowa-mapa-administracyjna-polski-do-przegladania",
     "name": "Rastrowa Mapa Administracyjna Polski do przeglądania",
-    "source": "USŁUGI KRAJOWE / DANE ARCHIWALNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/img/guest/Administracyjna/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Administracyjna&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Administracyjna",
     "zoom": 18,
@@ -686,7 +686,7 @@
   {
     "id": "rastrowa-ogolnogeograficzna-mapa-polski-do-przegladania",
     "name": "Rastrowa Ogólnogeograficzna Mapa Polski do przeglądania",
-    "source": "USŁUGI KRAJOWE / DANE ARCHIWALNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/img/guest/Ogolnogeograficzna/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Ogolnogeograficzna&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Ogolnogeograficzna",
     "zoom": 18,
@@ -698,7 +698,7 @@
   {
     "id": "rejestr-cen-nieruchomosci",
     "name": "Rejestr Cen Nieruchomości",
-    "source": "USŁUGI KRAJOWE / NIERUCHOMOŚCI",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/rcn?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=lokale,budynki,dzialki,powiaty&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "lokale,budynki,dzialki,powiaty",
     "zoom": 18,
@@ -710,7 +710,7 @@
   {
     "id": "rejestr-cen-nieruchomosci-mapy-gestosci",
     "name": "Rejestr Cen Nieruchomości - mapy gęstości",
-    "source": "USŁUGI KRAJOWE / NIERUCHOMOŚCI",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/heatmaps_rcn?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=heatmap_hex_nieruchomosc_gruntowa_niezabudowana_liczba,heatmap_hex_nieruchomosc_gruntowa_niezabudowana_cena,heatmap_hex_nieruchomosc_gruntowa_zabudowana_liczba,heatmap_hex_nieruchomosc_gruntowa_zabudowana_cena,heatmap_hex_lokale_mieszkalne_liczba,heatmap_hex_lokale_mieszkalne_cena,heatmap_hex_lokale_handlowo_uslugowe_liczba,heatmap_hex_lokale_handlowo_uslugowe_cena,heatmap_hex_lokale_biurowe_liczba,heatmap_hex_lokale_biurowe_cena,heatmap_hex_lokale_produkcyjne_liczba,heatmap_hex_lokale_produkcyjne_cena,heatmap_hex_lokale_garaze_liczba,heatmap_hex_lokale_garaze_cena&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "heatmap_hex_nieruchomosc_gruntowa_niezabudowana_liczba,heatmap_hex_nieruchomosc_gruntowa_niezabudowana_cena,heatmap_hex_nieruchomosc_gruntowa_zabudowana_liczba,heatmap_hex_nieruchomosc_gruntowa_zabudowana_cena,heatmap_hex_lokale_mieszkalne_liczba,heatmap_hex_lokale_mieszkalne_cena,heatmap_hex_lokale_handlowo_uslugowe_liczba,heatmap_hex_lokale_handlowo_uslugowe_cena,heatmap_hex_lokale_biurowe_liczba,heatmap_hex_lokale_biurowe_cena,heatmap_hex_lokale_produkcyjne_liczba,heatmap_hex_lokale_produkcyjne_cena,heatmap_hex_lokale_garaze_liczba,heatmap_hex_lokale_garaze_cena",
     "zoom": 18,
@@ -722,7 +722,7 @@
   {
     "id": "rejestr-wnioskow-decyzji-i-zgloszen",
     "name": "Rejestr Wniosków Decyzji i Zgłoszeń",
-    "source": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / GŁÓWNY URZĄD NADZORU BUDOWLANEGO",
+    "source": "Główny Urząd Nadzoru Budowlanego",
     "url": "https://mapy.geoportal.gov.pl/wss/ext/GlownyUrzadNadzoruBudowlanego/RWDZ-WMS?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=pozwolenia,pozwolenia_pkt,pozwolenia_POLYGON,pozwolenia_CLUSTER_POW,pozwolenia_CLUSTER_WOJ&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "pozwolenia,pozwolenia_pkt,pozwolenia_POLYGON,pozwolenia_CLUSTER_POW,pozwolenia_CLUSTER_WOJ",
     "zoom": 18,
@@ -756,7 +756,7 @@
   {
     "id": "schrony",
     "name": "Schrony",
-    "source": "USŁUGI KRAJOWE / ZARZĄDZANIE KRYZYSOWE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/ext/Schrony?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=schrony&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "schrony",
     "zoom": 18,
@@ -768,7 +768,7 @@
   {
     "id": "sekcje-mapy-w-ukladzie-1992",
     "name": "Sekcje mapy w układzie 1992",
-    "source": "USŁUGI KRAJOWE / SPECJALISTYCZNE INFORMACJE GEODEZYJNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PUWG1992?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=sekcje10000,sekcje5000&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "sekcje10000,sekcje5000",
     "zoom": 18,
@@ -780,7 +780,7 @@
   {
     "id": "siec-drogowa-z-bazy-projektu-openstreetmap",
     "name": "Sieć drogowa z bazy projektu OpenStreetMap",
-    "source": "USŁUGI KRAJOWE / DANE TOPOGRAFICZNE I OGÓLNOGEOGRAFICZNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/ext/OSM/SiecDrogowaOSM?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=copyright,planowane,wbudowie,pikietaz,drugorzedne,glowne,ekspresowe,autostrady&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "copyright,planowane,wbudowie,pikietaz,drugorzedne,glowne,ekspresowe,autostrady",
     "zoom": 18,
@@ -792,7 +792,7 @@
   {
     "id": "skorowidz-map-baza-danych-obiektow-topograficznych-bdot",
     "name": "Skorowidz map - Baza Danych Obiektów Topograficznych (BDOT)",
-    "source": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/pub/guest/Skorowidze_BDOT10k/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=0,1,2,3,4&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "0,1,2,3,4",
     "zoom": 18,
@@ -804,7 +804,7 @@
   {
     "id": "skorowidz-map-mapa-sozologiczna",
     "name": "Skorowidz map - Mapa Sozologiczna",
-    "source": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/pub/guest/G2_SKOROWIDZE_SOZO/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=0,2,3&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "0,2,3",
     "zoom": 18,
@@ -816,7 +816,7 @@
   {
     "id": "skorowidz-map-osnowa",
     "name": "Skorowidz map - Osnowa",
-    "source": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/SkorowidzeWgRozdzielczosci?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=SkorowidzeOrtofotomapyDo5cm,SkorowidzeOrtofotomapyPowyzej5Do10cm,SkorowidzeOrtofotomapyPowyzej10cm,SkorowidzeOrtofotomapyZasiegiDo5cm,SkorowidzeOrtofotomapyZasiegiPowyzej5Do10cm,SkorowidzeOrtofotomapyZasiegiPowyzej10cm&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "SkorowidzeOrtofotomapyDo5cm,SkorowidzeOrtofotomapyPowyzej5Do10cm,SkorowidzeOrtofotomapyPowyzej10cm,SkorowidzeOrtofotomapyZasiegiDo5cm,SkorowidzeOrtofotomapyZasiegiPowyzej5Do10cm,SkorowidzeOrtofotomapyZasiegiPowyzej10cm",
     "zoom": 18,
@@ -828,7 +828,7 @@
   {
     "id": "skorowidz-map-zdjecia-lotnicze",
     "name": "Skorowidz map - Zdjęcia lotnicze",
-    "source": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ZDJ/WMS/SkorWgAktualnosci?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Zdjecia_lotnicze_2026,Zdjecia_lotnicze_2021-2025,Zdjecia_lotnicze_2016-2020,Zdjecia_lotnicze_2011-2015,Zdjecia_lotnicze_2006-2010,Zdjecia_lotnicze_2001-2005,Zdjecia_lotnicze_1996-2000,Zdjecia_lotnicze_1991-1995,Zdjecia_lotnicze_1986-1990,Zdjecia_lotnicze_1981-1985,Zdjecia_lotnicze_1976-1980,Zdjecia_lotnicze_1971-1975,Zdjecia_lotnicze_1966-1970,Zdjecia_lotnicze_1961-1965,Zdjecia_lotnicze_1956-1960,Zdjecia_lotnicze_1951-1955&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Zdjecia_lotnicze_2026,Zdjecia_lotnicze_2021-2025,Zdjecia_lotnicze_2016-2020,Zdjecia_lotnicze_2011-2015,Zdjecia_lotnicze_2006-2010,Zdjecia_lotnicze_2001-2005,Zdjecia_lotnicze_1996-2000,Zdjecia_lotnicze_1991-1995,Zdjecia_lotnicze_1986-1990,Zdjecia_lotnicze_1981-1985,Zdjecia_lotnicze_1976-1980,Zdjecia_lotnicze_1971-1975,Zdjecia_lotnicze_1966-1970,Zdjecia_lotnicze_1961-1965,Zdjecia_lotnicze_1956-1960,Zdjecia_lotnicze_1951-1955",
     "zoom": 18,
@@ -840,7 +840,7 @@
   {
     "id": "skorowidze-aerotriangulacji-zdjec-lotniczych",
     "name": "Skorowidze aerotriangulacji zdjęć lotniczych",
-    "source": "USŁUGI KRAJOWE / OSNOWA GEODEZYJNA",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ZDJ/WMS/Aerotriangulacja?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=SkorowidzAerotriangulacji&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "SkorowidzAerotriangulacji",
     "zoom": 18,
@@ -852,7 +852,7 @@
   {
     "id": "skorowidze-linii-mozaikowania-zdjec-lotniczych",
     "name": "Skorowidze linii mozaikowania zdjęć lotniczych",
-    "source": "USŁUGI KRAJOWE / OSNOWA GEODEZYJNA",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ZDJ/WMS/LinieMozaikowania?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=SkorowidzLiniiMozaikowania&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "SkorowidzLiniiMozaikowania",
     "zoom": 18,
@@ -864,7 +864,7 @@
   {
     "id": "srchiwalne-kartoteki-osnow-geodezyjnych",
     "name": "Srchiwalne kartoteki osnów geodezyjnych",
-    "source": "USŁUGI KRAJOWE / OSNOWA GEODEZYJNA",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/Osnowy/WMS/Archiwalne_kartoteki?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Katalogi_Kartoteki1942,Katalogi_Kronsztadt60&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Katalogi_Kartoteki1942,Katalogi_Kronsztadt60",
     "zoom": 18,
@@ -876,7 +876,7 @@
   {
     "id": "stacje-asg-eupos-2",
     "name": "Stacje ASG_EUPOS",
-    "source": "USŁUGI KRAJOWE / SPECJALISTYCZNE INFORMACJE GEODEZYJNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/pub/guest/G2_ASG_EUPOS_WMS/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=0,1&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "0,1",
     "zoom": 18,
@@ -888,7 +888,7 @@
   {
     "id": "statystyki-obiektow-innych-w-bdot10k",
     "name": "Statystyki obiektów innych w BDOT10k.",
-    "source": "USŁUGI KRAJOWE / DANE TOPOGRAFICZNE I OGÓLNOGEOGRAFICZNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WMS/StatystykiObiektowInnych?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=obiekty_inne_woj,obiekty_inne_pow&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "obiekty_inne_woj,obiekty_inne_pow",
     "zoom": 18,
@@ -900,7 +900,7 @@
   {
     "id": "statystyki-sieci-komunikacyjnej-w-bdot10k",
     "name": "sTatystyki sieci komunikacyjnej w BDOT10k",
-    "source": "USŁUGI KRAJOWE / DANE TOPOGRAFICZNE I OGÓLNOGEOGRAFICZNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WMS/StatystykiSieciKomunikacyjnej?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=drogi_woj,drogi_pow&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "drogi_woj,drogi_pow",
     "zoom": 18,
@@ -912,7 +912,7 @@
   {
     "id": "statystyki-sieci-wodnej-w-bdot10k",
     "name": "statystyki sieci wodnej w BDOT10k",
-    "source": "USŁUGI KRAJOWE / DANE TOPOGRAFICZNE I OGÓLNOGEOGRAFICZNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WMS/StatystykiSieciWodnej?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=rzeki_woj,rzeki_pow&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "rzeki_woj,rzeki_pow",
     "zoom": 18,
@@ -924,7 +924,7 @@
   {
     "id": "strefy-zagrozenia-naturalnego-zjawiska-meteorologiczne-w-pol",
     "name": "Strefy zagrożenia naturalnego (zjawiska meteorologiczne) w Polsce",
-    "source": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / INSTYTUT METEOROLOGII I GOSPODARKI WODNEJ",
+    "source": "Instytut Meteorologii i Gospodarki Wodnej",
     "url": "https://imgw.isok.gov.pl/wss/INSPIRE/INSPIRE_NZ_METEO_WMS?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=NZ.extremelyHighPrecipitationTotals_12h,NZ.extremelyHighPrecipitationTotals_24h,NZ.extremelyHighPrecipitationTotals_48h,NZ.extremelyHighTemperature_12h,NZ.extremelyHighTemperature_24h,NZ.extremelyHighTemperature_48h,NZ.extremelyLowTemperature_12h,NZ.extremelyLowTemperature_24h,NZ.extremelyLowTemperature_48h,NZ.fog_12h,NZ.fog_24h,NZ.fog_48h,NZ.glaze_12h,NZ.glaze_24h,NZ.glaze_48h,NZ.intensiveSnowfalls_12h,NZ.intensiveSnowfalls_24h,NZ.intensiveSnowfalls_48h,NZ.maxTemperatureOver25Or30_12h,NZ.maxTemperatureOver25Or30_24h,NZ.maxTemperatureOver25Or30_48h,NZ.maxTemperatureUnder0_12h,NZ.maxTemperatureUnder0_24h,NZ.maxTemperatureUnder0_48h,NZ.minTemperatureUnder0_12h,NZ.minTemperatureUnder0_24h,NZ.minTemperatureUnder0_48h,NZ.minTemperatureUnder_15Or_30_12h,NZ.minTemperatureUnder_15Or_30_24h,NZ.minTemperatureUnder_15Or_30_48h,NZ.precipitationTotalsOver30Or50_12h,NZ.precipitationTotalsOver30Or50_24h,NZ.precipitationTotalsOver30Or50_48h,NZ.rime_12h,NZ.rime_24h,NZ.rime_48h,NZ.thunderstormsOrThunderstormsWithHail_12h,NZ.thunderstormsOrThunderstormsWithHail_24h,NZ.thunderstormsOrThunderstormsWithHail_48h,NZ.wind_12h&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "NZ.extremelyHighPrecipitationTotals_12h,NZ.extremelyHighPrecipitationTotals_24h,NZ.extremelyHighPrecipitationTotals_48h,NZ.extremelyHighTemperature_12h,NZ.extremelyHighTemperature_24h,NZ.extremelyHighTemperature_48h,NZ.extremelyLowTemperature_12h,NZ.extremelyLowTemperature_24h,NZ.extremelyLowTemperature_48h,NZ.fog_12h,NZ.fog_24h,NZ.fog_48h,NZ.glaze_12h,NZ.glaze_24h,NZ.glaze_48h,NZ.intensiveSnowfalls_12h,NZ.intensiveSnowfalls_24h,NZ.intensiveSnowfalls_48h,NZ.maxTemperatureOver25Or30_12h,NZ.maxTemperatureOver25Or30_24h,NZ.maxTemperatureOver25Or30_48h,NZ.maxTemperatureUnder0_12h,NZ.maxTemperatureUnder0_24h,NZ.maxTemperatureUnder0_48h,NZ.minTemperatureUnder0_12h,NZ.minTemperatureUnder0_24h,NZ.minTemperatureUnder0_48h,NZ.minTemperatureUnder_15Or_30_12h,NZ.minTemperatureUnder_15Or_30_24h,NZ.minTemperatureUnder_15Or_30_48h,NZ.precipitationTotalsOver30Or50_12h,NZ.precipitationTotalsOver30Or50_24h,NZ.precipitationTotalsOver30Or50_48h,NZ.rime_12h,NZ.rime_24h,NZ.rime_48h,NZ.thunderstormsOrThunderstormsWithHail_12h,NZ.thunderstormsOrThunderstormsWithHail_24h,NZ.thunderstormsOrThunderstormsWithHail_48h,NZ.wind_12h",
     "zoom": 18,
@@ -947,7 +947,7 @@
   {
     "id": "tereny-zamkniete-ministerstwo-infrastruktury",
     "name": "Tereny zamknięte - Ministerstwo Infrastruktury",
-    "source": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/ext/SklepyWielkopowierzchniowe?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=obiekty_lokalizacja,obiekty,powiaty,wojewodztwa&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "obiekty_lokalizacja,obiekty,powiaty,wojewodztwa",
     "zoom": 18,
@@ -981,7 +981,7 @@
   {
     "id": "usluga-przegladania-wms-ortofotomap-archiwalnych-dla-obszaru",
     "name": "Usługa przeglądania (WMS) ortofotomap archiwalnych dla obszaru Polski",
-    "source": "USŁUGI KRAJOWE / DANE ARCHIWALNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/StandardResolutionTime?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Raster&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Raster",
     "zoom": 18,
@@ -993,7 +993,7 @@
   {
     "id": "usluga-przegladania-wms-rastrowych-map-topograficznych-dla-o",
     "name": "Usługa przeglądania (WMS) rastrowych map topograficznych dla obszaru Polski (serie)",
-    "source": "USŁUGI KRAJOWE / DANE ARCHIWALNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/img/guest/TOPO_SERIA/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Raster_10_1992,Raster_10_1965,Raster_10_1942,Raster_25_1965,Raster_50_UTM,Raster_50tys_VMap,Raster_50_1992,Raster_50_1965,Raster_50_1942&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Raster_10_1992,Raster_10_1965,Raster_10_1942,Raster_25_1965,Raster_50_UTM,Raster_50tys_VMap,Raster_50_1992,Raster_50_1965,Raster_50_1942",
     "zoom": 18,
@@ -1005,7 +1005,7 @@
   {
     "id": "usluga-przegladania-danych-bazy-danych-obiektow-topograficzn",
     "name": "Usługa przeglądania danych Bazy Danych Obiektów Topograficznych (BDOT10k) dla obszaru Polski",
-    "source": "USŁUGI KRAJOWE / DANE TOPOGRAFICZNE I OGÓLNOGEOGRAFICZNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/pub/guest/kompozycja_BDOT10k_WMS/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=RZab,TPrz,UTrw,TLes,RKr,RTr,Mo,WPow,Szu,LBrzN,LBrz,WPowEt,GrPol,Rez,GrPK,GrPN,PRur,ZbTA,BudCm,TerCm,BudSp,Bzn,BHydA,BHydL,IUTA,ObOrA,ObPL,Prom,UTrL,NazDr,NrDr,Umo,UTrP,ObKom,InUTP,ZbTP,NazUl,ObOrP,WyBT,SOd2&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "RZab,TPrz,UTrw,TLes,RKr,RTr,Mo,WPow,Szu,LBrzN,LBrz,WPowEt,GrPol,Rez,GrPK,GrPN,PRur,ZbTA,BudCm,TerCm,BudSp,Bzn,BHydA,BHydL,IUTA,ObOrA,ObPL,Prom,UTrL,NazDr,NrDr,Umo,UTrP,ObKom,InUTP,ZbTP,NazUl,ObOrP,WyBT,SOd2",
     "zoom": 18,
@@ -1017,7 +1017,7 @@
   {
     "id": "usluga-przegladania-danych-inspire-tematu-adresy-dla-obszaru",
     "name": "Usługa przeglądania danych INSPIRE tematu Adresy dla obszaru Polski",
-    "source": "USŁUGI INSPIRE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/INSPIRE/Addresses?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=AD.Address&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "AD.Address",
     "zoom": 18,
@@ -1029,7 +1029,7 @@
   {
     "id": "usluga-przegladania-danych-inspire-tematu-dzialki-katastraln",
     "name": "Usługa przeglądania danych INSPIRE tematu Działki katastralne dla obszaru Polski",
-    "source": "USŁUGI INSPIRE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/INSPIRE_CP/guest?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=CP.CadastralParcel,CP.CadastralZoning&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "CP.CadastralParcel,CP.CadastralZoning",
     "zoom": 18,
@@ -1041,7 +1041,7 @@
   {
     "id": "usluga-przegladania-danych-inspire-tematu-nazwy-geograficzne",
     "name": "Usługa przeglądania danych INSPIRE tematu Nazwy geograficzne dla obszaru Polski",
-    "source": "USŁUGI INSPIRE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/geosrv/wmsGN/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=GN.GeographicalNames&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "GN.GeographicalNames",
     "zoom": 18,
@@ -1053,7 +1053,7 @@
   {
     "id": "usluga-przegladania-danych-topograficznych-dla-polski",
     "name": "Usługa przeglądania danych topograficznych dla Polski",
-    "source": "USŁUGI KRAJOWE / DANE ARCHIWALNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/img/guest/TOPO/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Raster&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Raster",
     "zoom": 18,
@@ -1065,7 +1065,7 @@
   {
     "id": "usluga-przegladania-tresci-bazy-danych-ogolnogeograficznych-",
     "name": "Usługa przeglądania treści Bazy Danych Ogólnogeograficznych dla obszaru Polski",
-    "source": "USŁUGI KRAJOWE / DANE TOPOGRAFICZNE I OGÓLNOGEOGRAFICZNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOO/WMS/aktualne?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39",
     "zoom": 18,
@@ -1077,7 +1077,7 @@
   {
     "id": "usluga-przegladania-umozliwiajaca-przegladanie-hipsometrii-n",
     "name": "Usługa przeglądania umożliwiająca przeglądanie hipsometrii NMT o dynamicznej skali barw",
-    "source": "USŁUGI KRAJOWE / NUMERYCZNY MODEL TERENU",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/NMT/GRID1/WMS/Hypsometry?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Raster&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "Raster",
     "zoom": 18,
@@ -1089,7 +1089,7 @@
   {
     "id": "usluga-wms-publikujca-wykaz-portali-mapowych",
     "name": "Usługa WMS publikujca wykaz portali mapowych.",
-    "source": "USŁUGI KRAJOWE / PORTALE MAPOWE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/ext/PortaleMapowe?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=wojewodzkie,powiatowe,gminne&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "wojewodzkie,powiatowe,gminne",
     "zoom": 18,
@@ -1101,7 +1101,7 @@
   {
     "id": "usluga-wms-publikujaca-statystyki-budynkow-i-budowli-w-bdot1",
     "name": "Usługa WMS publikująca statystyki budynków i budowli w BDOT10k",
-    "source": "USŁUGI KRAJOWE / DANE TOPOGRAFICZNE I OGÓLNOGEOGRAFICZNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WMS/StatystykiBudynkow?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=budynki_woj,budynki_pow&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "budynki_woj,budynki_pow",
     "zoom": 18,
@@ -1113,7 +1113,7 @@
   {
     "id": "wig-mapa-operacyjna-1-300-000",
     "name": "WIG Mapa operacyjna 1:300 000",
-    "source": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+    "source": "Cartomatic",
     "url": "https://pastmaps.cenagis.edu.pl/geoserver/ihpan/wms/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=wig300k_3857&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "wig300k_3857",
     "zoom": 15,
@@ -1124,7 +1124,7 @@
   {
     "id": "wig-mapa-polski-1-500-000-1939",
     "name": "WIG Mapa Polski 1:500 000 (1939)",
-    "source": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+    "source": "Cartomatic",
     "url": "https://pastmaps.cenagis.edu.pl/geoserver/ihpan/wms/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=wig500k1939_3857&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "wig500k1939_3857",
     "zoom": 14,
@@ -1135,7 +1135,7 @@
   {
     "id": "wig-mapa-polski-1-500-000-1947-1952",
     "name": "WIG Mapa Polski 1:500 000 (1947–1952)",
-    "source": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+    "source": "Cartomatic",
     "url": "https://pastmaps.cenagis.edu.pl/geoserver/ihpan/wms/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=wig_1947_1952_3857&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "wig_1947_1952_3857",
     "zoom": 14,
@@ -1146,7 +1146,7 @@
   {
     "id": "wig-mapa-polski-i-krajow-osciennych-1-500-000",
     "name": "WIG Mapa Polski i Krajów Ościennych 1:500 000",
-    "source": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+    "source": "Cartomatic",
     "url": "https://pastmaps.cenagis.edu.pl/geoserver/ihpan/wms/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=wig500k_3857&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "wig500k_3857",
     "zoom": 14,
@@ -1157,7 +1157,7 @@
   {
     "id": "wig-mapa-szczegolowa-1-25-000",
     "name": "WIG Mapa szczegółowa 1:25 000",
-    "source": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+    "source": "Cartomatic",
     "url": "https://pastmaps.cenagis.edu.pl/geoserver/ihpan/wms/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=wig25k_3857&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "wig25k_3857",
     "zoom": 17,
@@ -1168,7 +1168,7 @@
   {
     "id": "wig-polska-mapa-taktyczna-1-100-000",
     "name": "WIG Polska mapa taktyczna 1:100 000",
-    "source": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+    "source": "Cartomatic",
     "url": "https://pastmaps.cenagis.edu.pl/geoserver/ihpan/wms/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=wig100k_3857&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "wig100k_3857",
     "zoom": 16,
@@ -1179,7 +1179,7 @@
   {
     "id": "wms-krajowej-integracji-numeracji-adresowej-do-przegladania-",
     "name": "WMS Krajowej Integracji Numeracji Adresowej do przeglądania map ulic i adresów",
-    "source": "USŁUGI KRAJOWE / DANE ADRESOWE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/ext/KrajowaIntegracjaNumeracjiAdresowej?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=A07_Punkty_adresowe,A08_Ulice,A08_Ulice_Powierzchnie,A08_Ulice_Linie&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "A07_Punkty_adresowe,A08_Ulice,A08_Ulice_Powierzchnie,A08_Ulice_Linie",
     "zoom": 18,
@@ -1191,7 +1191,7 @@
   {
     "id": "wskaznik-wegetacji-analiza-ndvi-wykonana-na-podstawie-zdjec-",
     "name": "Wskaźnik wegetacji - Analiza NDVI wykonana na podstawie zdjęć satelitarnych Sentinel-2 zarejestrowanych w roku 2020 (w większości sierpień-wrzesień)",
-    "source": "USŁUGI KRAJOWE / MAPY TEMATYCZNE",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/NDVI?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=0&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "0",
     "zoom": 18,
@@ -1203,7 +1203,7 @@
   {
     "id": "wykaz-szkol-i-placowek-oswiatowych",
     "name": "Wykaz szkół i placówek oświatowych",
-    "source": "USŁUGI KRAJOWE / OBIEKTY UŻYTECZNOŚCI PUBLICZNEJ",
+    "source": "GUGiK · geoportal.gov.pl",
     "url": "https://mapy.geoportal.gov.pl/wss/ext/GUGiK/Edukacja?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=przedszkola,podstawowe,licea,inne,szkoly&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "przedszkola,podstawowe,licea,inne,szkoly",
     "zoom": 18,
@@ -1271,7 +1271,7 @@
   {
     "id": "ubersichtskarte-von-mitteleuropa-1-300-000",
     "name": "Übersichtskarte von Mitteleuropa 1:300 000",
-    "source": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+    "source": "Cartomatic",
     "url": "https://pastmaps.cenagis.edu.pl/geoserver/ihpan/wms/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=ukvme_3857&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
     "layer": "ukvme_3857",
     "zoom": 15,

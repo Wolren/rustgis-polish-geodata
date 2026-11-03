@@ -28,7 +28,7 @@
   "commands": [
     {
       "id": "orto",
-      "label": "Orthophoto",
+      "label": "Orthophoto\n(WMTS)",
       "icon": "basemap",
       "help": "GUGiK orthophoto (WMTS, EPSG:3857). Click again to remove it."
     },
@@ -40,7 +40,7 @@
     },
     {
       "id": "bdot",
-      "label": "BDOT10k",
+      "label": "BDOT10k\n(overlay)",
       "icon": "basemap",
       "help": "Topographic object database as an overlay (visible from city scale)."
     },
@@ -70,13 +70,13 @@
     },
     {
       "id": "nmt",
-      "label": "DEM\nhillshade",
+      "label": "Hillshade\n(NMT)",
       "icon": "relief",
       "help": "Hillshade of the digital terrain model."
     },
     {
       "id": "obszar-widok",
-      "label": "Rectangle\narea",
+      "label": "Area\nfrom view",
       "icon": "g_rect",
       "help": "Copies the map view into the area layer as a rectangle: one click, and the rectangle is exactly what you see. It is the area a download and the elevation model use."
     },
@@ -94,7 +94,7 @@
     },
     {
       "id": "obszar-wyczysc",
-      "label": "Clear\narea",
+      "label": "Remove\narea",
       "icon": "erase",
       "help": "Removes the area layer, so the next rectangle or drawn shape starts empty."
     },
@@ -106,7 +106,7 @@
     },
     {
       "id": "przytnij",
-      "label": "Clip\nto area",
+      "label": "Clip\nto layer",
       "icon": "buffer",
       "help": "Clips a layer to a boundary layer: the area layer by default, or the one you choose in the panel. A WFS answer returns whole features that touch it; this cuts them.",
       "params": "{\"layer\": \"layer name (optional, the active layer or the newest one when left out)\", \"obszar\": \"boundary layer name (optional, the panel's choice or the area layer when left out)\"}"
@@ -187,7 +187,7 @@
     },
     {
       "id": "dem-style",
-      "label": "Style the model",
+      "label": "Set the model's style",
       "icon": "map",
       "help": "Shades the newest elevation model again. Pass colours to band the heights instead.",
       "params": "{\"layer\": \"elevation model layer (optional)\", \"colours\": \"false\"}"
@@ -213,7 +213,14 @@
           "label": "Area (layer)",
           "kind": "vectorLayer",
           "required": true,
-          "help": "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download."
+          "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        },
+        {
+          "name": "clear",
+          "label": "Clear the stored answers first",
+          "kind": "bool",
+          "default": false,
+          "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         }
       ]
     },
@@ -236,7 +243,14 @@
           "label": "Area (layer)",
           "kind": "vectorLayer",
           "required": true,
-          "help": "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download."
+          "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        },
+        {
+          "name": "clear",
+          "label": "Clear the stored answers first",
+          "kind": "bool",
+          "default": false,
+          "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         }
       ]
     },
@@ -259,7 +273,14 @@
           "label": "Area (layer)",
           "kind": "vectorLayer",
           "required": true,
-          "help": "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download."
+          "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        },
+        {
+          "name": "clear",
+          "label": "Clear the stored answers first",
+          "kind": "bool",
+          "default": false,
+          "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         }
       ]
     },
@@ -282,7 +303,14 @@
           "label": "Area (layer)",
           "kind": "vectorLayer",
           "required": true,
-          "help": "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download."
+          "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        },
+        {
+          "name": "clear",
+          "label": "Clear the stored answers first",
+          "kind": "bool",
+          "default": false,
+          "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         }
       ]
     },
@@ -305,7 +333,14 @@
           "label": "Area (layer)",
           "kind": "vectorLayer",
           "required": true,
-          "help": "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download."
+          "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        },
+        {
+          "name": "clear",
+          "label": "Clear the stored answers first",
+          "kind": "bool",
+          "default": false,
+          "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         }
       ]
     }
@@ -426,7 +461,7 @@
         "kind": "text",
         "id": "area",
         "label": "Area to download",
-        "text": "Press Rectangle area to make one."
+        "text": "Press Area from view to make one."
       },
       {
         "kind": "text",
@@ -437,10 +472,14 @@
       {
         "kind": "tree",
         "id": "cel",
-        "label": "Clip to layer",
+        "label": "Boundary layer",
         "help": "Choose the layer whose outline cuts the features. The area layer is the default.",
         "command": "panel-state",
         "search": true
+      },
+      {
+        "kind": "button",
+        "command": "panel-state"
       },
       {
         "kind": "button",
@@ -456,6 +495,14 @@
       },
       {
         "kind": "button",
+        "command": "obszar-anuluj"
+      },
+      {
+        "kind": "button",
+        "command": "obszar-wyczysc"
+      },
+      {
+        "kind": "button",
         "command": "parcel"
       },
       {
@@ -465,13 +512,6 @@
       {
         "kind": "button",
         "command": "wyczysc-cache"
-      },
-      {
-        "kind": "checkbox",
-        "id": "clear",
-        "label": "Clear the stored answers after a download",
-        "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time.",
-        "default": false
       },
       {
         "kind": "text",
@@ -492,12 +532,12 @@
       "Address points and streets from the national address numbering service.": "Punkty adresowe i ulice (Krajowa Integracja Numeracji Adresowej).",
       "Addresses": "Adresy",
       "Addresses and buildings": "Adresy i budynki",
-      "Adds the 1 m terrain model of the area, shaded. GUGiK serves PL-KRON86-NH as GeoTIFF.": "Dodaje model terenu 1 m dla obszaru, cieniowany. GUGiK udostępnia PL-KRON86-NH jako GeoTIFF.",
-      "Adds the parcel an identifier names, without pointing at the map: id as ULDK writes it, or teryt and numer.": "Dodaje działkę wskazaną identyfikatorem, bez klikan ia w mapę: id w postaci ULDK albo teryt i numer.",
+      "Adds the 1 m terrain model of the area, shaded. GUGiK serves PL-KRON86-NH as GeoTIFF.": "Dodaje model wysokości 1 m dla obszaru, cieniowany. GUGiK udostępnia PL-KRON86-NH jako GeoTIFF.",
+      "Adds the parcel an identifier names, without pointing at the map: id as ULDK writes it, or teryt and numer.": "Dodaje działkę wskazaną identyfikatorem, bez klikania w mapę: id tak, jak zapisuje je ULDK, albo teryt i numer.",
       "Area": "Obszar",
       "Area (layer)": "Obszar (warstwa)",
       "Area to download": "Obszar pobierania",
-      "BDOT10k": "BDOT10k",
+      "BDOT10k\n(overlay)": "BDOT10k\n(nakładka)",
       "Basemaps": "Podkłady",
       "Boundaries and units": "Granice i jednostki",
       "Brings the map to the whole of Poland, the area GUGiK serves.": "Przybliża mapę do całej Polski, obszaru obsługiwanego przez GUGiK.",
@@ -505,27 +545,26 @@
       "Cancel\ndrawing": "Anuluj\nrysowanie",
       "Catalogue": "Katalog",
       "Catalogue\n(JSON)": "Katalog\n(JSON)",
-      "Clear\narea": "Wyczyść\nobszar",
+      "Remove\narea": "Usuń\nobszar",
       "Clear\ncache": "Wyczyść\ncache",
-      "Clear the stored answers after a download": "Wyczyść zapisane odpowiedzi po pobraniu",
+      "Clear the stored answers first": "Najpierw usuń zapisane odpowiedzi",
       "Clip": "Przytnij",
-      "Clip to layer": "Przytnij do warstwy",
-      "Choose the layer whose outline cuts the features. The area layer is the default.": "Wybierz warstwę, której granica przytnie obiekty. Domyślnie jest to warstwa obszaru.",
+      "Choose the layer whose outline cuts the features. The area layer is the default.": "Wybierz warstwę graniczną: jej granica przytnie obiekty. Domyślnie jest to obszar pobierania.",
       "Click the corners, then double-click to close the ring, or press Escape to stop. The shape stays as drawn: a download follows it, and the elevation model covers the rectangle around it.": "Klikaj narożniki, a na końcu kliknij dwukrotnie, aby zamknąć obwód, albo naciśnij Escape, aby przerwać. Kształt zostaje taki, jak narysowany: pobieranie idzie za nim, a model wysokości obejmuje prostokąt wokół niego.",
-      "Clip\nto area": "Przytnij\ndo obszaru",
-      "Clips a layer to a boundary layer: the area layer by default, or the one you choose in the panel. A WFS answer returns whole features that touch it; this cuts them.": "Przycina warstwę do warstwy granicy: domyślnie do warstwy obszaru, albo do wybranej w panelu. WFS zwraca całe obiekty dotykające granicy; to je tnie.",
+      "Clip\nto layer": "Przytnij\ndo warstwy",
+      "Clips a layer to a boundary layer: the area layer by default, or the one you choose in the panel. A WFS answer returns whole features that touch it; this cuts them.": "Przycina warstwę do granicy: domyślnie do obszaru pobierania, albo do wybranej w panelu. WFS zwraca całe obiekty dotykające granicy; to je tnie.",
       "Control points": "Osnowy i pomiary",
       "Copies the map view into the area layer as a rectangle: one click, and the rectangle is exactly what you see. It is the area a download and the elevation model use.": "Kopiuje widok mapy do warstwy obszaru jako prostokąt: jedno kliknięcie i prostokąt jest dokładnie tym, co widać. To obszar, którego używa pobieranie i model wysokości.",
       "Country, voivodeship, county, commune and city boundaries.": "Granice państwa, województw, powiatów, gmin i miast.",
-      "DEM\nhillshade": "NMT\ncieniowanie",
-      "Dataset": "Zestaw",
+      "Hillshade\n(NMT)": "Cieniowanie\n(NMT)",
+      "Dataset": "Zbiór",
       "Deletes the stored WFS answers (kept for 7 days by default) and the downloaded elevation grids, so the data is fetched again.": "Usuwa zapisane odpowiedzi WFS (domyślnie trzymane 7 dni) i pobrane siatki wysokości, żeby pobrać dane od nowa.",
       "Downloads": "Pobieranie",
       "Draw\narea": "Narysuj\nobszar",
       "Drops the drawing tool and leaves the map in the explore tool. Escape does the same.": "Wyłącza narzędzie rysowania i zostawia mapę w trybie przeglądania. Escape robi to samo.",
       "Elevation": "Wysokości",
       "Filled in when the panel opens.": "Wypełniane przy otwarciu panelu.",
-      "Finds an address with GUGiK's UUG service and adds it as a point: city, street, number, postcode and the PL-1992 position.": "Znajduje adres w usłudze UUG GUGiK i dodaje go jako punkt: miejscowość, ulica, numer, kod pocztowy i pozycja w PL-1992.",
+      "Finds an address with GUGiK's UUG service and adds it as a point: city, street, number, postcode and the PL-1992 position.": "Znajduje adres w usłudze UUG GUGiK i dodaje go jako punkt: miejscowość, ulica, numer, kod pocztowy i pozycja w układzie PL-1992.",
       "Finds the parcel under the map centre and adds its boundary with its attributes.": "Znajduje działkę pod środkiem mapy i dodaje jej granice wraz z atrybutami.",
       "Forest data of the State Forests' Bank of Forest Data.": "Dane leśne Banku Danych o Lasach.",
       "Forests (BDL)": "Lasy (BDL)",
@@ -543,7 +582,7 @@
       "High-resolution orthophoto (WMS).": "Ortofotomapa w wysokiej rozdzielczości (WMS).",
       "Hillshade of the digital terrain model.": "Cieniowanie numerycznego modelu terenu.",
       "Historical maps": "Mapy historyczne",
-      "Lists every service and every dataset, with the ids a script or an agent runs, optionally narrowed by institution or by a word of the name.": "Wypisuje wszystkie usługi i zestawy danych wraz z identyfikatorami, których używa skrypt albo agent; można zawęzić do instytucji albo do słowa z nazwy.",
+      "Lists every service and every dataset, with the ids a script or an agent runs, optionally narrowed by institution or by a word of the name.": "Wypisuje wszystkie usługi i zbiory danych wraz z identyfikatorami, których używa skrypt albo agent; można zawęzić do instytucji albo do słowa z nazwy.",
       "Lookups": "Wyszukiwanie",
       "Map view": "Widok mapy",
       "Maps": "Mapy",
@@ -553,7 +592,7 @@
       "Monuments, archaeological records and UNESCO sites.": "Zabytki, rejestr archeologiczny i obiekty UNESCO.",
       "Offices and courts": "Urzędy i sądy",
       "Open the panel to read the view.": "Otwórz panel, aby odczytać widok.",
-      "Orthophoto": "Ortofoto",
+      "Orthophoto\n(WMTS)": "Ortofoto\n(WMTS)",
       "Orthophoto\nHi-Res": "Ortofoto\nHi-Res",
       "Orthophoto and DEM": "Ortofoto i NMT",
       "Orthophoto, elevation, vegetation and archive imagery.": "Ortofoto, wysokości, wegetacja i zdjęcia archiwalne.",
@@ -562,40 +601,40 @@
       "Other data": "Pozostałe dane",
       "Other institutions": "Pozostałe instytucje",
       "PRG\nboundaries": "Granice\nPRG",
-      "PRG boundaries, place names and the administrative units around them.": "Granice PRG, nazwy miejscowości i jednostki administracyjne.",
+      "PRG boundaries, place names and the administrative units around them.": "Granice PRG, nazwy geograficzne i jednostki administracyjne.",
       "Parcel\nfrom ULDK": "Działka\nz ULDK",
       "Parcel and building boundaries from KIEG (visible from about 1:5,000).": "Granice działek i budynków z KIEG (widoczne od skali ok. 1:5000).",
       "Parcel by\nnumber": "Działka\nz numeru",
       "Parcels\n(WMS)": "Działki\n(WMS)",
-      "Parcels, buildings, addresses, boundaries and place names.": "Działki, budynki, adresy, granice i nazwy miejscowości.",
+      "Parcels, buildings, addresses, boundaries and place names.": "Działki, budynki, adresy, granice i nazwy geograficzne.",
       "Parcels, buildings, utilities, addresses and administrative boundaries.": "Działki, budynki, uzbrojenie, adresy i granice administracyjne.",
-      "Place\nnames": "Nazwy\nmiejscowości",
-      "Place names from PRNG.": "Nazwy miejscowości z PRNG.",
+      "Place\nnames": "Nazwy\ngeograficzne",
+      "Place names from PRNG.": "Nazwy geograficzne z PRNG.",
       "Polish Geodata": "Dane PL",
-      "Polish national geodetic data from GUGiK in one tab: orthophoto, BDOT10k, parcels, addresses, PRG boundaries, place names and hillshade as map layers; the national WFS catalogue through background download tools with progress and Cancel; a 1 m elevation model built from the area you point at; and a ULDK parcel lookup at the map centre.": "Polskie dane geodezyjne GUGiK w jednej zakładce: ortofoto, BDOT10k, działki, adresy, granice PRG, nazwy miejscowości i cieniowanie NMT jako warstwy mapy; katalog krajowych usług WFS przez narzędzia pobierania działające w tle, z postępem i przerwaniem; model wysokości 1 m dla wskazanego obszaru; oraz działka z ULDK pod środkiem mapy.",
-      "Press Rectangle area to make one.": "Naciśnij Obszar prostokąt, aby go utworzyć.",
+      "Polish national geodetic data from GUGiK in one tab: orthophoto, BDOT10k, parcels, addresses, PRG boundaries, place names and hillshade as map layers; the national WFS catalogue through background download tools with progress and Cancel; a 1 m elevation model built from the area you point at; and a ULDK parcel lookup at the map centre.": "Polskie dane geodezyjne GUGiK w jednej zakładce: ortofoto, BDOT10k, działki, adresy, granice PRG, nazwy geograficzne i cieniowanie NMT jako warstwy mapy; katalog krajowych usług WFS przez narzędzia pobierania działające w tle, z postępem i przyciskiem Anuluj; model wysokości 1 m dla wskazanego obszaru; oraz wyszukiwanie działki z ULDK pod środkiem mapy.",
+      "Press Area from view to make one.": "Naciśnij przycisk Obszar z widoku, aby go utworzyć.",
       "Public offices, courts, schools, forests and other institutions.": "Urzędy, sądy, szkoły, nadleśnictwa i inne instytucje.",
       "Raster": "Rastry",
-      "Reads the terrain model's height at the map centre, or at x/y given in PL-1992. PL-KRON86-NH, in metres above sea level.": "Odczytuje wysokość modelu terenu pod środkiem mapy albo pod x/y w PL-1992. PL-KRON86-NH, w metrach nad poziomem morza.",
-      "Rectangle\narea": "Obszar\nprostokąt",
+      "Reads the terrain model's height at the map centre, or at x/y given in PL-1992. PL-KRON86-NH, in metres above sea level.": "Odczytuje wysokość modelu terenu pod środkiem mapy albo w punkcie x/y w układzie PL-1992. PL-KRON86-NH, w metrach nad poziomem morza.",
+      "Area\nfrom view": "Obszar\nz widoku",
       "Refresh the panel": "Odśwież panel",
       "Register\nEZiUDP": "Rejestr\nEZiUDP",
       "Removes the area layer, so the next rectangle or drawn shape starts empty.": "Usuwa warstwę obszaru, żeby następny prostokąt albo rysowany kształt zaczynał od zera.",
-      "Searches the national register of spatial data sets and services: which body holds what, and the address of its WMS, WFS and CSW. Narrows the register, never dumps it.": "Przeszukuje krajową ewidencję zbiorów i usług danych przestrzennych: kto co ma i pod jakim adresem są jego WMS, WFS i CSW. Zawęża rejestr, nigdy nie pobiera go całego.",
-      "Shades the newest elevation model again. Pass colours to band the heights instead.": "Ponownie cieniuje najnowszy model wysokości. Podaj colours, aby pokazać wysokości w barwach.",
-      "Statistics, ASG-EUPOS, archiving, elections and the rest.": "Statystyki, ASG-EUPOS, archiwizacja, wybory i pozostałe.",
+      "Searches the national register of spatial data sets and services: which body holds what, and the address of its WMS, WFS and CSW. Narrows the register, never dumps it.": "Przeszukuje krajową ewidencję zbiorów i usług danych przestrzennych: kto co ma i pod jakim adresem są jego WMS, WFS i CSW. Zawęża ewidencję, nigdy nie zwraca jej w całości.",
+      "Shades the newest elevation model again. Pass colours to band the heights instead.": "Ponownie cieniuje najnowszy model wysokości. Podaj parametr colours, aby pokazać wysokości w barwach.",
+      "Statistics, ASG-EUPOS, archiving, elections and the rest.": "Statystyki, ASG-EUPOS, archiwizacja, wybory i pozostałe dane.",
       "Stored answers": "Zapisane odpowiedzi",
-      "Style the model": "Stylizuj model",
+      "Set the model's style": "Ustaw styl modelu",
       "Surface\nNMPT": "Pokrycie\nNMPT",
       "Terrain\nEVRF2007": "Teren\nEVRF2007",
       "Terrain\nKRON86": "Teren\nKRON86",
       "The 1 m elevation model of the area, as GeoTIFF or ASCII grid.": "Model wysokości 1 m dla obszaru, jako GeoTIFF albo siatka ASCII.",
       "The GUGiK feature type to download.": "Typ obiektów GUGiK do pobrania.",
       "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time.": "Odpowiedzi są trzymane 7 dni, więc powtórne pobranie nic nie kosztuje. Zaznacz, aby następnym razem pobrać świeże dane.",
-      "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download.": "Warstwa, której zasięg jest pobierany. Narysuj ją przyciskiem Obszar prostokąt albo wskaż własną warstwę; zaznaczenie na niej zawęża pobieranie.",
+      "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download.": "Warstwa, której zasięg jest pobierany. Naciśnij przycisk Obszar z widoku, aby ją utworzyć, albo wskaż własną warstwę; zaznaczenie na niej zawęża pobieranie.",
       "The map view, the area to download, the catalogue and the stored answers, with the buttons that act on them.": "Widok mapy, obszar pobierania, katalog i zapisane odpowiedzi oraz przyciski, które na nich działają.",
       "The surface model, buildings and trees kept, in PL-KRON86-NH. An ASCII grid.": "Model pokrycia, z budynkami i drzewami, w PL-KRON86-NH. Siatka ASCII.",
-      "The terrain model in PL-EVRF2007-NH. GUGiK serves it as an ASCII grid, so one click covers less ground than the GeoTIFF.": "Model terenu w PL-EVRF2007-NH. GUGiK udostępnia go jako siatkę ASCII, więc jedno kliknięcie obejmuje mniejszy obszar niż GeoTIFF.",
+      "The terrain model in PL-EVRF2007-NH. GUGiK serves it as an ASCII grid, so one click covers less ground than the GeoTIFF.": "Model wysokości w PL-EVRF2007-NH. GUGiK udostępnia go jako siatkę ASCII, więc jedno kliknięcie obejmuje mniejszy obszar niż GeoTIFF.",
       "Tools": "Narzędzia",
       "Topographic object database as an overlay (visible from city scale).": "Baza Danych Obiektów Topograficznych jako warstwa nakładkowa (widoczna od skali miasta).",
       "Topographic, landscape, archival and thematic maps.": "Mapy topograficzne, krajobrazowe, archiwalne i tematyczne.",
@@ -603,7 +642,8 @@
       "Vector": "Wektory",
       "WIG and German survey maps of the 19th and 20th centuries, as scans.": "Arkusze WIG i mapy niemieckie z XIX i XX wieku, jako skany.",
       "WMS (view only)": "WMS (podgląd)",
-      "Zoom to Poland": "Przybliż do Polski"
+      "Zoom to Poland": "Przybliż do Polski",
+      "Boundary layer": "Warstwa graniczna"
     }
   },
   "institutionMenus": {

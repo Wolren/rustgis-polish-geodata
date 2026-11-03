@@ -1760,7 +1760,7 @@
     "id": "dane-wfs-ortofotomapa-ukosna-poludnie",
     "max_span": 20.0,
     "index": true,
-    "label": "WFS Ortofotomapa ukosna"
+    "label": "WFS Ortofotomapa ukośna"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/skorOrtoUkosne",
@@ -1771,7 +1771,7 @@
     "id": "dane-wfs-ortofotomapa-ukosna-wschod",
     "max_span": 20.0,
     "index": true,
-    "label": "WFS Ortofotomapa ukośna - Wschod"
+    "label": "WFS Ortofotomapa ukośna - Wschód"
   },
   {
     "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/skorOrtoUkosne",
@@ -2033,7 +2033,7 @@
     "id": "dane-u09-regionalny-zarzad-gospodarki-wodnej-pgwwp",
     "max_span": 0.15,
     "index": false,
-    "label": "Regionalny zarzad gospodarki",
+    "label": "Regionalny zarząd gospodarki",
     "tool": "pobierz-granice"
   },
   {
@@ -2057,7 +2057,7 @@
     "id": "dane-u07-regionalna-dyrekcja-lasow-panstwowych",
     "max_span": 0.15,
     "index": false,
-    "label": "Regionalna dyrekcja lasow",
+    "label": "Regionalna dyrekcja lasów",
     "tool": "pobierz-granice"
   },
   {
@@ -2105,7 +2105,7 @@
     "id": "dane-u03-wyspecjalizowany-urzad-skarbowy",
     "max_span": 0.15,
     "index": false,
-    "label": "Wyspecjalizowany urzad skarbowy",
+    "label": "Wyspecjalizowany urząd skarbowy",
     "tool": "pobierz-urzedy"
   },
   {
@@ -2177,7 +2177,7 @@
     "id": "dane-k10-dywizjon-strazy-granicznej",
     "max_span": 20.0,
     "index": false,
-    "label": "Dywizjon strazy granicznej",
+    "label": "Dywizjon straży granicznej",
     "tool": "pobierz-granice"
   },
   {
@@ -2189,7 +2189,7 @@
     "id": "dane-k09-placowka-strazy-granicznej",
     "max_span": 20.0,
     "index": false,
-    "label": "Placowka strazy granicznej",
+    "label": "Placówka straży granicznej",
     "tool": "pobierz-granice"
   },
   {
@@ -2201,7 +2201,7 @@
     "id": "dane-k08-oddzial-strazy-granicznej",
     "max_span": 20.0,
     "index": false,
-    "label": "Oddzial strazy granicznej",
+    "label": "Oddział straży granicznej",
     "tool": "pobierz-granice"
   },
   {
@@ -2213,7 +2213,7 @@
     "id": "dane-k07-komenda-powiatowa-strazy-pozarnej",
     "max_span": 20.0,
     "index": false,
-    "label": "Komenda powiatowa strazy",
+    "label": "Komenda powiatowa straży",
     "tool": "pobierz-granice"
   },
   {
@@ -2333,7 +2333,7 @@
     "id": "dane-s04-wojewodzki-sad-administracyjny",
     "max_span": 0.15,
     "index": false,
-    "label": "Wojewodzki sad administracyjny",
+    "label": "Wojewódzki sąd administracyjny",
     "tool": "pobierz-granice"
   },
   {
@@ -2381,7 +2381,7 @@
     "id": "dane-r02-granice-obwodow-spisowych",
     "max_span": 20.0,
     "index": false,
-    "label": "Granice obwodow spisowych",
+    "label": "Granice obwodów spisowych",
     "tool": "pobierz-granice"
   },
   {
@@ -2393,7 +2393,7 @@
     "id": "dane-r01-granice-rejonow-statystycznych",
     "max_span": 20.0,
     "index": false,
-    "label": "Granice rejonow statystycznych",
+    "label": "Granice rejonów statystycznych",
     "tool": "pobierz-granice"
   },
   {
@@ -2405,7 +2405,7 @@
     "id": "dane-a06-granice-obrebow-ewidencyjnych",
     "max_span": 20.0,
     "index": false,
-    "label": "Granice obrebow ewidencyjnych",
+    "label": "Granice obrębów ewidencyjnych",
     "tool": "pobierz-granice"
   },
   {
@@ -2453,7 +2453,7 @@
     "id": "dane-a02-granice-powiatow",
     "max_span": 20.0,
     "index": false,
-    "label": "Granice powiatow",
+    "label": "Granice powiatów",
     "tool": "pobierz-granice"
   },
   {
@@ -2465,7 +2465,7 @@
     "id": "dane-a01-granice-wojewodztw",
     "max_span": 20.0,
     "index": false,
-    "label": "Granice wojewodztw",
+    "label": "Granice województw",
     "tool": "pobierz-granice"
   },
   {
@@ -2477,7 +2477,7 @@
     "id": "dane-a00-granice-panstwa",
     "max_span": 20.0,
     "index": false,
-    "label": "Granice panstwa",
+    "label": "Granice państwa",
     "tool": "pobierz-granice"
   },
   {
@@ -2525,7 +2525,7 @@
     "id": "dane-bazowa-osnowa-wysokosciowa",
     "max_span": 0.15,
     "index": false,
-    "label": "Bazowa osnowa wysokosciowa",
+    "label": "Bazowa osnowa wysokościowa",
     "tool": "pobierz-osnowy"
   },
   {

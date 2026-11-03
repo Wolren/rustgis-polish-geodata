@@ -78,7 +78,7 @@ fn run(
     if let Some(overlay) = catalog::overlay(id) {
         return tile::toggle(host, overlay, lang);
     }
-    match id {
+    let mut answer = match id {
         "obszar-rysuj" => obszar::draw(host, lang),
         "obszar-widok" => obszar::rectangle_from_view(host, lang),
         "obszar-anuluj" => obszar::abort(host, lang),
@@ -99,42 +99,46 @@ fn run(
         "przytnij" => cut(host, request, lang),
         "parcel" => uldk::parcel(host, params, lang),
         other => Err(text::unknown_command(lang, other)),
-    }
-}
-
-/// Cuts a layer to a boundary layer. The boundary is the parameter, else the one chosen in the
-/// panel, else the area layer; the layer is the parameter, else the active one, else the newest.
-fn cut(host: &mut host::Host, request: &Value, lang: Lang) -> Result<Value, String> {
-    let params = request.get("params").cloned().unwrap_or_else(|| json!({}));
-    let list = clip::layers(host, lang)?;
-    let boundary = params
-        .get("obszar")
-        .and_then(Value::as_str)
-        .filter(|name| !name.is_empty())
-        .map(str::to_string)
-        .or_else(|| clip::chosen(&list, request))
-        .or_else(|| clip::area_in(&list))
-        .unwrap_or_else(|| text::area_layer(lang).to_string());
-    let named = params
-        .get("layer")
-        .and_then(Value::as_str)
-        .unwrap_or_default();
-    let layer = if named.is_empty() {
-        clip::target(&list, &boundary).ok_or_else(|| text::nothing_to_clip(lang))?
-    } else {
-        named.to_string()
-    };
-    if layer == boundary {
-        return Err(text::clip_same(lang, &layer));
-    }
-    let mut answer = clip::to_area(host, &layer, &boundary, lang)?;
-    // The tree lists the layers with their counts, so a cut answers the panel it was pressed from.
-    if let Ok(state) = panel::state(host, lang, request) {
-        if let Some(panel) = state.get("panel") {
-            answer["panel"] = panel.clone();
+    }?;
+    // The pane reads the panel's state once, when it opens: a command that changes it answers too.
+    if redraws_panel(id) {
+        if let Ok(state) = panel::state(host, lang, request) {
+            panel::attach(&mut answer, state);
         }
     }
     Ok(answer)
+}
+
+/// The commands whose work changes what the panel shows, so each answers the panel's state.
+fn redraws_panel(id: &str) -> bool {
+    matches!(
+        id,
+        "obszar-widok"
+            | "obszar-rysuj"
+            | "obszar-anuluj"
+            | "obszar-wyczysc"
+            | "parcel"
+            | "wyczysc-cache"
+            | "dem-style"
+            | "przytnij"
+    )
+}
+
+/// Cuts a layer to a boundary layer: the one the request names, else the area layer.
+fn cut(host: &mut host::Host, request: &Value, lang: Lang) -> Result<Value, String> {
+    let list = clip::layers(host, lang)?;
+    let (layer, boundary) = clip::plan(&list, request);
+    let Some(boundary) = boundary else {
+        return Err(match clip::asked(request) {
+            Some(name) => text::boundary_gone(lang, &name),
+            None => text::clip_no_boundary(lang),
+        });
+    };
+    let layer = layer.ok_or_else(|| text::nothing_to_clip(lang))?;
+    if layer == boundary {
+        return Err(text::clip_same(lang, &layer));
+    }
+    clip::to_area(host, &layer, &boundary, lang)
 }
 
 /// Brings the map to Poland, the only area GUGiK serves.

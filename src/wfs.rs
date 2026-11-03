@@ -9,6 +9,7 @@
 //!   layer's native EPSG:2180 and answer nothing),
 //! - removes the features that fall into two cells, by their `gml:id`.
 
+use crate::cache;
 use crate::catalog::WfsLayer;
 use crate::filter;
 use crate::gk92;
@@ -23,7 +24,8 @@ const PAGE: usize = 500;
 /// Pages requested at once. Four parallel pages beat sequential by 2.57x, measured.
 const PAGES_IN_FLIGHT: usize = 4;
 const BUDGET_SECS: u64 = 240;
-const MAX_TOTAL: usize = 6000;
+/// One download stops at 6000 features; the tool gate reads this same number.
+pub const MAX_TOTAL: usize = 6000;
 /// Above this width or height, an area is split into four cells fetched at once.
 const SPLIT_SPAN: f64 = 1.5;
 
@@ -49,49 +51,57 @@ pub fn too_large(layer: &WfsLayer, bbox: [f64; 4]) -> bool {
     bbox[2] - bbox[0] > layer.max_span || bbox[3] - bbox[1] > layer.max_span
 }
 
-pub fn span_error(layer: &WfsLayer, bbox: [f64; 4], lang: Lang) -> String {
-    text::span_too_large(
-        lang,
-        layer.name,
-        bbox[2] - bbox[0],
-        bbox[3] - bbox[1],
-        layer.max_span,
-    )
+/// What one download brought back, and what the user still has to be told.
+pub struct Download {
+    pub features: Vec<Value>,
+    pub truncated: bool,
+    /// Requests that never answered, so the list is short of their features.
+    pub failed: usize,
+    /// `Some` when the shape could not filter, naming why the box went in instead.
+    pub fallback: Option<filter::ShapeProblem>,
 }
 
 /// Downloads every feature for `bbox`, reporting progress through `report`.
 ///
-/// `area` is the area layer's GeoJSON. When it is a single polygon the server filters by that
-/// polygon instead of its bounding box, which cut 468 features to 189 on a measured strip.
+/// `area` is the area layer's GeoJSON. A single polygon goes in as the service's filter instead
+/// of its bounding box, which cut 468 features to 189 on a measured strip. A request that fails
+/// costs only its own features, and the answer counts them.
 pub fn fetch(
     layer: &WfsLayer,
     bbox: [f64; 4],
     area: Option<&Value>,
     report: &mut dyn FnMut(&str),
     lang: Lang,
-) -> Result<(Vec<Value>, bool), String> {
+) -> Result<Download, String> {
     if ![bbox[0], bbox[1], bbox[2], bbox[3]]
         .iter()
         .all(|v| v.is_finite())
     {
         return Err(text::span_invalid(lang));
     }
-    if too_large(layer, bbox) {
-        return Err(span_error(layer, bbox, lang));
-    }
-    let polygon = area.and_then(|a| filter::polygon_filter(layer, a));
-    let mut result = gather(layer, bbox, polygon.as_deref(), report, lang, Srs::LonLat)?;
-    if result.0.is_empty() {
+    let mut fallback = None;
+    let polygon = area.and_then(|collection| match filter::polygon_filter(layer, collection) {
+        Ok(filter) => Some(filter),
+        Err(problem) => {
+            fallback = Some(problem);
+            None
+        }
+    });
+    let mut download = gather(layer, bbox, polygon.as_deref(), report, lang, Srs::LonLat)?;
+    if download.features.is_empty() && download.failed == 0 {
         // The address and street service answers an empty collection outside the national grid.
-        let retry = gather(layer, bbox, None, report, lang, Srs::Grid)?;
-        if !retry.0.is_empty() {
-            result = retry;
+        let grid = area.and_then(|collection| filter::polygon_filter_grid(layer, collection).ok());
+        if let Ok(retry) = gather(layer, bbox, grid.as_deref(), report, lang, Srs::Grid) {
+            if !retry.features.is_empty() {
+                download = retry;
+            }
         }
     }
-    Ok(result)
+    download.fallback = fallback;
+    Ok(download)
 }
 
-/// One attempt over the area in a given coordinate system.
+/// One attempt over the area in a given coordinate system; a failed request is counted, not fatal.
 fn gather(
     layer: &WfsLayer,
     bbox: [f64; 4],
@@ -99,16 +109,15 @@ fn gather(
     report: &mut dyn FnMut(&str),
     lang: Lang,
     srs: Srs,
-) -> Result<(Vec<Value>, bool), String> {
+) -> Result<Download, String> {
     let areas = split_cells(bbox);
     report(&text::split_areas(lang, layer.name, areas.len()));
 
-    let mut parts: Vec<(Vec<Value>, bool)> = Vec::new();
+    let mut cells: Vec<Cell> = Vec::new();
     if areas.len() == 1 {
-        parts.push(fetch_cell(layer, areas[0], polygon, report, lang, srs)?);
+        cells.push(fetch_cell(layer, areas[0], polygon, report, lang, srs));
     } else {
         let total = areas.len();
-        let mut results: Vec<Result<(Vec<Value>, bool), String>> = Vec::new();
         let (sender, receiver) = std::sync::mpsc::channel();
         std::thread::scope(|scope| {
             for (index, area) in areas.iter().enumerate() {
@@ -121,38 +130,39 @@ fn gather(
             }
             drop(sender);
             let mut done = 0;
-            for (_, result) in receiver {
+            for (_, cell) in receiver {
                 done += 1;
-                match &result {
-                    Ok((features, _)) => report(&text::area_progress(
+                match cell.first_error.as_deref() {
+                    Some(error) => {
+                        report(&text::area_progress_error(lang, layer.name, done, total, error))
+                    }
+                    None => report(&text::area_progress(
                         lang,
                         layer.name,
                         done,
                         total,
-                        features.len(),
-                    )),
-                    Err(e) => report(&text::area_progress_error(
-                        lang,
-                        layer.name,
-                        done,
-                        total,
-                        e.as_str(),
+                        cell.features.len(),
                     )),
                 }
-                results.push(result);
+                cells.push(cell);
             }
         });
-        for result in results {
-            parts.push(result?);
-        }
     }
 
-    let mut seen: HashSet<String> = HashSet::new();
     let mut features: Vec<Value> = Vec::new();
+    let mut seen: HashSet<String> = HashSet::new();
     let mut truncated = false;
-    for (part, cut) in parts {
-        truncated |= cut;
-        for feature in part {
+    let mut failed = 0usize;
+    let mut answered = 0usize;
+    let mut first_error: Option<String> = None;
+    for cell in cells {
+        truncated |= cell.truncated;
+        failed += cell.failed;
+        answered += cell.answered;
+        if first_error.is_none() {
+            first_error = cell.first_error;
+        }
+        for feature in cell.features {
             match gml::feature_key(&feature) {
                 Some(key) => {
                     if seen.insert(key) {
@@ -163,14 +173,30 @@ fn gather(
             }
         }
     }
+    if features.is_empty() && answered == 0 {
+        if let Some(error) = first_error {
+            return Err(error);
+        }
+    }
     if features.len() > MAX_TOTAL {
         features.truncate(MAX_TOTAL);
         truncated = true;
     }
-    Ok((features, truncated))
+    Ok(Download { features, truncated, failed, fallback: None })
 }
 
-/// One area, in parallel page batches.
+/// One cell's answer: the features that arrived, and the requests that did not.
+#[derive(Default)]
+struct Cell {
+    features: Vec<Value>,
+    truncated: bool,
+    /// Requests that answered, an empty page included.
+    answered: usize,
+    failed: usize,
+    first_error: Option<String>,
+}
+
+/// One area, in parallel page batches; a page that fails costs its features, not the cell.
 ///
 /// GUGiK answers in ~1.6 s per request whatever the page size, and caps a response near 995
 /// features (measured), so throughput comes from overlapping requests, not bigger pages.
@@ -181,45 +207,52 @@ fn fetch_cell(
     report: &mut dyn FnMut(&str),
     lang: Lang,
     srs: Srs,
-) -> Result<(Vec<Value>, bool), String> {
+) -> Cell {
     let started = Instant::now();
-    let mut features: Vec<Value> = Vec::new();
-    let mut truncated = false;
+    let mut cell = Cell::default();
     let mut start = 0usize;
     let mut exhausted = false;
     while !exhausted {
         if started.elapsed().as_secs() > BUDGET_SECS {
-            truncated = true;
+            cell.truncated = true;
             break;
         }
-        if features.len() >= MAX_TOTAL {
-            truncated = true;
+        if cell.features.len() >= MAX_TOTAL {
+            cell.truncated = true;
             break;
         }
         let starts: Vec<usize> = (0..PAGES_IN_FLIGHT).map(|i| start + i * PAGE).collect();
-        let mut batch = fetch_pages(layer, bbox, filter, &starts, lang, srs)?;
-        // A short page ends the sequence; later pages in the batch are past the end.
         let mut read = 0usize;
-        for page in batch.drain(..) {
-            if page.len() < PAGE {
-                exhausted = true;
+        for (_, page) in fetch_pages(layer, bbox, filter, &starts, lang, srs) {
+            match page {
+                Ok(page) => {
+                    cell.answered += 1;
+                    // A short page ends the sequence; the pages after it are past the end.
+                    if page.len() < PAGE {
+                        exhausted = true;
+                    }
+                    read += page.len();
+                    cell.features.extend(page);
+                }
+                Err(error) => {
+                    cell.failed += 1;
+                    cell.first_error.get_or_insert(error);
+                }
             }
-            read += page.len();
-            features.extend(page);
             if exhausted {
                 break;
             }
         }
-        report(&text::count(lang, layer.name, features.len()));
+        report(&text::count(lang, layer.name, cell.features.len()));
         if read == 0 {
             break;
         }
         start += read;
     }
-    Ok((features, truncated))
+    cell
 }
 
-/// Fetches the given page offsets at once; a page that fails is reported, not retried.
+/// Fetches the given page offsets at once; a page that fails comes back as its error.
 fn fetch_pages(
     layer: &WfsLayer,
     bbox: [f64; 4],
@@ -227,7 +260,7 @@ fn fetch_pages(
     starts: &[usize],
     lang: Lang,
     srs: Srs,
-) -> Result<Vec<Vec<Value>>, String> {
+) -> Vec<(usize, Result<Vec<Value>, String>)> {
     let (sender, receiver) = std::sync::mpsc::channel();
     std::thread::scope(|scope| {
         for &offset in starts {
@@ -235,24 +268,24 @@ fn fetch_pages(
             scope.spawn(move || {
                 let url = page_url(layer, bbox, offset, filter, srs);
                 let swap = matches!(srs, Srs::LonLat);
-                let parsed = http::get(&url, 120, lang)
-                    .and_then(|body| gml::parse_features(&body, swap, lang))
-                    .map(|mut rows| {
-                        if matches!(srs, Srs::Grid) {
-                            to_lon_lat(&mut rows);
-                        }
-                        rows
-                    });
+                let parsed = http::get_unstored(&url, 120, lang).and_then(|body| {
+                    let mut rows = gml::parse_features(&body, swap, lang)?;
+                    // Only an answer parsed as features is stored, so an exception never sticks.
+                    if !rows.is_empty() {
+                        cache::put(&url, &body);
+                    }
+                    if matches!(srs, Srs::Grid) {
+                        to_lon_lat(&mut rows);
+                    }
+                    Ok(rows)
+                });
                 let _ = sender.send((offset, parsed));
             });
         }
         drop(sender);
-        let mut pages: Vec<(usize, Vec<Value>)> = Vec::new();
-        for (offset, parsed) in receiver {
-            pages.push((offset, parsed?));
-        }
+        let mut pages: Vec<(usize, Result<Vec<Value>, String>)> = receiver.into_iter().collect();
         pages.sort_by_key(|(offset, _)| *offset);
-        Ok(pages.into_iter().map(|(_, page)| page).collect())
+        pages
     })
 }
 
@@ -380,6 +413,15 @@ mod tests {
         assert!(too_large(dzialki, [21.0, 52.0, 21.5, 52.4]));
         assert!(!too_large(dzialki, [21.0, 52.2, 21.01, 52.21]));
         assert!(!too_large(gminy, [21.0, 52.0, 22.5, 53.0]));
+    }
+
+    #[test]
+    fn keeps_the_polygon_in_the_grid_retry() {
+        let layer = catalog::wfs_by_label("gminy").unwrap();
+        let url = page_url(layer, [21.0, 52.2, 21.01, 52.21], 0, Some("%3CFilter%3E"), Srs::Grid);
+        assert!(url.contains("SRSNAME=EPSG:2180"), "{url}");
+        assert!(url.contains("&FILTER=%3CFilter%3E"), "{url}");
+        assert!(!url.contains("BBOX="), "a retry never widens past the drawn shape: {url}");
     }
 
     #[test]

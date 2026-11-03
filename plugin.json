@@ -26,7 +26,7 @@
   "commands": [
     {
       "id": "orto",
-      "label": "Orthophoto",
+      "label": "Orthophoto\n(WMTS)",
       "icon": "basemap",
       "help": "GUGiK orthophoto (WMTS, EPSG:3857). Click again to remove it."
     },
@@ -38,7 +38,7 @@
     },
     {
       "id": "bdot",
-      "label": "BDOT10k",
+      "label": "BDOT10k\n(overlay)",
       "icon": "basemap",
       "help": "Topographic object database as an overlay (visible from city scale)."
     },
@@ -68,13 +68,13 @@
     },
     {
       "id": "nmt",
-      "label": "DEM\nhillshade",
+      "label": "Hillshade\n(NMT)",
       "icon": "relief",
       "help": "Hillshade of the digital terrain model."
     },
     {
       "id": "obszar-widok",
-      "label": "Rectangle\narea",
+      "label": "Area\nfrom view",
       "icon": "g_rect",
       "help": "Copies the map view into the area layer as a rectangle: one click, and the rectangle is exactly what you see. It is the area a download and the elevation model use."
     },
@@ -92,7 +92,7 @@
     },
     {
       "id": "obszar-wyczysc",
-      "label": "Clear\narea",
+      "label": "Remove\narea",
       "icon": "erase",
       "help": "Removes the area layer, so the next rectangle or drawn shape starts empty."
     },
@@ -104,7 +104,7 @@
     },
     {
       "id": "przytnij",
-      "label": "Clip\nto area",
+      "label": "Clip\nto layer",
       "icon": "buffer",
       "help": "Clips a layer to a boundary layer: the area layer by default, or the one you choose in the panel. A WFS answer returns whole features that touch it; this cuts them.",
       "params": "{\"layer\": \"layer name (optional, the active layer or the newest one when left out)\", \"obszar\": \"boundary layer name (optional, the panel's choice or the area layer when left out)\"}"
@@ -185,7 +185,7 @@
     },
     {
       "id": "dem-style",
-      "label": "Style the model",
+      "label": "Set the model's style",
       "icon": "map",
       "help": "Shades the newest elevation model again. Pass colours to band the heights instead.",
       "params": "{\"layer\": \"elevation model layer (optional)\", \"colours\": \"false\"}"
@@ -194,763 +194,763 @@
       "id": "usluga-ceny-nieruchomosci",
       "label": "Ceny nieruchomości",
       "icon": "basemap",
-      "help": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+      "help": "Ceny nieruchomości · GUGiK",
       "params": "{\"service\": \"Ceny nieruchomości\"}"
     },
     {
       "id": "usluga-cieniowanie-wms",
       "label": "Cieniowanie (WMS)",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / NUMERYCZNY MODEL TERENU",
+      "help": "Cieniowanie (WMS) · GUGiK",
       "params": "{\"service\": \"Cieniowanie (WMS)\"}"
     },
     {
       "id": "usluga-dane-hydrologiczne-polski-w-ukladzie-1992-zgeneralizowane",
       "label": "Hydrologia 1992",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE ARCHIWALNE",
+      "help": "Hydrologia 1992 · GUGiK",
       "params": "{\"service\": \"Dane hydrologiczne Polski w układzie 1992, zgeneralizowane z precyzją 1 m\"}"
     },
     {
       "id": "usluga-dane-o-projektowanych-planach-ogolnych-dla-gmin",
       "label": "Plany ogólne: projekty",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / PLANY OGÓLNE GMIN",
+      "help": "Plany ogólne: projekty · GUGiK",
       "params": "{\"service\": \"Dane o projektowanych planach ogólnych dla gmin\"}"
     },
     {
       "id": "usluga-dane-o-uchwalonych-planach-ogolnych-dla-gmin",
       "label": "Plany ogólne: uchwalone",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / PLANY OGÓLNE GMIN",
+      "help": "Plany ogólne: uchwalone · GUGiK",
       "params": "{\"service\": \"Dane o uchwalonych planach ogólnych dla gmin\"}"
     },
     {
       "id": "usluga-formy-ochrony-przyrody",
       "label": "GDOŚ · Formy ochrony przyrody",
       "icon": "basemap",
-      "help": "Generalna Dyrekcja Ochrony Środowiska (GDOŚ) - Geoserwis",
+      "help": "GDOŚ · Formy ochrony przyrody · Generalna Dyrekcja Ochrony Środowiska (GDOŚ)",
       "params": "{\"service\": \"Formy Ochrony Przyrody\"}"
     },
     {
       "id": "usluga-grossblatt-1-100-000-karte-des-deutschen-reiches",
       "label": "Grossblatt 1:100 000 Karte des Deutschen Reiches",
       "icon": "basemap",
-      "help": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+      "help": "Grossblatt 1:100 000 Karte des Deutschen Reiches · Cartomatic",
       "params": "{\"service\": \"Grossblatt 1:100 000 Karte des Deutschen Reiches\"}"
     },
     {
       "id": "usluga-grunty-skarbu-panstwa",
       "label": "Grunty Skarbu Państwa",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / SPECJALISTYCZNE INFORMACJE GEODEZYJNE",
+      "help": "Grunty Skarbu Państwa · GUGiK",
       "params": "{\"service\": \"Grunty Skarbu Państwa\"}"
     },
     {
       "id": "usluga-hydrologia-monitoring-wod-podziemnych",
       "label": "Wody podziemne",
       "icon": "basemap",
-      "help": "Państwowy Instytut Geologiczny (PIG)",
+      "help": "Wody podziemne · Państwowy Instytut Geologiczny (PIG)",
       "params": "{\"service\": \"Hydrologia - Monitoring Wód Podziemnych\"}"
     },
     {
       "id": "usluga-infrastruktura-kolejowa",
       "label": "PKP PLK · Infrastruktura kolejowa",
       "icon": "basemap",
-      "help": "Polskie Linie Kolejowe S.A.",
+      "help": "PKP PLK · Infrastruktura kolejowa · Polskie Linie Kolejowe S.A.",
       "params": "{\"service\": \"Infrastruktura kolejowa\"}"
     },
     {
       "id": "usluga-inspire-tn-sieci-transportowe-bdot",
       "label": "INSPIRE: sieci transportowe",
       "icon": "basemap",
-      "help": "USŁUGI INSPIRE",
+      "help": "INSPIRE: sieci transportowe · GUGiK",
       "params": "{\"service\": \"INSPIRE_TN: Sieci transportowe (BDOT)\"}"
     },
     {
       "id": "usluga-jaskinie",
       "label": "Jaskinie",
       "icon": "basemap",
-      "help": "Państwowy Instytut Geologiczny (PIG)",
+      "help": "Jaskinie · Państwowy Instytut Geologiczny (PIG)",
       "params": "{\"service\": \"Jaskinie\"}"
     },
     {
       "id": "usluga-jednostki-statystyczne-brec-2017",
       "label": "GUS · Jednostki statystyczne",
       "icon": "basemap",
-      "help": "Główny Urząd Statystyczny",
+      "help": "GUS · Jednostki statystyczne · Główny Urząd Statystyczny",
       "params": "{\"service\": \"Jednostki statystyczne (BREC 2017)\"}"
     },
     {
       "id": "usluga-karte-des-deutschen-reiches-1-100-000",
       "label": "Karte des Deutschen Reiches 1:100 000",
       "icon": "basemap",
-      "help": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+      "help": "Karte des Deutschen Reiches 1:100 000 · Cartomatic",
       "params": "{\"service\": \"Karte des Deutschen Reiches 1:100 000\"}"
     },
     {
       "id": "usluga-karte-des-westlichen-russlands-1-100-000",
       "label": "Karte des westlichen Rußlands 1:100 000",
       "icon": "basemap",
-      "help": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+      "help": "Karte des westlichen Rußlands 1:100 000 · Cartomatic",
       "params": "{\"service\": \"Karte des westlichen Rußlands 1:100 000\"}"
     },
     {
       "id": "usluga-krajowa-integracja-miejscowych-planow-zagospodarowania-pr",
       "label": "KIMPZP plany gmin",
       "icon": "basemap",
-      "help": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+      "help": "KIMPZP plany gmin · GUGiK",
       "params": "{\"service\": \"Krajowa Integracja Miejscowych Planów Zagospodarowania Przestrzennego (KIMP)\"}"
     },
     {
       "id": "usluga-krajowa-integracja-studium-uwarunkowan-i-kierunkow-zagosp",
       "label": "Studium gmin",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / ELEMENTY MAPY ZASADNICZEJ I ZAGOSPODAROWANIA PRZESTRZENNEGO",
+      "help": "Studium gmin · GUGiK",
       "params": "{\"service\": \"Krajowa Integracja Studium Uwarunkowań i Kierunków Zagospodarowania Przestrzennego (KISKZP)\"}"
     },
     {
       "id": "usluga-krajowa-integracja-szczegolowych-osnow-geodezyjnych-kisog",
       "label": "KISOG osnowy",
       "icon": "basemap",
-      "help": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+      "help": "KISOG osnowy · GUGiK",
       "params": "{\"service\": \"Krajowa Integracja Szczegółowych Osnów Geodezyjnych (KISOG)\"}"
     },
     {
       "id": "usluga-krajowy-osrodek-wsparcia-rolnictwa-dzialki",
       "label": "KOWR działki",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / KRAJOWY OŚRODEK WSPARCIA ROLNICTWA",
+      "help": "KOWR działki · Krajowy Ośrodek Wsparcia Rolnictwa",
       "params": "{\"service\": \"Krajowy Ośrodek Wsparcia Rolnictwa - działki\"}"
     },
     {
       "id": "usluga-mapa-wlasnosci-grupy-rejestrowe",
       "label": "Mapa własności",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE POZYSKIWANE Z POWIATOWYCH USŁUG",
+      "help": "Mapa własności · GUGiK",
       "params": "{\"service\": \"Mapa własności - grupy rejestrowe\"}"
     },
     {
       "id": "usluga-mapa-zagrozenia-powodziowego",
       "label": "PGW Wody Polskie · Zagrożenie powodziowe",
       "icon": "basemap",
-      "help": "PGW Wody Polskie (dawniej KZGW)",
+      "help": "PGW Wody Polskie · Zagrożenie powodziowe · PGW Wody Polskie",
       "params": "{\"service\": \"Mapa zagrożenia powodziowego\"}"
     },
     {
       "id": "usluga-mapy-sozologiczne-do-przegladania",
       "label": "Mapy sozologiczne",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE ARCHIWALNE",
+      "help": "Mapy sozologiczne · GUGiK",
       "params": "{\"service\": \"Mapy sozologiczne do przeglądania\"}"
     },
     {
       "id": "usluga-messtischblatter-1-25-000",
       "label": "Meßtischblätter 1:25 000",
       "icon": "basemap",
-      "help": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+      "help": "Meßtischblätter 1:25 000 · Cartomatic",
       "params": "{\"service\": \"Meßtischblätter 1:25 000\"}"
     },
     {
       "id": "usluga-modele-roznic-wysokosci",
       "label": "Modele różnic wysokości",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / SPECJALISTYCZNE INFORMACJE GEODEZYJNE",
+      "help": "Modele różnic wysokości · GUGiK",
       "params": "{\"service\": \"Modele różnic wysokości\"}"
     },
     {
       "id": "usluga-nowe-budynki-w-bdot10k",
       "label": "BDOT: nowe budynki",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE TOPOGRAFICZNE I OGÓLNOGEOGRAFICZNE",
+      "help": "BDOT: nowe budynki · GUGiK",
       "params": "{\"service\": \"Nowe budynki w BDOT10k\"}"
     },
     {
       "id": "usluga-obiekty-panstwowego-rejestru-nazw-geograficznych",
       "label": "PRNG obiekty",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE TOPOGRAFICZNE I OGÓLNOGEOGRAFICZNE",
+      "help": "PRNG obiekty · GUGiK",
       "params": "{\"service\": \"Obiekty Państwowego Rejestru Nazw Geograficznych\"}"
     },
     {
       "id": "usluga-obiekty-uzytecznosci-publicznej-defibrylatory",
       "label": "Defibrylatory",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / OBIEKTY UŻYTECZNOŚCI PUBLICZNEJ",
+      "help": "Defibrylatory · GUGiK",
       "params": "{\"service\": \"Obiekty użyteczności publicznej - Defibrylatory\"}"
     },
     {
       "id": "usluga-obiekty-uzytecznosci-publicznej-zdrowie",
       "label": "Zdrowie: obiekty",
       "icon": "basemap",
-      "help": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+      "help": "Zdrowie: obiekty · GUGiK",
       "params": "{\"service\": \"Obiekty użyteczności publicznej - Zdrowie\"}"
     },
     {
       "id": "usluga-obrazy-intensywnosci",
       "label": "Obrazy intensywności",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / ORTOFOTOMAPA",
+      "help": "Obrazy intensywności · GUGiK",
       "params": "{\"service\": \"Obrazy intensywności\"}"
     },
     {
       "id": "usluga-obreby-modernizacja",
       "label": "Obręby - modernizacja",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / MODERNIZACJA EWIDENCJI GRUNTÓW I BUDYNKÓW",
+      "help": "Obręby - modernizacja · GUGiK",
       "params": "{\"service\": \"Obręby - modernizacja\"}"
     },
     {
       "id": "usluga-obszary-prognostyczne-i-perspektywiczne",
       "label": "Obszary prognostyczne",
       "icon": "basemap",
-      "help": "Państwowy Instytut Geologiczny (PIG)",
+      "help": "Obszary prognostyczne · Państwowy Instytut Geologiczny (PIG)",
       "params": "{\"service\": \"Obszary prognostyczne i perspektywiczne\"}"
     },
     {
       "id": "usluga-ortofotomapa-prawdziwa",
       "label": "Ortofoto prawdziwe",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / ORTOFOTOMAPA",
+      "help": "Ortofoto prawdziwe · GUGiK",
       "params": "{\"service\": \"Ortofotomapa prawdziwa\"}"
     },
     {
       "id": "usluga-ortofotomapa-skorowidze-wg-aktualnosci",
       "label": "Ortofoto: skorowidze",
       "icon": "basemap",
-      "help": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+      "help": "Ortofoto: skorowidze · GUGiK",
       "params": "{\"service\": \"Ortofotomapa - skorowidze wg aktualności\"}"
     },
     {
       "id": "usluga-ortofotomapa-standardowa",
       "label": "Ortofoto standardowe",
       "icon": "basemap",
-      "help": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+      "help": "Ortofoto standardowe · GUGiK",
       "params": "{\"service\": \"Ortofotomapa standardowa\"}"
     },
     {
       "id": "usluga-ortofotomapa-wysokiej-rozdzielczosci",
       "label": "Ortofoto hi-res",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / ORTOFOTOMAPA",
+      "help": "Ortofoto hi-res · GUGiK",
       "params": "{\"service\": \"Ortofotomapa wysokiej rozdzielczości\"}"
     },
     {
       "id": "usluga-osnowa-magnetyczna",
       "label": "Osnowa magnetyczna",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / SPECJALISTYCZNE INFORMACJE GEODEZYJNE",
+      "help": "Osnowa magnetyczna · GUGiK",
       "params": "{\"service\": \"Osnowa magnetyczna\"}"
     },
     {
       "id": "usluga-osuwiska-i-tereny-zagrozone-ruchami-masowymi",
       "label": "Osuwiska",
       "icon": "basemap",
-      "help": "Państwowy Instytut Geologiczny (PIG)",
+      "help": "Osuwiska · Państwowy Instytut Geologiczny (PIG)",
       "params": "{\"service\": \"Osuwiska i tereny zagrożone ruchami masowymi\"}"
     },
     {
       "id": "usluga-otwory-wiertnicze",
       "label": "Otwory wiertnicze",
       "icon": "basemap",
-      "help": "Państwowy Instytut Geologiczny (PIG)",
+      "help": "Otwory wiertnicze · Państwowy Instytut Geologiczny (PIG)",
       "params": "{\"service\": \"Otwory wiertnicze\"}"
     },
     {
       "id": "usluga-otwory-wiertnicze-hydrogeologiczne",
       "label": "Otwory hydrogeologiczne",
       "icon": "basemap",
-      "help": "Państwowy Instytut Geologiczny (PIG)",
+      "help": "Otwory hydrogeologiczne · Państwowy Instytut Geologiczny (PIG)",
       "params": "{\"service\": \"Otwory wiertnicze - hydrogeologiczne\"}"
     },
     {
       "id": "usluga-paczki-powiatowe-z-archiwalnymi-danymi-bdot10k",
       "label": "BDOT10k powiaty (arch.)",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE ARCHIWALNE",
+      "help": "BDOT10k powiaty (arch.) · GUGiK",
       "params": "{\"service\": \"Paczki powiatowe z archiwalnymi danymi BDOT10k\"}"
     },
     {
       "id": "usluga-panstwowy-rejestr-granic-adresy",
       "label": "PRG adresy",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / PAŃSTWOWY REJESTR GRANIC",
+      "help": "PRG adresy · GUGiK",
       "params": "{\"service\": \"Państwowy Rejestr Granic - Adresy\"}"
     },
     {
       "id": "usluga-podstawowa-osnowa-geodezyjna-pozioma",
       "label": "Osnowa pozioma",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / SPECJALISTYCZNE INFORMACJE GEODEZYJNE",
+      "help": "Osnowa pozioma · GUGiK",
       "params": "{\"service\": \"Podstawowa osnowa geodezyjna pozioma\"}"
     },
     {
       "id": "usluga-podstawowa-osnowa-geodezyjna-wysokosciowa",
       "label": "Osnowa wysokościowa",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / SPECJALISTYCZNE INFORMACJE GEODEZYJNE",
+      "help": "Osnowa wysokościowa · GUGiK",
       "params": "{\"service\": \"Podstawowa osnowa geodezyjna wysokościowa\"}"
     },
     {
       "id": "usluga-podtopienia",
       "label": "Podtopienia",
       "icon": "basemap",
-      "help": "Państwowy Instytut Geologiczny (PIG)",
+      "help": "Podtopienia · Państwowy Instytut Geologiczny (PIG)",
       "params": "{\"service\": \"Podtopienia\"}"
     },
     {
       "id": "usluga-polsa-klasyfikacja-pokrycia-terenu-2019",
       "label": "POLSA pokrycie 2019",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+      "help": "POLSA pokrycie 2019 · Polska Agencja Kosmiczna",
       "params": "{\"service\": \"POLSA Klasyfikacja pokrycia terenu 2019\"}"
     },
     {
       "id": "usluga-polsa-klasyfikacja-pokrycia-terenu-2020",
       "label": "POLSA pokrycie 2020",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+      "help": "POLSA pokrycie 2020 · Polska Agencja Kosmiczna",
       "params": "{\"service\": \"POLSA Klasyfikacja pokrycia terenu 2020\"}"
     },
     {
       "id": "usluga-polsa-klasyfikacja-pokrycia-terenu-2021",
       "label": "POLSA pokrycie 2021",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+      "help": "POLSA pokrycie 2021 · Polska Agencja Kosmiczna",
       "params": "{\"service\": \"POLSA Klasyfikacja pokrycia terenu 2021\"}"
     },
     {
       "id": "usluga-polsa-klasyfikacja-pokrycia-terenu-2022",
       "label": "POLSA pokrycie 2022",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+      "help": "POLSA pokrycie 2022 · Polska Agencja Kosmiczna",
       "params": "{\"service\": \"POLSA Klasyfikacja pokrycia terenu 2022\"}"
     },
     {
       "id": "usluga-polsa-klasyfikacja-pokrycia-terenu-2023",
       "label": "POLSA pokrycie 2023",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+      "help": "POLSA pokrycie 2023 · Polska Agencja Kosmiczna",
       "params": "{\"service\": \"POLSA Klasyfikacja pokrycia terenu 2023\"}"
     },
     {
       "id": "usluga-polsa-klasyfikacja-pokrycia-terenu-2024",
       "label": "POLSA pokrycie 2024",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+      "help": "POLSA pokrycie 2024 · Polska Agencja Kosmiczna",
       "params": "{\"service\": \"POLSA Klasyfikacja pokrycia terenu 2024\"}"
     },
     {
       "id": "usluga-polsa-klasyfikacja-pokrycia-terenu-2025",
       "label": "POLSA pokrycie 2025",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+      "help": "POLSA pokrycie 2025 · Polska Agencja Kosmiczna",
       "params": "{\"service\": \"POLSA Klasyfikacja pokrycia terenu 2025\"}"
     },
     {
       "id": "usluga-polsa-ortofotomapa-satelitarna-2021",
       "label": "POLSA ortofoto 2021",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+      "help": "POLSA ortofoto 2021 · Polska Agencja Kosmiczna",
       "params": "{\"service\": \"POLSA Ortofotomapa satelitarna 2021\"}"
     },
     {
       "id": "usluga-polsa-ortofotomapa-satelitarna-2022",
       "label": "POLSA ortofoto 2022",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+      "help": "POLSA ortofoto 2022 · Polska Agencja Kosmiczna",
       "params": "{\"service\": \"POLSA Ortofotomapa satelitarna 2022\"}"
     },
     {
       "id": "usluga-polsa-ortofotomapa-satelitarna-2024",
       "label": "POLSA ortofoto 2024",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / POLSKA AGENCJA KOSMICZNA",
+      "help": "POLSA ortofoto 2024 · Polska Agencja Kosmiczna",
       "params": "{\"service\": \"POLSA Ortofotomapa satelitarna 2024\"}"
     },
     {
       "id": "usluga-pomniki-historii-inspire",
       "label": "Pomniki historii",
       "icon": "basemap",
-      "help": "Narodowy Instytut Dziedzictwa (NID)",
+      "help": "Pomniki historii · Narodowy Instytut Dziedzictwa (NID)",
       "params": "{\"service\": \"Pomniki historii (INSPIRE)\"}"
     },
     {
       "id": "usluga-prg-jednostki-terytorialne-panstwowy-rejestr-granic",
       "label": "PRG jednostki",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / PAŃSTWOWY REJESTR GRANIC",
+      "help": "PRG jednostki · GUGiK",
       "params": "{\"service\": \"PRG Jednostki Terytorialne (Państwowy Rejestr Granic)\"}"
     },
     {
       "id": "usluga-rastrowa-krajobrazowa-mapa-polski-do-przegladania",
       "label": "Mapa krajobrazowa",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE ARCHIWALNE",
+      "help": "Mapa krajobrazowa · GUGiK",
       "params": "{\"service\": \"Rastrowa Krajobrazowa Mapa Polski do przeglądania\"}"
     },
     {
       "id": "usluga-rastrowa-mapa-administracyjna-polski-do-przegladania",
       "label": "Mapa administracyjna",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE ARCHIWALNE",
+      "help": "Mapa administracyjna · GUGiK",
       "params": "{\"service\": \"Rastrowa Mapa Administracyjna Polski do przeglądania\"}"
     },
     {
       "id": "usluga-rastrowa-ogolnogeograficzna-mapa-polski-do-przegladania",
       "label": "Mapa ogólnogeograficzna",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE ARCHIWALNE",
+      "help": "Mapa ogólnogeograficzna · GUGiK",
       "params": "{\"service\": \"Rastrowa Ogólnogeograficzna Mapa Polski do przeglądania\"}"
     },
     {
       "id": "usluga-rejestr-cen-nieruchomosci",
       "label": "RCN ceny",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / NIERUCHOMOŚCI",
+      "help": "RCN ceny · GUGiK",
       "params": "{\"service\": \"Rejestr Cen Nieruchomości\"}"
     },
     {
       "id": "usluga-rejestr-cen-nieruchomosci-mapy-gestosci",
       "label": "RCN mapy gęstości",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / NIERUCHOMOŚCI",
+      "help": "RCN mapy gęstości · GUGiK",
       "params": "{\"service\": \"Rejestr Cen Nieruchomości - mapy gęstości\"}"
     },
     {
       "id": "usluga-rejestr-wnioskow-decyzji-i-zgloszen",
       "label": "Rejestr wniosków i zgłoszeń",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / GŁÓWNY URZĄD NADZORU BUDOWLANEGO",
+      "help": "Rejestr wniosków i zgłoszeń · Główny Urząd Nadzoru Budowlanego",
       "params": "{\"service\": \"Rejestr Wniosków Decyzji i Zgłoszeń\"}"
     },
     {
       "id": "usluga-rejestr-zabytkow-archeologicznych-inspire",
       "label": "Rejestr zabytków archeologicznych (INSPIRE)",
       "icon": "basemap",
-      "help": "Narodowy Instytut Dziedzictwa (NID)",
+      "help": "Rejestr zabytków archeologicznych (INSPIRE) · Narodowy Instytut Dziedzictwa (NID)",
       "params": "{\"service\": \"Rejestr zabytków archeologicznych (INSPIRE)\"}"
     },
     {
       "id": "usluga-rejestr-zabytkow-nieruchomych-inspire",
       "label": "Rejestr zabytków",
       "icon": "basemap",
-      "help": "Narodowy Instytut Dziedzictwa (NID)",
+      "help": "Rejestr zabytków · Narodowy Instytut Dziedzictwa (NID)",
       "params": "{\"service\": \"Rejestr zabytków nieruchomych (INSPIRE)\"}"
     },
     {
       "id": "usluga-schrony",
       "label": "Schrony",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / ZARZĄDZANIE KRYZYSOWE",
+      "help": "Schrony · GUGiK",
       "params": "{\"service\": \"Schrony\"}"
     },
     {
       "id": "usluga-sekcje-mapy-w-ukladzie-1992",
       "label": "Sekcje mapy w układzie 1992",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / SPECJALISTYCZNE INFORMACJE GEODEZYJNE",
+      "help": "Sekcje mapy w układzie 1992 · GUGiK",
       "params": "{\"service\": \"Sekcje mapy w układzie 1992\"}"
     },
     {
       "id": "usluga-siec-drogowa-z-bazy-projektu-openstreetmap",
       "label": "Drogi (OSM)",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE TOPOGRAFICZNE I OGÓLNOGEOGRAFICZNE",
+      "help": "Drogi (OSM) · GUGiK",
       "params": "{\"service\": \"Sieć drogowa z bazy projektu OpenStreetMap\"}"
     },
     {
       "id": "usluga-skorowidz-map-baza-danych-obiektow-topograficznych-bdot",
       "label": "Skorowidz: BDOT",
       "icon": "basemap",
-      "help": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+      "help": "Skorowidz: BDOT · GUGiK",
       "params": "{\"service\": \"Skorowidz map - Baza Danych Obiektów Topograficznych (BDOT)\"}"
     },
     {
       "id": "usluga-skorowidz-map-mapa-sozologiczna",
       "label": "Skorowidz: sozologia",
       "icon": "basemap",
-      "help": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+      "help": "Skorowidz: sozologia · GUGiK",
       "params": "{\"service\": \"Skorowidz map - Mapa Sozologiczna\"}"
     },
     {
       "id": "usluga-skorowidz-map-osnowa",
       "label": "Skorowidz: osnowa",
       "icon": "basemap",
-      "help": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+      "help": "Skorowidz: osnowa · GUGiK",
       "params": "{\"service\": \"Skorowidz map - Osnowa\"}"
     },
     {
       "id": "usluga-skorowidz-map-zdjecia-lotnicze",
       "label": "Skorowidz: zdjęcia",
       "icon": "basemap",
-      "help": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+      "help": "Skorowidz: zdjęcia · GUGiK",
       "params": "{\"service\": \"Skorowidz map - Zdjęcia lotnicze\"}"
     },
     {
       "id": "usluga-skorowidze-aerotriangulacji-zdjec-lotniczych",
       "label": "Skorowidze aerotriangulacji",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / OSNOWA GEODEZYJNA",
+      "help": "Skorowidze aerotriangulacji · GUGiK",
       "params": "{\"service\": \"Skorowidze aerotriangulacji zdjęć lotniczych\"}"
     },
     {
       "id": "usluga-skorowidze-linii-mozaikowania-zdjec-lotniczych",
       "label": "Skorowidze mozaikowania",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / OSNOWA GEODEZYJNA",
+      "help": "Skorowidze mozaikowania · GUGiK",
       "params": "{\"service\": \"Skorowidze linii mozaikowania zdjęć lotniczych\"}"
     },
     {
       "id": "usluga-srchiwalne-kartoteki-osnow-geodezyjnych",
       "label": "Kartoteki osnów (arch.)",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / OSNOWA GEODEZYJNA",
+      "help": "Kartoteki osnów (arch.) · GUGiK",
       "params": "{\"service\": \"Srchiwalne kartoteki osnów geodezyjnych\"}"
     },
     {
       "id": "usluga-stacje-asg-eupos",
       "label": "ASG-EUPOS stacje",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / SPECJALISTYCZNE INFORMACJE GEODEZYJNE",
+      "help": "ASG-EUPOS stacje · GUGiK",
       "params": "{\"service\": \"Stacje ASG_EUPOS\"}"
     },
     {
       "id": "usluga-statystyki-obiektow-innych-w-bdot10k",
       "label": "BDOT: statystyki inne",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE TOPOGRAFICZNE I OGÓLNOGEOGRAFICZNE",
+      "help": "BDOT: statystyki inne · GUGiK",
       "params": "{\"service\": \"Statystyki obiektów innych w BDOT10k.\"}"
     },
     {
       "id": "usluga-statystyki-sieci-komunikacyjnej-w-bdot10k",
       "label": "BDOT: statystyki dróg",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE TOPOGRAFICZNE I OGÓLNOGEOGRAFICZNE",
+      "help": "BDOT: statystyki dróg · GUGiK",
       "params": "{\"service\": \"sTatystyki sieci komunikacyjnej w BDOT10k\"}"
     },
     {
       "id": "usluga-statystyki-sieci-wodnej-w-bdot10k",
       "label": "BDOT: statystyki wód",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE TOPOGRAFICZNE I OGÓLNOGEOGRAFICZNE",
+      "help": "BDOT: statystyki wód · GUGiK",
       "params": "{\"service\": \"statystyki sieci wodnej w BDOT10k\"}"
     },
     {
       "id": "usluga-strefy-zagrozenia-naturalnego-zjawiska-meteorologiczne-w",
       "label": "IMGW-PIB · Strefy zagrożenia meteo",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE INNYCH INSTYTUCJI / INSTYTUT METEOROLOGII I GOSPODARKI WODNEJ",
+      "help": "IMGW-PIB · Strefy zagrożenia meteo · Instytut Meteorologii i Gospodarki Wodnej",
       "params": "{\"service\": \"Strefy zagrożenia naturalnego (zjawiska meteorologiczne) w Polsce\"}"
     },
     {
       "id": "usluga-szczegolowa-mapa-geologiczna-pigsmg",
       "label": "Geologia SMG",
       "icon": "basemap",
-      "help": "Państwowy Instytut Geologiczny (PIG)",
+      "help": "Geologia SMG · Państwowy Instytut Geologiczny (PIG)",
       "params": "{\"service\": \"Szczegółowa mapa geologiczna pigSMG\"}"
     },
     {
       "id": "usluga-tereny-zamkniete-ministerstwo-infrastruktury",
       "label": "Tereny zamknięte",
       "icon": "basemap",
-      "help": "Główny Urząd Geodezji i Kartografii (GUGiK) - Geoportal.gov.pl",
+      "help": "Tereny zamknięte · GUGiK",
       "params": "{\"service\": \"Tereny zamknięte - Ministerstwo Infrastruktury\"}"
     },
     {
       "id": "usluga-ubersichtskarte-von-mitteleuropa-1-300-000",
       "label": "Übersichtskarte von Mitteleuropa 1:300 000",
       "icon": "basemap",
-      "help": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+      "help": "Übersichtskarte von Mitteleuropa 1:300 000 · Cartomatic",
       "params": "{\"service\": \"Übersichtskarte von Mitteleuropa 1:300 000\"}"
     },
     {
       "id": "usluga-usluga-przegladania-danych-bazy-danych-obiektow-topografi",
       "label": "BDOT10k",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE TOPOGRAFICZNE I OGÓLNOGEOGRAFICZNE",
+      "help": "BDOT10k · GUGiK",
       "params": "{\"service\": \"Usługa przeglądania danych Bazy Danych Obiektów Topograficznych (BDOT10k) dla obszaru Polski\"}"
     },
     {
       "id": "usluga-usluga-przegladania-danych-inspire-tematu-adresy-dla-obsz",
       "label": "INSPIRE: adresy",
       "icon": "basemap",
-      "help": "USŁUGI INSPIRE",
+      "help": "INSPIRE: adresy · GUGiK",
       "params": "{\"service\": \"Usługa przeglądania danych INSPIRE tematu Adresy dla obszaru Polski\"}"
     },
     {
       "id": "usluga-usluga-przegladania-danych-inspire-tematu-dzialki-katastr",
       "label": "INSPIRE: działki katastralne",
       "icon": "basemap",
-      "help": "USŁUGI INSPIRE",
+      "help": "INSPIRE: działki katastralne · GUGiK",
       "params": "{\"service\": \"Usługa przeglądania danych INSPIRE tematu Działki katastralne dla obszaru Polski\"}"
     },
     {
       "id": "usluga-usluga-przegladania-danych-inspire-tematu-nazwy-geografic",
       "label": "INSPIRE: nazwy geograficzne",
       "icon": "basemap",
-      "help": "USŁUGI INSPIRE",
+      "help": "INSPIRE: nazwy geograficzne · GUGiK",
       "params": "{\"service\": \"Usługa przeglądania danych INSPIRE tematu Nazwy geograficzne dla obszaru Polski\"}"
     },
     {
       "id": "usluga-usluga-przegladania-danych-topograficznych-dla-polski",
       "label": "Mapy topo (WMS)",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE ARCHIWALNE",
+      "help": "Mapy topo (WMS) · GUGiK",
       "params": "{\"service\": \"Usługa przeglądania danych topograficznych dla Polski\"}"
     },
     {
       "id": "usluga-usluga-przegladania-tresci-bazy-danych-ogolnogeograficzny",
       "label": "BDOO",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE TOPOGRAFICZNE I OGÓLNOGEOGRAFICZNE",
+      "help": "BDOO · GUGiK",
       "params": "{\"service\": \"Usługa przeglądania treści Bazy Danych Ogólnogeograficznych dla obszaru Polski\"}"
     },
     {
       "id": "usluga-usluga-przegladania-umozliwiajaca-przegladanie-hipsometri",
       "label": "Hipsometria NMT",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / NUMERYCZNY MODEL TERENU",
+      "help": "Hipsometria NMT · GUGiK",
       "params": "{\"service\": \"Usługa przeglądania umożliwiająca przeglądanie hipsometrii NMT o dynamicznej skali barw\"}"
     },
     {
       "id": "usluga-usluga-przegladania-wms-danych-banku-danych-o-lasach",
       "label": "BDL lasy",
       "icon": "basemap",
-      "help": "Lasy Państwowe (LP) - Bank Danych o Lasach",
+      "help": "BDL lasy · Lasy Państwowe (LP) - Bank Danych o Lasach",
       "params": "{\"service\": \"Usługa przeglądania (WMS) danych Banku Danych o Lasach:\"}"
     },
     {
       "id": "usluga-usluga-przegladania-wms-danych-banku-danych-o-lasach-wg-k",
       "label": "BDL lasy: własność",
       "icon": "basemap",
-      "help": "Lasy Państwowe (LP) - Bank Danych o Lasach",
+      "help": "BDL lasy: własność · Lasy Państwowe (LP) - Bank Danych o Lasach",
       "params": "{\"service\": \"Usługa przeglądania (WMS) danych Banku Danych o Lasach wg kategorii własności:\"}"
     },
     {
       "id": "usluga-usluga-przegladania-wms-ortofotomap-archiwalnych-dla-obsz",
       "label": "Ortofoto archiwalne",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE ARCHIWALNE",
+      "help": "Ortofoto archiwalne · GUGiK",
       "params": "{\"service\": \"Usługa przeglądania (WMS) ortofotomap archiwalnych dla obszaru Polski\"}"
     },
     {
       "id": "usluga-usluga-przegladania-wms-rastrowych-map-topograficznych-dl",
       "label": "Mapy topo archiwalne",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE ARCHIWALNE",
+      "help": "Mapy topo archiwalne · GUGiK",
       "params": "{\"service\": \"Usługa przeglądania (WMS) rastrowych map topograficznych dla obszaru Polski (serie)\"}"
     },
     {
       "id": "usluga-usluga-wms-publikujaca-statystyki-budynkow-i-budowli-w-bd",
       "label": "BDOT: statystyki budynków",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE TOPOGRAFICZNE I OGÓLNOGEOGRAFICZNE",
+      "help": "BDOT: statystyki budynków · GUGiK",
       "params": "{\"service\": \"Usługa WMS publikująca statystyki budynków i budowli w BDOT10k\"}"
     },
     {
       "id": "usluga-usluga-wms-publikujca-wykaz-portali-mapowych",
       "label": "Wykaz portali mapowych",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / PORTALE MAPOWE",
+      "help": "Wykaz portali mapowych · GUGiK",
       "params": "{\"service\": \"Usługa WMS publikujca wykaz portali mapowych.\"}"
     },
     {
       "id": "usluga-wig-mapa-operacyjna-1-300-000",
       "label": "WIG Mapa operacyjna 1:300 000",
       "icon": "basemap",
-      "help": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+      "help": "WIG Mapa operacyjna 1:300 000 · Cartomatic",
       "params": "{\"service\": \"WIG Mapa operacyjna 1:300 000\"}"
     },
     {
       "id": "usluga-wig-mapa-polski-1-500-000-1939",
       "label": "WIG Mapa Polski 1:500 000 (1939)",
       "icon": "basemap",
-      "help": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+      "help": "WIG Mapa Polski 1:500 000 (1939) · Cartomatic",
       "params": "{\"service\": \"WIG Mapa Polski 1:500 000 (1939)\"}"
     },
     {
       "id": "usluga-wig-mapa-polski-1-500-000-1947-1952",
       "label": "WIG Mapa Polski 1:500 000 (1947–1952)",
       "icon": "basemap",
-      "help": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+      "help": "WIG Mapa Polski 1:500 000 (1947–1952) · Cartomatic",
       "params": "{\"service\": \"WIG Mapa Polski 1:500 000 (1947–1952)\"}"
     },
     {
       "id": "usluga-wig-mapa-polski-i-krajow-osciennych-1-500-000",
       "label": "WIG Mapa Polski i Krajów Ościennych 1:500 000",
       "icon": "basemap",
-      "help": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+      "help": "WIG Mapa Polski i Krajów Ościennych 1:500 000 · Cartomatic",
       "params": "{\"service\": \"WIG Mapa Polski i Krajów Ościennych 1:500 000\"}"
     },
     {
       "id": "usluga-wig-mapa-szczegolowa-1-25-000",
       "label": "WIG Mapa szczegółowa 1:25 000",
       "icon": "basemap",
-      "help": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+      "help": "WIG Mapa szczegółowa 1:25 000 · Cartomatic",
       "params": "{\"service\": \"WIG Mapa szczegółowa 1:25 000\"}"
     },
     {
       "id": "usluga-wig-polska-mapa-taktyczna-1-100-000",
       "label": "WIG Polska mapa taktyczna 1:100 000",
       "icon": "basemap",
-      "help": "Cartomatic - Historyczny GIS (pastmaps.cenagis.edu.pl)",
+      "help": "WIG Polska mapa taktyczna 1:100 000 · Cartomatic",
       "params": "{\"service\": \"WIG Polska mapa taktyczna 1:100 000\"}"
     },
     {
       "id": "usluga-wms-krajowej-integracji-numeracji-adresowej-do-przegladan",
       "label": "KIN ulice i adresy",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / DANE ADRESOWE",
+      "help": "KIN ulice i adresy · GUGiK",
       "params": "{\"service\": \"WMS Krajowej Integracji Numeracji Adresowej do przeglądania map ulic i adresów\"}"
     },
     {
       "id": "usluga-wskaznik-wegetacji-analiza-ndvi-wykonana-na-podstawie-zdj",
       "label": "NDVI (Sentinel-2)",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / MAPY TEMATYCZNE",
+      "help": "NDVI (Sentinel-2) · GUGiK",
       "params": "{\"service\": \"Wskaźnik wegetacji - Analiza NDVI wykonana na podstawie zdjęć satelitarnych Sentinel-2 zarejestrowanych w roku 2020 (w większości sierpień-wrzesień)\"}"
     },
     {
       "id": "usluga-wykaz-szkol-i-placowek-oswiatowych",
       "label": "Szkoły",
       "icon": "basemap",
-      "help": "USŁUGI KRAJOWE / OBIEKTY UŻYTECZNOŚCI PUBLICZNEJ",
+      "help": "Szkoły · GUGiK",
       "params": "{\"service\": \"Wykaz szkół i placówek oświatowych\"}"
     },
     {
       "id": "usluga-zagrozenie-pozarowe-w-lasach",
       "label": "Zagrożenie pożarowe w lasach",
       "icon": "basemap",
-      "help": "Lasy Państwowe (LP) - Bank Danych o Lasach",
+      "help": "Zagrożenie pożarowe w lasach · Lasy Państwowe (LP) - Bank Danych o Lasach",
       "params": "{\"service\": \"Zagrożenie pożarowe w lasach\"}"
     },
     {
       "id": "usluga-zakazy-wstepu-do-lasu",
       "label": "Zakazy wstępu do lasu",
       "icon": "basemap",
-      "help": "Lasy Państwowe (LP) - Bank Danych o Lasach",
+      "help": "Zakazy wstępu do lasu · Lasy Państwowe (LP) - Bank Danych o Lasach",
       "params": "{\"service\": \"Zakazy wstępu do lasu\"}"
     },
     {
       "id": "usluga-zasieg-zabytkow-nieruchomych",
       "label": "Zasięg zabytków",
       "icon": "basemap",
-      "help": "Narodowy Instytut Dziedzictwa (NID)",
+      "help": "Zasięg zabytków · Narodowy Instytut Dziedzictwa (NID)",
       "params": "{\"service\": \"Zasięg zabytków nieruchomych\"}"
     },
     {
       "id": "usluga-zasiegi-i-placowki-zus",
       "label": "Zasięgi i placówki ZUS",
       "icon": "basemap",
-      "help": "Zakład Ubezpieczeń Społecznych",
+      "help": "Zasięgi i placówki ZUS · Zakład Ubezpieczeń Społecznych",
       "params": "{\"service\": \"Zasięgi i placówki ZUS\"}"
     },
     {
       "id": "usluga-zloza-obszary-i-tereny-gornicze-midas",
       "label": "Złoża i tereny górnicze",
       "icon": "basemap",
-      "help": "Państwowy Instytut Geologiczny (PIG)",
+      "help": "Złoża i tereny górnicze · Państwowy Instytut Geologiczny (PIG)",
       "params": "{\"service\": \"Złoża. obszary i tereny górnicze (MIDAS)\"}"
     }
   ],
@@ -995,7 +995,14 @@
           "label": "Area (layer)",
           "kind": "vectorLayer",
           "required": true,
-          "help": "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download."
+          "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        },
+        {
+          "name": "clear",
+          "label": "Clear the stored answers first",
+          "kind": "bool",
+          "default": false,
+          "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         }
       ]
     },
@@ -1019,24 +1026,24 @@
             "Sieć komunikacyjna w powiatach",
             "Sieć wodna w powiatach",
             "Sieć wodna w województwach",
-            "Regionalny zarzad gospodarki",
-            "Regionalna dyrekcja lasow",
-            "Dywizjon strazy granicznej",
-            "Placowka strazy granicznej",
-            "Oddzial strazy granicznej",
-            "Komenda powiatowa strazy",
+            "Regionalny zarząd gospodarki",
+            "Regionalna dyrekcja lasów",
+            "Dywizjon straży granicznej",
+            "Placówka straży granicznej",
+            "Oddział straży granicznej",
+            "Komenda powiatowa straży",
             "Komenda powiatowa policji",
             "Prokuratura regionalna",
-            "Wojewodzki sad administracyjny",
-            "Granice obwodow spisowych",
-            "Granice rejonow statystycznych",
-            "Granice obrebow ewidencyjnych",
+            "Wojewódzki sąd administracyjny",
+            "Granice obwodów spisowych",
+            "Granice rejonów statystycznych",
+            "Granice obrębów ewidencyjnych",
             "Granice jednostek ewidencyjnych",
             "Granice miast",
             "Granice gmin",
-            "Granice powiatow",
-            "Granice wojewodztw",
-            "Granice panstwa"
+            "Granice powiatów",
+            "Granice województw",
+            "Granice państwa"
           ]
         },
         {
@@ -1044,7 +1051,14 @@
           "label": "Area (layer)",
           "kind": "vectorLayer",
           "required": true,
-          "help": "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download."
+          "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        },
+        {
+          "name": "clear",
+          "label": "Clear the stored answers first",
+          "kind": "bool",
+          "default": false,
+          "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         }
       ]
     },
@@ -1073,7 +1087,7 @@
             "Osnowa fundamentalna pozioma",
             "Bazowa osnowa pozioma",
             "Osnowa fundamentalna",
-            "Bazowa osnowa wysokosciowa",
+            "Bazowa osnowa wysokościowa",
             "Przejazdy: PKP LHS",
             "Przejazdy: KPK-LK",
             "Przejazdy: MB Infrastruktura",
@@ -1090,7 +1104,14 @@
           "label": "Area (layer)",
           "kind": "vectorLayer",
           "required": true,
-          "help": "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download."
+          "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        },
+        {
+          "name": "clear",
+          "label": "Clear the stored answers first",
+          "kind": "bool",
+          "default": false,
+          "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         }
       ]
     },
@@ -1113,7 +1134,7 @@
             "Nadleśnictwo",
             "Izba administracji skarbowej",
             "Urząd celno-skarbowy",
-            "Wyspecjalizowany urzad skarbowy",
+            "Wyspecjalizowany urząd skarbowy",
             "Urząd skarbowy",
             "Archiwum państwowe",
             "Szef obrony: obszar 13",
@@ -1136,7 +1157,14 @@
           "label": "Area (layer)",
           "kind": "vectorLayer",
           "required": true,
-          "help": "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download."
+          "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        },
+        {
+          "name": "clear",
+          "label": "Clear the stored answers first",
+          "kind": "bool",
+          "default": false,
+          "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         }
       ]
     },
@@ -1182,7 +1210,14 @@
           "label": "Area (layer)",
           "kind": "vectorLayer",
           "required": true,
-          "help": "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download."
+          "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        },
+        {
+          "name": "clear",
+          "label": "Clear the stored answers first",
+          "kind": "bool",
+          "default": false,
+          "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         }
       ]
     }
@@ -1240,14 +1275,6 @@
       {
         "label": "WMS (view only)",
         "layout": "small",
-        "menus": [
-          "gugik",
-          "cartomatic",
-          "pig",
-          "nid",
-          "lasy",
-          "other"
-        ],
         "items": [
           {
             "menu": "GUGiK",
@@ -1473,12 +1500,12 @@
       "Address points and streets from the national address numbering service.": "Punkty adresowe i ulice (Krajowa Integracja Numeracji Adresowej).",
       "Addresses": "Adresy",
       "Addresses and buildings": "Adresy i budynki",
-      "Adds the 1 m terrain model of the area, shaded. GUGiK serves PL-KRON86-NH as GeoTIFF.": "Dodaje model terenu 1 m dla obszaru, cieniowany. GUGiK udostępnia PL-KRON86-NH jako GeoTIFF.",
-      "Adds the parcel an identifier names, without pointing at the map: id as ULDK writes it, or teryt and numer.": "Dodaje działkę wskazaną identyfikatorem, bez klikan ia w mapę: id w postaci ULDK albo teryt i numer.",
+      "Adds the 1 m terrain model of the area, shaded. GUGiK serves PL-KRON86-NH as GeoTIFF.": "Dodaje model wysokości 1 m dla obszaru, cieniowany. GUGiK udostępnia PL-KRON86-NH jako GeoTIFF.",
+      "Adds the parcel an identifier names, without pointing at the map: id as ULDK writes it, or teryt and numer.": "Dodaje działkę wskazaną identyfikatorem, bez klikania w mapę: id tak, jak zapisuje je ULDK, albo teryt i numer.",
       "Area": "Obszar",
       "Area (layer)": "Obszar (warstwa)",
       "Area to download": "Obszar pobierania",
-      "BDOT10k": "BDOT10k",
+      "BDOT10k\n(overlay)": "BDOT10k\n(nakładka)",
       "Basemaps": "Podkłady",
       "Boundaries and units": "Granice i jednostki",
       "Brings the map to the whole of Poland, the area GUGiK serves.": "Przybliża mapę do całej Polski, obszaru obsługiwanego przez GUGiK.",
@@ -1486,27 +1513,26 @@
       "Cancel\ndrawing": "Anuluj\nrysowanie",
       "Catalogue": "Katalog",
       "Catalogue\n(JSON)": "Katalog\n(JSON)",
-      "Clear\narea": "Wyczyść\nobszar",
+      "Remove\narea": "Usuń\nobszar",
       "Clear\ncache": "Wyczyść\ncache",
-      "Clear the stored answers after a download": "Wyczyść zapisane odpowiedzi po pobraniu",
+      "Clear the stored answers first": "Najpierw usuń zapisane odpowiedzi",
       "Clip": "Przytnij",
-      "Clip to layer": "Przytnij do warstwy",
-      "Choose the layer whose outline cuts the features. The area layer is the default.": "Wybierz warstwę, której granica przytnie obiekty. Domyślnie jest to warstwa obszaru.",
+      "Choose the layer whose outline cuts the features. The area layer is the default.": "Wybierz warstwę graniczną: jej granica przytnie obiekty. Domyślnie jest to obszar pobierania.",
       "Click the corners, then double-click to close the ring, or press Escape to stop. The shape stays as drawn: a download follows it, and the elevation model covers the rectangle around it.": "Klikaj narożniki, a na końcu kliknij dwukrotnie, aby zamknąć obwód, albo naciśnij Escape, aby przerwać. Kształt zostaje taki, jak narysowany: pobieranie idzie za nim, a model wysokości obejmuje prostokąt wokół niego.",
-      "Clip\nto area": "Przytnij\ndo obszaru",
-      "Clips a layer to a boundary layer: the area layer by default, or the one you choose in the panel. A WFS answer returns whole features that touch it; this cuts them.": "Przycina warstwę do warstwy granicy: domyślnie do warstwy obszaru, albo do wybranej w panelu. WFS zwraca całe obiekty dotykające granicy; to je tnie.",
+      "Clip\nto layer": "Przytnij\ndo warstwy",
+      "Clips a layer to a boundary layer: the area layer by default, or the one you choose in the panel. A WFS answer returns whole features that touch it; this cuts them.": "Przycina warstwę do granicy: domyślnie do obszaru pobierania, albo do wybranej w panelu. WFS zwraca całe obiekty dotykające granicy; to je tnie.",
       "Control points": "Osnowy i pomiary",
       "Copies the map view into the area layer as a rectangle: one click, and the rectangle is exactly what you see. It is the area a download and the elevation model use.": "Kopiuje widok mapy do warstwy obszaru jako prostokąt: jedno kliknięcie i prostokąt jest dokładnie tym, co widać. To obszar, którego używa pobieranie i model wysokości.",
       "Country, voivodeship, county, commune and city boundaries.": "Granice państwa, województw, powiatów, gmin i miast.",
-      "DEM\nhillshade": "NMT\ncieniowanie",
-      "Dataset": "Zestaw",
+      "Hillshade\n(NMT)": "Cieniowanie\n(NMT)",
+      "Dataset": "Zbiór",
       "Deletes the stored WFS answers (kept for 7 days by default) and the downloaded elevation grids, so the data is fetched again.": "Usuwa zapisane odpowiedzi WFS (domyślnie trzymane 7 dni) i pobrane siatki wysokości, żeby pobrać dane od nowa.",
       "Downloads": "Pobieranie",
       "Draw\narea": "Narysuj\nobszar",
       "Drops the drawing tool and leaves the map in the explore tool. Escape does the same.": "Wyłącza narzędzie rysowania i zostawia mapę w trybie przeglądania. Escape robi to samo.",
       "Elevation": "Wysokości",
       "Filled in when the panel opens.": "Wypełniane przy otwarciu panelu.",
-      "Finds an address with GUGiK's UUG service and adds it as a point: city, street, number, postcode and the PL-1992 position.": "Znajduje adres w usłudze UUG GUGiK i dodaje go jako punkt: miejscowość, ulica, numer, kod pocztowy i pozycja w PL-1992.",
+      "Finds an address with GUGiK's UUG service and adds it as a point: city, street, number, postcode and the PL-1992 position.": "Znajduje adres w usłudze UUG GUGiK i dodaje go jako punkt: miejscowość, ulica, numer, kod pocztowy i pozycja w układzie PL-1992.",
       "Finds the parcel under the map centre and adds its boundary with its attributes.": "Znajduje działkę pod środkiem mapy i dodaje jej granice wraz z atrybutami.",
       "Forest data of the State Forests' Bank of Forest Data.": "Dane leśne Banku Danych o Lasach.",
       "Forests (BDL)": "Lasy (BDL)",
@@ -1524,7 +1550,7 @@
       "High-resolution orthophoto (WMS).": "Ortofotomapa w wysokiej rozdzielczości (WMS).",
       "Hillshade of the digital terrain model.": "Cieniowanie numerycznego modelu terenu.",
       "Historical maps": "Mapy historyczne",
-      "Lists every service and every dataset, with the ids a script or an agent runs, optionally narrowed by institution or by a word of the name.": "Wypisuje wszystkie usługi i zestawy danych wraz z identyfikatorami, których używa skrypt albo agent; można zawęzić do instytucji albo do słowa z nazwy.",
+      "Lists every service and every dataset, with the ids a script or an agent runs, optionally narrowed by institution or by a word of the name.": "Wypisuje wszystkie usługi i zbiory danych wraz z identyfikatorami, których używa skrypt albo agent; można zawęzić do instytucji albo do słowa z nazwy.",
       "Lookups": "Wyszukiwanie",
       "Map view": "Widok mapy",
       "Maps": "Mapy",
@@ -1534,7 +1560,7 @@
       "Monuments, archaeological records and UNESCO sites.": "Zabytki, rejestr archeologiczny i obiekty UNESCO.",
       "Offices and courts": "Urzędy i sądy",
       "Open the panel to read the view.": "Otwórz panel, aby odczytać widok.",
-      "Orthophoto": "Ortofoto",
+      "Orthophoto\n(WMTS)": "Ortofoto\n(WMTS)",
       "Orthophoto\nHi-Res": "Ortofoto\nHi-Res",
       "Orthophoto and DEM": "Ortofoto i NMT",
       "Orthophoto, elevation, vegetation and archive imagery.": "Ortofoto, wysokości, wegetacja i zdjęcia archiwalne.",
@@ -1543,40 +1569,40 @@
       "Other data": "Pozostałe dane",
       "Other institutions": "Pozostałe instytucje",
       "PRG\nboundaries": "Granice\nPRG",
-      "PRG boundaries, place names and the administrative units around them.": "Granice PRG, nazwy miejscowości i jednostki administracyjne.",
+      "PRG boundaries, place names and the administrative units around them.": "Granice PRG, nazwy geograficzne i jednostki administracyjne.",
       "Parcel\nfrom ULDK": "Działka\nz ULDK",
       "Parcel and building boundaries from KIEG (visible from about 1:5,000).": "Granice działek i budynków z KIEG (widoczne od skali ok. 1:5000).",
       "Parcel by\nnumber": "Działka\nz numeru",
       "Parcels\n(WMS)": "Działki\n(WMS)",
-      "Parcels, buildings, addresses, boundaries and place names.": "Działki, budynki, adresy, granice i nazwy miejscowości.",
+      "Parcels, buildings, addresses, boundaries and place names.": "Działki, budynki, adresy, granice i nazwy geograficzne.",
       "Parcels, buildings, utilities, addresses and administrative boundaries.": "Działki, budynki, uzbrojenie, adresy i granice administracyjne.",
-      "Place\nnames": "Nazwy\nmiejscowości",
-      "Place names from PRNG.": "Nazwy miejscowości z PRNG.",
+      "Place\nnames": "Nazwy\ngeograficzne",
+      "Place names from PRNG.": "Nazwy geograficzne z PRNG.",
       "Polish Geodata": "Dane PL",
-      "Polish national geodetic data from GUGiK in one tab: orthophoto, BDOT10k, parcels, addresses, PRG boundaries, place names and hillshade as map layers; the national WFS catalogue through background download tools with progress and Cancel; a 1 m elevation model built from the area you point at; and a ULDK parcel lookup at the map centre.": "Polskie dane geodezyjne GUGiK w jednej zakładce: ortofoto, BDOT10k, działki, adresy, granice PRG, nazwy miejscowości i cieniowanie NMT jako warstwy mapy; katalog krajowych usług WFS przez narzędzia pobierania działające w tle, z postępem i przerwaniem; model wysokości 1 m dla wskazanego obszaru; oraz działka z ULDK pod środkiem mapy.",
-      "Press Rectangle area to make one.": "Naciśnij Obszar prostokąt, aby go utworzyć.",
+      "Polish national geodetic data from GUGiK in one tab: orthophoto, BDOT10k, parcels, addresses, PRG boundaries, place names and hillshade as map layers; the national WFS catalogue through background download tools with progress and Cancel; a 1 m elevation model built from the area you point at; and a ULDK parcel lookup at the map centre.": "Polskie dane geodezyjne GUGiK w jednej zakładce: ortofoto, BDOT10k, działki, adresy, granice PRG, nazwy geograficzne i cieniowanie NMT jako warstwy mapy; katalog krajowych usług WFS przez narzędzia pobierania działające w tle, z postępem i przyciskiem Anuluj; model wysokości 1 m dla wskazanego obszaru; oraz wyszukiwanie działki z ULDK pod środkiem mapy.",
+      "Press Area from view to make one.": "Naciśnij przycisk Obszar z widoku, aby go utworzyć.",
       "Public offices, courts, schools, forests and other institutions.": "Urzędy, sądy, szkoły, nadleśnictwa i inne instytucje.",
       "Raster": "Rastry",
-      "Reads the terrain model's height at the map centre, or at x/y given in PL-1992. PL-KRON86-NH, in metres above sea level.": "Odczytuje wysokość modelu terenu pod środkiem mapy albo pod x/y w PL-1992. PL-KRON86-NH, w metrach nad poziomem morza.",
-      "Rectangle\narea": "Obszar\nprostokąt",
+      "Reads the terrain model's height at the map centre, or at x/y given in PL-1992. PL-KRON86-NH, in metres above sea level.": "Odczytuje wysokość modelu terenu pod środkiem mapy albo w punkcie x/y w układzie PL-1992. PL-KRON86-NH, w metrach nad poziomem morza.",
+      "Area\nfrom view": "Obszar\nz widoku",
       "Refresh the panel": "Odśwież panel",
       "Register\nEZiUDP": "Rejestr\nEZiUDP",
       "Removes the area layer, so the next rectangle or drawn shape starts empty.": "Usuwa warstwę obszaru, żeby następny prostokąt albo rysowany kształt zaczynał od zera.",
-      "Searches the national register of spatial data sets and services: which body holds what, and the address of its WMS, WFS and CSW. Narrows the register, never dumps it.": "Przeszukuje krajową ewidencję zbiorów i usług danych przestrzennych: kto co ma i pod jakim adresem są jego WMS, WFS i CSW. Zawęża rejestr, nigdy nie pobiera go całego.",
-      "Shades the newest elevation model again. Pass colours to band the heights instead.": "Ponownie cieniuje najnowszy model wysokości. Podaj colours, aby pokazać wysokości w barwach.",
-      "Statistics, ASG-EUPOS, archiving, elections and the rest.": "Statystyki, ASG-EUPOS, archiwizacja, wybory i pozostałe.",
+      "Searches the national register of spatial data sets and services: which body holds what, and the address of its WMS, WFS and CSW. Narrows the register, never dumps it.": "Przeszukuje krajową ewidencję zbiorów i usług danych przestrzennych: kto co ma i pod jakim adresem są jego WMS, WFS i CSW. Zawęża ewidencję, nigdy nie zwraca jej w całości.",
+      "Shades the newest elevation model again. Pass colours to band the heights instead.": "Ponownie cieniuje najnowszy model wysokości. Podaj parametr colours, aby pokazać wysokości w barwach.",
+      "Statistics, ASG-EUPOS, archiving, elections and the rest.": "Statystyki, ASG-EUPOS, archiwizacja, wybory i pozostałe dane.",
       "Stored answers": "Zapisane odpowiedzi",
-      "Style the model": "Stylizuj model",
+      "Set the model's style": "Ustaw styl modelu",
       "Surface\nNMPT": "Pokrycie\nNMPT",
       "Terrain\nEVRF2007": "Teren\nEVRF2007",
       "Terrain\nKRON86": "Teren\nKRON86",
       "The 1 m elevation model of the area, as GeoTIFF or ASCII grid.": "Model wysokości 1 m dla obszaru, jako GeoTIFF albo siatka ASCII.",
       "The GUGiK feature type to download.": "Typ obiektów GUGiK do pobrania.",
       "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time.": "Odpowiedzi są trzymane 7 dni, więc powtórne pobranie nic nie kosztuje. Zaznacz, aby następnym razem pobrać świeże dane.",
-      "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download.": "Warstwa, której zasięg jest pobierany. Narysuj ją przyciskiem Obszar prostokąt albo wskaż własną warstwę; zaznaczenie na niej zawęża pobieranie.",
+      "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download.": "Warstwa, której zasięg jest pobierany. Naciśnij przycisk Obszar z widoku, aby ją utworzyć, albo wskaż własną warstwę; zaznaczenie na niej zawęża pobieranie.",
       "The map view, the area to download, the catalogue and the stored answers, with the buttons that act on them.": "Widok mapy, obszar pobierania, katalog i zapisane odpowiedzi oraz przyciski, które na nich działają.",
       "The surface model, buildings and trees kept, in PL-KRON86-NH. An ASCII grid.": "Model pokrycia, z budynkami i drzewami, w PL-KRON86-NH. Siatka ASCII.",
-      "The terrain model in PL-EVRF2007-NH. GUGiK serves it as an ASCII grid, so one click covers less ground than the GeoTIFF.": "Model terenu w PL-EVRF2007-NH. GUGiK udostępnia go jako siatkę ASCII, więc jedno kliknięcie obejmuje mniejszy obszar niż GeoTIFF.",
+      "The terrain model in PL-EVRF2007-NH. GUGiK serves it as an ASCII grid, so one click covers less ground than the GeoTIFF.": "Model wysokości w PL-EVRF2007-NH. GUGiK udostępnia go jako siatkę ASCII, więc jedno kliknięcie obejmuje mniejszy obszar niż GeoTIFF.",
       "Tools": "Narzędzia",
       "Topographic object database as an overlay (visible from city scale).": "Baza Danych Obiektów Topograficznych jako warstwa nakładkowa (widoczna od skali miasta).",
       "Topographic, landscape, archival and thematic maps.": "Mapy topograficzne, krajobrazowe, archiwalne i tematyczne.",
@@ -1584,7 +1610,8 @@
       "Vector": "Wektory",
       "WIG and German survey maps of the 19th and 20th centuries, as scans.": "Arkusze WIG i mapy niemieckie z XIX i XX wieku, jako skany.",
       "WMS (view only)": "WMS (podgląd)",
-      "Zoom to Poland": "Przybliż do Polski"
+      "Zoom to Poland": "Przybliż do Polski",
+      "Boundary layer": "Warstwa graniczna"
     }
   },
   "panel": {
@@ -1603,7 +1630,7 @@
         "kind": "text",
         "id": "area",
         "label": "Area to download",
-        "text": "Press Rectangle area to make one."
+        "text": "Press Area from view to make one."
       },
       {
         "kind": "text",
@@ -1614,10 +1641,14 @@
       {
         "kind": "tree",
         "id": "cel",
-        "label": "Clip to layer",
+        "label": "Boundary layer",
         "help": "Choose the layer whose outline cuts the features. The area layer is the default.",
         "command": "panel-state",
         "search": true
+      },
+      {
+        "kind": "button",
+        "command": "panel-state"
       },
       {
         "kind": "button",
@@ -1633,6 +1664,14 @@
       },
       {
         "kind": "button",
+        "command": "obszar-anuluj"
+      },
+      {
+        "kind": "button",
+        "command": "obszar-wyczysc"
+      },
+      {
+        "kind": "button",
         "command": "parcel"
       },
       {
@@ -1642,13 +1681,6 @@
       {
         "kind": "button",
         "command": "wyczysc-cache"
-      },
-      {
-        "kind": "checkbox",
-        "id": "clear",
-        "label": "Clear the stored answers after a download",
-        "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time.",
-        "default": false
       },
       {
         "kind": "text",

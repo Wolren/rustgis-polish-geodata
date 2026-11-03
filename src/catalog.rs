@@ -116,7 +116,7 @@ BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT
     Overlay {
         id: "prng",
         name_en: "Place names (PRNG)",
-        name_pl: "Nazwy miejscowości (PRNG)",
+        name_pl: "Nazwy geograficzne (PRNG)",
         url: "https://mapy.geoportal.gov.pl/wss/service/PZGiK/PRNG/WMS/GeographicalNames?\
 SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=M1_UrzedoweNazwyMiejscowosci,\
 M2_PozostaleNazwyMiejscowosci&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&\

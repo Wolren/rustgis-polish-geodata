@@ -16,13 +16,15 @@ use serde_json::{json, Map, Value};
 struct Node {
     name: String,
     id: Option<String>,
+    /// `srsDimension`, which sets the stride a coordinate list is read in.
+    dimension: Option<usize>,
     text: String,
     children: Vec<Node>,
 }
 
 impl Node {
-    fn new(name: &[u8], id: Option<String>) -> Self {
-        Node { name: String::from_utf8_lossy(name).into_owned(), id, text: String::new(), children: Vec::new() }
+    fn new(name: &[u8], id: Option<String>, dimension: Option<usize>) -> Self {
+        Node { name: String::from_utf8_lossy(name).into_owned(), id, dimension, text: String::new(), children: Vec::new() }
     }
 
     fn has_children(&self) -> bool {
@@ -30,11 +32,14 @@ impl Node {
     }
 }
 
-/// Builds the element tree.
-///
-/// The error is dropped: parse_fragment turns it into `None`, so only parse_features
-/// reports a GML failure to the user, in the interface language.
-fn parse_tree(xml: &str) -> Result<Vec<Node>, String> {
+/// Why a GML document could not be read as a tree.
+enum TreeError {
+    Xml(String),
+    Unterminated,
+}
+
+/// Builds the element tree, and refuses a document that stops with an element still open.
+fn parse_tree(xml: &str) -> Result<Vec<Node>, TreeError> {
     let mut reader = Reader::from_str(xml);
     reader.config_mut().trim_text(false);
     let mut stack: Vec<Node> = Vec::new();
@@ -42,17 +47,19 @@ fn parse_tree(xml: &str) -> Result<Vec<Node>, String> {
     loop {
         match reader
             .read_event()
-            .map_err(|e| format!("GML could not be read: {e}"))?
+            .map_err(|e| TreeError::Xml(e.to_string()))?
         {
             Event::Start(e) => {
                 let id = gml_id(&e);
+                let dimension = srs_dimension(&e);
                 let name = e.local_name().as_ref().to_vec();
-                stack.push(Node::new(&name, id));
+                stack.push(Node::new(&name, id, dimension));
             }
             Event::Empty(e) => {
                 let id = gml_id(&e);
+                let dimension = srs_dimension(&e);
                 let name = e.local_name().as_ref().to_vec();
-                push_node(&mut stack, &mut roots, Node::new(&name, id));
+                push_node(&mut stack, &mut roots, Node::new(&name, id, dimension));
             }
             Event::Text(t) => {
                 if let Some(top) = stack.last_mut() {
@@ -77,6 +84,10 @@ fn parse_tree(xml: &str) -> Result<Vec<Node>, String> {
             _ => {}
         }
     }
+    // quick-xml reports no unclosed tag at Eof, so the stack is the only witness.
+    if !stack.is_empty() {
+        return Err(TreeError::Unterminated);
+    }
     Ok(roots)
 }
 
@@ -84,6 +95,16 @@ fn gml_id(e: &quick_xml::events::BytesStart<'_>) -> Option<String> {
     for attr in e.attributes().flatten() {
         if attr.key.local_name().as_ref() == b"id" {
             return attr.unescape_value().ok().map(|v| v.into_owned());
+        }
+    }
+    None
+}
+
+/// The `srsDimension` an element states for its coordinate list, when it states one.
+fn srs_dimension(e: &quick_xml::events::BytesStart<'_>) -> Option<usize> {
+    for attr in e.attributes().flatten() {
+        if attr.key.local_name().as_ref() == b"srsDimension" {
+            return attr.unescape_value().ok()?.trim().parse().ok();
         }
     }
     None
@@ -138,7 +159,10 @@ fn find_descendant<'a>(node: &'a Node, name: &str) -> Option<&'a Node> {
 }
 
 /// Reads a coordinate list: GML 3's `posList`/`pos` (whitespace separated) or GML 2's
-/// `coordinates` (`x,y x,y`), looking inside `node` first and then its descendants.
+/// `coordinates` (`x,y x,y`), inside `node` or below it.
+///
+/// Only `posList`/`pos` take `swap`: GML 2 `coordinates` is always x,y. The stride is the
+/// element's `srsDimension`, so a 3D list keeps the first two numbers of every point.
 fn coordinates(node: &Node, swap: bool) -> Vec<[f64; 2]> {
     for name in ["posList", "coordinates", "pos"] {
         if let Some(found) = find_descendant(node, name) {
@@ -151,15 +175,17 @@ fn coordinates(node: &Node, swap: bool) -> Vec<[f64; 2]> {
                 .filter(|s| !s.is_empty())
                 .filter_map(|s| s.parse::<f64>().ok())
                 .collect();
-            let mut out = Vec::with_capacity(numbers.len() / 2);
+            let step = found.dimension.unwrap_or(2).max(2);
+            let flip = swap && name != "coordinates";
+            let mut out = Vec::with_capacity(numbers.len() / step);
             let mut i = 0;
-            while i + 1 < numbers.len() {
-                out.push(if swap {
+            while i + step <= numbers.len() {
+                out.push(if flip {
                     [numbers[i + 1], numbers[i]]
                 } else {
                     [numbers[i], numbers[i + 1]]
                 });
-                i += 2;
+                i += step;
             }
             if !out.is_empty() {
                 return out;
@@ -299,20 +325,67 @@ fn feature(node: &Node, swap: bool) -> Option<Value> {
     Some(Value::Object(out))
 }
 
-/// Every feature in a `wfs:FeatureCollection`, as GeoJSON features.
+/// Every feature in a `wfs:FeatureCollection`, as GeoJSON features; an OGC exception is an error.
 ///
-/// The document is walked as a stream: each `<wfs:member>`/`<gml:featureMember>` block is
-/// sliced out of the input and parsed on its own. A country-wide PRG answer is 40 MB, and
-/// building one tree for all of it would cost hundreds of megabytes; a feature at a time does
-/// not.
+/// The whole document becomes one tree, so every namespace a feature uses is in scope. A
+/// country-wide PRG answer is 40 MB, and the tree is built once for all of it.
 pub fn parse_features(xml: &str, swap: bool, lang: Lang) -> Result<Vec<Value>, String> {
     // The whole document is read as one tree, so every namespace a feature uses is in scope.
-    let roots = parse_tree(xml).map_err(|e| text::gml_unreadable(lang, &e))?;
+    let roots = parse_tree(xml).map_err(|e| match e {
+        TreeError::Xml(detail) => text::gml_unreadable(lang, &detail),
+        TreeError::Unterminated => text::gml_unclosed(lang),
+    })?;
+    // An exception report holds no feature, so its own text is the answer to report.
+    if let Some(exception) = exception_of(&roots) {
+        return Err(text::service_exception(lang, &exception));
+    }
     let mut features = Vec::new();
     for root in &roots {
         collect_members(root, swap, &mut features);
     }
     Ok(features)
+}
+
+/// The text of the OGC exception the document carries, clipped to one message line.
+fn exception_of(roots: &[Node]) -> Option<String> {
+    let node = roots.iter().find_map(find_exception)?;
+    let mut text = String::new();
+    exception_text(node, &mut text);
+    let text = if text.is_empty() { node.name.as_str() } else { text.as_str() };
+    Some(clip(text, EXCEPTION_CHARS))
+}
+
+fn find_exception(node: &Node) -> Option<&Node> {
+    if matches!(node.name.as_str(), "ServiceException" | "ServiceExceptionReport" | "ExceptionReport") {
+        return Some(node);
+    }
+    node.children.iter().find_map(find_exception)
+}
+
+/// Joins every text run below an exception element, since its message may sit in a child.
+fn exception_text(node: &Node, out: &mut String) {
+    for word in node.text.split_whitespace() {
+        if !out.is_empty() {
+            out.push(' ');
+        }
+        out.push_str(word);
+    }
+    for child in &node.children {
+        exception_text(child, out);
+    }
+}
+
+/// The message keeps this much of an exception: GUGiK's first sentence fits well inside.
+const EXCEPTION_CHARS: usize = 300;
+
+/// At most `max` characters of `text`, with an ellipsis where the rest was cut.
+fn clip(text: &str, max: usize) -> String {
+    if text.chars().count() <= max {
+        return text.to_string();
+    }
+    let mut out: String = text.chars().take(max.saturating_sub(1)).collect();
+    out.push('…');
+    out
 }
 
 /// Walks the tree for member wrappers and parses the feature inside each.
@@ -493,6 +566,46 @@ mod tests {
         assert_eq!(f["geometry"]["coordinates"][0], 21.0);
         assert_eq!(f["geometry"]["coordinates"][1], 52.1);
         assert_eq!(f["properties"]["NAZWA"], "Test");
+    }
+
+    #[test]
+    fn reports_an_ogc_exception_instead_of_an_empty_answer() {
+        let xml = r#"<?xml version="1.0" encoding="UTF-8"?>
+<ServiceExceptionReport version="1.2.0" xmlns="http://www.opengis.net/ogc">
+  <ServiceException code="InvalidParameterValue">msWFSGetFeature(): SRSNAME is not supported</ServiceException>
+</ServiceExceptionReport>"#;
+        let error = parse_features(xml, true, Lang::En).unwrap_err();
+        assert!(error.contains("SRSNAME is not supported"), "{error}");
+        assert!(!error.contains('\n'), "one line: {error}");
+    }
+
+    #[test]
+    fn reports_a_document_cut_mid_element() {
+        let cut = DZIALKA.split("  </gml:featureMember>").next().unwrap();
+        let error = parse_features(cut, true, Lang::En).unwrap_err();
+        assert!(error.contains("ends before"), "{error}");
+    }
+
+    #[test]
+    fn keeps_x_y_order_in_gml2_coordinates() {
+        let xml = r#"<wfs:FeatureCollection xmlns:wfs="http://www.opengis.net/wfs" xmlns:gml="http://www.opengis.net/gml" xmlns:ms="http://mapserver.gis.umn.edu/mapserver">
+<gml:featureMember><ms:punkt><ms:geom><gml:Point srsName="EPSG:4326"><gml:coordinates>21.0,52.1 21.1,52.2</gml:coordinates></gml:Point></ms:geom><ms:NAZWA>Test</ms:NAZWA></ms:punkt></gml:featureMember>
+</wfs:FeatureCollection>"#;
+        let f = &parse_features(xml, true, Lang::En).unwrap()[0];
+        assert_eq!(f["geometry"]["coordinates"][0], 21.0);
+        assert_eq!(f["geometry"]["coordinates"][1], 52.1);
+    }
+
+    #[test]
+    fn steps_a_three_dimensional_pos_list_by_its_dimension() {
+        let xml = r#"<wfs:FeatureCollection xmlns:wfs="http://www.opengis.net/wfs" xmlns:gml="http://www.opengis.net/gml" xmlns:ms="http://mapserver.gis.umn.edu/mapserver">
+<gml:featureMember><ms:linia><ms:geom><gml:LineString srsName="urn:ogc:def:crs:EPSG::4326"><gml:posList srsDimension="3">52.1 21.0 100 52.2 21.1 110</gml:posList></gml:LineString></ms:geom></ms:linia></gml:featureMember>
+</wfs:FeatureCollection>"#;
+        let f = &parse_features(xml, true, Lang::En).unwrap()[0];
+        let line = f["geometry"]["coordinates"].as_array().unwrap();
+        assert_eq!(line.len(), 2);
+        assert_eq!(line[0][0], 21.0);
+        assert_eq!(line[1][1], 52.2);
     }
 
     #[test]

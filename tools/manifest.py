@@ -115,6 +115,14 @@ def leaf_entries(groups):
     return listed
 
 
+def service_help(service):
+    """The tooltip of a service button: its label and the publisher, one string for both languages."""
+    label = service.get("label") or service["name"]
+    # A credit may name the portal too; the tooltip shows the institution alone.
+    publisher = (service.get("source") or "").split(" \u00b7 ")[0] or "GUGiK"
+    return f"{label} \u00b7 {publisher}"
+
+
 def build():
     base = load(BASE)
     services = load(SERVICES)
@@ -171,8 +179,7 @@ def build():
                 "id": cmd,
                 "label": service.get("label") or service["name"],
                 "icon": "basemap",
-                # The attribution is a proper name, so it reads the same in both languages.
-                "help": service.get("source", ""),
+                "help": service_help(service),
                 "params": json.dumps({"service": service["name"]}, ensure_ascii=False),
             }
         )
@@ -233,7 +240,8 @@ def build():
         if layout not in MAX_GROUP_ITEMS:
             raise Bad(f"group {group['label']}: layout '{layout}' is not large or small")
         if "menus" in group:
-            group["items"] = [menu_decl(key, menus, folders) for key in group["menus"]]
+            # The host's GroupDecl has no `menus`: expand the menus into items, then drop the key.
+            group["items"] = [menu_decl(key, menus, folders) for key in group.pop("menus")]
         limit = MAX_GROUP_ITEMS[layout]
         if not 1 <= len(group["items"]) <= limit:
             raise Bad(

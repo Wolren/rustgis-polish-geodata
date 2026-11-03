@@ -4,6 +4,8 @@
 //! answers in that language. Two languages only: English is the base, Polish is the translation,
 //! and any other code falls back to English.
 
+use crate::filter::ShapeProblem;
+
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum Lang {
     En,
@@ -81,6 +83,33 @@ pub fn areas(lang: Lang, n: usize) -> String {
     format!("{n} {}", words[form(lang, n)])
 }
 
+pub fn datasets(lang: Lang, n: usize) -> String {
+    let words = pick!(
+        lang,
+        ["dataset", "datasets", "datasets"],
+        ["zbiór", "zbiory", "zbiorów"]
+    );
+    format!("{n} {}", words[form(lang, n)])
+}
+
+pub fn sheets(lang: Lang, n: usize) -> String {
+    let words = pick!(
+        lang,
+        ["sheet index", "sheet indexes", "sheet indexes"],
+        ["skorowidz", "skorowidze", "skorowidzów"]
+    );
+    format!("{n} {}", words[form(lang, n)])
+}
+
+/// A quantity with the language's decimal separator: `1.5` in English, `1,5` in Polish.
+pub fn num(lang: Lang, value: f64, places: usize) -> String {
+    let text = format!("{:.1$}", value, places);
+    match lang {
+        Lang::En => text,
+        Lang::Pl => text.replace('.', ","),
+    }
+}
+
 /// "Layer: 12 features".
 pub fn count(lang: Lang, name: &str, n: usize) -> String {
     format!("{name}: {}", features(lang, n))
@@ -98,21 +127,16 @@ pub fn unknown_command(lang: Lang, id: &str) -> String {
     pick!(
         lang,
         format!("Polish Geodata has no command '{id}'"),
-        format!("Dane PL nie ma polecenia '{id}'")
+        format!("Wtyczka Dane PL nie ma polecenia „{id}”")
     )
 }
 
 pub fn cache_cleared(lang: Lang, count: usize, megabytes: f64) -> String {
+    let size = num(lang, megabytes, 0);
     pick!(
         lang,
-        format!(
-            "WFS cache: removed {} ({megabytes:.0} MB)",
-            files(lang, count)
-        ),
-        format!(
-            "Cache WFS: usunięto {} ({megabytes:.0} MB)",
-            files(lang, count)
-        )
+        format!("WFS cache: removed {} ({size} MB)", files(lang, count)),
+        format!("Cache WFS: usunięto {} ({size} MB)", files(lang, count))
     )
 }
 
@@ -151,7 +175,7 @@ pub fn no_area_layer(lang: Lang, area: &str) -> String {
 }
 
 pub fn clipped_suffix(lang: Lang) -> &'static str {
-    pick!(lang, " (clipped)", " (przycięte)")
+    pick!(lang, " (clipped)", " (po przycięciu)")
 }
 
 pub fn clipped(lang: Lang, layer: &str, area: &str, kept: usize) -> String {
@@ -162,6 +186,38 @@ pub fn clipped(lang: Lang, layer: &str, area: &str, kept: usize) -> String {
             features(lang, kept)
         ),
         format!("Przycięto „{layer}” do „{area}”: {}", features(lang, kept))
+    )
+}
+
+/// The cut kept nothing, so the layer stays as it was and the empty result goes.
+pub fn clipped_empty(lang: Lang, layer: &str, area: &str) -> String {
+    pick!(
+        lang,
+        format!(
+            "the boundary \"{area}\" covered nothing of \"{layer}\": no feature is kept, so the layer is unchanged"
+        ),
+        format!(
+            "granica „{area}” nie objęła żadnego obiektu warstwy „{layer}”: nic nie zostało zachowane, więc warstwa jest bez zmian"
+        )
+    )
+}
+
+/// The host answered a clip without saying which layer it made.
+pub fn clipped_unreported(lang: Lang) -> String {
+    pick!(
+        lang,
+        "RustGIS did not say which layer the clip made",
+        "RustGIS nie podało, którą warstwę utworzyło przycięcie"
+    )
+    .to_string()
+}
+
+/// The boundary picked in the panel is no longer on the map, so the press reports it.
+pub fn boundary_gone(lang: Lang, name: &str) -> String {
+    pick!(
+        lang,
+        format!("the boundary layer \"{name}\" is no longer on the map, choose another"),
+        format!("warstwy granicy „{name}” nie ma już na mapie, wybierz inną")
     )
 }
 
@@ -191,7 +247,7 @@ pub fn clip_no_boundary(lang: Lang) -> String {
     pick!(
         lang,
         "pick a boundary layer below",
-        "wybierz warstwę granicy poniżej"
+        "wybierz warstwę graniczną poniżej"
     )
     .to_string()
 }
@@ -220,11 +276,19 @@ pub fn detail_hint(lang: Lang) -> &'static str {
     )
 }
 
-pub fn http_status(lang: Lang, code: u16, url: &str) -> String {
+/// The status, and the exception line the body carried when it carried one.
+pub fn http_status(lang: Lang, code: u16, url: &str, detail: &str) -> String {
+    if detail.trim().is_empty() {
+        return pick!(
+            lang,
+            format!("HTTP {code} from {url}"),
+            format!("HTTP {code} z {url}")
+        );
+    }
     pick!(
         lang,
-        format!("HTTP {code} from {url}"),
-        format!("HTTP {code} z {url}")
+        format!("HTTP {code} from {url}: {detail}"),
+        format!("HTTP {code} z {url}: {detail}")
     )
 }
 
@@ -286,7 +350,7 @@ pub fn area_not_passed(lang: Lang, area: &str) -> String {
     pick!(
         lang,
         format!("the area layer \"{area}\" was not passed in"),
-        format!("nie otrzymałem warstwy obszaru „{area}”")
+        format!("nie przekazano warstwy obszaru „{area}”")
     )
 }
 
@@ -306,18 +370,49 @@ pub fn area_too_large(
     name: &str,
     max: f64,
 ) -> String {
+    let (width, height, max) = (num(lang, width, 1), num(lang, height, 1), num(lang, max, 2));
     pick!(
         lang,
         format!(
-            "the layer \"{area}\" covers {width:.1}° × {height:.1}°, too much for \"{name}\" \
-             (at most {max:.2}°). Select the features you want on the map and run the tool again \
+            "the layer \"{area}\" covers {width}° × {height}°, too much for \"{name}\" \
+             (at most {max}°). Select the features you want on the map and run the tool again \
              (a selection narrows the area), or pick a smaller layer."
         ),
         format!(
-            "warstwa „{area}” obejmuje {width:.1}° × {height:.1}°, za dużo dla „{name}” \
-             (maks. {max:.2}°). Zaznacz na mapie interesujące obiekty i uruchom narzędzie ponownie \
+            "warstwa „{area}” obejmuje {width}° × {height}°, za dużo dla „{name}” \
+             (maks. {max}°). Zaznacz na mapie interesujące obiekty i uruchom narzędzie ponownie \
              (zaznaczenie zawęża obszar) albo wskaż mniejszą warstwę."
         )
+    )
+}
+
+/// A layer the catalogue sets no span for is measured in features instead, before any fetch.
+pub fn area_over_budget(lang: Lang, area: &str, needed: usize, budget: usize, name: &str) -> String {
+    pick!(
+        lang,
+        format!(
+            "the layer \"{area}\" needs {} from \"{name}\", more than one download takes ({}). \
+             Select the features you want on the map and run the tool again (a selection narrows \
+             the area), or pick a smaller layer.",
+            features(lang, needed),
+            features(lang, budget)
+        ),
+        format!(
+            "warstwa „{area}” potrzebuje {} z zestawu „{name}”, a jedno pobranie bierze najwyżej \
+             {}. Zaznacz na mapie interesujące obiekty i uruchom narzędzie ponownie (zaznaczenie \
+             zawęża obszar) albo wskaż mniejszą warstwę.",
+            features(lang, needed),
+            features(lang, budget)
+        )
+    )
+}
+
+/// The progress line while the service counts the features the area needs.
+pub fn counting(lang: Lang, name: &str, area: &str) -> String {
+    pick!(
+        lang,
+        format!("{name}: counting the features in \"{area}\""),
+        format!("{name}: zliczanie obiektów w „{area}”")
     )
 }
 
@@ -337,17 +432,41 @@ pub fn truncated(lang: Lang) -> &'static str {
     )
 }
 
-pub fn span_too_large(lang: Lang, name: &str, width: f64, height: f64, max: f64) -> String {
+/// The download could not filter by the drawn shape, so it widened to the shape's bounding box.
+pub fn bbox_used(lang: Lang, problem: ShapeProblem) -> String {
+    match problem {
+        ShapeProblem::NoPolygon | ShapeProblem::SeveralPolygons => pick!(
+            lang,
+            "the area is not one polygon, so the bounding box was used",
+            "obszar nie jest jednym poligonem, więc użyto prostokąta otaczającego"
+        ),
+        ShapeProblem::TooFewPoints => pick!(
+            lang,
+            "the area outline has fewer than four points, so the bounding box was used",
+            "obrys obszaru ma mniej niż cztery punkty, więc użyto prostokąta otaczającego"
+        ),
+        ShapeProblem::TooLong => pick!(
+            lang,
+            "the area outline is too detailed for one request, so the bounding box was used",
+            "obrys obszaru jest zbyt szczegółowy dla jednego żądania, więc użyto prostokąta otaczającego"
+        ),
+    }
+    .to_string()
+}
+
+/// Requests that never answered, so the layer is short of the whole area.
+pub fn shortfall(lang: Lang, failed: usize) -> String {
+    // Polish wants the genitive after "brak", so 2 and 5 share one form.
+    let words = pick!(
+        lang,
+        ["request", "requests", "requests"],
+        ["żądania", "żądań", "żądań"]
+    );
+    let count = format!("{failed} {}", words[form(lang, failed)]);
     pick!(
         lang,
-        format!(
-            "the area is too big for \"{name}\": {width:.2}° × {height:.2}°, the maximum is {max:.2}°, \
-             zoom in or choose a smaller area."
-        ),
-        format!(
-            "obszar jest zbyt duży dla „{name}”: {width:.2}° × {height:.2}°, a maksimum to {max:.2}°, \
-             przybliż mapę albo wybierz mniejszy obszar."
-        )
+        format!("{count} failed, so the layer holds only what arrived"),
+        format!("brak {count}, więc warstwa zawiera tylko to, co dotarło")
     )
 }
 
@@ -366,7 +485,7 @@ pub fn split_areas(lang: Lang, name: &str, n: usize) -> String {
         (Lang::En, 1) => format!("{name}: one area"),
         (Lang::En, _) => format!("{name}: {} at once", areas(lang, n)),
         (Lang::Pl, 1) => format!("{name}: obszar"),
-        (Lang::Pl, _) => format!("{name}: obszary równolegle"),
+        (Lang::Pl, _) => format!("{name}: {}, równolegle", areas(lang, n)),
     }
 }
 
@@ -529,6 +648,24 @@ pub fn gml_unreadable(lang: Lang, error: &str) -> String {
     )
 }
 
+/// The service answered an OGC exception instead of features, so its own text is the answer.
+pub fn service_exception(lang: Lang, detail: &str) -> String {
+    pick!(
+        lang,
+        format!("the service answered with an exception: {detail}"),
+        format!("usługa odpowiedziała wyjątkiem: {detail}")
+    )
+}
+
+pub fn gml_unclosed(lang: Lang) -> String {
+    pick!(
+        lang,
+        "the GML document ends before its last element closes",
+        "dokument GML kończy się przed zamknięciem ostatniego elementu"
+    )
+    .to_string()
+}
+
 /// The view line: the box, then its scale.
 pub fn view_text(lang: Lang, extent: [f64; 4], scale: f64) -> String {
     let [west, south, east, north] = extent;
@@ -543,8 +680,17 @@ pub fn view_text(lang: Lang, extent: [f64; 4], scale: f64) -> String {
     )
 }
 
+/// No extent came back, so the panel says so and hides the row instead of showing 0°.
+pub fn view_missing(lang: Lang) -> String {
+    pick!(
+        lang,
+        "The map did not report a view.",
+        "Mapa nie podała widoku."
+    )
+    .to_string()
+}
+
 /// What the draw command says, and which gesture finishes it.
-/// What the draw command says, and the gesture that finishes the ring.
 pub fn area_armed(lang: Lang, name: &str) -> String {
     pick!(
         lang,
@@ -555,28 +701,46 @@ pub fn area_armed(lang: Lang, name: &str) -> String {
         ),
         format!(
             "Klikaj narożniki obszaru, a na końcu kliknij dwukrotnie, aby go zamknąć — albo \
-             naciśnij Escape, aby przerwać. {name} jest aktywna, a narzędzie poligonu włączone. \
-             Kształt zostaje taki, jak narysowany; pobieranie idzie za nim, a model wysokości \
-             obejmuje prostokąt wokół niego."
+             naciśnij Escape, aby przerwać. Warstwa {name} jest aktywna, a narzędzie poligonu \
+             włączone. Kształt zostaje taki, jak narysowany; pobieranie idzie za nim, a model \
+             wysokości obejmuje prostokąt wokół niego."
         )
     )
 }
 
 /// The rectangle the area layer now holds, and how big it is.
 pub fn area_from_view(lang: Lang, name: &str, size: (f64, f64)) -> String {
+    let (width, height) = (num(lang, size.0, 1), num(lang, size.1, 1));
     pick!(
         lang,
         format!(
-            "Rectangle from the view written to {name}: {:.1} by {:.1} km. It is the area a \
-             download and the elevation model use.",
-            size.0, size.1
+            "Rectangle from the view written to {name}: {width} × {height} km. It is the area a \
+             download and the elevation model use."
         ),
         format!(
-            "Prostokąt z widoku zapisany w {name}: {:.1} na {:.1} km. To obszar, którego używa \
-             pobieranie i model wysokości.",
-            size.0, size.1
+            "Prostokąt z widoku zapisany w warstwie {name}: {width} × {height} km. To obszar, \
+             którego używa pobieranie i model wysokości."
         )
     )
+}
+
+/// The rectangle replaced a drawn shape, so the shape did not vanish without a word.
+pub fn area_replaced(lang: Lang, name: &str) -> String {
+    pick!(
+        lang,
+        format!("The rectangle replaced the shape drawn in {name}."),
+        format!("Prostokąt zastąpił kształt narysowany w warstwie {name}.")
+    )
+}
+
+/// The host made no area layer for the ring.
+pub fn area_failed(lang: Lang) -> String {
+    pick!(
+        lang,
+        "RustGIS did not make the area layer",
+        "RustGIS nie utworzyło warstwy obszaru"
+    )
+    .to_string()
 }
 
 /// The area layer is gone, and the next command makes a new one.
@@ -592,8 +756,8 @@ pub fn area_cleared(lang: Lang, name: &str) -> String {
 pub fn area_none(lang: Lang) -> String {
     pick!(
         lang,
-        "There is no area layer to remove. Press Rectangle area or Draw area to make one.",
-        "Nie ma warstwy obszaru do usunięcia. Naciśnij Obszar prostokąt albo Narysuj obszar."
+        "There is no area layer to remove. Press Area from view or Draw area to make one.",
+        "Nie ma warstwy obszaru do usunięcia. Naciśnij przycisk Obszar z widoku albo Narysuj obszar."
     )
     .to_string()
 }
@@ -617,8 +781,8 @@ pub fn nmt_box_note(lang: Lang, name: &str, box_lon: [f64; 4]) -> String {
 pub fn service_unknown(lang: Lang, wanted: &str, count: usize) -> String {
     pick!(
         lang,
-        format!("No service '{wanted}' among the {count} in the catalogue. Pick one from the Services group, or pass its name in the service parameter."),
-        format!("Nie ma usługi '{wanted}' wśród {count} w katalogu. Wskaż ją w grupie Usługi albo podaj jej nazwę w parametrze service.")
+        format!("No service '{wanted}' among the {count} services in the catalogue. Pick one from the WMS (view only) group, or pass its name in the service parameter."),
+        format!("Nie ma usługi '{wanted}' wśród {count} usług w katalogu. Wskaż ją w grupie WMS (podgląd) albo podaj jej nazwę w parametrze service.")
     )
 }
 
@@ -651,8 +815,8 @@ pub fn area_no_view(lang: Lang) -> String {
 pub fn area_missing(lang: Lang) -> String {
     pick!(
         lang,
-        "Not on the map yet. Press Rectangle area, or draw one.",
-        "Jeszcze nie ma na mapie. Naciśnij Obszar prostokąt albo go narysuj."
+        "Not on the map yet. Press Area from view, or draw one.",
+        "Jeszcze nie ma na mapie. Naciśnij przycisk Obszar z widoku albo go narysuj."
     )
     .to_string()
 }
@@ -666,16 +830,20 @@ pub fn area_present(lang: Lang, features_found: usize) -> String {
 }
 
 pub fn cache_text(lang: Lang, count: usize, bytes: u64) -> String {
-    format!("{}, {:.1} MB", files(lang, count), bytes as f64 / 1e6)
+    format!(
+        "{}, {} MB",
+        files(lang, count),
+        num(lang, bytes as f64 / 1e6, 1)
+    )
 }
 
 /// What the download tools offer, and what the catalogue holds beyond them.
 pub fn catalogue_text(lang: Lang, offered: usize, all: usize) -> String {
-    let indexes = all.saturating_sub(offered);
+    let (offered, sheets) = (datasets(lang, offered), sheets(lang, all.saturating_sub(offered)));
     pick!(
         lang,
-        format!("{offered} datasets in the download tools, {indexes} sheet indexes beside them (a script names those by id)."),
-        format!("{offered} zestawów w narzędziach pobierania, {indexes} skorowidzów obok (skrypt wskazuje je po identyfikatorze).")
+        format!("{offered} in the download tools, {sheets} beside them (a script names those by id)."),
+        format!("{offered} w narzędziach pobierania, {sheets} obok (skrypt wskazuje je po identyfikatorze).")
     )
 }
 
@@ -699,6 +867,7 @@ pub fn nmt_added(
     colours: bool,
 ) -> String {
     let (width, height) = size;
+    let megabytes = num(lang, megabytes, 1);
     let look = if colours {
         pick!(lang, "colours", "barwy")
     } else {
@@ -706,8 +875,21 @@ pub fn nmt_added(
     };
     pick!(
         lang,
-        format!("{name} added from {source}: {datum}, {width} by {height} cells, {megabytes:.1} MB, {look}."),
-        format!("Dodano {name} z {source}: {datum}, {width} na {height} komorek, {megabytes:.1} MB, {look}.")
+        format!("{name} added from {source}: {datum}, {width} × {height} cells, {megabytes} MB, {look}."),
+        format!("Dodano {name} z {source}: {datum}, {width} × {height} komórek, {megabytes} MB, {look}.")
+    )
+}
+
+/// The GeoTIFF is left to the app, which fetches it off the frame: nothing is styled yet.
+pub fn nmt_pending(lang: Lang, name: &str, source: &str) -> String {
+    pick!(
+        lang,
+        format!(
+            "{name} is on its way from {source}: RustGIS downloads the GeoTIFF in the background and shades it when it lands."
+        ),
+        format!(
+            "{name} jest w drodze z warstwy {source}: RustGIS pobiera GeoTIFF w tle i cieniuje go po pobraniu."
+        )
     )
 }
 
@@ -732,13 +914,19 @@ pub fn nmt_outside_poland(lang: Lang) -> String {
 
 /// The download holds the window, so the area is measured against the measured speed first.
 pub fn nmt_budget(lang: Lang, cells: f64, megabytes: f64, seconds: f64, budget: f64) -> String {
+    let (cells, megabytes, seconds, budget) = (
+        num(lang, cells, 0),
+        num(lang, megabytes, 0),
+        num(lang, seconds, 0),
+        num(lang, budget, 0),
+    );
     pick!(
         lang,
         format!(
-            "The area is {cells:.0} cells at 1 m: {megabytes:.0} MB, about {seconds:.0} s to download. One click may hold the window for {budget:.0} s. Select a smaller area."
+            "The area is {cells} cells at 1 m: {megabytes} MB, about {seconds} s to download. One click may hold the window for {budget} s. Select a smaller area."
         ),
         format!(
-            "Obszar ma {cells:.0} komorek w 1 m: {megabytes:.0} MB, około {seconds:.0} s pobierania. Jedno kliknięcie może zająć okno na {budget:.0} s. Zaznacz mniejszy obszar."
+            "Obszar ma {cells} komórek w rozdzielczości 1 m: {megabytes} MB, około {seconds} s pobierania. Jedno kliknięcie może zablokować okno na {budget} s. Zaznacz mniejszy obszar."
         )
     )
 }
@@ -819,7 +1007,16 @@ pub fn uug_found(lang: Lang, address: &str, lon: f64, lat: f64) -> String {
     pick!(
         lang,
         format!("{address} at {lat:.6}, {lon:.6}"),
-        format!("{address} na {lat:.6}, {lon:.6}"),
+        format!("{address} o współrzędnych {lat:.6}, {lon:.6}"),
+    )
+}
+
+/// More than one address matched the query; the tooltip names how many were left out.
+pub fn uug_candidates(lang: Lang, count: usize) -> String {
+    pick!(
+        lang,
+        format!("{count} addresses match, the closest one was added"),
+        format!("pasuje {count} adresów, dodano najbliższy"),
     )
 }
 
@@ -829,6 +1026,16 @@ pub fn height_failed(lang: Lang, detail: &str) -> String {
         format!("the terrain model answered \"{detail}\", not a height"),
         format!("model terenu odpowiedział „{detail}”, a nie wysokością"),
     )
+}
+
+/// The model covers Poland; elsewhere the service answers 0, which would read as sea level.
+pub fn height_outside(lang: Lang) -> String {
+    pick!(
+        lang,
+        "the terrain model covers Poland only, and the point is outside it",
+        "model terenu pokrywa tylko Polskę, a punkt jest poza nią",
+    )
+    .to_string()
 }
 
 pub fn height_at(lang: Lang, metres: f64, x: f64, y: f64) -> String {
@@ -843,9 +1050,18 @@ pub fn eziudp_needs_query(lang: Lang) -> String {
     pick!(
         lang,
         "narrow the register: {\"szukaj\": \"ortofoto\"}, {\"instytucja\": \"Geolog\"} or {\"teryt\": \"3064\"}. Without a filter it is 12 000 records and 9 MB",
-        "zawęź rejestr: {\"szukaj\": \"ortofoto\"}, {\"instytucja\": \"Geolog\"} albo {\"teryt\": \"3064\"}. Bez filtra to 12 000 rekordów i 9 MB",
+        "zawęź ewidencję: {\"szukaj\": \"ortofoto\"}, {\"instytucja\": \"Geolog\"} albo {\"teryt\": \"3064\"}. Bez filtra to 12 000 rekordów i 9 MB",
     )
     .to_string()
+}
+
+/// The narrowed register matched nothing, so the empty answer says it rather than reading as a bug.
+pub fn eziudp_nothing(lang: Lang, query: &str) -> String {
+    pick!(
+        lang,
+        format!("the register has nothing matching \"{query}\""),
+        format!("ewidencja nie ma nic dla „{query}”"),
+    )
 }
 
 pub fn eziudp_unreadable(lang: Lang) -> String {
@@ -904,6 +1120,7 @@ mod tests {
         assert_eq!(area_layer(Lang::En), "Area to download");
         assert_eq!(area_layer(Lang::Pl), "Obszar pobierania");
         assert_eq!(clipped_suffix(Lang::En), " (clipped)");
+        assert_eq!(clipped_suffix(Lang::Pl), " (po przycięciu)");
         assert_eq!(
             count(Lang::Pl, "Działki (EGiB)", 5),
             "Działki (EGiB): 5 obiektów"
@@ -912,5 +1129,36 @@ mod tests {
             count(Lang::En, "Parcels (EGiB)", 5),
             "Parcels (EGiB): 5 features"
         );
+    }
+
+    #[test]
+    fn polish_writes_a_decimal_comma() {
+        assert_eq!(num(Lang::Pl, 1.5, 1), "1,5");
+        assert_eq!(num(Lang::En, 1.5, 1), "1.5");
+        assert_eq!(num(Lang::Pl, 12.3, 1), "12,3");
+        assert_eq!(num(Lang::Pl, 54_267.0, 0), "54267");
+        assert!(area_from_view(Lang::Pl, "Obszar", (1.5, 2.0)).contains("1,5 × 2,0 km"));
+        assert!(catalogue_text(Lang::Pl, 106, 268).contains("106 zbiorów"));
+    }
+
+    #[test]
+    fn a_count_of_areas_keeps_the_number_in_polish() {
+        assert_eq!(split_areas(Lang::Pl, "granice", 1), "granice: obszar");
+        assert_eq!(
+            split_areas(Lang::Pl, "granice", 4),
+            "granice: 4 obszary, równolegle"
+        );
+        assert_eq!(split_areas(Lang::En, "gminy", 4), "gminy: 4 areas at once");
+    }
+
+    #[test]
+    fn names_the_bbox_fallback_and_the_shortfall() {
+        assert!(bbox_used(Lang::En, ShapeProblem::SeveralPolygons).contains("not one polygon"));
+        assert!(bbox_used(Lang::Pl, ShapeProblem::TooLong).contains("prostokąta"));
+        assert_eq!(shortfall(Lang::En, 1), "1 request failed, so the layer holds only what arrived");
+        assert_eq!(shortfall(Lang::Pl, 5), "brak 5 żądań, więc warstwa zawiera tylko to, co dotarło");
+        assert!(service_exception(Lang::Pl, "błąd serwera").contains("błąd serwera"));
+        assert!(http_status(Lang::En, 400, "https://x", "no such type").contains("no such type"));
+        assert_eq!(http_status(Lang::En, 400, "https://x", ""), "HTTP 400 from https://x");
     }
 }

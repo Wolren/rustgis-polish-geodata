@@ -5,8 +5,8 @@
 //! is 1 m. PL-KRON86-NH travels as GeoTIFF and RustGIS downloads it on its own; the ASCII systems
 //! come back through this program, which writes the `.prj` the grid needs to be placed.
 //!
-//! A command holds the window while it runs, so the area is measured first: GUGiK moved 256 MB in
-//! 43 s as GeoTIFF and 99.5 MB in 50 s as ASCII (measured 2026-10-27), and the budget is 12 s.
+//! A command holds the window while it runs, so the ASCII grid's area is measured first: GUGiK
+//! moved 99.5 MB in 50 s (measured 2026-10-27), and one click may hold the window for 12 s.
 
 use crate::cache;
 use crate::gk92;
@@ -111,29 +111,41 @@ pub fn add(host: &mut Host, lang: Lang, request: &Value, kind: Kind) -> Result<V
     let cells = f64::from(width) * f64::from(height);
     let bytes = cells * kind.bytes_per_cell();
     let seconds = bytes / kind.bytes_per_second();
-    if seconds > BUDGET_SECONDS {
-        return Err(text::nmt_budget(
-            lang,
-            cells,
-            bytes / 1e6,
-            seconds,
-            BUDGET_SECONDS,
-        ));
-    }
 
     let wanted = text::nmt_layer_name(kind.surface(), kind.datum());
     let address = url(kind, x0, y0, width, height);
     let mut megabytes = bytes / 1e6;
+    let mut pending = false;
     let name = if kind.tiff() {
-        // RustGIS downloads the GeoTIFF itself and reads the CRS from it.
-        attempts(|| host.call("layer.addUrl", json!({ "url": address, "name": wanted })))?;
-        resolved_name(host, &wanted)
+        // The app downloads a GeoTIFF off the frame, so it may answer that the file is on its way.
+        let answer = attempts(|| host.call("layer.addUrl", json!({ "url": address, "name": wanted })))?;
+        pending = answer.get("pending").and_then(Value::as_bool) == Some(true);
+        if pending {
+            wanted.clone()
+        } else {
+            resolved_name(host, &wanted)
+        }
     } else {
         let file = cache::dem_file(&format!(
             "{}_{x0}_{y0}_{width}x{height}.asc",
             kind.coverage()
         ));
-        megabytes = http::download(&address, &file, 110, lang)? as f64 / 1e6;
+        if file.exists() {
+            // The grid is already on disk: the click costs no download, so no budget either.
+            megabytes = file.metadata().map(|meta| meta.len()).unwrap_or(0) as f64 / 1e6;
+        } else {
+            // This download runs inside the command and holds the window, so it is measured first.
+            if seconds > BUDGET_SECONDS {
+                return Err(text::nmt_budget(
+                    lang,
+                    cells,
+                    megabytes,
+                    seconds,
+                    BUDGET_SECONDS,
+                ));
+            }
+            megabytes = http::download(&address, &file, 110, lang)? as f64 / 1e6;
+        }
         // An ASCII grid carries no CRS, so the sidecar places it.
         let prj = file.with_extension("prj");
         std::fs::write(&prj, gk92::WKT)
@@ -143,22 +155,25 @@ pub fn add(host: &mut Host, lang: Lang, request: &Value, kind: Kind) -> Result<V
         resolved_name(host, &wanted)
     };
 
-    let look = look(&name, colours(request));
-    let styled = host.call("raster.symbology", look).is_ok();
-    tidy(host, &source, boxes.lon);
-    host.notify(&text::nmt_added(
-        lang,
-        &name,
-        kind.datum(),
-        (width, height),
-        megabytes,
-        &source,
-        colours(request),
-    ));
-    // A model is a rectangle: when the area was drawn as something else, say which rectangle it
-    // turned into, because the layer now shows that box instead of the shape.
-    if text::AREA_LAYERS.contains(&source.as_str()) && !covers_its_box(&features, boxes.lon) {
-        host.notify(&text::nmt_box_note(lang, &source, boxes.lon));
+    // A GeoTIFF still on its way is not on the map, so there is nothing to shade yet.
+    let styled = !pending && host.call("raster.symbology", look(&name, colours(request))).is_ok();
+    tidy(host, &source, boxes.lon, &features, lang)?;
+    if pending {
+        host.notify(&text::nmt_pending(lang, &wanted, &source));
+    } else {
+        host.notify(&text::nmt_added(
+            lang,
+            &name,
+            kind.datum(),
+            (width, height),
+            megabytes,
+            &source,
+            colours(request),
+        ));
+        // A model is a rectangle, so a drawn shape becomes a box, and the layer shows that box.
+        if text::AREA_LAYERS.contains(&source.as_str()) && !covers_its_box(&features, boxes.lon) {
+            host.notify(&text::nmt_box_note(lang, &source, boxes.lon));
+        }
     }
     Ok(json!({
         "layer": name,
@@ -172,18 +187,28 @@ pub fn add(host: &mut Host, lang: Lang, request: &Value, kind: Kind) -> Result<V
         "box": [x0, y0, x0 + i64::from(width), y0 + i64::from(height)],
         "megabytes": megabytes.round(),
         "styled": styled,
+        "pending": pending,
         "look": if colours(request) { "colours" } else { "shading" },
     }))
 }
 
-/// Leaves the map usable after a build: a drawn area becomes the box the model covers, and the
-/// drawing tool returns to explore so the next click pans instead of adding a vertex.
-fn tidy(host: &mut Host, source: &str, box_lon: [f64; 4]) {
-    let drawn = text::AREA_LAYERS.contains(&source);
-    if drawn && obszar::Mode::stored() == obszar::Mode::Drawn {
-        let _ = obszar::snap(host, source, box_lon);
+/// Leaves the map usable after a build: a drawn area becomes the box, and the tool returns to explore.
+fn tidy(
+    host: &mut Host,
+    source: &str,
+    box_lon: [f64; 4],
+    features: &[Value],
+    lang: Lang,
+) -> Result<(), String> {
+    if text::AREA_LAYERS.contains(&source) {
+        // The layer's own geometry decides: a rectangle is left alone, a drawn shape is boxed.
+        let mode = obszar::Mode::of(features).unwrap_or_else(obszar::Mode::stored);
+        if mode == obszar::Mode::Drawn {
+            obszar::snap(host, source, box_lon, lang)?;
+        }
     }
     host.call("tool.set", json!({ "tool": "explore" })).ok();
+    Ok(())
 }
 
 /// Colours or shades the elevation model already on the map, a separate click on purpose.

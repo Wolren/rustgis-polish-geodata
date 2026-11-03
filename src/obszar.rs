@@ -28,7 +28,7 @@ impl Mode {
         }
     }
 
-    /// The mode of the last area command, so a model knows whether to snap the shape.
+    /// The mode of the last area command, for a layer whose geometry says nothing.
     pub fn stored() -> Mode {
         match std::fs::read_to_string(cache::area_mode_file()) {
             Ok(text) if text.trim() == Mode::View.key() => Mode::View,
@@ -36,9 +36,55 @@ impl Mode {
         }
     }
 
+    /// The mode the layer itself shows: one closed rectangle ring was copied from the view.
+    pub fn of(features: &[Value]) -> Option<Mode> {
+        if features.is_empty() {
+            return None;
+        }
+        Some(match features {
+            [feature] if rectangle(feature) => Mode::View,
+            _ => Mode::Drawn,
+        })
+    }
+
     fn remember(self) {
         std::fs::write(cache::area_mode_file(), self.key()).ok();
     }
+
+    /// Drops the stored mode, so another project's area does not inherit it.
+    fn forget() {
+        std::fs::remove_file(cache::area_mode_file()).ok();
+    }
+}
+
+/// Whether a feature is one closed ring of five corners on an axis-aligned rectangle.
+fn rectangle(feature: &Value) -> bool {
+    let Some(geometry) = feature.get("geometry") else {
+        return false;
+    };
+    if geometry.get("type").and_then(Value::as_str) != Some("Polygon") {
+        return false;
+    }
+    let Some(rings) = geometry.get("coordinates").and_then(Value::as_array) else {
+        return false;
+    };
+    let [ring] = rings.as_slice() else {
+        return false;
+    };
+    let Some(points) = ring.as_array() else {
+        return false;
+    };
+    if points.len() != 5 || points.first() != points.last() {
+        return false;
+    }
+    let corner = |index: usize| {
+        let point = points.get(index)?;
+        Some((point.get(0)?.as_f64()?, point.get(1)?.as_f64()?))
+    };
+    let (Some(a), Some(b), Some(c), Some(d)) = (corner(0), corner(1), corner(2), corner(3)) else {
+        return false;
+    };
+    a.1 == b.1 && b.0 == c.0 && c.1 == d.1 && d.0 == a.0
 }
 
 /// Fills the area layer with the current view, so a rectangle needs no drawing at all.
@@ -48,21 +94,15 @@ pub fn rectangle_from_view(host: &mut Host, lang: Lang) -> Result<Value, String>
         return Err(text::area_no_view(lang));
     }
     let name = area_layer(host, lang)?;
-    // The layer is emptied, not dropped: its renderer and place in the layer list stay.
-    host.call("layer.remove", json!({ "layer": [name.clone()] }))
-        .ok();
-    host.call(
-        "layer.template",
-        json!({ "template": "areas", "name": name.clone() }),
-    )?;
-    host.call("edit.enable", json!({ "on": true }))?;
-    host.call(
-        "edit.addFeature",
-        json!({ "layer": name, "geometry": { "type": "Polygon", "coordinates": [ring(extent)] } }),
-    )?;
+    let drawn = present(host, &name)?.unwrap_or(0) > 0;
+    refill(host, &name, &ring(extent), lang)?;
     host.call("layer.select", json!({ "layer": name }))?;
     host.call("tool.set", json!({ "tool": "explore" }))?;
     Mode::View.remember();
+    // A shape drawn in the layer goes with the rectangle, and says so.
+    if drawn {
+        host.notify(&text::area_replaced(lang, &name));
+    }
     host.notify(&text::area_from_view(lang, &name, size_km(extent)));
     Ok(json!({ "layer": name, "mode": Mode::View.key(), "box": extent }))
 }
@@ -76,10 +116,10 @@ pub fn draw(host: &mut Host, lang: Lang) -> Result<Value, String> {
     let name = area_layer(host, lang)?;
     let layers = host.call("host.layers", json!({}))?;
     let list = layers.as_array().cloned().unwrap_or_default();
-    let present = list
+    let there = list
         .iter()
         .any(|layer| layer.get("name").and_then(Value::as_str) == Some(name.as_str()));
-    if !present {
+    if !there {
         host.call(
             "layer.template",
             json!({ "template": "areas", "name": name.clone() }),
@@ -106,15 +146,17 @@ pub fn abort(host: &mut Host, lang: Lang) -> Result<Value, String> {
 pub fn clear(host: &mut Host, lang: Lang) -> Result<Value, String> {
     let layers = host.call("host.layers", json!({}))?;
     let list = layers.as_array().cloned().unwrap_or_default();
-    let present = list
+    let found = list
         .iter()
         .filter_map(|layer| layer.get("name").and_then(Value::as_str))
         .find(|name| text::AREA_LAYERS.contains(name))
         .map(str::to_string);
-    let Some(name) = present else {
+    let Some(name) = found else {
         return Err(text::area_none(lang));
     };
     host.call("layer.remove", json!({ "layer": [name.clone()] }))?;
+    // The mode goes with the layer, so no later model reads a stale one.
+    Mode::forget();
     host.notify(&text::area_cleared(lang, &name));
     Ok(json!({ "removed": name }))
 }
@@ -131,19 +173,43 @@ fn area_layer(host: &mut Host, lang: Lang) -> Result<String, String> {
     Ok(existing.unwrap_or_else(|| text::area_layer(lang).to_string()))
 }
 
-/// Replaces the drawn shape with its bounding box, so the layer shows the ground the model covers.
-pub fn snap(host: &mut Host, name: &str, box_lon: [f64; 4]) -> Result<(), String> {
-    host.call("layer.remove", json!({ "layer": [name] }))?;
-    host.call(
+/// The area layer's feature count on the map, when it is there at all.
+fn present(host: &mut Host, name: &str) -> Result<Option<i64>, String> {
+    let layers = host.call("host.layers", json!({}))?;
+    Ok(layers
+        .as_array()
+        .into_iter()
+        .flatten()
+        .find(|layer| layer.get("name").and_then(Value::as_str) == Some(name))
+        .map(|layer| layer.get("features").and_then(Value::as_i64).unwrap_or(0)))
+}
+
+/// Makes the area layer hold `ring`, building the new layer before the old one goes.
+fn refill(host: &mut Host, name: &str, ring: &[[f64; 2]], lang: Lang) -> Result<(), String> {
+    let answer = host.call(
         "layer.template",
-        json!({ "template": "areas", "name": name }),
+        json!({ "template": "areas", "name": format!("{name} (new)") }),
     )?;
+    let made = answer
+        .get("layer")
+        .cloned()
+        .ok_or_else(|| text::area_failed(lang))?;
     host.call("edit.enable", json!({ "on": true }))?;
     host.call(
         "edit.addFeature",
-        json!({ "layer": name, "geometry": { "type": "Polygon", "coordinates": [ring(box_lon)] } }),
+        json!({ "layer": made.clone(), "geometry": { "type": "Polygon", "coordinates": [ring] } }),
     )?;
+    // The old layer goes last: a failure above leaves the area as it was.
+    if present(host, name)?.is_some() {
+        host.call("layer.remove", json!({ "layer": [name] }))?;
+    }
+    host.call("layer.rename", json!({ "layer": made, "name": name }))?;
     Ok(())
+}
+
+/// Replaces the drawn shape with its bounding box, so the layer shows the ground the model covers.
+pub fn snap(host: &mut Host, name: &str, box_lon: [f64; 4], lang: Lang) -> Result<(), String> {
+    refill(host, name, &ring(box_lon), lang)
 }
 
 /// A closed ring around a `[west, south, east, north]` box.
@@ -163,6 +229,15 @@ fn size_km(extent: [f64; 4]) -> (f64, f64) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn feature(ring: &[(f64, f64)]) -> Value {
+        let coordinates: Vec<Value> = ring.iter().map(|(x, y)| json!([x, y])).collect();
+        json!({
+            "type": "Feature",
+            "properties": {},
+            "geometry": { "type": "Polygon", "coordinates": [coordinates] }
+        })
+    }
 
     #[test]
     fn every_mode_key_reads_back() {
@@ -191,5 +266,16 @@ mod tests {
         let (width, height) = size_km([16.0, 52.0, 17.0, 53.0]);
         assert!(width > 40.0 && width < 120.0, "width {width}");
         assert!(height > 100.0 && height < 120.0, "height {height}");
+    }
+
+    #[test]
+    fn a_view_rectangle_is_read_from_the_geometry() {
+        let view = [(16.9, 52.4), (17.0, 52.4), (17.0, 52.5), (16.9, 52.5), (16.9, 52.4)];
+        assert_eq!(Mode::of(&[feature(&view)]), Some(Mode::View));
+        // A triangle, and a shape drawn twice, are not the view's rectangle.
+        let triangle = [(16.9, 52.4), (17.0, 52.4), (17.0, 52.5), (16.9, 52.4)];
+        assert_eq!(Mode::of(&[feature(&triangle)]), Some(Mode::Drawn));
+        assert_eq!(Mode::of(&[feature(&view), feature(&view)]), Some(Mode::Drawn));
+        assert_eq!(Mode::of(&[]), None, "an empty layer says nothing");
     }
 }

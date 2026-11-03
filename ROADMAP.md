@@ -8,9 +8,11 @@ instytucji, potem według tematu — i którą w całości da się sterować prz
 ## Zrobione (0.6.0)
 
 - Pobieranie przestało być 108 poleceniami na wstędze: pięć narzędzi w tle, z postępem i
-  przerwaniem, jedna lista zestawów na narzędzie (`data/wfs.json` zna swoje narzędzie).
+  przerwaniem, jedna lista zbiorów na narzędzie (`data/wfs.json` zna swoje narzędzie).
 - Obszar: prostokąt z widoku, rysowanie, anulowanie, czyszczenie. Bez łańcucha zgadywania.
 - Wstęga mówi, co robi: **WMS (podgląd)** tylko wyświetla, **Pobieranie** tylko ściąga.
+- **Wysokości** to jedyny wyjątek od tej zasady: trzy polecenia pobierają raster, bo narzędzie
+  nie umie dodać warstwy rastrowej.
 - Katalog generowany z danych (`tools/manifest.py` + `tools/manifest.base.json`), instytucja
   i menu siedzą w `data/services.json`.
 - `katalog` — cały katalog jako JSON dla agentów.
@@ -20,11 +22,14 @@ instytucji, potem według tematu — i którą w całości da się sterować prz
 - Wstęga mieści się w oknie: wszystkie grupy w układzie `small`, katalog zwinięty według
   instytucji (**GUGiK** z czterema tematami w podmenu, pięć menu pozostałych instytucji), a
   pobieranie to pięć osobnych przycisków. 10 kolumn zamiast 28; w polskim interfejsie wstęga
-  kończy się na 1347 px z 1480. Wymaga RustGIS 0.5.0 (zagnieżdżone menu i kolumny `small`),
+  kończy się na 1353 px z 1480. Wymaga RustGIS 0.5.0 (zagnieżdżone menu i kolumny `small`),
   stąd `minRustgisVersion`.
-- **Przycinanie do dowolnej granicy.** Panel ma listę warstw poligonowych z liczbą obiektów
-  (drzewo z wyszukiwarką); wybór ustawia granicę, a wiersz **Przytnij** pokazuje parę
+- **Przycinanie do dowolnej granicy.** Panel ma drzewo warstw poligonowych z liczbą obiektów
+  i wyszukiwarką; wybór ustawia granicę, a wiersz **Przytnij** pokazuje parę
   „warstwa → granica”. Cięta jest warstwa aktywna, a bez niej najnowsza.
+- **Panel bez wypychania przycisków.** Statusy i przyciski stoją nad drzewem, drzewo jest
+  ostatnie, a **Odśwież panel** czyta widok, obszar, katalog i zapisane odpowiedzi od nowa.
+  Każde narzędzie pobierania ma parametr `clear` zamiast pola wyboru w panelu.
 
 ## Następne
 

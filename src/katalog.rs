@@ -82,15 +82,17 @@ pub fn run(params: &Value, lang: Lang) -> Result<Value, String> {
         .map(|layer| json!({ "id": layer.id, "title": layer.name }))
         .collect();
 
+    let counts = json!({
+        "services": service_list.len(),
+        "datasets": dataset_list.len(),
+        "indexes": index_list.len(),
+    });
+
     Ok(json!({
         "services": service_list,
         "datasets": dataset_list,
         "indexes": index_list,
-        "counts": {
-            "services": services::all().len(),
-            "datasets": catalog::offered().count(),
-            "indexes": catalog::wfs_layers().len() - catalog::offered().count(),
-        },
+        "counts": counts,
         "how": {
             "service": "run_command  plugin:dane-pl/<command>",
             "download": "gp.run  {\"tool\": \"plugin:dane-pl/<tool>\", \"params\": {\"dane\": \"<title>\", \"obszar\": \"<area layer>\"}}",
@@ -118,6 +120,22 @@ mod tests {
             answer["indexes"].as_array().unwrap().len(),
             catalog::wfs_layers().len() - catalog::offered().count()
         );
+        counts_describe_the_lists(&answer);
+    }
+
+    /// The counts say what the lists beside them hold, also after a filter.
+    fn counts_describe_the_lists(answer: &Value) {
+        for (key, list) in [
+            ("services", "services"),
+            ("datasets", "datasets"),
+            ("indexes", "indexes"),
+        ] {
+            assert_eq!(
+                answer["counts"][key].as_u64().unwrap() as usize,
+                answer[list].as_array().unwrap().len(),
+                "{key}"
+            );
+        }
     }
 
     #[test]
@@ -130,9 +148,11 @@ mod tests {
             .all(|s| s["institution"].as_str() == Some("pig")));
         // The datasets are GUGiK's, so another institution's filter leaves them out.
         assert!(pig["datasets"].as_array().unwrap().is_empty());
+        counts_describe_the_lists(&pig);
 
         let search = run(&json!({"szukaj": "geolog"}), Lang::En).unwrap();
         assert!(search["services"].as_array().unwrap().len() < services::all().len());
+        counts_describe_the_lists(&search);
     }
 
     #[test]

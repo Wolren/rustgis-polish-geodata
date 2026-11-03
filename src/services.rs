@@ -49,12 +49,15 @@ pub fn all() -> &'static [Service] {
     PARSED.get_or_init(|| serde_json::from_str(RAW).unwrap_or_default())
 }
 
-/// The service a request names, by id or by its catalogue name.
+/// The service a request names, by id, command, catalogue name or short label.
 pub fn find(wanted: &str) -> Option<&'static Service> {
     let wanted = wanted.trim();
-    all()
-        .iter()
-        .find(|s| s.id == wanted || s.cmd == wanted || s.name.eq_ignore_ascii_case(wanted))
+    all().iter().find(|s| {
+        s.id == wanted
+            || s.cmd == wanted
+            || s.name.eq_ignore_ascii_case(wanted)
+            || (!s.label.is_empty() && s.label.eq_ignore_ascii_case(wanted))
+    })
 }
 
 /// The service a request names: the `service` parameter, or the command that carried it.
@@ -88,31 +91,13 @@ pub fn toggle(host: &mut Host, lang: Lang, request: &Value) -> Result<Value, Str
     })?;
 
     let tiles = host.call("map.tiles", json!({}))?;
-    let present = tiles.as_array().and_then(|list| {
-        list.iter()
-            .filter_map(|tile| tile.get("name").and_then(Value::as_str))
-            .find(|name| *name == service.display())
-            .map(str::to_string)
-    });
-    if let Some(name) = present {
+    if let Some(name) = on_map(&tiles, service) {
         host.call("map.removeTiles", json!({ "name": name }))?;
         host.notify(&text::removed(lang, &name));
         return Ok(json!({ "removed": name }));
     }
 
-    host.call(
-        "map.addTiles",
-        json!({
-            "url": service.url,
-            "kind": "raster",
-            "name": service.display(),
-            "attribution": service.source,
-            "overlay": true,
-            "minZoom": 0,
-            "maxZoom": service.zoom,
-            "tileSize": 256,
-        }),
-    )?;
+    host.call("map.addTiles", tile_layer(service))?;
     host.notify(&text::service_added(
         lang,
         service.display(),
@@ -124,6 +109,28 @@ pub fn toggle(host: &mut Host, lang: Lang, request: &Value) -> Result<Value, Str
         "layer": service.layer,
         "services": all().len(),
     }))
+}
+
+/// The tile layer that is this service: the same name and the same address.
+fn on_map(tiles: &Value, service: &Service) -> Option<String> {
+    tiles.as_array()?.iter().find_map(|tile| {
+        let name = tile.get("name")?.as_str()?;
+        let url = tile.get("url")?.as_str()?;
+        (name == service.display() && url.trim() == service.url.trim()).then(|| name.to_string())
+    })
+}
+
+/// The `map.addTiles` request for a catalogue service, one picture of the view.
+fn tile_layer(service: &Service) -> Value {
+    json!({
+        "url": service.url,
+        "kind": "raster",
+        "name": service.display(),
+        "attribution": service.source,
+        "overlay": true,
+        "minZoom": 0,
+        "maxZoom": service.zoom,
+    })
 }
 
 #[cfg(test)]
@@ -177,5 +184,34 @@ mod tests {
         assert!(find(&first.id).is_some());
         assert!(find(&first.name).is_some());
         assert!(find("no such service").is_none());
+    }
+
+    #[test]
+    fn every_short_label_resolves_to_its_service() {
+        for service in all() {
+            assert_eq!(
+                find(service.display()).map(|found| found.id.as_str()),
+                Some(service.id.as_str()),
+                "{} is not found by its label",
+                service.display()
+            );
+        }
+    }
+
+    #[test]
+    fn a_tile_with_the_name_but_another_address_is_not_the_service() {
+        let service = &all()[0];
+        let foreign = json!([{"name": service.display(), "url": "https://example.test/{z}/{x}/{y}.png"}]);
+        assert_eq!(on_map(&foreign, service), None);
+        let ours = json!([{"name": service.display(), "url": service.url}]);
+        assert_eq!(on_map(&ours, service), Some(service.display().to_string()));
+    }
+
+    #[test]
+    fn a_service_is_added_as_one_picture_of_the_view() {
+        for service in all() {
+            let layer = tile_layer(service);
+            assert!(layer.get("tileSize").is_none(), "{}", service.id);
+        }
     }
 }

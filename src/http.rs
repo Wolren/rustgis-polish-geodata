@@ -15,10 +15,16 @@ const MAX_BYTES: u64 = 64 * 1024 * 1024;
 const MIN_COVERAGE_BYTES: u64 = 1024;
 /// One failed connection is retried this many times, with a pause that grows.
 const ATTEMPTS: u32 = 3;
+/// An error body is read up to this many bytes to find the exception it carries.
+const ERROR_BYTES: u64 = 8192;
+/// An exception line longer than this is cut: its first sentence names the fault.
+const ERROR_CHARS: usize = 200;
 
 /// Why one GET failed. A transport failure is worth another attempt; an HTTP status is not.
+///
+/// A status carries the first useful line of its body, where WFS and WCS put the exception.
 enum Failure {
-    Status(u16),
+    Status(u16, String),
     Transport(String),
     TooBig,
     NotUtf8,
@@ -34,13 +40,23 @@ pub fn get(url: &str, timeout_secs: u64, lang: Lang) -> Result<String, String> {
     Ok(body)
 }
 
+/// A GET answered from the cache when fresh, else from the server; the caller stores the body.
+pub fn get_unstored(url: &str, timeout_secs: u64, lang: Lang) -> Result<String, String> {
+    match cache::get(url) {
+        Some(cached) => Ok(cached),
+        None => fetch(url, timeout_secs, lang),
+    }
+}
+
 /// A GET that always reaches the server, bypassing the cache.
 pub fn fetch(url: &str, timeout_secs: u64, lang: Lang) -> Result<String, String> {
     let mut attempt = 0;
     loop {
         match request(url, timeout_secs) {
             Ok(body) => return Ok(body),
-            Err(Failure::Status(code)) => return Err(text::http_status(lang, code, short(url))),
+            Err(Failure::Status(code, detail)) => {
+                return Err(text::http_status(lang, code, short(url), &detail))
+            }
             Err(Failure::TooBig) => return Err(text::http_too_big(lang, short(url))),
             Err(Failure::NotUtf8) => return Err(text::http_not_utf8(lang, short(url))),
             Err(Failure::Transport(detail)) => {
@@ -60,7 +76,7 @@ fn request(url: &str, timeout_secs: u64) -> Result<String, Failure> {
         .set("User-Agent", UA)
         .call()
         .map_err(|e| match e {
-            ureq::Error::Status(code, _) => Failure::Status(code),
+            ureq::Error::Status(code, response) => Failure::Status(code, error_detail(response)),
             ureq::Error::Transport(t) => Failure::Transport(t.to_string()),
         })?;
     let mut bytes = Vec::new();
@@ -105,7 +121,9 @@ fn stream(url: &str, path: &std::path::Path, timeout_secs: u64, lang: Lang) -> R
         .set("User-Agent", UA)
         .call()
         .map_err(|e| match e {
-            ureq::Error::Status(code, _) => text::http_status(lang, code, short(url)),
+            ureq::Error::Status(code, response) => {
+                text::http_status(lang, code, short(url), &error_detail(response))
+            }
             ureq::Error::Transport(t) => text::http_transport(short(url), &t.to_string()),
         })?;
 
@@ -123,6 +141,77 @@ fn stream(url: &str, path: &std::path::Path, timeout_secs: u64, lang: Lang) -> R
     Ok(copied)
 }
 
+/// The first line of an error body that carries text, with the markup taken off it.
+fn error_detail(response: ureq::Response) -> String {
+    let mut bytes = Vec::new();
+    let read = response.into_reader().take(ERROR_BYTES).read_to_end(&mut bytes);
+    if read.is_err() {
+        return String::new();
+    }
+    first_text_line(&String::from_utf8_lossy(&bytes))
+}
+
+/// The first line of a body that holds words of its own, clipped for a message.
+fn first_text_line(body: &str) -> String {
+    for line in body.lines() {
+        let text = without_tags(line);
+        if !text.is_empty() {
+            return clip(&text, ERROR_CHARS);
+        }
+    }
+    String::new()
+}
+
+/// Drops every `<…>` span, so an XML or HTML error leaves the sentence it wraps.
+fn without_tags(line: &str) -> String {
+    let mut out = String::new();
+    let mut inside = false;
+    for ch in line.chars() {
+        match ch {
+            '<' => inside = true,
+            '>' => {
+                inside = false;
+                out.push(' ');
+            }
+            c if !inside => out.push(c),
+            _ => {}
+        }
+    }
+    out.split_whitespace().collect::<Vec<_>>().join(" ")
+}
+
+fn clip(text: &str, max: usize) -> String {
+    if text.chars().count() <= max {
+        return text.to_string();
+    }
+    let mut out: String = text.chars().take(max.saturating_sub(1)).collect();
+    out.push('…');
+    out
+}
+
 fn short(url: &str) -> &str {
     url.split('?').next().unwrap_or(url)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn takes_the_sentence_out_of_an_xml_error_body() {
+        let body = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ServiceExceptionReport version=\"1.2.0\">\n  <ServiceException code=\"InvalidParameterValue\">msWFSGetFeature(): BBOX and FILTER are mutually exclusive</ServiceException>\n</ServiceExceptionReport>";
+        assert_eq!(
+            first_text_line(body),
+            "msWFSGetFeature(): BBOX and FILTER are mutually exclusive"
+        );
+        assert_eq!(first_text_line("<html><body>Bad request</body></html>"), "Bad request");
+        assert_eq!(first_text_line("  \n\n"), "");
+    }
+
+    #[test]
+    fn clips_a_long_exception_line() {
+        let body = "x".repeat(ERROR_CHARS + 50);
+        assert_eq!(first_text_line(&body).chars().count(), ERROR_CHARS);
+        assert!(first_text_line(&body).ends_with('…'));
+    }
 }

@@ -35,18 +35,22 @@ pub fn area_in(list: &[Value]) -> Option<String> {
     })
 }
 
-/// The boundary chosen in the panel's tree, while the map still holds it.
-pub fn chosen(list: &[Value], request: &Value) -> Option<String> {
-    let name = request
+/// The boundary named in the panel's tree, whether or not the map still holds it.
+pub fn asked(request: &Value) -> Option<String> {
+    request
         .get("panel")
         .and_then(|panel| panel.get("values"))
         .and_then(|values| values.get("cel"))
         .and_then(Value::as_str)
-        .filter(|name| !name.is_empty())?;
-    let held = list
-        .iter()
-        .any(|layer| layer.get("name").and_then(Value::as_str) == Some(name));
-    held.then(|| name.to_string())
+        .map(str::trim)
+        .filter(|name| !name.is_empty())
+        .map(str::to_string)
+}
+
+/// Whether the map holds a layer of this name.
+fn held(list: &[Value], name: &str) -> bool {
+    list.iter()
+        .any(|layer| layer.get("name").and_then(Value::as_str) == Some(name))
 }
 
 /// The layer a caller naming none means: the Contents pane's active layer, else the newest one.
@@ -59,38 +63,133 @@ pub fn target(list: &[Value], boundary: &str) -> Option<String> {
         .and_then(|layer| layer.get("name").and_then(Value::as_str).map(str::to_string))
 }
 
+/// The clip a request asks for, as the panel shows it and `cut` runs it.
+pub fn plan(list: &[Value], request: &Value) -> (Option<String>, Option<String>) {
+    let params = request.get("params").cloned().unwrap_or(Value::Null);
+    let boundary = params
+        .get("obszar")
+        .and_then(Value::as_str)
+        .filter(|name| !name.trim().is_empty())
+        .map(str::to_string)
+        .or_else(|| match asked(request) {
+            // A name the map no longer holds is still the pick: no press switches to another.
+            Some(name) => held(list, &name).then_some(name),
+            None => area_in(list),
+        });
+    let named = params
+        .get("layer")
+        .and_then(Value::as_str)
+        .unwrap_or_default();
+    let layer = if named.trim().is_empty() {
+        target(list, boundary.as_deref().unwrap_or_default())
+    } else {
+        Some(named.to_string())
+    };
+    (layer, boundary)
+}
+
+/// The layer `gp.run` reports as added: its id, or the first of several.
+fn added(answer: &Value) -> Option<Value> {
+    answer
+        .get("layer")
+        .cloned()
+        .or_else(|| answer.get("layers")?.as_array()?.first().cloned())
+}
+
 /// Clips `layer` to `area`, replacing the layer in place.
 pub fn to_area(host: &mut Host, layer: &str, area: &str, lang: Lang) -> Result<Value, String> {
     let list = layers(host, lang)?;
-    let exists = |name: &str| {
-        list.iter()
-            .any(|l| l.get("name").and_then(Value::as_str) == Some(name))
-    };
-    if !exists(layer) {
+    if !held(&list, layer) {
         return Err(text::no_layer(lang, layer));
     }
-    if !exists(area) {
+    if !held(&list, area) {
         return Err(text::no_area_layer(lang, area));
     }
 
     let cut = format!("{layer}{}", text::clipped_suffix(lang));
-    host.call(
+    let answer = host.call(
         "gp.run",
         json!({
             "tool": "clip",
             "params": { "input": layer, "clip": area, "output": cut }
         }),
     )?;
+    // The host renames a taken output, so the answer's layer id is the only safe handle.
+    let made = added(&answer).ok_or_else(|| text::clipped_unreported(lang))?;
+    let after = layers(host, lang)?;
+    let produced = after
+        .iter()
+        .find(|found| found.get("id") == Some(&made))
+        .ok_or_else(|| text::clipped_unreported(lang))?;
+    let kept = produced.get("features").and_then(Value::as_i64).unwrap_or(0);
+
+    if kept <= 0 {
+        // Nothing kept: the empty result goes, and the original stays exactly as it was.
+        host.call("layer.remove", json!({ "layer": [made] }))?;
+        return Err(text::clipped_empty(lang, layer, area));
+    }
+    let kept = usize::try_from(kept).unwrap_or(0);
 
     // Keep one layer, not two: the uncut original obscures what the cut actually kept.
-    let kept = host
-        .call("host.features", json!({ "layer": cut }))
-        .ok()
-        .and_then(|f| f.get("features")?.as_array().map(|a| a.len()))
-        .unwrap_or(0);
-    let _ = host.call("layer.remove", json!({ "layer": layer }));
-    let _ = host.call("layer.rename", json!({ "layer": cut, "name": layer }));
+    host.call("layer.remove", json!({ "layer": layer }))?;
+    host.call("layer.rename", json!({ "layer": made, "name": layer }))?;
 
     host.notify(&text::clipped(lang, layer, area, kept));
     Ok(json!({ "layer": layer, "area": area, "features": kept }))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn layer(name: &str, id: i64, features: i64, active: bool) -> Value {
+        json!({ "name": name, "id": id, "features": features, "active": active, "raster": false })
+    }
+
+    fn map() -> Vec<Value> {
+        vec![
+            layer("Area to download", 1, 1, false),
+            layer("parcels", 2, 40, false),
+            layer("roads", 3, 7, true),
+        ]
+    }
+
+    fn request(cel: Value) -> Value {
+        json!({ "params": {}, "panel": { "values": { "cel": cel } } })
+    }
+
+    #[test]
+    fn a_panel_pick_is_the_boundary_and_the_active_layer_is_cut() {
+        let (layer, boundary) = plan(&map(), &request(json!("parcels")));
+        assert_eq!(boundary, Some("parcels".to_string()));
+        assert_eq!(layer, Some("roads".to_string()));
+    }
+
+    #[test]
+    fn nothing_chosen_falls_back_to_the_area_layer() {
+        let (layer, boundary) = plan(&map(), &request(Value::Null));
+        assert_eq!(boundary, Some("Area to download".to_string()));
+        assert_eq!(layer, Some("roads".to_string()));
+    }
+
+    #[test]
+    fn a_pick_the_map_lost_is_no_boundary_and_no_switch() {
+        let (_, boundary) = plan(&map(), &request(json!("gone")));
+        assert_eq!(boundary, None, "the area layer must not stand in for a lost pick");
+        assert_eq!(asked(&request(json!("gone"))), Some("gone".to_string()));
+    }
+
+    #[test]
+    fn parameters_name_both_sides_of_the_cut() {
+        let asked = json!({ "params": { "obszar": "roads", "layer": "parcels" } });
+        let (layer, boundary) = plan(&map(), &asked);
+        assert_eq!(layer, Some("parcels".to_string()));
+        assert_eq!(boundary, Some("roads".to_string()));
+    }
+
+    #[test]
+    fn the_boundary_is_never_the_layer_to_cut() {
+        let (layer, _) = plan(&map(), &request(json!("parcels")));
+        assert_ne!(layer, Some("parcels".to_string()));
+    }
 }

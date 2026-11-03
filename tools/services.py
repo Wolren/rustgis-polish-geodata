@@ -148,6 +148,42 @@ def https_first(address):
     return [address]
 
 
+CREDIT = "GUGiK · geoportal.gov.pl"
+# Each marker is matched inside the breadcrumb or credit; the value is the publisher name.
+PUBLISHERS = (
+    ("cartomatic", "Cartomatic"),
+    ("główny urząd geodezji i kartografii", CREDIT),
+    ("państwowy instytut geologiczny", "Państwowy Instytut Geologiczny (PIG)"),
+    ("lasy państwowe", "Lasy Państwowe (LP) - Bank Danych o Lasach"),
+    ("generalna dyrekcja ochrony środowiska", "Generalna Dyrekcja Ochrony Środowiska (GDOŚ)"),
+    ("narodowy instytut dziedzictwa", "Narodowy Instytut Dziedzictwa (NID)"),
+    ("pgw wody polskie", "PGW Wody Polskie"),
+    ("główny urząd statystyczny", "Główny Urząd Statystyczny"),
+    ("polskie linie kolejowe", "Polskie Linie Kolejowe S.A."),
+    ("zakład ubezpieczeń społecznych", "Zakład Ubezpieczeń Społecznych"),
+    ("polska agencja kosmiczna", "Polska Agencja Kosmiczna"),
+    ("instytut meteorologii i gospodarki wodnej", "Instytut Meteorologii i Gospodarki Wodnej"),
+    ("główny urząd nadzoru budowlanego", "Główny Urząd Nadzoru Budowlanego"),
+    ("krajowy ośrodek wsparcia rolnictwa", "Krajowy Ośrodek Wsparcia Rolnictwa"),
+)
+
+
+def credit(entry):
+    """The map credit of a service: GUGiK's portal for its own, the publisher for the rest.
+
+    A breadcrumb under "DANE INNYCH INSTYTUCJI" names the publisher; every other national
+    section is GUGiK's own, and a bare publisher name is kept as it is.
+    """
+    path = entry.get("source") or entry.get("category") or ""
+    folded = path.lower()
+    for marker, name in PUBLISHERS:
+        if marker in folded:
+            return name
+    if "usługi" in folded:
+        return CREDIT
+    return path.strip() or CREDIT
+
+
 def one(entry):
     address = entry["url"]
     last = "no address"
@@ -172,7 +208,7 @@ def one(entry):
         return {
             "id": slug(entry["name"]),
             "name": entry["name"],
-            "source": entry.get("source") or entry.get("category") or "",
+            "source": credit(entry),
             "url": template(candidate, layer, version),
             "layer": layer,
             "zoom": 18,

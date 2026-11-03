@@ -5,6 +5,7 @@
 //! features instead of every feature in its bounding box.
 
 use crate::catalog::WfsLayer;
+use crate::gk92;
 use serde_json::Value;
 
 /// The filter is sent in the URL, so it must stay well under a typical 8 KB request line.
@@ -12,31 +13,70 @@ const MAX_FILTER_CHARS: usize = 6000;
 /// Fewer points than this and the polygon is too coarse to filter usefully.
 const MAX_POINTS: usize = 300;
 
-/// A percent-encoded `<Filter>` for the area, or `None` when the area is not a single polygon
-/// (several polygons, or none); the caller then uses the bounding box.
-pub fn polygon_filter(layer: &WfsLayer, collection: &Value) -> Option<String> {
-    let rings = exterior_rings(collection);
-    if rings.len() != 1 {
-        return None;
+/// Why the area's shape could not be sent as a filter, so the request used its bounding box.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum ShapeProblem {
+    NoPolygon,
+    SeveralPolygons,
+    TooFewPoints,
+    TooLong,
+}
+
+/// A percent-encoded `<Filter>` for the area in lon and lat, or why the area has no single ring.
+pub fn polygon_filter(layer: &WfsLayer, collection: &Value) -> Result<String, ShapeProblem> {
+    // GUGiK answers EPSG:4326 with the latitude first, which is the order its filter wants.
+    polygon_filter_in(layer, collection, |lon, lat| [lat, lon])
+}
+
+/// The same ring in EPSG:2180, where the national grid carries the northing first.
+pub fn polygon_filter_grid(layer: &WfsLayer, collection: &Value) -> Result<String, ShapeProblem> {
+    polygon_filter_in(layer, collection, |lon, lat| {
+        let (easting, northing) = gk92::forward(lon, lat);
+        [northing, easting]
+    })
+}
+
+/// One ring, projected by `project`, as the `<Filter>` the `FILTER` parameter takes.
+fn polygon_filter_in(
+    layer: &WfsLayer,
+    collection: &Value,
+    project: impl Fn(f64, f64) -> [f64; 2],
+) -> Result<String, ShapeProblem> {
+    let mut rings = exterior_rings(collection);
+    if rings.is_empty() {
+        return Err(ShapeProblem::NoPolygon);
     }
-    let ring = rings.into_iter().next()?;
+    if rings.len() > 1 {
+        return Err(ShapeProblem::SeveralPolygons);
+    }
+    let ring = rings.remove(0);
     if ring.len() < 4 {
-        return None;
+        return Err(ShapeProblem::TooFewPoints);
     }
     let ring = decimate(ring, MAX_POINTS);
-    let mut positions = String::new();
-    for [lon, lat] in &ring {
-        positions.push_str(&format!("{lat:.7} {lon:.7} "));
-    }
     let xml = format!(
-        "<Filter><Intersects><PropertyName>{}</PropertyName><gml:Polygon><gml:exterior>\
+        "<Filter xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:gml=\"http://www.opengis.net/gml\">\
+<Intersects><PropertyName>{}</PropertyName><gml:Polygon><gml:exterior>\
 <gml:LinearRing><gml:posList>{}</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon>\
 </Intersects></Filter>",
         layer.geom_field,
-        positions.trim_end()
+        positions(&ring, project).trim_end()
     );
     let encoded = percent_encode(&xml);
-    (encoded.len() <= MAX_FILTER_CHARS).then_some(encoded)
+    if encoded.len() > MAX_FILTER_CHARS {
+        return Err(ShapeProblem::TooLong);
+    }
+    Ok(encoded)
+}
+
+/// The ring as `x y` pairs, each pair in the order the server's frame wants it.
+fn positions(ring: &[[f64; 2]], project: impl Fn(f64, f64) -> [f64; 2]) -> String {
+    let mut out = String::new();
+    for [lon, lat] in ring {
+        let [x, y] = project(*lon, *lat);
+        out.push_str(&format!("{x:.7} {y:.7} "));
+    }
+    out
 }
 
 /// The exterior rings of every polygon in a FeatureCollection.
@@ -80,7 +120,7 @@ fn ring_of(value: &Value) -> Option<Vec<[f64; 2]>> {
         }
         ring.push([pair[0].as_f64()?, pair[1].as_f64()?]);
     }
-    (ring.len() >= 4).then_some(ring)
+    Some(ring)
 }
 
 /// Keeps at most `max` points, evenly spaced, always including the first and the last.
@@ -130,11 +170,33 @@ mod tests {
     fn filters_by_the_single_polygon() {
         let layer = catalog::wfs_by_label("gminy").unwrap();
         let filter = polygon_filter(layer, &square(0.01)).expect("a filter");
-        assert!(filter.starts_with("%3CFilter%3E"));
+        assert!(filter.starts_with("%3CFilter%20xmlns%3Aogc"), "{filter}");
         assert!(filter.contains("msGeometry"));
         // lat lon, as GML in EPSG:4326 wants it
         assert!(filter.contains("52.2000000"));
         assert!(filter.contains("21.0100000") || filter.contains("21.0000000"));
+    }
+
+    #[test]
+    fn declares_the_namespaces_the_filter_uses() {
+        let layer = catalog::wfs_by_label("gminy").unwrap();
+        let filter = polygon_filter(layer, &square(0.01)).unwrap();
+        assert!(filter.contains("xmlns%3Aogc"), "{filter}");
+        assert!(filter.contains("xmlns%3Agml"), "{filter}");
+    }
+
+    #[test]
+    fn writes_the_grid_ring_northing_first() {
+        let ring = [[21.0, 52.2], [21.01, 52.2], [21.01, 52.21], [21.0, 52.2]];
+        let text = positions(&ring, |lon, lat| {
+            let (easting, northing) = gk92::forward(lon, lat);
+            [northing, easting]
+        });
+        let numbers: Vec<f64> = text.split_whitespace().filter_map(|n| n.parse().ok()).collect();
+        let (easting, northing) = gk92::forward(21.0, 52.2);
+        assert_eq!(numbers.len(), 8);
+        assert!((numbers[0] - northing).abs() < 0.01, "{numbers:?}");
+        assert!((numbers[1] - easting).abs() < 0.01, "{numbers:?}");
     }
 
     #[test]
@@ -143,7 +205,29 @@ mod tests {
         let mut area = square(0.01);
         let copy = area["features"][0].clone();
         area["features"].as_array_mut().unwrap().push(copy);
-        assert!(polygon_filter(layer, &area).is_none());
+        assert_eq!(
+            polygon_filter(layer, &area),
+            Err(ShapeProblem::SeveralPolygons)
+        );
+    }
+
+    #[test]
+    fn names_a_ring_with_too_few_points() {
+        let layer = catalog::wfs_by_label("gminy").unwrap();
+        let area = serde_json::json!({
+            "type": "FeatureCollection",
+            "features": [{"type": "Feature", "properties": {}, "geometry": {
+                "type": "Polygon", "coordinates": [[[21.0, 52.2], [21.01, 52.2], [21.0, 52.2]]]
+            }}]
+        });
+        assert_eq!(polygon_filter(layer, &area), Err(ShapeProblem::TooFewPoints));
+    }
+
+    #[test]
+    fn names_the_reason_without_any_polygon() {
+        let layer = catalog::wfs_by_label("gminy").unwrap();
+        let empty = serde_json::json!({"type": "FeatureCollection", "features": []});
+        assert_eq!(polygon_filter(layer, &empty), Err(ShapeProblem::NoPolygon));
     }
 
     #[test]

@@ -103,11 +103,20 @@ pub fn dem_stats() -> (usize, u64) {
     stats_in(&dem_dir())
 }
 
+/// Whether a file of this name is a finished answer, not a download's leftover.
+fn finished(name: &str) -> bool {
+    let name = name.to_ascii_lowercase();
+    !name.ends_with(".part") && !name.starts_with('.')
+}
+
 fn stats_in(dir: &std::path::Path) -> (usize, u64) {
     let mut count = 0;
     let mut bytes = 0;
     if let Ok(entries) = fs::read_dir(dir) {
         for entry in entries.flatten() {
+            if !finished(&entry.file_name().to_string_lossy()) {
+                continue;
+            }
             if let Ok(meta) = entry.metadata() {
                 if meta.is_file() {
                     bytes += meta.len();
@@ -128,5 +137,13 @@ mod tests {
         assert_eq!(key("https://a"), key("https://a"));
         assert_ne!(key("https://a"), key("https://b"));
         assert_eq!(key("https://a").len(), 16);
+    }
+
+    #[test]
+    fn a_leftover_is_not_a_stored_answer() {
+        assert!(finished("0123456789abcdef"));
+        assert!(finished("DTM_PL-KRON86-NH_348129_497807_2317x2193.asc"));
+        assert!(!finished("DTM_PL-KRON86-NH_348129_497807_2317x2193.part"));
+        assert!(!finished(".DS_Store"));
     }
 }

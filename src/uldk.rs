@@ -18,16 +18,23 @@ const FIELDS: &str = "parcel,voivodeship,county,commune,teryt,geom_wkt";
 
 /// The parcel under a point: `x`/`y` in PL-1992, or the map centre.
 pub fn parcel(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String> {
-    let (lon, lat) = match (params.get("x").and_then(Value::as_f64), params.get("y").and_then(Value::as_f64)) {
-        (Some(x), Some(y)) => (x, y),
-        _ => host.centre()?,
+    let given = (
+        params.get("x").and_then(Value::as_f64),
+        params.get("y").and_then(Value::as_f64),
+    );
+    let (easting, northing, asked) = match given {
+        (Some(x), Some(y)) => (x, y, tm::to_wgs84(x, y)),
+        _ => {
+            let (lon, lat) = host.centre()?;
+            let (easting, northing) = tm::to_2180(lon, lat);
+            (easting, northing, [lon, lat])
+        }
     };
-    let (easting, northing) = tm::to_2180(lon, lat);
     let url = format!(
         "{ULDK}?request=GetParcelByXY&xy={easting:.2},{northing:.2}&srid=2180&result={FIELDS}"
     );
     let body = http::get(&url, 20, lang)?;
-    answer(host, &body, lang, Some((lon, lat)))
+    answer(host, &body, lang, Some(asked))
 }
 
 /// The parcel an identifier names: `id` as ULDK writes it (`306401_1.0001.14/4`), or `teryt`,
@@ -63,14 +70,14 @@ fn identifier(params: &Value, lang: Lang) -> Result<String, String> {
 }
 
 /// Turns ULDK's answer into a layer, with the point that was asked about beside it.
-fn answer(host: &mut Host, body: &str, lang: Lang, asked: Option<(f64, f64)>) -> Result<Value, String> {
+fn answer(host: &mut Host, body: &str, lang: Lang, asked: Option<[f64; 2]>) -> Result<Value, String> {
     let (fields, wkt) = parse(body, lang)?;
 
     let mut properties = Map::new();
     for (name, value) in ["parcel", "voivodeship", "county", "commune", "teryt"].iter().zip(fields.iter()) {
         properties.insert((*name).into(), json!(value));
     }
-    if let Some((lon, lat)) = asked {
+    if let Some([lon, lat]) = asked {
         properties.insert("queryPoint".into(), json!([lon, lat]));
     }
 
@@ -93,8 +100,13 @@ fn answer(host: &mut Host, body: &str, lang: Lang, asked: Option<(f64, f64)>) ->
 /// Splits ULDK's answer into its fields and its WKT geometry.
 fn parse(body: &str, lang: Lang) -> Result<(Vec<String>, String), String> {
     let answer = body.trim();
-    let mut chars = answer.char_indices();
-    let (_, first) = chars.next().ok_or_else(|| text::uldk_empty(lang))?;
+    let first = answer.chars().next().ok_or_else(|| text::uldk_empty(lang))?;
+    if !first.is_ascii_digit() {
+        // A body with no status digit is a proxy or HTML page, shown as it came.
+        let line = answer.split_whitespace().collect::<Vec<_>>().join(" ");
+        let snippet: String = line.chars().take(100).collect();
+        return Err(text::uldk_message(&snippet));
+    }
     if first != '0' {
         let (_, message) = answer.split_once(' ').unwrap_or((answer, answer));
         return Err(text::uldk_message(message.trim()));
@@ -132,6 +144,14 @@ mod tests {
     fn reports_an_error_line() {
         let err = parse("-1 brak wyników", Lang::En).unwrap_err();
         assert!(err.contains("brak wyników"));
+    }
+
+    #[test]
+    fn reports_an_html_page_verbatim() {
+        let body = "<html>\n  <body>502 Bad Gateway</body>\n</html>";
+        let err = parse(body, Lang::En).unwrap_err();
+        assert!(err.starts_with("ULDK: <html>"));
+        assert!(err.contains("502 Bad Gateway"));
     }
 
     #[test]
