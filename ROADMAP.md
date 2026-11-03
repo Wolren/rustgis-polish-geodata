@@ -27,15 +27,17 @@ instytucji, potem według tematu — i którą w całości da się sterować prz
 - **Przycinanie do dowolnej granicy.** Panel ma drzewo warstw poligonowych z liczbą obiektów
   i wyszukiwarką; wybór ustawia granicę, a wiersz **Przytnij** pokazuje parę
   „warstwa → granica”. Cięta jest warstwa aktywna, a bez niej najnowsza.
-- **Panel bez wypychania przycisków.** Statusy i przyciski stoją nad drzewem, drzewo jest
-  ostatnie, a **Odśwież panel** czyta widok, obszar, katalog i zapisane odpowiedzi od nowa.
+- **Panel bez wypychania przycisków.** Statusy, para „warstwa → granica” i drzewo granicy stoją
+  nad przyciskami, a **Odśwież panel** czyta widok, obszar, katalog i zapisane odpowiedzi od nowa.
   Każde narzędzie pobierania ma parametr `clear` zamiast pola wyboru w panelu.
 
 ## Następne
 
 ### Dane
 
-- **Wody Polskie: ~900 warstw w 32 usługach WMS.** Jedyna instytucja, przy której model
+- **Wody Polskie: ~900 warstw w 32 usługach WMS.** Dziś w katalogu jest 1 z nich (MZP20,
+  zagrożenie powodziowe), a rejestr eZiUDP zna 19 zbiorów Wody Polskie, 15 z adresem WMS.
+  Jedyna instytucja, przy której model
   „jedna usługa = jedno polecenie" się nie skaluje. Potrzebny wybór warstwy wewnątrz usługi
   (parametr `warstwa` w poleceniu + lista z capabilities), zamiast 900 poleceń.
   Wejście: `wody.isok.gov.pl/gpservices/...`, wtyczka QGIS „Wody Polskie — Baza WMS".
@@ -43,7 +45,8 @@ instytucji, potem według tematu — i którą w całości da się sterować prz
 - **Pozostałe warstwy Cartomatic** — serwer podaje 110 warstw, wciągnięto 11 (WIG i mapy
   niemieckie). Zostały plany miast i mapy katastralne.
 - **Wody/geologia/ochrona środowiska** — przejrzeć EZiUDP po instytucjach i dobrać brakujące
-  usługi narodowe; wszystko przez `tools/services.py` (weryfikacja realnym kafliem).
+  usługi narodowe; wszystko przez `tools/services.py` (weryfikacja realnym kafliem). Zmierzone:
+  IMGW ma w rejestrze 3 zbiory (mamy 1), GUS 2 (mamy 1), GUNB i KOWR rejestr nie zna pod tą nazwą.
 
 ### Wyszukiwanie i ULDK
 
