@@ -26,15 +26,9 @@
   "commands": [
     {
       "id": "orto",
-      "label": "Orthophoto\n(WMTS)",
+      "label": "Orthophoto",
       "icon": "basemap",
       "help": "GUGiK orthophoto (WMTS, EPSG:3857). Click again to remove it."
-    },
-    {
-      "id": "orto-hi",
-      "label": "Orthophoto\nHi-Res",
-      "icon": "basemap",
-      "help": "High-resolution orthophoto (WMS)."
     },
     {
       "id": "bdot",
@@ -161,6 +155,13 @@
       "label": "Refresh the panel",
       "icon": "history",
       "help": "Updates the panel: the view, the area layer, the catalogue and the stored answers."
+    },
+    {
+      "id": "mapa",
+      "label": "Map",
+      "icon": "contents",
+      "help": "Adds the map or the dataset chosen in the panel list.",
+      "params": "{\"panel\": {\"mapa\": \"v:<command id> or d:<tool>:<dataset>\"}}"
     },
     {
       "id": "dem",
@@ -969,91 +970,91 @@
     },
     {
       "id": "wody-mrp3",
-      "label": "MRP 0,2% (raz na 500lat) negatywne konsekwencje dla życia i zdrowia ludzi",
+      "label": "MRP 0,2% (raz na 500lat) negatywne\nkonsekwencje dla życia i zdrowia ludzi",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 22 warstwy",
       "params": "{\"service\": \"wody-mrp3\"}"
     },
     {
       "id": "wody-mrp8",
-      "label": "MRP 0,2%(raz na 500lat) negatywne konsekwencje dla środowiska, dziedzictwa kult. i działalności gosp.",
+      "label": "MRP 0,2%(raz na 500lat) negatywne\nkonsekwencje dla środowiska, dziedzictwa\nkult. i działalności gosp.",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 40 warstw",
       "params": "{\"service\": \"wody-mrp8\"}"
     },
     {
       "id": "wody-mrp2",
-      "label": "MRP 1% (raz na 100lat) negatywne konsekwencje dla życia i zdrowia ludzi",
+      "label": "MRP 1% (raz na 100lat) negatywne\nkonsekwencje dla życia i zdrowia ludzi",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 22 warstwy",
       "params": "{\"service\": \"wody-mrp2\"}"
     },
     {
       "id": "wody-mrp7",
-      "label": "MRP 1%(raz na 100lat) negatywne konsekwencje dla środowiska, dziedzictwa kult. i działalności gosp.",
+      "label": "MRP 1%(raz na 100lat) negatywne konsekwencje\ndla środowiska, dziedzictwa kult. i\ndziałalności gosp.",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 40 warstw",
       "params": "{\"service\": \"wody-mrp7\"}"
     },
     {
       "id": "wody-mrp1",
-      "label": "MRP 10% (raz na 10lat) negatywne konsekwencje dla życia i zdrowia ludzi",
+      "label": "MRP 10% (raz na 10lat) negatywne\nkonsekwencje dla życia i zdrowia ludzi",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 9 warstw",
       "params": "{\"service\": \"wody-mrp1\"}"
     },
     {
       "id": "wody-mrp6",
-      "label": "MRP 10%(raz na 10lat) negatywne konsekwencje dla środowiska, dziedzictwa kulturowego i działalności gosp.",
+      "label": "MRP 10%(raz na 10lat) negatywne konsekwencje\ndla środowiska, dziedzictwa kulturowego i\ndziałalności gosp.",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 18 warstw",
       "params": "{\"service\": \"wody-mrp6\"}"
     },
     {
       "id": "wody-mrp12",
-      "label": "MRP-zniszczenie lub uszkodzenie budowli piętrzącej-negatywne skutki dla środowiska, dziedzictwa kult. i działalności gosp.",
+      "label": "MRP-zniszczenie lub uszkodzenie budowli\npiętrzącej-negatywne skutki dla środowiska,\ndziedzictwa kult. i działalności gosp.",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 146 warstw",
       "params": "{\"service\": \"wody-mrp12\"}"
     },
     {
       "id": "wody-mrp11",
-      "label": "MRP-zniszczenie lub uszkodzenie budowli piętrzącej-negatywne skutki dla życia i zdrowia ludzi",
+      "label": "MRP-zniszczenie lub uszkodzenie budowli\npiętrzącej-negatywne skutki dla życia i\nzdrowia ludzi",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 187 warstw",
       "params": "{\"service\": \"wody-mrp11\"}"
     },
     {
       "id": "wody-mrp9",
-      "label": "MRP-zniszczenie wału przeciwpow.-negatywne skutki dla środowiska, dziedzictwa kult. i działalności gosp.",
+      "label": "MRP-zniszczenie wału przeciwpow.-negatywne\nskutki dla środowiska, dziedzictwa kult. i\ndziałalności gosp.",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 18 warstw",
       "params": "{\"service\": \"wody-mrp9\"}"
     },
     {
       "id": "wody-mrp4",
-      "label": "MRP-zniszczenie wału przeciwpow.-negatywne skutki dla życia i zdrowia ludzi",
+      "label": "MRP-zniszczenie wału przeciwpow.-negatywne\nskutki dla życia i zdrowia ludzi",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 9 warstw",
       "params": "{\"service\": \"wody-mrp4\"}"
     },
     {
       "id": "wody-mrp10",
-      "label": "MRP-zniszczenie wału przeciwsztorm.-negatywne skutki dla środowiska, dziedzictwa kult. i działalności gosp.",
+      "label": "MRP-zniszczenie wału\nprzeciwsztorm.-negatywne skutki dla\nśrodowiska, dziedzictwa kult. i działalności\ngosp.",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 22 warstwy",
       "params": "{\"service\": \"wody-mrp10\"}"
     },
     {
       "id": "wody-mrp5",
-      "label": "MRP-zniszczenie wału przeciwsztorm.-negatywne skutki dla życia i zdrowia ludzi",
+      "label": "MRP-zniszczenie wału\nprzeciwsztorm.-negatywne skutki dla życia i\nzdrowia ludzi",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 12 warstw",
       "params": "{\"service\": \"wody-mrp5\"}"
     },
     {
       "id": "wody-mzp9",
-      "label": "MZP od strony morza-całkowite zniszczenie wału przeciwsztormowego",
+      "label": "MZP od strony morza-całkowite zniszczenie\nwału przeciwsztormowego",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 13 warstw",
       "params": "{\"service\": \"wody-mzp9\"}"
@@ -1109,7 +1110,7 @@
     },
     {
       "id": "wody-mzp8",
-      "label": "MZP-zniszczenie lub uszkodzenie budowli piętrzącej",
+      "label": "MZP-zniszczenie lub uszkodzenie budowli\npiętrzącej",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 162 warstwy",
       "params": "{\"service\": \"wody-mzp8\"}"
@@ -2023,7 +2024,6 @@
             "help": "Orthophoto, hillshade and the topographic overlay.",
             "items": [
               "orto",
-              "orto-hi",
               "bdot",
               "nmt"
             ]
@@ -2248,11 +2248,37 @@
             "help": "Wody Polskie and the Cartomatic series, one button per service.",
             "items": [
               {
-                "menu": "Wody Polskie",
+                "menu": "Wody: PGW",
                 "icon": "map",
                 "items": [
                   "wody-apgw",
                   "wody-apgw2",
+                  "wody-pgwwp"
+                ]
+              },
+              {
+                "menu": "Wody: powódź",
+                "icon": "map",
+                "items": [
+                  "wody-mzp9",
+                  "wody-mzp1",
+                  "wody-mzp2",
+                  "wody-mzp3",
+                  "wody-mzp4",
+                  "wody-mzp5",
+                  "wody-mzp6",
+                  "wody-mzp10",
+                  "wody-mzp8",
+                  "wody-mzp7",
+                  "wody-worp-onnp-od-morza",
+                  "wody-worp-onnp-zniszczenie-budowli-pietrzacych",
+                  "wody-worp4"
+                ]
+              },
+              {
+                "menu": "Wody: ryzyko",
+                "icon": "map",
+                "items": [
                   "wody-mrp3",
                   "wody-mrp8",
                   "wody-mrp2",
@@ -2265,22 +2291,8 @@
                   "wody-mrp4",
                   "wody-mrp10",
                   "wody-mrp5",
-                  "wody-mzp9",
-                  "wody-mzp1",
-                  "wody-mzp2",
-                  "wody-mzp3",
-                  "wody-mzp4",
-                  "wody-mzp5",
-                  "wody-mzp6",
-                  "wody-mzp10",
-                  "wody-mzp8",
-                  "wody-mzp7",
-                  "wody-pgwwp",
                   "wody-ppss",
-                  "wody-pzrp",
-                  "wody-worp-onnp-od-morza",
-                  "wody-worp-onnp-zniszczenie-budowli-pietrzacych",
-                  "wody-worp4"
+                  "wody-pzrp"
                 ]
               },
               {
@@ -2377,10 +2389,10 @@
             "items": [
               "dem",
               "dem-evr",
-              "dem-nmpt"
+              "dem-nmpt",
+              "dem-style"
             ]
-          },
-          "dem-style"
+          }
         ]
       },
       {
@@ -2407,6 +2419,8 @@
       "Addresses and buildings": "Adresy i budynki",
       "Adds the 1 m terrain model of the area, shaded. GUGiK serves PL-KRON86-NH as GeoTIFF.": "Dodaje model wysokości 1 m dla obszaru, cieniowany. GUGiK udostępnia PL-KRON86-NH jako GeoTIFF.",
       "Adds the parcel an identifier names, without pointing at the map: id as ULDK writes it, or teryt and numer.": "Dodaje działkę wskazaną identyfikatorem, bez klikania w mapę: id tak, jak zapisuje je ULDK, albo teryt i numer.",
+      "Adds the map or the dataset chosen in the panel list.": "Dodaje mapę albo zbiór danych wskazany na liście w panelu.",
+      "Every map the plugin can show and every dataset it can download: pick a row to add it.": "Wszystkie mapy, które wtyczka pokazuje, i wszystkie zbiory, które pobiera: wskaż wiersz, aby go dodać.",
       "Area": "Obszar",
       "Area (layer)": "Obszar (warstwa)",
       "Area to download": "Obszar pobierania",
@@ -2452,12 +2466,12 @@
       "Geology (PIG)": "Geologia (PIG)",
       "Height\nat point": "Wysokość\nw punkcie",
       "Heritage (NID)": "Zabytki (NID)",
-      "High-resolution orthophoto (WMS).": "Ortofotomapa w wysokiej rozdzielczości (WMS).",
       "Hillshade of the digital terrain model.": "Cieniowanie numerycznego modelu terenu.",
       "Historical maps": "Mapy historyczne",
       "Lists every service and every dataset, with the ids a script or an agent runs, optionally narrowed by institution or by a word of the name.": "Wypisuje wszystkie usługi i zbiory danych wraz z identyfikatorami, których używa skrypt albo agent; można zawęzić do instytucji albo do słowa z nazwy.",
       "Lookups": "Wyszukiwanie",
       "Map view": "Widok mapy",
+      "Map": "Mapa",
       "Maps": "Mapy",
       "Maritime zones, road and rail statistics, historic monuments and the rest.": "Strefy morskie, statystyki dróg i kolei, zabytki oraz pozostałe dane.",
       "Measured when the panel opens.": "Mierzone przy otwarciu panelu.",
@@ -2465,8 +2479,6 @@
       "Monuments, archaeological records and UNESCO sites.": "Zabytki, rejestr archeologiczny i obiekty UNESCO.",
       "Offices and courts": "Urzędy i sądy",
       "Open the panel to read the view.": "Otwórz panel, aby odczytać widok.",
-      "Orthophoto\n(WMTS)": "Ortofoto\n(WMTS)",
-      "Orthophoto\nHi-Res": "Ortofoto\nHi-Res",
       "Orthophoto and DEM": "Ortofoto i NMT",
       "Orthophoto, elevation, vegetation and archive imagery.": "Ortofoto, wysokości, wegetacja i zdjęcia archiwalne.",
       "Orthophoto, hillshade and the topographic overlay.": "Ortofoto, cieniowanie i nakładka topograficzna.",
@@ -2537,7 +2549,8 @@
       "Folder": "Folder",
       "The folder the files and the CSV report are written to.": "Folder, do którego trafiają pliki i raport CSV.",
       "Lookup": "Wyszukiwanie",
-      "A parcel under the map centre, or the terrain height at a point.": "Działka pod środkiem mapy albo wysokość terenu w punkcie."
+      "A parcel under the map centre, or the terrain height at a point.": "Działka pod środkiem mapy albo wysokość terenu w punkcie.",
+      "Orthophoto": "Ortofoto"
     }
   },
   "panel": {
@@ -2571,6 +2584,14 @@
         "help": "Choose the layer whose outline cuts the features. The area layer is the default.",
         "command": "panel-state",
         "search": true
+      },
+      {
+        "kind": "tree",
+        "id": "mapa",
+        "label": "Map",
+        "command": "mapa",
+        "search": true,
+        "help": "Every map the plugin can show and every dataset it can download: pick a row to add it."
       },
       {
         "kind": "button",

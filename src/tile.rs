@@ -40,7 +40,6 @@ pub fn toggle(host: &mut Host, overlay: &Overlay, lang: Lang) -> Result<Value, S
             "overlay": true,
             "minZoom": overlay.min_zoom,
             "maxZoom": overlay.max_zoom,
-            "tileSize": overlay.tile_size,
         }),
     )?;
 

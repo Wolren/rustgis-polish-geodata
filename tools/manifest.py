@@ -42,6 +42,17 @@ MAX_CHOICES = 64
 # No 'zones' or 'polygon' in the host's icon set: 'polygon_layer' is the polygon glyph.
 MAP_ICON = "polygon_layer"
 
+# The Wody Polskie folders by service id prefix: what the service shows, not who publishes it.
+WODY_FOLDERS = (
+    ("PGW", ("wody-pgwwp", "wody-apgw", "wody-apgw2", "wody-mphp")),
+    ("powódź", ("wody-worp", "wody-mzp")),
+    ("ryzyko", ("wody-mrp", "wody-pzrp", "wody-ppss")),
+)
+WODY_REST = "inne"
+
+# A menu row wider than this wraps, because the popup otherwise stretches past the column.
+LABEL_WIDTH = 44
+
 # What the build had to change to fit the host's limits, printed by main.
 NOTICES = []
 
@@ -131,18 +142,63 @@ def folders_of(label, leaves, titles, literal):
         ]
         for number, chunk in enumerate(chunks, start=1):
             name = word if len(chunks) == 1 else f"{word} ({number})"
-            # A folder named after a title's first word carries that Polish word into both languages.
+            # A split folder takes a Polish title word, so it stays the same in both languages.
             literal.add(name)
             folders.append({"menu": name, "icon": "map", "items": chunk})
     NOTICES.append(f"folder {label}: {len(leaves)} entries split into {len(folders)} folders")
     return folders
 
 
+def wody_folder(service_id):
+    """The Wody Polskie folder a service id belongs to, and 'inne' when no prefix matches it."""
+    for name, prefixes in WODY_FOLDERS:
+        if service_id.startswith(prefixes):
+            return name
+    return WODY_REST
+
+
+def wrapped(label, width=LABEL_WIDTH):
+    """The label broken at a space within `width` characters: a menu row keeps its line."""
+    lines, line = [], ""
+    for word in label.split():
+        if line and len(line) + len(word) + 1 > width:
+            lines.append(line)
+            line = word
+        else:
+            line = f"{line} {word}" if line else word
+    if line:
+        lines.append(line)
+    return "\n".join(lines)
+
+
+def wody_folders(meta, wody, literal):
+    """The Wody Polskie folders of 'More maps': PGW, flood, risk, then a bucket for a new family."""
+    buckets = {}
+    for command in wody:
+        buckets.setdefault(wody_folder(command["id"]), []).append(command["id"])
+    folders = []
+    for name in [name for name, _ in WODY_FOLDERS] + [WODY_REST]:
+        leaves = buckets.pop(name, [])
+        if not leaves:
+            continue
+        # The publisher's short name stays Polish in both languages, like the service titles.
+        label = f"{meta['wody']}: {name}"
+        literal.add(label)
+        chunks = [
+            leaves[start : start + MAX_MENU_ITEMS]
+            for start in range(0, len(leaves), MAX_MENU_ITEMS)
+        ]
+        for number, chunk in enumerate(chunks, start=1):
+            # A folder that had to split keeps its theme name, so the three labels never drift.
+            chunk_label = label if len(chunks) == 1 else f"{label} ({number})"
+            literal.add(chunk_label)
+            folders.append({"menu": chunk_label, "icon": "map", "items": chunk})
+    return folders
+
+
 def more_maps(meta, wody, carto, titles, literal):
-    """The 'More maps' menu: the Wody Polskie services, then one folder per Cartomatic series."""
-    # The publisher's own name in both languages: Wody Polskie is not a word to translate.
-    literal.add(meta["wody"])
-    folders = folders_of(meta["wody"], [command["id"] for command in wody], titles, literal)
+    """The 'More maps' menu: three Wody Polskie folders, then one folder per Cartomatic series."""
+    folders = wody_folders(meta, wody, literal)
     for series, label in carto["series"].items():
         if series not in meta["series"]:
             raise Bad(f"series '{series}' has no English label in tools/manifest.base.json")
@@ -347,16 +403,18 @@ def build():
                 raise Bad(f"data/wody.json: {service.get('id', '?')} has no '{key}'")
         count = len(service["layers"])
         help_text = f"{wody_file['attribution']} \u00b7 {count} {warstw(count)}"
+        # A 122-character title would stretch the popup, so the menu row wraps at a space.
+        label = wrapped(service["title"])
         wody_commands.append(
             {
                 "id": service["id"],
-                "label": service["title"],
+                "label": label,
                 "icon": MAP_ICON,
                 "help": help_text,
                 "params": json.dumps({"service": service["id"]}, ensure_ascii=False),
             }
         )
-        literal.update((service["title"], help_text))
+        literal.update((label, help_text))
     for entry in carto_file["maps"]:
         for key in ("id", "title", "layer", "series"):
             if not entry.get(key):
@@ -484,7 +542,7 @@ def menu_strings(items, strings):
 
 
 def interface_strings(manifest, literal):
-    """The strings the interface shows, minus the proper names that stay Polish in both languages."""
+    """The interface strings, minus the proper names that stay Polish in both languages."""
     strings = {manifest["name"], manifest["description"], manifest["tab"]["label"]}
     for group in manifest["tab"]["groups"]:
         strings.add(group["label"])

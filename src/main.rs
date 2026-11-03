@@ -6,6 +6,8 @@
 //! Commands only do things that finish at once: a map layer, a drawn area, a parcel lookup. A
 //! command holds the interface while it runs, so nothing that downloads belongs in one. The WFS
 //! download is a tool: it runs in the background with progress and Cancel.
+//!
+//! The panel's map list starts a download tool, so that press holds the interface until the run ends.
 
 mod cache;
 mod catalog;
@@ -98,6 +100,7 @@ fn run(
         "wysokosc" => uug::height(host, params, lang),
         "dzialka-id" => uldk::parcel_by_id(host, params, lang),
         "panel-state" => panel::state(host, lang, request),
+        "mapa" => panel::mapa(host, request, lang),
         "dem" => nmt::add(host, lang, request, nmt::Kind::TerrainKron),
         "dem-evr" => nmt::add(host, lang, request, nmt::Kind::TerrainEvrf),
         "dem-nmpt" => nmt::add(host, lang, request, nmt::Kind::SurfaceKron),
@@ -128,6 +131,7 @@ fn redraws_panel(id: &str) -> bool {
             | "parcel"
             | "wyczysc-cache"
             | "dem-style"
+            | "mapa"
             | "przytnij"
     )
 }

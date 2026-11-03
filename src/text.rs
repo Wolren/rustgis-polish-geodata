@@ -981,6 +981,40 @@ pub fn zoomed(lang: Lang) -> String {
     pick!(lang, "Zoomed to Poland", "Przybliżono do Polski").to_string()
 }
 
+/// The two roots of the panel's map list: every map first, then every download.
+pub fn map_roots(lang: Lang) -> [&'static str; 2] {
+    pick!(lang, ["Basemaps", "Downloads"], ["Podkłady", "Pobieranie"])
+}
+
+/// Nothing chosen in the panel's map list, so the press has no row to act on.
+pub fn map_missing(lang: Lang) -> String {
+    pick!(
+        lang,
+        "pick a row in the panel list first: a map to show, or a dataset to download",
+        "najpierw wskaż wiersz na liście w panelu: mapę do pokazania albo zbiór do pobrania"
+    )
+    .to_string()
+}
+
+/// The panel's list holds no such row: the value names a map or a dataset this build has not.
+pub fn map_unknown(lang: Lang, row: &str) -> String {
+    pick!(
+        lang,
+        format!("the panel list has no map or dataset for \"{row}\""),
+        format!("lista w panelu nie ma mapy ani zbioru dla „{row}”")
+    )
+}
+
+/// A download takes its area from a layer, and the map has neither the area layer nor an active one.
+pub fn map_no_layer(lang: Lang) -> String {
+    pick!(
+        lang,
+        "a download needs a layer to take its area from: draw the area, or select a layer",
+        "pobieranie potrzebuje warstwy, z której bierze obszar: narysuj obszar albo wskaż warstwę"
+    )
+    .to_string()
+}
+
 /// The raster's name: the product and its grid, the same in both languages.
 pub fn nmt_layer_name(surface: bool, datum: &str) -> String {
     let product = if surface { "NMPT" } else { "NMT" };

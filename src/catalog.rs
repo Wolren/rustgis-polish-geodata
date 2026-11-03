@@ -24,8 +24,6 @@ pub struct Overlay {
     pub max_zoom: u8,
     /// The shallowest zoom the service draws at; below it its tiles are blank.
     pub min_zoom: u8,
-    /// The tile size the service's cartography is drawn for (BDOT10k needs 512).
-    pub tile_size: u16,
 }
 
 impl Overlay {
@@ -54,23 +52,11 @@ pub const OVERLAYS: &[Overlay] = &[
         id: "orto",
         name_en: "Orthophoto (GUGiK)",
         name_pl: "Ortofoto (GUGiK)",
-        url: "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMTS/StandardResolution?\
-SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ORTOFOTOMAPA&STYLE=default&\
-TILEMATRIXSET=EPSG:3857&TILEMATRIX=EPSG:3857:{z}&TILEROW={y}&TILECOL={x}&FORMAT=image/jpeg",
-        max_zoom: 19,
-        min_zoom: 0,
-        tile_size: 256,
-    },
-    Overlay {
-        id: "orto-hi",
-        name_en: "Orthophoto Hi-Res (GUGiK)",
-        name_pl: "Ortofoto Hi-Res (GUGiK)",
         url: "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/HighResolution?\
 SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Raster&STYLES=&CRS=EPSG:3857&\
 BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/jpeg&TRANSPARENT=false",
         max_zoom: 19,
         min_zoom: 0,
-        tile_size: 256,
     },
     Overlay {
         id: "bdot",
@@ -79,7 +65,6 @@ BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/jpeg&TRANSPAREN
         url: BDOT_URL,
         max_zoom: 18,
         min_zoom: 13,
-        tile_size: 512,
     },
     Overlay {
         id: "dzialki-wms",
@@ -88,7 +73,6 @@ BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/jpeg&TRANSPAREN
         url: KIEG_URL,
         max_zoom: 21,
         min_zoom: 15,
-        tile_size: 256,
     },
     Overlay {
         id: "adresy",
@@ -100,7 +84,6 @@ SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=A07_Punkty_adresowe,A08_Ulice&ST
 CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=true",
         max_zoom: 21,
         min_zoom: 15,
-        tile_size: 256,
     },
     Overlay {
         id: "prg-wms",
@@ -112,7 +95,6 @@ A02_Granice_powiatow,A03_Granice_gmin,A04_Granice_miast&STYLES=&CRS=EPSG:3857&\
 BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=true",
         max_zoom: 18,
         min_zoom: 0,
-        tile_size: 256,
     },
     Overlay {
         id: "prng",
@@ -124,7 +106,6 @@ M2_PozostaleNazwyMiejscowosci&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&\
 WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=true",
         max_zoom: 18,
         min_zoom: 0,
-        tile_size: 256,
     },
     Overlay {
         id: "nmt",
@@ -135,7 +116,6 @@ SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Raster&STYLES=&CRS=EPSG:3857&\
 BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=false",
         max_zoom: 18,
         min_zoom: 0,
-        tile_size: 256,
     },
 ];
 

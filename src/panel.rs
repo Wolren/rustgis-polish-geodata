@@ -1,10 +1,27 @@
 //! The panel's state: what the pane shows when it opens, and which of its buttons apply.
 
 use crate::cache;
+use crate::catalog;
 use crate::clip;
 use crate::host::Host;
+use crate::services;
 use crate::text::{self, Lang};
 use serde_json::{json, Map, Value};
+
+/// The curated overlays the map list offers, in the order the ribbon shows them.
+const CURATED: &[&str] = &["orto", "bdot", "nmt", "dzialki-wms", "adresy", "prg-wms", "prng"];
+
+/// The five WFS download tools, in the order the map list shows them: id, English label, Polish label.
+const DOWNLOAD_TOOLS: &[(&str, &str, &str)] = &[
+    ("pobierz-adresy", "Addresses and buildings", "Adresy i budynki"),
+    ("pobierz-granice", "Boundaries and units", "Granice i jednostki"),
+    ("pobierz-osnowy", "Control points", "Osnowy i pomiary"),
+    ("pobierz-urzedy", "Offices and courts", "Urzędy i sądy"),
+    ("pobierz-pozostale", "Other data", "Pozostałe dane"),
+];
+
+/// The manifest's id: the host prefixes a tool id with it.
+const PLUGIN_ID: &str = "dane-pl";
 
 /// Copies the panel's state into a command's answer, so the pane shows what the command changed.
 pub fn attach(answer: &mut Value, state: Value) {
@@ -92,6 +109,7 @@ pub fn state(host: &mut Host, lang: Lang, request: &Value) -> Result<Value, Stri
         "cel".into(),
         json!({ "nodes": nodes, "enabled": has_nodes }),
     );
+    items.insert("mapa".into(), json!({ "nodes": map_nodes(lang) }));
     items.insert(
         "cache".into(),
         json!({ "text": text::cache_text(lang, files, bytes) }),
@@ -120,10 +138,242 @@ pub fn state(host: &mut Host, lang: Lang, request: &Value) -> Result<Value, Stri
     }))
 }
 
+/// Adds the map or the dataset the panel's list holds, as `v:` and `d:` rows name them.
+pub fn mapa(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, String> {
+    let row = picked(request).ok_or_else(|| text::map_missing(lang))?;
+    if let Some(id) = row.strip_prefix("v:") {
+        if !is_map(id) {
+            return Err(text::map_unknown(lang, &row));
+        }
+        // The host refuses a plugin-prefixed id, so the plugin runs its own command here.
+        let sub = json!({ "id": id, "params": {} });
+        return crate::run(&sub, id, &json!({}), host, lang);
+    }
+    let Some(rest) = row.strip_prefix("d:") else {
+        return Err(text::map_unknown(lang, &row));
+    };
+    let (tool, dataset) = rest.split_once(':').ok_or_else(|| text::map_unknown(lang, &row))?;
+    download(host, tool, dataset, lang)
+}
+
+/// The row chosen in the panel's map list, which is the command's only input.
+fn picked(request: &Value) -> Option<String> {
+    request
+        .get("panel")
+        .and_then(|panel| panel.get("values"))
+        .and_then(|values| values.get("mapa"))
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|row| !row.is_empty())
+        .map(str::to_string)
+}
+
+/// Whether the list offers this map command: a curated overlay, a service, a Wody service, a Cartomatic map.
+fn is_map(id: &str) -> bool {
+    CURATED.contains(&id)
+        || services::all().iter().any(|service| service.cmd == id)
+        || catalog::wody().iter().any(|service| service.id == id)
+        || catalog::cartomatic().iter().any(|map| map.id == id)
+}
+
+/// Starts the download tool of a `d:` row with the dataset's title and a layer to take the area from.
+fn download(host: &mut Host, tool: &str, dataset: &str, lang: Lang) -> Result<Value, String> {
+    let layer = catalog::wfs_layers()
+        .iter()
+        .find(|layer| !layer.index && layer.id == dataset && layer.tool == tool)
+        .ok_or_else(|| text::map_unknown(lang, &format!("d:{tool}:{dataset}")))?;
+    let list = clip::layers(host, lang)?;
+    let area = clip::area_in(&list)
+        .or_else(|| active(&list))
+        .ok_or_else(|| text::map_no_layer(lang))?;
+    host.call(
+        "gp.run",
+        json!({
+            "tool": format!("plugin:{}/{tool}", PLUGIN_ID),
+            "params": { "dane": layer.title, "obszar": area },
+        }),
+    )
+}
+
+/// The layer the Contents pane has active, when one is.
+fn active(list: &[Value]) -> Option<String> {
+    let layer = list
+        .iter()
+        .find(|layer| layer.get("active").and_then(Value::as_bool) == Some(true))?;
+    layer.get("name").and_then(Value::as_str).map(str::to_string)
+}
+
+/// The panel's map list: every map under Podkłady, every downloadable dataset under Pobieranie.
+fn map_nodes(lang: Lang) -> Value {
+    let [maps, downloads] = text::map_roots(lang);
+    json!([
+        { "id": "podklady", "label": maps, "children": map_leaves(lang) },
+        { "id": "pobieranie", "label": downloads, "children": download_leaves(lang) },
+    ])
+}
+
+/// Every map the plugin can show, as `v:<command id>` leaves in catalogue order.
+fn map_leaves(lang: Lang) -> Vec<Value> {
+    let mut leaves: Vec<Value> = CURATED
+        .iter()
+        .filter_map(|id| catalog::overlay(id))
+        .map(|overlay| leaf(&format!("v:{}", overlay.id), overlay.name(lang)))
+        .collect();
+    leaves.extend(
+        services::all()
+            .iter()
+            .map(|service| leaf(&format!("v:{}", service.cmd), service.display())),
+    );
+    leaves.extend(
+        catalog::wody()
+            .iter()
+            .map(|service| leaf(&format!("v:{}", service.id), service.title)),
+    );
+    leaves.extend(
+        catalog::cartomatic()
+            .iter()
+            .map(|map| leaf(&format!("v:{}", map.id), map.title)),
+    );
+    leaves
+}
+
+/// One folder per download tool, each leaf `d:<tool>:<dataset>` labelled as the tool's choice names it.
+fn download_leaves(lang: Lang) -> Vec<Value> {
+    DOWNLOAD_TOOLS
+        .iter()
+        .filter_map(|(tool, english, polish)| {
+            let leaves: Vec<Value> = catalog::wfs_layers()
+                .iter()
+                .filter(|layer| !layer.index && layer.tool == *tool)
+                .map(|layer| leaf(&format!("d:{tool}:{}", layer.id), layer.name))
+                .collect();
+            let label = match lang {
+                Lang::En => english,
+                Lang::Pl => polish,
+            };
+            (!leaves.is_empty()).then(|| {
+                json!({ "id": format!("folder:{tool}"), "label": label, "children": leaves })
+            })
+        })
+        .collect()
+}
+
+/// A tree leaf: its id and its label, with no count.
+fn leaf(id: &str, label: &str) -> Value {
+    json!({ "id": id, "label": label })
+}
+
 /// The map's scale, or 0 when the app does not report it.
 fn scale(host: &mut Host) -> f64 {
     host.call("host.view", json!({}))
         .ok()
         .and_then(|view| view.get("scale").and_then(Value::as_f64))
         .unwrap_or(0.0)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The nodes of a subtree, the node itself included.
+    fn count_nodes(node: &Value) -> usize {
+        1 + node["children"]
+            .as_array()
+            .map(|children| children.iter().map(count_nodes).sum())
+            .unwrap_or(0)
+    }
+
+    /// Every row names something this build still has, and no id repeats.
+    #[test]
+    fn every_row_names_a_map_or_a_dataset() {
+        let nodes = map_nodes(Lang::En);
+        let maps = nodes[0]["children"].as_array().expect("map leaves");
+        let folders = nodes[1]["children"].as_array().expect("download folders");
+        assert_eq!(
+            maps.len(),
+            CURATED.len() + services::all().len() + catalog::wody().len() + catalog::cartomatic().len()
+        );
+        assert_eq!(folders.len(), DOWNLOAD_TOOLS.len());
+        let total: usize = nodes.as_array().expect("nodes").iter().map(count_nodes).sum();
+        assert!(total <= 400, "{total} nodes");
+
+        let mut ids: Vec<String> = Vec::new();
+        for leaf in maps {
+            let id = leaf["id"].as_str().expect("an id");
+            assert!(is_map(id.trim_start_matches("v:")), "{id}");
+            assert!(!leaf["label"].as_str().unwrap_or_default().is_empty(), "{id}");
+            ids.push(id.to_string());
+        }
+        for folder in folders {
+            assert!(!folder["label"].as_str().unwrap_or_default().is_empty());
+            for leaf in folder["children"].as_array().expect("dataset leaves") {
+                let id = leaf["id"].as_str().expect("an id");
+                let rest = id.strip_prefix("d:").unwrap_or_default();
+                let found = rest.split_once(':').and_then(|(tool, dataset)| {
+                    catalog::wfs_layers()
+                        .iter()
+                        .find(|layer| !layer.index && layer.tool == tool && layer.id == dataset)
+                });
+                assert!(found.is_some(), "{id}");
+                ids.push(id.to_string());
+            }
+        }
+        let before = ids.len();
+        ids.sort();
+        ids.dedup();
+        assert_eq!(before, ids.len(), "two rows share an id");
+    }
+
+    /// Every offered dataset sits in a folder of its own tool, so the list can start each download.
+    #[test]
+    fn every_offered_dataset_is_in_a_folder() {
+        let nodes = map_nodes(Lang::Pl);
+        let folders = nodes[1]["children"].as_array().expect("download folders");
+        let mut listed: Vec<&str> = Vec::new();
+        for folder in folders {
+            for leaf in folder["children"].as_array().expect("dataset leaves") {
+                listed.extend(leaf["id"].as_str());
+            }
+        }
+        for layer in catalog::offered() {
+            let wanted = format!("d:{}:{}", layer.tool, layer.id);
+            assert!(listed.contains(&wanted.as_str()), "{} is not listed", layer.id);
+        }
+        assert_eq!(listed.len(), catalog::offered().count());
+    }
+
+    /// A `d:` row passes the dataset's title, so every offered title must resolve to its own entry.
+    #[test]
+    fn every_offered_title_resolves_to_its_dataset() {
+        for layer in catalog::offered() {
+            let found = catalog::wfs_by_label(layer.title);
+            assert_eq!(found.map(|entry| entry.id), Some(layer.id), "{}", layer.id);
+        }
+    }
+
+    /// The folders carry the tool names the manifest prints, so the panel and the ribbon agree.
+    #[test]
+    fn the_folders_carry_the_manifest_tool_names() {
+        let manifest: Value =
+            serde_json::from_str(include_str!("../plugin.json")).expect("plugin.json is not JSON");
+        for (tool, english, _) in DOWNLOAD_TOOLS {
+            let found = manifest["tools"]
+                .as_array()
+                .expect("tools")
+                .iter()
+                .find(|decl| decl["id"] == *tool)
+                .and_then(|decl| decl["name"].as_str());
+            assert_eq!(found, Some(*english), "{tool}");
+        }
+    }
+
+    /// A press without a row, or with a row no map defines, fails before the map is touched.
+    #[test]
+    fn a_press_without_a_row_says_so() {
+        let mut host = Host::new(Lang::En);
+        let empty = json!({ "params": {} });
+        assert!(mapa(&mut host, &empty, Lang::En).unwrap_err().contains("panel list"));
+        let unknown = json!({ "panel": { "values": { "mapa": "v:nothing" } } });
+        assert!(mapa(&mut host, &unknown, Lang::Pl).unwrap_err().contains("nie ma mapy"));
+    }
 }

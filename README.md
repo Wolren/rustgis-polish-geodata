@@ -11,15 +11,15 @@ zamrażało okno na czas transferu. Dlatego na wstędze nie ma już 108 przycisk
 dziewięć narzędzi w panelu Narzędzia, wszystkie w tle, z postępem i przyciskiem Anuluj, w tym pięć
 pobierających zbiory WFS i cztery od paczek.
 
-Jeden wyjątek jest opisany niżej: trzy przyciski **Wysokości** to polecenia, które pobierają
+Jeden wyjątek jest opisany niżej: trzy polecenia w menu **Model** grupy **Wysokości** pobierają
 raster. Narzędzie geoprzetwarzania nie umie dodać warstwy rastrowej, więc raster pobiera i kładzie
 na mapie polecenie.
 
 Wszystkie grupy jadą w układzie `small`, czyli trzy kontrolki w kolumnie, a katalog jest zwinięty
 najpierw według instytucji: GUGiK to jedna pozycja z czterema tematami w podmenu. Wstęga ma przez
-to 11 kolumn zamiast 28 i mieści się w oknie 1480 px bez strzałki przewijania. Przy dziesięciu
-kolumnach polski interfejs kończył się na zmierzonych 1353 px; jedenasta kolumna to jedno wąskie
-menu **Więcej map**, czyli zmierzone 1439 px bez strzałki przewijania.
+to 11 kolumn zamiast 28 i mieści się w oknie 1480 px bez strzałki przewijania. Zmierzone na
+zrzucie z `ui_shot` (1480 x 760, polski interfejs): treść kończy się na 1390 px, po zwinięciu
+**Wysokości** i **Wyszukiwania** w jedno menu każde. Przed zwinięciem było 1439 px.
 
 | Grupa | Pozycja | Co robi |
 | --- | --- | --- |
@@ -29,7 +29,7 @@ menu **Więcej map**, czyli zmierzone 1439 px bez strzałki przewijania.
 | | Narysuj obszar | Narzędzie poligonu na warstwie „Obszar pobierania”; kształt zostaje taki, jak narysowany |
 | | Anuluj rysowanie | Wyłącza narzędzie rysowania i wraca do przeglądania |
 | | Usuń obszar | Usuwa warstwę „Obszar pobierania”, żeby zacząć od pustej |
-| **Narzędzia** | Panel | Panel ze statusami (widok, obszar, para warstwa → granica), przyciskami, drzewem warstw granicznych, katalogiem i zapisanymi odpowiedziami; **Odśwież panel** czyta je od nowa |
+| **Narzędzia** | Panel | Panel ze statusami (widok, obszar, para warstwa → granica), przyciskami, drzewem warstw granicznych, drzewem map z wyszukiwarką, katalogiem i zapisanymi odpowiedziami; **Odśwież panel** czyta je od nowa |
 | | Przytnij do warstwy | Tnie warstwę do wybranej w panelu granicy, domyślnie do „Obszar pobierania” |
 | **WMS (podgląd)** | GUGiK | 76 usług w czterech tematach: Ortofoto i NMT (20), Mapy (21), Kataster i granice (24), Pozostałe dane (11) |
 | | Mapy historyczne | 11 arkuszy WIG i map niemieckich |
@@ -37,19 +37,17 @@ menu **Więcej map**, czyli zmierzone 1439 px bez strzałki przewijania.
 | | Zabytki (NID) | 4 usługi |
 | | Lasy (BDL) | 4 usługi |
 | | Pozostałe instytucje | GDOŚ, PKP PLK, GUS, Wody Polskie, IMGW-PIB |
-| | Więcej map | 30 usług Wody Polskie (890 warstw) i 45 map Cartomatic w trzech folderach |
+| | Więcej map | 30 usług Wody Polskie (890 warstw) w trzech folderach i 45 map Cartomatic w dwóch folderach |
 | **Pobieranie** | Adresy i budynki | 19 zbiorów WFS |
 | | Granice i jednostki | 24 zbiory |
 | | Osnowy i pomiary | 21 zbiorów |
 | | Urzędy i sądy | 21 zbiorów |
 | | Pozostałe dane | 21 zbiorów |
 | | Pakiety | Trzy skorowidze arkuszy (ortofoto, NMT, pozostałe) i pobieranie arkuszy do folderu |
-| **Wysokości** | Model | Teren KRON86 (GeoTIFF), teren EVRF2007, pokrycie NMPT |
-| | Ustaw styl modelu | Cieniowanie najnowszego modelu, albo barwy |
-| **Wyszukiwanie** | Działka z ULDK | Działka pod środkiem mapy: geometria + atrybuty |
-| | Wysokość w punkcie | Wysokość NMT w PL-1992 (środek mapy albo x/y) |
+| **Wysokości** | Model | Teren KRON86 (GeoTIFF), teren EVRF2007, pokrycie NMPT i ustawianie stylu modelu |
+| **Wyszukiwanie** | Wyszukiwanie | Działka z ULDK i wysokość w punkcie |
 
-Łącznie: **210 poleceń** (26 własnych, 109 usług katalogu krajowego, 30 usług Wody Polskie i 45 map
+Łącznie: **211 poleceń** (27 własnych, 109 usług katalogu krajowego, 30 usług Wody Polskie i 45 map
 Cartomatic) oraz **9 narzędzi**. Wcześniej było 228 poleceń, z czego 108 pobierało dane natychmiast,
 blokując okno.
 
@@ -81,13 +79,27 @@ i przeglądowe) w menu **Więcej map**.
 
 ### Wody Polskie i seria Cartomatic
 
-Menu **Więcej map** zbiera dwie rodziny, które nie mieszczą się w katalogu instytucji:
+Menu **Więcej map** zbiera dwie rodziny, które nie mieszczą się w katalogu instytucji: 30 usług Wody
+Polskie (890 warstw) i 45 map Cartomatic. Wody Polskie dzielą się na trzy foldery, a o przynależności
+decyduje identyfikator usługi, nie jej tytuł:
 
 | Folder | Co się w nim kryje | Przycisków |
 | --- | --- | --- |
-| Wody Polskie | 30 usług WMS PGW Wody Polskie (ISOK), razem 890 warstw | 30 |
+| Wody: PGW | plany gospodarowania wodami (PGWWP, aPGW) i MPHP | 3 |
+| Wody: powódź | zagrożenie powodziowe (WORP, MZP) | 13 |
+| Wody: ryzyko | ryzyko powodziowe (MRP, PZRP, PPSS) | 14 |
 | Plany miast i atlasy | plany miast i atlasy z serwera Cartomatic | 20 |
 | Mapy topograficzne i przeglądowe | mapy topograficzne i przeglądowe z tego samego serwera | 25 |
+
+Podział bierze się z prefiksu: `wody-pgwwp`, `wody-apgw*` i `wody-mphp*` idą do **Wody: PGW**,
+`wody-worp*` i `wody-mzp*` do **Wody: powódź**, a `wody-mrp*`, `wody-pzrp` i `wody-ppss*` do
+**Wody: ryzyko**. Rodzina, której żaden prefiks nie łapie, trafia do **Wody: inne**, więc nowa usługa
+w katalogu nie wywala builda. Funkcja `wody_folder` w `tools/manifest.py` trzyma tę mapę, a każdy
+folder mieści najwyżej 32 pozycje, bo tyle przyjmuje menu gospodarza.
+
+Tytuły usług sięgają 122 znaków i taki wiersz rozwlekał popup na cały ekran. Etykieta łamie się
+więc na spacji co 44 znaki (`wrapped` w `tools/manifest.py`): wiersz menu zachowuje złamanie, a mały
+przycisk zamienia je na spację, więc oba czytają to samo.
 
 Przycisk to jedna usługa albo jedna mapa: naciśnięcie kładzie na mapę wszystkie jej warstwy, drugie
 je zdejmuje. Podpowiedź niesie atrybucję wydawcy („PGW Wody Polskie (ISOK) · 11 warstw”,
@@ -146,28 +158,30 @@ Menu **Pakiety** w grupie **Pobieranie** zamienia skorowidz w listę arkuszy do 
 
 | Narzędzie | Co robi | Wybór |
 | --- | --- | --- |
-| Skorowidze: ortofoto | dodaje skorowidz ortofotomap jako warstwę | 54 zbiory |
-| Skorowidze: NMT | to samo dla modeli terenu i pokrycia | 44 zbiory |
-| Skorowidze: inne | LIDAR, zdjęcia lotnicze i siatki arkuszy | 64 zbiory |
+| Skorowidze: ortofoto | dodaje skorowidz ortofotomap jako warstwę | 54 zbiory, obszar |
+| Skorowidze: NMT | to samo dla modeli terenu i pokrycia | 44 zbiory, obszar |
+| Skorowidze: inne | LIDAR, zdjęcia lotnicze i siatki arkuszy | 64 zbiory, obszar |
 | Pobierz arkusze | pobiera pliki wskazane przez obiekty skorowidza | warstwa, folder, `clear` |
 
 Kolejność jest zawsze ta sama:
 
-1. Uruchom jedno z trzech narzędzi skorowidza i wybierz zbiór, np. „Skorowidz ortofotomapy 2024”.
-   Skorowidz wjeżdża na mapę jako warstwa arkuszy.
-2. Zaznacz arkusze, które chcesz mieć, albo zostaw całą warstwę: bez zaznaczenia liczy się każdy
+1. Wskaż obszar, tak jak przy każdym pobieraniu: **Obszar z widoku**, **Narysuj obszar** albo
+   własna warstwa.
+2. Uruchom jedno z trzech narzędzi skorowidza, wybierz zbiór (np. „Skorowidz ortofotomapy 2024”)
+   i warstwę obszaru. Skorowidz wjeżdża na mapę jako warstwa arkuszy.
+3. Zaznacz arkusze, które chcesz mieć, albo zostaw całą warstwę: bez zaznaczenia liczy się każdy
    obiekt.
-3. Uruchom **Pobierz arkusze**: wskaż warstwę skorowidza i folder.
-4. Pliki lądują w folderze, a obok nich raport CSV z listą arkuszy i wynikiem każdego pobrania.
+4. Uruchom **Pobierz arkusze**: wskaż warstwę skorowidza i folder.
+5. Pliki lądują w folderze, a obok nich raport CSV z listą arkuszy i wynikiem każdego pobrania.
 
 Adres każdego pliku bierze się z pola `url_do_pobrania` obiektu skorowidza. Wartością wyboru w
-trzech narzędziach skorowidza jest tytuł zbioru, a gdy dwa zbiory mają ten sam tytuł, wybór niesie
-w nawiasie identyfikator, żeby dało się je rozróżnić.
+trzech narzędziach skorowidza jest tytuł zbioru, więc dwa zbiory o tym samym tytule niosą
+w nawiasie identyfikator.
 
 Skrypt robi to samo:
 
 ```
-run_tool  plugin:dane-pl/pobierz-skorowidz-orto  {"dane": "Skorowidz ortofotomapy 2024"}
+run_tool  plugin:dane-pl/pobierz-skorowidz-orto  {"dane": "Skorowidz ortofotomapy 2024", "obszar": "Obszar pobierania"}
 run_tool  plugin:dane-pl/pobierz-arkusze  {"skorowidz": "Skorowidz ortofotomapy 2024", "folder": "D:/orto"}
 ```
 
@@ -218,6 +232,23 @@ drzewem przyciski, katalog i zapisane odpowiedzi. Wybierz w drzewie dowolną war
 czego, na przykład `Adresy → Gmina Poznań`. Przycisk **Przytnij do warstwy** robi wtedy to, co
 widać. Bez wyboru granicą jest warstwa „Obszar pobierania”.
 
+Pod drzewem granic stoi drugie drzewo, **Mapa**, też z wyszukiwarką i 304 wierszami. W **Podkładach**
+jest każda mapa, którą wtyczka umie pokazać: siedem nakładek własnych, 109 usług katalogu, 30 usług
+Wody Polskie i 45 map Cartomatic. W **Pobieraniu** jest każdy zbiór, który umie pobrać, w pięciu
+folderach narzędzi. Wiersz niesie źródło w identyfikatorze: `v:<polecenie>` to mapa, a
+`d:<narzędzie>:<zbiór>` to pobieranie. Wybór wiersza uruchamia polecenie **Mapa** (`mapa`): `v:`
+wjeżdża tym samym poleceniem, które stoi na wstędze, a `d:` startuje narzędzie pobierania z tytułem
+zbioru i warstwą obszaru (albo warstwą aktywną, gdy obszaru nie ma). Skrypt robi to samo:
+
+```
+run_command  plugin:dane-pl/mapa  {"panel": {"mapa": "v:bdot"}}
+run_command  plugin:dane-pl/mapa  {"panel": {"mapa": "d:pobierz-granice:dane-a03-granice-gmin"}}
+```
+
+Bez wiersza polecenie odmawia i prosi o wskazanie wiersza. Pobranie z listy trzyma interfejs na czas
+transferu: polecenie nie ma tła, więc Anuluj nie działa, a postęp dochodzi do paska statusu dopiero po
+zakończeniu. Formularz narzędzia zostaje wygodniejszy, bo działa w tle i ma przycisk przerwania.
+
 **Odśwież panel** czyta od nowa widok, warstwę obszaru, katalog i zapisane odpowiedzi, więc
 odświeża panel także wtedy, gdy mapa zmieniła się poza nim.
 
@@ -230,15 +261,15 @@ mała, dla dróg i obiektów wielkości gminy duża.
 
 ### Model wysokości z obszaru
 
-Grupa **Wysokości** ma trzy pokrycia:
+Grupa **Wysokości** ma trzy pokrycia, w menu **Model**:
 
-| Przycisk | Pokrycie | Format |
+| Pozycja | Pokrycie | Format |
 | --- | --- | --- |
 | Model terenu KRON86 | `DTM_PL-KRON86-NH_TIFF` | GeoTIFF |
 | Model terenu EVRF2007 | `DTM_PL-EVRF2007-NH` | siatka ASCII |
 | Model pokrycia NMPT | `DSM_PL-KRON86-NH` | siatka ASCII |
 
-Te trzy przyciski to **polecenia**, nie narzędzia: pobierają raster i od razu kładą go na mapie.
+Te trzy pozycje to **polecenia**, nie narzędzia: pobierają raster i od razu kładą go na mapie.
 To jedyny wyjątek od zasady „polecenie pokazuje, narzędzie pobiera”, bo narzędzie nie umie dodać
 warstwy rastrowej.
 
@@ -367,7 +398,9 @@ python tools/manifest.py --check    # kończy się kodem 1, gdy plik jest nieakt
 Warstwa redakcyjna (co jest przyciskiem, w której grupie i menu, jak brzmią zdania, tłumaczenia)
 siedzi w `tools/manifest.base.json`. Generator rozwija listy zbiorów w `choices` narzędzi,
 dokłada po jednym poleceniu na usługę WMS, na usługę Wody Polskie i na mapę Cartomatic, i składa
-menu **Więcej map**: foldery serii Cartomatic biorą angielską nazwę z manifestu, a polską z `i18n`.
+menu **Więcej map**: foldery serii Cartomatic biorą angielską nazwę z manifestu, a polską z `i18n`,
+a foldery Wody Polskie wybiera prefiks identyfikatora usługi (`wody_folder`), z etykietami łamanymi
+co 44 znaki (`wrapped`).
 
 Przynależność do instytucji siedzi w `data/services.json` (`institution`, a dla GUGiK
 `institutionMenu`), a nie w manifeście: nowa usługa trafia do właściwego menu sama. Dwie nowe
@@ -420,8 +453,8 @@ oraz wpis rejestru do wydania.
 - Uprawnienia: `edit`, `network` i `files`. `files` jest potrzebne, bo siatki ASCII wysokości
   wchodzą na mapę przez `layer.addData` z `path`; `network` przez `map.addTiles` i `layer.addUrl`.
 - Ikony to nazwy ikon RustGIS (`basemap`, `buffer`, `bookmark`, `label`, `relief`, `erase`,
-  `g_rect`, `polygon_tool`, `line_tool`, `polygon_layer`, `globe_view`, `table`, `map`, `package`,
-  `zoom_world`, `history`); nieznana nazwa dawałaby puzzel.
+  `g_rect`, `polygon_tool`, `line_tool`, `polygon_layer`, `globe_view`, `table`, `map`, `contents`,
+  `package`, `zoom_world`, `history`); nieznana nazwa dawałaby puzzel.
 - `params` każdego polecenia opisuje jego argumenty dla skryptów i agentów; wcześniej ten opis
   leżał w kluczu `command`, który gospodarz ignoruje.
 - Wpis rejestru ma kształt wymagany przez `rustgis-plugins`: `id`, `source.url`, `source.sha256`

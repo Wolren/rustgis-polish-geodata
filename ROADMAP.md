@@ -21,10 +21,10 @@ instytucji, potem według tematu — i którą w całości da się sterować prz
 - 109 usług WMS, w tym 11 arkuszy historycznych (WIG, mapy niemieckie) z Cartomatic.
 - Wstęga mieści się w oknie: wszystkie grupy w układzie `small`, katalog zwinięty według
   instytucji (**GUGiK** z czterema tematami w podmenu, pięć menu pozostałych instytucji), a
-  pobieranie to pięć osobnych przycisków i menu **Pakiety**. 11 kolumn zamiast 28; przy dziesięciu
-  kolumnach polski interfejs kończył się na 1353 px z 1480, a jedenasta kolumna to jedno wąskie
-  menu **Więcej map** (około 1450 px). Wymaga RustGIS 0.5.0 (zagnieżdżone menu i kolumny `small`),
-  stąd `minRustgisVersion`.
+  pobieranie to pięć osobnych przycisków i menu **Pakiety**. 11 kolumn zamiast 28, a w polskim
+  interfejsie treść kończy się na zmierzonych 1390 px z 1480 (zrzut z `ui_shot`), bez strzałki
+  przewijania: **Wysokości** i **Wyszukiwanie** to po jednym menu. Wymaga RustGIS 0.5.0
+  (zagnieżdżone menu i kolumny `small`), stąd `minRustgisVersion`.
 - **Przycinanie do dowolnej granicy.** Panel ma drzewo warstw poligonowych z liczbą obiektów
   i wyszukiwarką; wybór ustawia granicę, a wiersz **Przytnij** pokazuje parę
   „warstwa → granica”. Cięta jest warstwa aktywna, a bez niej najnowsza.
@@ -42,10 +42,12 @@ instytucji, potem według tematu — i którą w całości da się sterować prz
   więc oba języki pokazują swoją nazwę serii. Gdy folder przekroczy 32 pozycje, generator dzieli
   go po pierwszym słowie tytułu i wypisuje, co podzielił.
 - **Pakiety: skorowidz, folder, CSV.** Menu **Pakiety** w grupie **Pobieranie** ma trzy narzędzia
-  skorowidzy (ortofoto 54 zbiory, NMT 44, pozostałe 64, według `theme` z katalogu WFS) i czwarte,
-  **Pobierz arkusze**: bierze warstwę skorowidza, folder i `clear`, pobiera pliki wskazane w polu
-  `url_do_pobrania` zaznaczonych obiektów i pisze raport CSV. Wybór w trzech narzędziach to tytuł
-  zbioru; przy powtarzającym się tytule wybór niesie w nawiasie identyfikator.
+  skorowidzy (ortofoto 54 zbiory, NMT 44, pozostałe 64; katalog WFS nie ma pola `theme`, więc
+  generator czyta temat z tytułu: „ortofotomap”, „pokrycia terenu”, „modelu terenu”; każde
+  narzędzie bierze zbiór i warstwę obszaru, jak pięć narzędzi WFS) i czwarte, **Pobierz arkusze**:
+  bierze warstwę skorowidza, folder i `clear`, pobiera pliki wskazane w polu `url_do_pobrania`
+  zaznaczonych obiektów i pisze raport CSV. Wybór w trzech narzędziach to tytuł zbioru; katalog ma
+  już unikalne tytuły, a gdyby się powtórzyły, wybór niesie w nawiasie identyfikator.
   Nie zrobione: LAZ i geobazy z dane.gov.pl (PGW, WORP, PZRP, PPSS, MZP) oraz wybór pojedynczych
   arkuszy w środku usługi.
 

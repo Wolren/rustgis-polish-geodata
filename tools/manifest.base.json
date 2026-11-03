@@ -28,15 +28,9 @@
   "commands": [
     {
       "id": "orto",
-      "label": "Orthophoto\n(WMTS)",
+      "label": "Orthophoto",
       "icon": "basemap",
       "help": "GUGiK orthophoto (WMTS, EPSG:3857). Click again to remove it."
-    },
-    {
-      "id": "orto-hi",
-      "label": "Orthophoto\nHi-Res",
-      "icon": "basemap",
-      "help": "High-resolution orthophoto (WMS)."
     },
     {
       "id": "bdot",
@@ -163,6 +157,13 @@
       "label": "Refresh the panel",
       "icon": "history",
       "help": "Updates the panel: the view, the area layer, the catalogue and the stored answers."
+    },
+    {
+      "id": "mapa",
+      "label": "Map",
+      "icon": "contents",
+      "help": "Adds the map or the dataset chosen in the panel list.",
+      "params": "{\"panel\": {\"mapa\": \"v:<command id> or d:<tool>:<dataset>\"}}"
     },
     {
       "id": "dem",
@@ -456,7 +457,6 @@
             "help": "Orthophoto, hillshade and the topographic overlay.",
             "items": [
               "orto",
-              "orto-hi",
               "bdot",
               "nmt"
             ]
@@ -538,10 +538,10 @@
             "items": [
               "dem",
               "dem-evr",
-              "dem-nmpt"
+              "dem-nmpt",
+              "dem-style"
             ]
-          },
-          "dem-style"
+          }
         ]
       },
       {
@@ -592,6 +592,14 @@
         "help": "Choose the layer whose outline cuts the features. The area layer is the default.",
         "command": "panel-state",
         "search": true
+      },
+      {
+        "kind": "tree",
+        "id": "mapa",
+        "label": "Map",
+        "command": "mapa",
+        "search": true,
+        "help": "Every map the plugin can show and every dataset it can download: pick a row to add it."
       },
       {
         "kind": "button",
@@ -650,6 +658,8 @@
       "Addresses and buildings": "Adresy i budynki",
       "Adds the 1 m terrain model of the area, shaded. GUGiK serves PL-KRON86-NH as GeoTIFF.": "Dodaje model wysokości 1 m dla obszaru, cieniowany. GUGiK udostępnia PL-KRON86-NH jako GeoTIFF.",
       "Adds the parcel an identifier names, without pointing at the map: id as ULDK writes it, or teryt and numer.": "Dodaje działkę wskazaną identyfikatorem, bez klikania w mapę: id tak, jak zapisuje je ULDK, albo teryt i numer.",
+      "Adds the map or the dataset chosen in the panel list.": "Dodaje mapę albo zbiór danych wskazany na liście w panelu.",
+      "Every map the plugin can show and every dataset it can download: pick a row to add it.": "Wszystkie mapy, które wtyczka pokazuje, i wszystkie zbiory, które pobiera: wskaż wiersz, aby go dodać.",
       "Area": "Obszar",
       "Area (layer)": "Obszar (warstwa)",
       "Area to download": "Obszar pobierania",
@@ -695,12 +705,12 @@
       "Geology (PIG)": "Geologia (PIG)",
       "Height\nat point": "Wysokość\nw punkcie",
       "Heritage (NID)": "Zabytki (NID)",
-      "High-resolution orthophoto (WMS).": "Ortofotomapa w wysokiej rozdzielczości (WMS).",
       "Hillshade of the digital terrain model.": "Cieniowanie numerycznego modelu terenu.",
       "Historical maps": "Mapy historyczne",
       "Lists every service and every dataset, with the ids a script or an agent runs, optionally narrowed by institution or by a word of the name.": "Wypisuje wszystkie usługi i zbiory danych wraz z identyfikatorami, których używa skrypt albo agent; można zawęzić do instytucji albo do słowa z nazwy.",
       "Lookups": "Wyszukiwanie",
       "Map view": "Widok mapy",
+      "Map": "Mapa",
       "Maps": "Mapy",
       "Maritime zones, road and rail statistics, historic monuments and the rest.": "Strefy morskie, statystyki dróg i kolei, zabytki oraz pozostałe dane.",
       "Measured when the panel opens.": "Mierzone przy otwarciu panelu.",
@@ -708,8 +718,6 @@
       "Monuments, archaeological records and UNESCO sites.": "Zabytki, rejestr archeologiczny i obiekty UNESCO.",
       "Offices and courts": "Urzędy i sądy",
       "Open the panel to read the view.": "Otwórz panel, aby odczytać widok.",
-      "Orthophoto\n(WMTS)": "Ortofoto\n(WMTS)",
-      "Orthophoto\nHi-Res": "Ortofoto\nHi-Res",
       "Orthophoto and DEM": "Ortofoto i NMT",
       "Orthophoto, elevation, vegetation and archive imagery.": "Ortofoto, wysokości, wegetacja i zdjęcia archiwalne.",
       "Orthophoto, hillshade and the topographic overlay.": "Ortofoto, cieniowanie i nakładka topograficzna.",
@@ -780,14 +788,15 @@
       "Folder": "Folder",
       "The folder the files and the CSV report are written to.": "Folder, do którego trafiają pliki i raport CSV.",
       "Lookup": "Wyszukiwanie",
-      "A parcel under the map centre, or the terrain height at a point.": "Działka pod środkiem mapy albo wysokość terenu w punkcie."
+      "A parcel under the map centre, or the terrain height at a point.": "Działka pod środkiem mapy albo wysokość terenu w punkcie.",
+      "Orthophoto": "Ortofoto"
     }
   },
   "moreMaps": {
     "label": "More maps",
     "icon": "map",
     "help": "Wody Polskie and the Cartomatic series, one button per service.",
-    "wody": "Wody Polskie",
+    "wody": "Wody",
     "series": {
       "plans": "City plans and atlases",
       "topo": "Topographic and survey maps"
