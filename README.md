@@ -22,8 +22,8 @@ interfejsie kończy się na 1347 px.
 | | Narysuj obszar | Narzędzie poligonu na warstwie „Obszar pobierania”; kształt zostaje taki, jak narysowany |
 | | Anuluj rysowanie | Wyłącza narzędzie rysowania i wraca do przeglądania |
 | | Wyczyść obszar | Usuwa warstwę „Obszar pobierania”, żeby zacząć od pustej |
-| **Narzędzia** | Panel | Panel z widokiem, obszarem, katalogiem, zapisanymi odpowiedziami i przyciskiem czyszczenia cache |
-| | Przytnij do obszaru | Tnie warstwę do granicy „Obszar pobierania” |
+| **Narzędzia** | Panel | Panel z widokiem, obszarem, listą warstw do przycięcia, katalogiem, zapisanymi odpowiedziami i przyciskiem czyszczenia cache |
+| | Przytnij do obszaru | Tnie warstwę do wybranej w panelu granicy, domyślnie do „Obszar pobierania” |
 | | Przybliż do Polski | Cała Polska w widoku |
 | **WMS (podgląd)** | GUGiK | 76 usług w czterech tematach: Ortofoto i NMT (20), Mapy (21), Kataster i granice (24), Pozostałe dane (11) |
 | | Mapy historyczne | 11 arkuszy WIG i map niemieckich |
@@ -148,8 +148,17 @@ drugi rysunek dokłada kształt do istniejącego i obszar się powiększa.
 
 Filtr WFS zwraca **całe** obiekty, które dotykają obszaru i nie przycina ich. Dlatego po pobraniu
 uruchom **Przytnij do obszaru**: wywołuje wbudowane narzędzie Clip i zastępuje warstwę wersją
-przyciętą (jedna warstwa, nie dwie). Uchwyt `layer` jest opcjonalny: bez niego bierze najnowszą
-warstwę wektorową.
+przyciętą (jedna warstwa, nie dwie).
+
+Granicą nie musi być warstwa obszaru. W panelu, w sekcji **Przytnij**, jest lista warstw
+poligonowych z liczbą obiektów: wybierz dowolną (gminę, obręb, działkę, własny poligon), a wiersz
+nad listą pokaże, co zostanie przycięte i do czego, na przykład `Adresy → Gmina Poznań`. Przycisk
+**Przytnij do obszaru** robi wtedy to, co widać. Bez wyboru granicą jest warstwa „Obszar
+pobierania”.
+
+Cięta jest warstwa aktywna w panelu **Warstwy**, a gdy żadna nie jest aktywna — najnowsza warstwa
+wektorowa. Uchwyt `layer` (albo `obszar`) w poleceniu nadpisuje jedno i drugie, więc skrypt nie
+zależy od stanu panelu.
 
 Pomiar: 5586 działek przecinało obszar, po przycięciu zostało 5583, dla działek różnica jest
 mała, dla dróg i obiektów wielkości gminy duża.

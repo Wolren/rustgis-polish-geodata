@@ -106,8 +106,8 @@
       "id": "przytnij",
       "label": "Clip\nto area",
       "icon": "buffer",
-      "help": "Clips a layer to the area layer's boundary, or to a named one. A WFS answer returns whole features that touch the area; this cuts them.",
-      "params": "{\"layer\": \"layer name (optional, the newest vector layer when left out)\", \"obszar\": \"area layer name (optional)\"}"
+      "help": "Clips a layer to a boundary layer: the area layer by default, or the one you choose in the panel. A WFS answer returns whole features that touch it; this cuts them.",
+      "params": "{\"layer\": \"layer name (optional, the active layer or the newest one when left out)\", \"obszar\": \"boundary layer name (optional, the panel's choice or the area layer when left out)\"}"
     },
     {
       "id": "wyczysc-cache",
@@ -1489,9 +1489,12 @@
       "Clear\narea": "Wyczyść\nobszar",
       "Clear\ncache": "Wyczyść\ncache",
       "Clear the stored answers after a download": "Wyczyść zapisane odpowiedzi po pobraniu",
+      "Clip": "Przytnij",
+      "Clip to layer": "Przytnij do warstwy",
+      "Choose the layer whose outline cuts the features. The area layer is the default.": "Wybierz warstwę, której granica przytnie obiekty. Domyślnie jest to warstwa obszaru.",
       "Click the corners, then double-click to close the ring, or press Escape to stop. The shape stays as drawn: a download follows it, and the elevation model covers the rectangle around it.": "Klikaj narożniki, a na końcu kliknij dwukrotnie, aby zamknąć obwód, albo naciśnij Escape, aby przerwać. Kształt zostaje taki, jak narysowany: pobieranie idzie za nim, a model wysokości obejmuje prostokąt wokół niego.",
       "Clip\nto area": "Przytnij\ndo obszaru",
-      "Clips a layer to the area layer's boundary, or to a named one. A WFS answer returns whole features that touch the area; this cuts them.": "Przycina warstwę do granicy warstwy obszaru albo wskazanej warstwy. WFS zwraca całe obiekty dotykające obszaru; to je tnie.",
+      "Clips a layer to a boundary layer: the area layer by default, or the one you choose in the panel. A WFS answer returns whole features that touch it; this cuts them.": "Przycina warstwę do warstwy granicy: domyślnie do warstwy obszaru, albo do wybranej w panelu. WFS zwraca całe obiekty dotykające granicy; to je tnie.",
       "Control points": "Osnowy i pomiary",
       "Copies the map view into the area layer as a rectangle: one click, and the rectangle is exactly what you see. It is the area a download and the elevation model use.": "Kopiuje widok mapy do warstwy obszaru jako prostokąt: jedno kliknięcie i prostokąt jest dokładnie tym, co widać. To obszar, którego używa pobieranie i model wysokości.",
       "Country, voivodeship, county, commune and city boundaries.": "Granice państwa, województw, powiatów, gmin i miast.",
@@ -1604,22 +1607,17 @@
       },
       {
         "kind": "text",
-        "id": "catalogue",
-        "label": "Catalogue",
+        "id": "clip",
+        "label": "Clip",
         "text": "Filled in when the panel opens."
       },
       {
-        "kind": "text",
-        "id": "cache",
-        "label": "Stored answers",
-        "text": "Measured when the panel opens."
-      },
-      {
-        "kind": "checkbox",
-        "id": "clear",
-        "label": "Clear the stored answers after a download",
-        "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time.",
-        "default": false
+        "kind": "tree",
+        "id": "cel",
+        "label": "Clip to layer",
+        "help": "Choose the layer whose outline cuts the features. The area layer is the default.",
+        "command": "panel-state",
+        "search": true
       },
       {
         "kind": "button",
@@ -1644,6 +1642,25 @@
       {
         "kind": "button",
         "command": "wyczysc-cache"
+      },
+      {
+        "kind": "checkbox",
+        "id": "clear",
+        "label": "Clear the stored answers after a download",
+        "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time.",
+        "default": false
+      },
+      {
+        "kind": "text",
+        "id": "catalogue",
+        "label": "Catalogue",
+        "text": "Filled in when the panel opens."
+      },
+      {
+        "kind": "text",
+        "id": "cache",
+        "label": "Stored answers",
+        "text": "Measured when the panel opens."
       }
     ]
   }

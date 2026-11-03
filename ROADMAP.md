@@ -22,6 +22,9 @@ instytucji, potem według tematu — i którą w całości da się sterować prz
   pobieranie to pięć osobnych przycisków. 10 kolumn zamiast 28; w polskim interfejsie wstęga
   kończy się na 1347 px z 1480. Wymaga RustGIS 0.5.0 (zagnieżdżone menu i kolumny `small`),
   stąd `minRustgisVersion`.
+- **Przycinanie do dowolnej granicy.** Panel ma listę warstw poligonowych z liczbą obiektów
+  (drzewo z wyszukiwarką); wybór ustawia granicę, a wiersz **Przytnij** pokazuje parę
+  „warstwa → granica”. Cięta jest warstwa aktywna, a bez niej najnowsza.
 
 ## Następne
 

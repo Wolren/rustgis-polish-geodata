@@ -1,6 +1,6 @@
-//! Cutting features to the area boundary.
+//! Cutting features to a boundary layer.
 //!
-//! A WFS spatial filter returns whole features that touch the area, never cut ones. Tools
+//! A WFS spatial filter returns whole features that touch a boundary, never cut ones. Tools
 //! cannot make host requests, so the cut is a separate command: it runs after a download,
 //! calls RustGIS's own Clip, and replaces the layer with the cut result.
 
@@ -8,54 +8,63 @@ use crate::host::Host;
 use crate::text::{self, Lang};
 use serde_json::{json, Value};
 
-/// The newest vector layer that is not the area, so a caller need not name the layer it just
-/// downloaded. Newest is the highest id, which RustGIS assigns in creation order.
-pub fn newest_layer(host: &mut Host, area: &str, lang: Lang) -> Result<String, String> {
-    let layers = host.call("host.layers", json!({}))?;
-    let list = layers
+/// The map's layers, as `host.layers` gives them.
+pub fn layers(host: &mut Host, lang: Lang) -> Result<Vec<Value>, String> {
+    let answer = host.call("host.layers", json!({}))?;
+    answer
         .as_array()
-        .ok_or_else(|| text::layers_unexpected(lang))?;
-    let mut best: Option<(&str, i64)> = None;
-    for layer in list {
-        let name = layer.get("name").and_then(Value::as_str).unwrap_or_default();
-        if name.is_empty() || name == area || text::AREA_LAYERS.contains(&name) {
-            continue;
-        }
-        if layer.get("raster").and_then(Value::as_bool) == Some(true) {
-            continue;
-        }
-        if layer.get("features").and_then(Value::as_i64) == Some(0) {
-            continue;
-        }
-        let id = layer.get("id").and_then(Value::as_i64).unwrap_or(0);
-        if best.map(|(_, b)| id > b).unwrap_or(true) {
-            best = Some((name, id));
-        }
-    }
-    best.map(|(name, _)| name.to_string())
-        .ok_or_else(|| text::nothing_to_clip(lang))
+        .cloned()
+        .ok_or_else(|| text::layers_unexpected(lang))
+}
+
+/// Whether `layer` can be cut: a vector layer with features, and not the boundary itself.
+fn cuttable(layer: &Value, boundary: &str) -> bool {
+    let name = layer.get("name").and_then(Value::as_str).unwrap_or_default();
+    !name.is_empty()
+        && name != boundary
+        && !text::AREA_LAYERS.contains(&name)
+        && layer.get("raster").and_then(Value::as_bool) != Some(true)
+        && layer.get("features").and_then(Value::as_i64).unwrap_or(0) > 0
 }
 
 /// The area layer's name on this map, which may carry the other language's wording.
-pub fn existing_area(host: &mut Host, lang: Lang) -> Result<String, String> {
-    let layers = host.call("host.layers", json!({}))?;
-    let found = layers.as_array().and_then(|all| {
-        all.iter().find_map(|layer| {
-            let name = layer.get("name").and_then(Value::as_str)?;
-            text::AREA_LAYERS.contains(&name).then(|| name.to_string())
-        })
-    });
-    Ok(found.unwrap_or_else(|| text::area_layer(lang).to_string()))
+pub fn area_in(list: &[Value]) -> Option<String> {
+    list.iter().find_map(|layer| {
+        let name = layer.get("name").and_then(Value::as_str)?;
+        text::AREA_LAYERS.contains(&name).then(|| name.to_string())
+    })
+}
+
+/// The boundary chosen in the panel's tree, while the map still holds it.
+pub fn chosen(list: &[Value], request: &Value) -> Option<String> {
+    let name = request
+        .get("panel")
+        .and_then(|panel| panel.get("values"))
+        .and_then(|values| values.get("cel"))
+        .and_then(Value::as_str)
+        .filter(|name| !name.is_empty())?;
+    let held = list
+        .iter()
+        .any(|layer| layer.get("name").and_then(Value::as_str) == Some(name));
+    held.then(|| name.to_string())
+}
+
+/// The layer a caller naming none means: the Contents pane's active layer, else the newest one.
+pub fn target(list: &[Value], boundary: &str) -> Option<String> {
+    let usable = || list.iter().filter(|layer| cuttable(layer, boundary));
+    let active = usable().find(|layer| layer.get("active").and_then(Value::as_bool) == Some(true));
+    let newest = usable().max_by_key(|layer| layer.get("id").and_then(Value::as_i64).unwrap_or(0));
+    active
+        .or(newest)
+        .and_then(|layer| layer.get("name").and_then(Value::as_str).map(str::to_string))
 }
 
 /// Clips `layer` to `area`, replacing the layer in place.
 pub fn to_area(host: &mut Host, layer: &str, area: &str, lang: Lang) -> Result<Value, String> {
-    let layers = host.call("host.layers", json!({}))?;
+    let list = layers(host, lang)?;
     let exists = |name: &str| {
-        layers
-            .as_array()
-            .map(|all| all.iter().any(|l| l.get("name").and_then(Value::as_str) == Some(name)))
-            .unwrap_or(false)
+        list.iter()
+            .any(|l| l.get("name").and_then(Value::as_str) == Some(name))
     };
     if !exists(layer) {
         return Err(text::no_layer(lang, layer));

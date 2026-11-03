@@ -96,33 +96,45 @@ fn run(
         "dem-style" => nmt::style(host, lang, request),
         "zoom-polska" => zoom_poland(host, lang),
         "wyczysc-cache" => clear_cache(host, lang),
-        "przytnij" => cut(host, params, lang),
+        "przytnij" => cut(host, request, lang),
         "parcel" => uldk::parcel(host, params, lang),
         other => Err(text::unknown_command(lang, other)),
     }
 }
 
-/// Cuts a layer to the area boundary. With no layer named it takes the newest one, so an agent
-/// can call it straight after a download without having to name the layer.
-fn cut(host: &mut host::Host, params: &Value, lang: Lang) -> Result<Value, String> {
-    let area = match params
+/// Cuts a layer to a boundary layer. The boundary is the parameter, else the one chosen in the
+/// panel, else the area layer; the layer is the parameter, else the active one, else the newest.
+fn cut(host: &mut host::Host, request: &Value, lang: Lang) -> Result<Value, String> {
+    let params = request.get("params").cloned().unwrap_or_else(|| json!({}));
+    let list = clip::layers(host, lang)?;
+    let boundary = params
         .get("obszar")
         .and_then(Value::as_str)
-        .filter(|s| !s.is_empty())
-    {
-        Some(named) => named.to_string(),
-        None => clip::existing_area(host, lang)?,
-    };
+        .filter(|name| !name.is_empty())
+        .map(str::to_string)
+        .or_else(|| clip::chosen(&list, request))
+        .or_else(|| clip::area_in(&list))
+        .unwrap_or_else(|| text::area_layer(lang).to_string());
     let named = params
         .get("layer")
         .and_then(Value::as_str)
         .unwrap_or_default();
     let layer = if named.is_empty() {
-        clip::newest_layer(host, &area, lang)?
+        clip::target(&list, &boundary).ok_or_else(|| text::nothing_to_clip(lang))?
     } else {
         named.to_string()
     };
-    clip::to_area(host, &layer, &area, lang)
+    if layer == boundary {
+        return Err(text::clip_same(lang, &layer));
+    }
+    let mut answer = clip::to_area(host, &layer, &boundary, lang)?;
+    // The tree lists the layers with their counts, so a cut answers the panel it was pressed from.
+    if let Ok(state) = panel::state(host, lang, request) {
+        if let Some(panel) = state.get("panel") {
+            answer["panel"] = panel.clone();
+        }
+    }
+    Ok(answer)
 }
 
 /// Brings the map to Poland, the only area GUGiK serves.

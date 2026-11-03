@@ -165,6 +165,37 @@ pub fn clipped(lang: Lang, layer: &str, area: &str, kept: usize) -> String {
     )
 }
 
+/// What the Clip button will do: the layer first, then the boundary it cuts to.
+pub fn clip_text(layer: &str, area: &str) -> String {
+    format!("{layer} → {area}")
+}
+
+pub fn clip_missing(lang: Lang) -> String {
+    pick!(
+        lang,
+        "nothing to cut yet: download data, or select a layer in Layers",
+        "nie ma czego ciąć: pobierz dane albo wskaż warstwę w panelu Warstwy"
+    )
+    .to_string()
+}
+
+pub fn clip_same(lang: Lang, layer: &str) -> String {
+    pick!(
+        lang,
+        format!("the boundary is the layer itself: \"{layer}\""),
+        format!("granica to ta sama warstwa: „{layer}”")
+    )
+}
+
+pub fn clip_no_boundary(lang: Lang) -> String {
+    pick!(
+        lang,
+        "pick a boundary layer below",
+        "wybierz warstwę granicy poniżej"
+    )
+    .to_string()
+}
+
 pub fn removed(lang: Lang, name: &str) -> String {
     pick!(
         lang,
@@ -856,6 +887,16 @@ mod tests {
         assert_eq!(Lang::from_code("en"), Lang::En);
         assert_eq!(Lang::from_code("de"), Lang::En);
         assert_eq!(Lang::from_code(""), Lang::En);
+    }
+
+    #[test]
+    fn names_the_clip_pair_in_both_languages() {
+        assert_eq!(
+            clip_text("Parcels (EGiB)", "Area to download"),
+            "Parcels (EGiB) → Area to download"
+        );
+        assert!(clip_missing(Lang::Pl).contains("pobierz dane"));
+        assert!(clip_same(Lang::En, "Parcels").contains("Parcels"));
     }
 
     #[test]
