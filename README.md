@@ -9,20 +9,21 @@ jako jedyne ściąga dane, **Wyszukiwanie** pyta usługę punktową, **Narzędzi
 okno na czas transferu. Dlatego na wstędze nie ma już 108 przycisków pobierania: są pięć narzędzi
 w panelu Narzędzia, działających w tle, z postępem i przerwaniem.
 
+Wszystkie grupy jadą w układzie `small`, czyli trzy kontrolki w kolumnie, a katalog jest zwinięty
+najpierw według instytucji: GUGiK to jedna pozycja z czterema tematami w podmenu. Wstęga ma przez
+to 10 kolumn zamiast 28 i mieści się w oknie 1480 px, bez strzałki przewijania.
+
 | Grupa | Przycisk | Co robi |
 | --- | --- | --- |
 | Podkłady | Rastry | Ortofoto (WMTS), Ortofoto Hi-Res (WMS), BDOT10k, cieniowanie NMT |
 | | Wektory | Działki (KIEG), Adresy, Granice PRG, Nazwy miejscowości |
-| **WMS (podgląd)** | GUGiK · Ortofoto i NMT | 20 usług — tylko podgląd na mapie |
-| | GUGiK · Mapy | 21 usług |
-| | GUGiK · Kataster i granice | 24 usługi |
-| | GUGiK · Pozostałe dane | 11 usług |
+| **WMS (podgląd)** | GUGiK | 76 usług w czterech tematach: Ortofoto i NMT (20), Mapy (21), Kataster i granice (24), Pozostałe dane (11) |
 | | Mapy historyczne | 11 arkuszy WIG i map niemieckich |
 | | Geologia (PIG) | 9 usług |
 | | Zabytki (NID) | 4 usługi |
 | | Lasy (BDL) | 4 usługi |
 | | Pozostałe instytucje | GDOŚ, PKP PLK, GUS, Wody Polskie, IMGW-PIB |
-| **Pobieranie** | Pięć narzędzi | Jedyne miejsce, które ściąga dane: adresy i budynki, granice, osnowy, urzędy, pozostałe |
+| **Pobieranie** | Zestawy | Jedyne miejsce, które ściąga dane: pięć narzędzi w tle — adresy i budynki, granice, osnowy, urzędy, pozostałe |
 | **Wyszukiwanie** | Działka z ULDK | Działka pod środkiem mapy |
 | | Wysokość w punkcie | Wysokość NMT w PL-1992 (środek mapy albo x/y) |
 | Obszar | **Obszar prostokąt** | Prostokąt z widoku mapy: jedno kliknięcie, bez rysowania. Dokładnie to, co widać |
@@ -40,7 +41,7 @@ w panelu Narzędzia, działających w tle, z postępem i przerwaniem.
 | | Przybliż do Polski | Cała Polska w widoku |
 | | Wyczyść cache | Usuwa zapisane odpowiedzi WFS i pobrane siatki wysokości |
 
-Łącznie: **130 poleceń** (21 własnych i 109 usług) i **5 narzędzi**. Wcześniej było 228 poleceń, z
+Łącznie: **135 poleceń** (26 własnych i 109 usług) i **5 narzędzi**. Wcześniej było 228 poleceń, z
 czego 108 pobierało dane natychmiast, blokując okno.
 
 ### Usługi krajowe
@@ -51,9 +52,9 @@ NMT, hipsometrię NMT, EMUiA, PRG, PRNG, RCN, KIMPZP, ISOK, POLSA, osnowy, mapy 
 BDL Lasów Państwowych, zabytki NID i inne. Każda pozycja przeszła realne żądanie kafla, więc lista
 nie zawiera martwych adresów.
 
-Usługi stoją w dwóch grupach: **GUGiK** (cztery menu tematyczne) i **Instytucje** (pięć menu).
-Podział jest instytucjonalny, bo tak szukają danych użytkownicy: najpierw *kto publikuje*, potem
-*co*. Naciśnięcie nazwy wjeżdża na mapę jako warstwa
+Usługi stoją w grupie **WMS (podgląd)**: **GUGiK** to jedna pozycja z czterema tematami w podmenu,
+a każda pozostała instytucja ma własne menu. Podział jest instytucjonalny, bo tak szukają danych
+użytkownicy: najpierw *kto publikuje*, potem *co*. Naciśnięcie nazwy wjeżdża na mapę jako warstwa
 kafelkowa, drugie naciśnięcie ją zdejmuje. Każda usługa to osobne polecenie, więc działa też
 wyszukiwarka poleceń: wpisz „cieniowanie” albo „ortofoto” i naciśnij wynik.
 

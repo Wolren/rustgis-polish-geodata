@@ -31,8 +31,9 @@ MAX_COMMANDS = 256
 MAX_TOOLS = 64
 MAX_TOOL_PARAMS = 32
 MAX_GROUPS = 8
-MAX_GROUP_ITEMS = 16
+MAX_GROUP_ITEMS = {"large": 16, "small": 48}
 MAX_MENU_ITEMS = 32
+MAX_MENU_DEPTH = 4
 MAX_CHOICES = 64
 
 
@@ -59,6 +60,57 @@ def catalogue():
         if not entry.get("index", False):
             offered.append(entry["id"])
     return by_id, offered
+
+
+def menu_decl(key, menus, folders, depth=1):
+    """A menu of the tab: a leaf of services, or a folder of leaves one level down."""
+    if key in folders:
+        if depth >= MAX_MENU_DEPTH:
+            raise Bad(f"menu '{key}' nests deeper than the host's {MAX_MENU_DEPTH} levels")
+        meta = folders[key]
+        if not 1 <= len(meta["children"]) <= MAX_MENU_ITEMS:
+            raise Bad(f"menu {meta['label']}: {len(meta['children'])} children")
+        return {
+            "menu": meta["label"],
+            "icon": meta.get("icon", ""),
+            "help": meta.get("help", ""),
+            "items": [menu_decl(child, menus, folders, depth + 1) for child in meta["children"]],
+        }
+    meta = menus[key]
+    return {
+        "menu": meta["label"],
+        "icon": meta.get("icon", ""),
+        "help": meta.get("help", ""),
+        "items": meta["items"],
+    }
+
+
+def check_item(where, item, known):
+    """Every name under a group is one of the plugin's commands or tools, at any menu depth."""
+    if isinstance(item, dict):
+        entries = item.get("items", [])
+        if not 1 <= len(entries) <= MAX_MENU_ITEMS:
+            raise Bad(f"menu {item.get('menu')}: {len(entries)} entries")
+        for entry in entries:
+            check_item(item.get("menu"), entry, known)
+    elif item not in known:
+        raise Bad(f"{where}: '{item}' is not a command or a tool")
+
+
+def leaf_entries(groups):
+    """Every command and tool a tab puts on the ribbon, menus included."""
+    listed = []
+
+    def walk(items):
+        for item in items:
+            if isinstance(item, dict):
+                walk(item.get("items", []))
+            else:
+                listed.append(item)
+
+    for group in groups:
+        walk(group["items"])
+    return listed
 
 
 def build():
@@ -137,9 +189,7 @@ def build():
     if len(commands) > MAX_COMMANDS:
         raise Bad(f"{len(commands)} commands, the host allows {MAX_COMMANDS}")
 
-    # The services group themselves: GUGiK by theme, every other institution as a menu of its own.
-    # The institution lives on each catalogue entry, so a new service lands in the right menu
-    # without anyone editing a list here.
+    # The institution lives on each catalogue entry, so no list here can drift from the catalogue.
     by_institution = {}
     for service in services:
         key = service.get("institutionMenu") or service.get("institution")
@@ -151,14 +201,22 @@ def build():
         meta = base["institutionMenus"].get(key)
         if meta is None:
             raise Bad(f"menu '{key}' has no label in tools/manifest.base.json")
+        if "children" in meta:
+            raise Bad(f"menu '{key}' holds themes, so it cannot hold services too")
         if not 1 <= len(cmds) <= MAX_MENU_ITEMS:
             raise Bad(
                 f"menu {meta['label']}: {len(cmds)} entries, the host allows {MAX_MENU_ITEMS}"
             )
         menus[key] = {**meta, "items": sorted(cmds)}
-    stale = [key for key in base["institutionMenus"] if key not in menus]
+    # A `children` menu is a folder on the ribbon: GUGiK holds four themes, one trigger not four.
+    folders = {key: meta for key, meta in base["institutionMenus"].items() if "children" in meta}
+    stale = [key for key in base["institutionMenus"] if key not in menus and key not in folders]
     if stale:
         raise Bad(f"menu '{stale[0]}' has no service in the catalogue")
+    for key, meta in folders.items():
+        for child in meta["children"]:
+            if child not in menus:
+                raise Bad(f"menu {meta['label']}: '{child}' is not a menu of services")
 
     known = (
         set(ids)
@@ -169,47 +227,21 @@ def build():
     if not 1 <= len(tab["groups"]) <= MAX_GROUPS:
         raise Bad(f"{len(tab['groups'])} tab groups, the host allows 1 to {MAX_GROUPS}")
     for group in tab["groups"]:
+        layout = group.get("layout", "large")
+        if layout not in MAX_GROUP_ITEMS:
+            raise Bad(f"group {group['label']}: layout '{layout}' is not large or small")
         if "menus" in group:
-            group["items"] = [{"menuRef": key} for key in group["menus"]]
-        if not 1 <= len(group["items"]) <= MAX_GROUP_ITEMS:
-            raise Bad(f"group {group['label']}: {len(group['items'])} items")
-        resolved = []
+            group["items"] = [menu_decl(key, menus, folders) for key in group["menus"]]
+        limit = MAX_GROUP_ITEMS[layout]
+        if not 1 <= len(group["items"]) <= limit:
+            raise Bad(
+                f"group {group['label']}: {len(group['items'])} items, the host allows 1 to {limit}"
+            )
         for item in group["items"]:
-            ref = item.get("menuRef") if isinstance(item, dict) else None
-            if ref is not None:
-                menu = menus.get(ref)
-                if menu is None:
-                    raise Bad(f"group {group['label']}: no service menu '{ref}'")
-                entries = menu["items"]
-                if not 1 <= len(entries) <= MAX_MENU_ITEMS:
-                    raise Bad(f"menu {menu['label']}: {len(entries)} entries")
-                resolved.append(
-                    {
-                        "menu": menu["label"],
-                        "icon": menu.get("icon", ""),
-                        "help": menu.get("help", ""),
-                        "items": entries,
-                    }
-                )
-            elif isinstance(item, dict):
-                entries = item.get("items", [])
-                if not 1 <= len(entries) <= MAX_MENU_ITEMS:
-                    raise Bad(f"menu {item.get('menu')}: {len(entries)} entries")
-                resolved.append(item)
-            else:
-                resolved.append(item)
-        for entry in resolved:
-            entries = entry["items"] if isinstance(entry, dict) else [entry]
-            for name in entries:
-                if name not in known:
-                    raise Bad(
-                        f"group {group['label']}: '{name}' is not a command or a tool"
-                    )
-        group["items"] = resolved
+            check_item(group["label"], item, known)
 
-    # Every catalogue service is on the ribbon once: the menus were built from the entries, so this
-    # only guards against a service that lost its institution.
-    listed = [entry for menu in menus.values() for entry in menu["items"]]
+    # Every service is on the ribbon once; this guards a service that lost its institution.
+    listed = leaf_entries(tab["groups"])
     if len(listed) != len(set(listed)):
         raise Bad("a service appears in two menus")
     unlisted = [s["cmd"] for s in services if s["cmd"] not in listed]
@@ -232,16 +264,22 @@ def build():
     return manifest
 
 
+def menu_strings(items, strings):
+    """The label and help of every menu of a group, submenus included."""
+    for item in items:
+        if isinstance(item, dict):
+            strings.add(item["menu"])
+            if item.get("help"):
+                strings.add(item["help"])
+            menu_strings(item.get("items", []), strings)
+
+
 def interface_strings(manifest):
     """The strings the interface shows from the manifest, minus GUGiK's own service names."""
     strings = {manifest["name"], manifest["description"], manifest["tab"]["label"]}
     for group in manifest["tab"]["groups"]:
         strings.add(group["label"])
-        for item in group["items"]:
-            if isinstance(item, dict):
-                strings.add(item["menu"])
-                if item.get("help"):
-                    strings.add(item["help"])
+        menu_strings(group["items"], strings)
     for command in manifest["commands"]:
         # A service's label is its official GUGiK name, the same in both languages.
         if command["id"].startswith("usluga-"):

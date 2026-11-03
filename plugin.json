@@ -17,7 +17,7 @@
       "bin/dane-pl-linux"
     ]
   },
-  "minRustgisVersion": "0.4.0",
+  "minRustgisVersion": "0.5.0",
   "permissions": [
     "edit",
     "files",
@@ -1192,6 +1192,7 @@
     "groups": [
       {
         "label": "Basemaps",
+        "layout": "small",
         "items": [
           {
             "menu": "Raster",
@@ -1219,6 +1220,7 @@
       },
       {
         "label": "Area",
+        "layout": "small",
         "items": [
           "obszar-widok",
           "obszar-rysuj",
@@ -1228,6 +1230,7 @@
       },
       {
         "label": "Tools",
+        "layout": "small",
         "items": [
           "panel",
           "przytnij",
@@ -1237,11 +1240,9 @@
       },
       {
         "label": "WMS (view only)",
+        "layout": "small",
         "menus": [
-          "gugik-orto",
-          "gugik-mapy",
-          "gugik-kataster",
-          "gugik-inne",
+          "gugik",
           "cartomatic",
           "pig",
           "nid",
@@ -1250,107 +1251,114 @@
         ],
         "items": [
           {
-            "menu": "Orthophoto and DEM",
-            "icon": "relief",
-            "help": "Orthophoto, elevation, vegetation and archive imagery.",
-            "items": [
-              "usluga-cieniowanie-wms",
-              "usluga-modele-roznic-wysokosci",
-              "usluga-obrazy-intensywnosci",
-              "usluga-ortofotomapa-prawdziwa",
-              "usluga-ortofotomapa-skorowidze-wg-aktualnosci",
-              "usluga-ortofotomapa-standardowa",
-              "usluga-ortofotomapa-wysokiej-rozdzielczosci",
-              "usluga-polsa-klasyfikacja-pokrycia-terenu-2019",
-              "usluga-polsa-klasyfikacja-pokrycia-terenu-2020",
-              "usluga-polsa-klasyfikacja-pokrycia-terenu-2021",
-              "usluga-polsa-klasyfikacja-pokrycia-terenu-2022",
-              "usluga-polsa-klasyfikacja-pokrycia-terenu-2023",
-              "usluga-polsa-klasyfikacja-pokrycia-terenu-2024",
-              "usluga-polsa-klasyfikacja-pokrycia-terenu-2025",
-              "usluga-polsa-ortofotomapa-satelitarna-2021",
-              "usluga-polsa-ortofotomapa-satelitarna-2022",
-              "usluga-polsa-ortofotomapa-satelitarna-2024",
-              "usluga-usluga-przegladania-umozliwiajaca-przegladanie-hipsometri",
-              "usluga-usluga-przegladania-wms-ortofotomap-archiwalnych-dla-obsz",
-              "usluga-wskaznik-wegetacji-analiza-ndvi-wykonana-na-podstawie-zdj"
-            ]
-          },
-          {
-            "menu": "Maps",
-            "icon": "basemap",
-            "help": "Topographic, landscape, archival and thematic maps.",
-            "items": [
-              "usluga-inspire-tn-sieci-transportowe-bdot",
-              "usluga-mapy-sozologiczne-do-przegladania",
-              "usluga-nowe-budynki-w-bdot10k",
-              "usluga-paczki-powiatowe-z-archiwalnymi-danymi-bdot10k",
-              "usluga-rastrowa-krajobrazowa-mapa-polski-do-przegladania",
-              "usluga-rastrowa-mapa-administracyjna-polski-do-przegladania",
-              "usluga-rastrowa-ogolnogeograficzna-mapa-polski-do-przegladania",
-              "usluga-skorowidz-map-baza-danych-obiektow-topograficznych-bdot",
-              "usluga-skorowidz-map-mapa-sozologiczna",
-              "usluga-skorowidz-map-zdjecia-lotnicze",
-              "usluga-skorowidze-aerotriangulacji-zdjec-lotniczych",
-              "usluga-skorowidze-linii-mozaikowania-zdjec-lotniczych",
-              "usluga-statystyki-obiektow-innych-w-bdot10k",
-              "usluga-statystyki-sieci-komunikacyjnej-w-bdot10k",
-              "usluga-statystyki-sieci-wodnej-w-bdot10k",
-              "usluga-usluga-przegladania-danych-bazy-danych-obiektow-topografi",
-              "usluga-usluga-przegladania-danych-inspire-tematu-nazwy-geografic",
-              "usluga-usluga-przegladania-danych-topograficznych-dla-polski",
-              "usluga-usluga-przegladania-tresci-bazy-danych-ogolnogeograficzny",
-              "usluga-usluga-przegladania-wms-rastrowych-map-topograficznych-dl",
-              "usluga-usluga-wms-publikujaca-statystyki-budynkow-i-budowli-w-bd"
-            ]
-          },
-          {
-            "menu": "Cadastre and boundaries",
-            "icon": "buffer",
-            "help": "Parcels, buildings, utilities, addresses and administrative boundaries.",
-            "items": [
-              "usluga-ceny-nieruchomosci",
-              "usluga-dane-o-projektowanych-planach-ogolnych-dla-gmin",
-              "usluga-dane-o-uchwalonych-planach-ogolnych-dla-gmin",
-              "usluga-grunty-skarbu-panstwa",
-              "usluga-krajowa-integracja-miejscowych-planow-zagospodarowania-pr",
-              "usluga-krajowa-integracja-studium-uwarunkowan-i-kierunkow-zagosp",
-              "usluga-krajowa-integracja-szczegolowych-osnow-geodezyjnych-kisog",
-              "usluga-mapa-wlasnosci-grupy-rejestrowe",
-              "usluga-obiekty-panstwowego-rejestru-nazw-geograficznych",
-              "usluga-obreby-modernizacja",
-              "usluga-osnowa-magnetyczna",
-              "usluga-panstwowy-rejestr-granic-adresy",
-              "usluga-podstawowa-osnowa-geodezyjna-pozioma",
-              "usluga-podstawowa-osnowa-geodezyjna-wysokosciowa",
-              "usluga-prg-jednostki-terytorialne-panstwowy-rejestr-granic",
-              "usluga-rejestr-cen-nieruchomosci",
-              "usluga-rejestr-cen-nieruchomosci-mapy-gestosci",
-              "usluga-sekcje-mapy-w-ukladzie-1992",
-              "usluga-skorowidz-map-osnowa",
-              "usluga-srchiwalne-kartoteki-osnow-geodezyjnych",
-              "usluga-stacje-asg-eupos",
-              "usluga-usluga-przegladania-danych-inspire-tematu-adresy-dla-obsz",
-              "usluga-usluga-przegladania-danych-inspire-tematu-dzialki-katastr",
-              "usluga-wms-krajowej-integracji-numeracji-adresowej-do-przegladan"
-            ]
-          },
-          {
-            "menu": "Other GUGiK data",
+            "menu": "GUGiK",
             "icon": "globe_view",
-            "help": "Statistics, ASG-EUPOS, archiving, elections and the rest.",
+            "help": "Orthophoto and elevation, topographic maps, cadastre, and the rest of GUGiK's own services.",
             "items": [
-              "usluga-dane-hydrologiczne-polski-w-ukladzie-1992-zgeneralizowane",
-              "usluga-krajowy-osrodek-wsparcia-rolnictwa-dzialki",
-              "usluga-obiekty-uzytecznosci-publicznej-defibrylatory",
-              "usluga-obiekty-uzytecznosci-publicznej-zdrowie",
-              "usluga-rejestr-wnioskow-decyzji-i-zgloszen",
-              "usluga-schrony",
-              "usluga-siec-drogowa-z-bazy-projektu-openstreetmap",
-              "usluga-tereny-zamkniete-ministerstwo-infrastruktury",
-              "usluga-usluga-wms-publikujca-wykaz-portali-mapowych",
-              "usluga-wykaz-szkol-i-placowek-oswiatowych",
-              "usluga-zasiegi-i-placowki-zus"
+              {
+                "menu": "Orthophoto and DEM",
+                "icon": "relief",
+                "help": "Orthophoto, elevation, vegetation and archive imagery.",
+                "items": [
+                  "usluga-cieniowanie-wms",
+                  "usluga-modele-roznic-wysokosci",
+                  "usluga-obrazy-intensywnosci",
+                  "usluga-ortofotomapa-prawdziwa",
+                  "usluga-ortofotomapa-skorowidze-wg-aktualnosci",
+                  "usluga-ortofotomapa-standardowa",
+                  "usluga-ortofotomapa-wysokiej-rozdzielczosci",
+                  "usluga-polsa-klasyfikacja-pokrycia-terenu-2019",
+                  "usluga-polsa-klasyfikacja-pokrycia-terenu-2020",
+                  "usluga-polsa-klasyfikacja-pokrycia-terenu-2021",
+                  "usluga-polsa-klasyfikacja-pokrycia-terenu-2022",
+                  "usluga-polsa-klasyfikacja-pokrycia-terenu-2023",
+                  "usluga-polsa-klasyfikacja-pokrycia-terenu-2024",
+                  "usluga-polsa-klasyfikacja-pokrycia-terenu-2025",
+                  "usluga-polsa-ortofotomapa-satelitarna-2021",
+                  "usluga-polsa-ortofotomapa-satelitarna-2022",
+                  "usluga-polsa-ortofotomapa-satelitarna-2024",
+                  "usluga-usluga-przegladania-umozliwiajaca-przegladanie-hipsometri",
+                  "usluga-usluga-przegladania-wms-ortofotomap-archiwalnych-dla-obsz",
+                  "usluga-wskaznik-wegetacji-analiza-ndvi-wykonana-na-podstawie-zdj"
+                ]
+              },
+              {
+                "menu": "Maps",
+                "icon": "basemap",
+                "help": "Topographic, landscape, archival and thematic maps.",
+                "items": [
+                  "usluga-inspire-tn-sieci-transportowe-bdot",
+                  "usluga-mapy-sozologiczne-do-przegladania",
+                  "usluga-nowe-budynki-w-bdot10k",
+                  "usluga-paczki-powiatowe-z-archiwalnymi-danymi-bdot10k",
+                  "usluga-rastrowa-krajobrazowa-mapa-polski-do-przegladania",
+                  "usluga-rastrowa-mapa-administracyjna-polski-do-przegladania",
+                  "usluga-rastrowa-ogolnogeograficzna-mapa-polski-do-przegladania",
+                  "usluga-skorowidz-map-baza-danych-obiektow-topograficznych-bdot",
+                  "usluga-skorowidz-map-mapa-sozologiczna",
+                  "usluga-skorowidz-map-zdjecia-lotnicze",
+                  "usluga-skorowidze-aerotriangulacji-zdjec-lotniczych",
+                  "usluga-skorowidze-linii-mozaikowania-zdjec-lotniczych",
+                  "usluga-statystyki-obiektow-innych-w-bdot10k",
+                  "usluga-statystyki-sieci-komunikacyjnej-w-bdot10k",
+                  "usluga-statystyki-sieci-wodnej-w-bdot10k",
+                  "usluga-usluga-przegladania-danych-bazy-danych-obiektow-topografi",
+                  "usluga-usluga-przegladania-danych-inspire-tematu-nazwy-geografic",
+                  "usluga-usluga-przegladania-danych-topograficznych-dla-polski",
+                  "usluga-usluga-przegladania-tresci-bazy-danych-ogolnogeograficzny",
+                  "usluga-usluga-przegladania-wms-rastrowych-map-topograficznych-dl",
+                  "usluga-usluga-wms-publikujaca-statystyki-budynkow-i-budowli-w-bd"
+                ]
+              },
+              {
+                "menu": "Cadastre and boundaries",
+                "icon": "buffer",
+                "help": "Parcels, buildings, utilities, addresses and administrative boundaries.",
+                "items": [
+                  "usluga-ceny-nieruchomosci",
+                  "usluga-dane-o-projektowanych-planach-ogolnych-dla-gmin",
+                  "usluga-dane-o-uchwalonych-planach-ogolnych-dla-gmin",
+                  "usluga-grunty-skarbu-panstwa",
+                  "usluga-krajowa-integracja-miejscowych-planow-zagospodarowania-pr",
+                  "usluga-krajowa-integracja-studium-uwarunkowan-i-kierunkow-zagosp",
+                  "usluga-krajowa-integracja-szczegolowych-osnow-geodezyjnych-kisog",
+                  "usluga-mapa-wlasnosci-grupy-rejestrowe",
+                  "usluga-obiekty-panstwowego-rejestru-nazw-geograficznych",
+                  "usluga-obreby-modernizacja",
+                  "usluga-osnowa-magnetyczna",
+                  "usluga-panstwowy-rejestr-granic-adresy",
+                  "usluga-podstawowa-osnowa-geodezyjna-pozioma",
+                  "usluga-podstawowa-osnowa-geodezyjna-wysokosciowa",
+                  "usluga-prg-jednostki-terytorialne-panstwowy-rejestr-granic",
+                  "usluga-rejestr-cen-nieruchomosci",
+                  "usluga-rejestr-cen-nieruchomosci-mapy-gestosci",
+                  "usluga-sekcje-mapy-w-ukladzie-1992",
+                  "usluga-skorowidz-map-osnowa",
+                  "usluga-srchiwalne-kartoteki-osnow-geodezyjnych",
+                  "usluga-stacje-asg-eupos",
+                  "usluga-usluga-przegladania-danych-inspire-tematu-adresy-dla-obsz",
+                  "usluga-usluga-przegladania-danych-inspire-tematu-dzialki-katastr",
+                  "usluga-wms-krajowej-integracji-numeracji-adresowej-do-przegladan"
+                ]
+              },
+              {
+                "menu": "Other GUGiK data",
+                "icon": "globe_view",
+                "help": "Statistics, ASG-EUPOS, archiving, elections and the rest.",
+                "items": [
+                  "usluga-dane-hydrologiczne-polski-w-ukladzie-1992-zgeneralizowane",
+                  "usluga-krajowy-osrodek-wsparcia-rolnictwa-dzialki",
+                  "usluga-obiekty-uzytecznosci-publicznej-defibrylatory",
+                  "usluga-obiekty-uzytecznosci-publicznej-zdrowie",
+                  "usluga-rejestr-wnioskow-decyzji-i-zgloszen",
+                  "usluga-schrony",
+                  "usluga-siec-drogowa-z-bazy-projektu-openstreetmap",
+                  "usluga-tereny-zamkniete-ministerstwo-infrastruktury",
+                  "usluga-usluga-wms-publikujca-wykaz-portali-mapowych",
+                  "usluga-wykaz-szkol-i-placowek-oswiatowych",
+                  "usluga-zasiegi-i-placowki-zus"
+                ]
+              }
             ]
           },
           {
@@ -1425,16 +1433,25 @@
       },
       {
         "label": "Downloads",
+        "layout": "small",
         "items": [
-          "tool:pobierz-adresy",
-          "tool:pobierz-granice",
-          "tool:pobierz-osnowy",
-          "tool:pobierz-urzedy",
-          "tool:pobierz-pozostale"
+          {
+            "menu": "Datasets",
+            "icon": "toolbox",
+            "help": "The five background downloads: addresses and buildings, boundaries, control networks, offices and the rest.",
+            "items": [
+              "tool:pobierz-adresy",
+              "tool:pobierz-granice",
+              "tool:pobierz-osnowy",
+              "tool:pobierz-urzedy",
+              "tool:pobierz-pozostale"
+            ]
+          }
         ]
       },
       {
         "label": "Elevation",
+        "layout": "small",
         "items": [
           {
             "menu": "Model",
@@ -1451,6 +1468,7 @@
       },
       {
         "label": "Lookups",
+        "layout": "small",
         "items": [
           "parcel",
           "wysokosc"
@@ -1477,6 +1495,7 @@
       "Clear\narea": "Wyczyść\nobszar",
       "Clear\ncache": "Wyczyść\ncache",
       "Clear the stored answers after a download": "Wyczyść zapisane odpowiedzi po pobraniu",
+      "Datasets": "Zestawy",
       "Click the corners, then double-click to close the ring, or press Escape to stop. The shape stays as drawn: a download follows it, and the elevation model covers the rectangle around it.": "Klikaj narożniki, a na końcu kliknij dwukrotnie, aby zamknąć obwód, albo naciśnij Escape, aby przerwać. Kształt zostaje taki, jak narysowany: pobieranie idzie za nim, a model wysokości obejmuje prostokąt wokół niego.",
       "Clip\nto area": "Przytnij\ndo obszaru",
       "Clips a layer to the area layer's boundary, or to a named one. A WFS answer returns whole features that touch the area; this cuts them.": "Przycina warstwę do granicy warstwy obszaru albo wskazanej warstwy. WFS zwraca całe obiekty dotykające obszaru; to je tnie.",
@@ -1500,7 +1519,9 @@
       "Forest data of the State Forests' Bank of Forest Data.": "Dane leśne Banku Danych o Lasach.",
       "Forests (BDL)": "Lasy (BDL)",
       "GDOŚ, PKP PLK, GUS, PGW Wody Polskie and IMGW-PIB.": "GDOŚ, PKP PLK, GUS, PGW Wody Polskie i IMGW-PIB.",
+      "GUGiK": "GUGiK",
       "GUGiK orthophoto (WMTS, EPSG:3857). Click again to remove it.": "Ortofotomapa GUGiK (WMTS, EPSG:3857). Kliknij ponownie, aby usunąć.",
+      "Orthophoto and elevation, topographic maps, cadastre, and the rest of GUGiK's own services.": "Ortofoto i wysokości, mapy topograficzne, kataster i pozostałe usługi własne GUGiK.",
       "GUGiK types for addresses, buildings and their statistics.": "Typy GUGiK dla adresów, budynków i ich statystyk.",
       "Geocode\naddress": "Geokoduj\nadres",
       "Geodetic, gravimetric and magnetic control networks, with their measurements.": "Osnowy geodezyjne, grawimetryczne i magnetyczne wraz z pomiarami.",
@@ -1558,6 +1579,7 @@
       "The 1 m elevation model of the area, as GeoTIFF or ASCII grid.": "Model wysokości 1 m dla obszaru, jako GeoTIFF albo siatka ASCII.",
       "The GUGiK feature type to download.": "Typ obiektów GUGiK do pobrania.",
       "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time.": "Odpowiedzi są trzymane 7 dni, więc powtórne pobranie nic nie kosztuje. Zaznacz, aby następnym razem pobrać świeże dane.",
+      "The five background downloads: addresses and buildings, boundaries, control networks, offices and the rest.": "Pięć pobrań w tle: adresy i budynki, granice, osnowy, urzędy i pozostałe.",
       "The layer whose extent is downloaded. Draw one with Rectangle area, or point at a layer of your own; a selection on it narrows the download.": "Warstwa, której zasięg jest pobierany. Narysuj ją przyciskiem Obszar prostokąt albo wskaż własną warstwę; zaznaczenie na niej zawęża pobieranie.",
       "The map view, the area to download, the catalogue and the stored answers, with the buttons that act on them.": "Widok mapy, obszar pobierania, katalog i zapisane odpowiedzi oraz przyciski, które na nich działają.",
       "The surface model, buildings and trees kept, in PL-KRON86-NH. An ASCII grid.": "Model pokrycia, z budynkami i drzewami, w PL-KRON86-NH. Siatka ASCII.",
