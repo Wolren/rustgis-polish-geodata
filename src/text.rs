@@ -1148,6 +1148,24 @@ pub fn map_unknown(lang: Lang, row: &str) -> String {
     )
 }
 
+/// The offline register has no service under this id.
+pub fn register_unknown(lang: Lang, id: &str) -> String {
+    pick!(
+        lang,
+        format!("the EZiUDP register in this plugin has no service \"{id}\""),
+        format!("rejestr EZiUDP w tej wtyczce nie ma usługi „{id}”")
+    )
+}
+
+/// A register entry that is not a WMS, so it cannot become an overlay.
+pub fn register_not_a_map(lang: Lang, name: &str) -> String {
+    pick!(
+        lang,
+        format!("\"{name}\" is a WFS in the register; download its types through a download tool or QGIS"),
+        format!("„{name}” to w rejestrze WFS; pobierz jego typy narzędziem pobierania albo w QGIS")
+    )
+}
+
 /// A folder row was chosen instead of a map or a dataset inside it.
 pub fn map_folder(lang: Lang, label: &str) -> String {
     pick!(

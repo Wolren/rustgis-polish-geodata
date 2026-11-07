@@ -31,6 +31,7 @@ mod tool;
 mod uug;
 mod uldk;
 mod wfs;
+mod zrodla;
 
 use serde_json::{json, Value};
 use std::io::Write;
@@ -108,6 +109,7 @@ fn run(
         other if other.starts_with("usluga-") => services::toggle(host, lang, request),
         "katalog" => katalog::run(params, lang),
         "eziudp" => eziudp::search(params, lang),
+        "zrodla" => zrodla::search(host, params, lang),
         "geokoduj" => uug::geocode(host, params, lang),
         "adres-odwrotnie" => uug::reverse(host, params, lang),
         "wysokosc" => uug::height(host, params, lang),

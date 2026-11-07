@@ -119,6 +119,13 @@
       "params": "{\"lon\": 21.02, \"lat\": 52.23} (both optional: the map centre when absent)"
     },
     {
+      "id": "zrodla",
+      "label": "Find\nservice",
+      "icon": "globe_view",
+      "help": "Searches the offline EZiUDP register: every Polish WMS and WFS that answered a real request. Pass dodaj with an id to add the WMS as an overlay.",
+      "params": "{\"szukaj\": \"geologia\", \"instytucja\": \"Warszawy\", \"teryt\": \"14\", \"rodzaj\": \"wms\", \"limit\": 50, \"dodaj\": \"<id>\"}"
+    },
+    {
       "id": "ustawienia",
       "label": "Download\nsettings",
       "icon": "settings",
@@ -2719,6 +2726,8 @@
       "The tool form's tick, for every run: downloads over the size limit proceed without asking.": "Zaznaczenie z formularza narzędzia, ale na stałe: pobrania powyżej limitu idą bez pytania.",
       "Download limit (MB)": "Limit pobrania (MB)",
       "Download\nsettings": "Ustawienia\npobierania",
+      "Find\nservice": "Znajdź\nusługę",
+      "Searches the offline EZiUDP register: every Polish WMS and WFS that answered a real request. Pass dodaj with an id to add the WMS as an overlay.": "Przeszukuje offline rejestr EZiUDP: każdy polski WMS i WFS, który odpowiedział na prawdziwe żądanie. Parametr dodaj z identyfikatorem dodaje WMS jako nakładkę.",
       "Stores the panel's download size limit and its standing Download even if large tick, so the tools use them without the form.": "Zapisuje limit rozmiaru pobrania z panelu i stałe zaznaczenie Pobierz mimo rozmiaru, żeby narzędzia brały je bez formularza.",
       "A run stops at this size unless Download even if large is on. A confirmed run stops at 256 MB.": "Pobranie zatrzymuje się na tym rozmiarze, chyba że włączone jest Pobierz mimo rozmiaru. Potwierdzone pobranie kończy się na 256 MB."
     }

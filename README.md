@@ -384,6 +384,11 @@ run_command  plugin:dane-pl/eziudp          {"instytucja": "Geolog"}
   więc polecenie **odmawia** i prosi o zawężenie, zamiast go pobierać. Zawężone zapytanie wraca
   w całości: rejestr ignoruje `limit` i `index`, więc nie ma czego stronicować, a odpowiedź niesie
   wszystkie dopasowane wiersze (filtr `nazwa=Starosta` to 1726 wierszy i 1,2 MB).
+- **Rejestr offline** — `zrodla`: ten sam rejestr, zbudowany raz przez `tools/eziudp.py`, leży
+  w `data/eziudp.json` i wchodzi do binarium. Budowniczy bierze cały rejestr, grupuje adresy i
+  dowodzi każdy z nich prawdziwym żądaniem: kaflem `GetMap` dla WMS (z warstwą z `GetCapabilities`)
+  albo dokumentem `GetCapabilities` dla WFS. Do pliku wchodzą tylko te, które odpowiedziały.
+  Szuka po nazwie zbioru, instytucji i TERYT, a `dodaj` z identyfikatorem kładzie WMS jako nakładkę.
 
 Agent zaczyna od katalogu, więc nie musi czytać manifestu:
 
