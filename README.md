@@ -45,12 +45,13 @@ zrzucie z `ui_shot` (1480 x 760, polski interfejs): treść kończy się na 1390
 | | Osnowy i pomiary | 21 zbiorów |
 | | Urzędy i sądy | 21 zbiorów |
 | | Pozostałe dane | 21 zbiorów |
+| | Ochrona przyrody (GDOŚ) | 15 typów WFS: Natura 2000, rezerwaty, parki, Ramsar, korytarze |
 | | Pakiety | Trzy skorowidze arkuszy (ortofoto, NMT, pozostałe) i pobieranie arkuszy do folderu |
 | **Wysokości** | Model | Teren KRON86 (GeoTIFF), teren EVRF2007, pokrycie NMPT i ustawianie stylu modelu |
 | **Wyszukiwanie** | Wyszukiwanie | Działka z ULDK, adres pod środkiem mapy i wysokość w punkcie |
 
 Łącznie: **211 poleceń** (27 własnych, 109 usług katalogu krajowego, 30 usług Wody Polskie i 45 map
-Cartomatic) oraz **9 narzędzi**. Wcześniej było 228 poleceń, z czego 108 pobierało dane natychmiast,
+Cartomatic) oraz **10 narzędzi**. Wcześniej było 228 poleceń, z czego 108 pobierało dane natychmiast,
 blokując okno.
 
 ### Usługi krajowe
@@ -123,7 +124,7 @@ skorowidze** (arkusze i siatki, które wskazują paczki do pobrania z Geoportalu
 jego obiekty. Skorowidz nadal da się wskazać po identyfikatorze, np.
 `dane-skorowidz-danych-pomiarowych-lidar-2024`.
 
-Pobieranie to **pięć narzędzi**, każde jako osobny przycisk w grupie **Pobieranie**. Każde ma listę
+Pobieranie to **sześć narzędzi**, każde jako osobny przycisk w grupie **Pobieranie**. Każde ma listę
 swoich zbiorów:
 
 | Narzędzie | Zbiory |
@@ -133,6 +134,7 @@ swoich zbiorów:
 | Osnowy i pomiary | 21 |
 | Urzędy i sądy | 21 |
 | Pozostałe dane | 21 |
+| Ochrona przyrody (GDOŚ) | 15 |
 
 1. Wskaż obszar: **Obszar z widoku**, **Narysuj obszar** albo własna warstwa.
 2. Naciśnij przycisk w grupie **Pobieranie**, na przykład **Adresy i budynki**.
@@ -519,6 +521,18 @@ udostępniane nieodpłatnie. Przy każdej warstwie ustawiana jest atrybucja
 | NMT | `…/PZGIK/NMT/GRID1/WMS/ShadedRelief` |
 | EGiB WFS | `…/PZGIK/EGIB/WFS/UslugaZbiorcza` |
 | ULDK | `uldk.gugik.gov.pl` |
+| GDOŚ WFS | `sdi.gdos.gov.pl/wfs` |
+
+Ochrona przyrody idzie z WFS GDOŚ, bo ta usługa ma 23 typy, a jej WMS tylko 10 warstw. Pobieranie
+bierze 15 typów: Natura 2000 (OSO i SOO), rezerwaty, parki narodowe i krajobrazowe, obszary
+chronionego krajobrazu, pomniki przyrody, stanowiska dokumentacyjne, użytki ekologiczne, zespoły
+przyrodniczo-krajobrazowe, obszary Ramsar, korytarze ekologiczne, mezoregiony i elektrownie wiatrowe.
+
+Ta usługa ma trzy własne ograniczenia i wtyczka je respektuje: filtruje tylko w EPSG:2180, więc
+pierwsze pytanie w lon/lat wraca puste, a odpowiedź przychodzi dopiero z układu krajowego; odmawia
+`STARTINDEX` („Cannot do natural order without a primary key”), więc odpowiada jedną stronę i
+pobranie kończy się na niej, o czym mówi komunikat o przerwaniu; a współrzędne podaje jako
+(easting, northing), odwrotnie niż GUGiK, więc wtyczka czyta je w tej kolejności.
 
 ## Ograniczenia
 
@@ -535,8 +549,8 @@ udostępniane nieodpłatnie. Przy każdej warstwie ustawiana jest atrybucja
   Point/LineString/Polygon i ich wersje multi nie są obsługiwane.
 - ULDK przyjmuje tylko EPSG:2180, więc wtyczka sama rzutuje współrzędne (Transverse Mercator,
   zgodność z PROJ na poziomie < 1 mm dla punktu testowego).
-- Prostokąta nie da się narysować przeciągnięciem: RustGIS nie ma narzędzia prostokąta dla
-  warstw edytowalnych. Prostokąt bierze się z widoku (**Obszar z widoku**), a rysowanie zostawia
-  kształt, jaki narysujesz.
+- Prostokąt z rysunku wymaga jednego kroku: RustGIS rysuje nim grafikę, nie obiekt warstwy
+  wektorowej, więc **Prostokąt do obszaru** przenosi go do warstwy obszaru (robi to też każde
+  następne polecenie wtyczki). Prostokąt z widoku (**Obszar z widoku**) wjeżdża od razu.
 - Wtyczka nie dodaje pozycji do menu kontekstowego mapy: manifest RustGIS 0.5.0 nie ma na to pola.
   Pobieranie idzie więc przez grupę **Dane › Pobieranie**, a nie spod prawego przycisku.

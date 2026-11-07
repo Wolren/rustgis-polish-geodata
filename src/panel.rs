@@ -11,13 +11,14 @@ use serde_json::{json, Map, Value};
 /// The curated overlays the map list offers, in the order the ribbon shows them.
 const CURATED: &[&str] = &["orto", "bdot", "nmt", "dzialki-wms", "adresy", "prg-wms", "prng"];
 
-/// The five WFS download tools, in the order the map list shows them: id, English label, Polish label.
+/// The WFS download tools, in the order the map list shows them: id, English label, Polish label.
 const DOWNLOAD_TOOLS: &[(&str, &str, &str)] = &[
     ("pobierz-adresy", "Addresses and buildings", "Adresy i budynki"),
     ("pobierz-granice", "Boundaries and units", "Granice i jednostki"),
     ("pobierz-osnowy", "Control points", "Osnowy i pomiary"),
     ("pobierz-urzedy", "Offices and courts", "Urzędy i sądy"),
     ("pobierz-pozostale", "Other data", "Pozostałe dane"),
+    ("pobierz-gdos", "Protected areas (GDOŚ)", "Ochrona przyrody (GDOŚ)"),
 ];
 
 /// The manifest's id: the host prefixes a tool id with it.

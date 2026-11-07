@@ -2000,6 +2000,52 @@
       ]
     },
     {
+      "id": "pobierz-gdos",
+      "name": "Protected areas (GDOŚ)",
+      "summary": "Natura 2000, nature reserves, landscape parks, Ramsar sites, ecological corridors, mesoregions and wind farms as features.",
+      "toolbox": "Polish Geodata",
+      "params": [
+        {
+          "name": "dane",
+          "label": "Dataset",
+          "kind": "choice",
+          "required": true,
+          "help": "The GDOŚ feature type to download.",
+          "choices": [
+            "Natura 2000 ptasie (OSO)",
+            "Natura 2000 siedliskowe (SOO)",
+            "Obszary chronionego krajobrazu",
+            "Parki krajobrazowe",
+            "Parki narodowe",
+            "Rezerwaty",
+            "Pomniki przyrody (pow.)",
+            "Pomniki przyrody (punktowe)",
+            "Stanowiska dokumentacyjne",
+            "Użytki ekologiczne",
+            "Zespoły przyr.-krajobrazowe",
+            "Ramsar (obszary wodno-błotne)",
+            "Korytarze ekologiczne",
+            "Mezoregiony fizycznogeograficzne",
+            "Elektrownie wiatrowe"
+          ]
+        },
+        {
+          "name": "obszar",
+          "label": "Area (layer)",
+          "kind": "vectorLayer",
+          "required": true,
+          "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        },
+        {
+          "name": "clear",
+          "label": "Clear the stored answers first",
+          "kind": "bool",
+          "default": false,
+          "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
+        }
+      ]
+    },
+    {
       "id": "pobierz-arkusze",
       "name": "Download sheets",
       "summary": "Downloads the files the selected index features name in url_do_pobrania into a folder, with a CSV report.",
@@ -2392,6 +2438,7 @@
           "tool:pobierz-osnowy",
           "tool:pobierz-urzedy",
           "tool:pobierz-pozostale",
+          "tool:pobierz-gdos",
           {
             "menu": "Packages",
             "icon": "package",
@@ -2583,6 +2630,9 @@
       "Lookup": "Wyszukiwanie",
       "A parcel, an address or the terrain height under the map centre.": "Działka, adres albo wysokość terenu pod środkiem mapy.",
       "Address\nat point": "Adres\nw punkcie",
+      "The GDOŚ feature type to download.": "Typ obiektów GDOŚ do pobrania.",
+      "Protected areas (GDOŚ)": "Ochrona przyrody (GDOŚ)",
+      "Natura 2000, nature reserves, landscape parks, Ramsar sites, ecological corridors, mesoregions and wind farms as features.": "Natura 2000, rezerwaty, parki krajobrazowe, obszary Ramsar, korytarze ekologiczne, mezoregiony i elektrownie wiatrowe jako obiekty.",
       "The address at the map centre, from GUGiK's UUG service: street, number, postcode and the distance in metres. Pass lon and lat to ask about another point.": "Adres pod środkiem mapy z usługi UUG GUGiK: ulica, numer, kod pocztowy i odległość w metrach. Parametry lon i lat wskazują inny punkt.",
       "Orthophoto": "Ortofoto",
       "Download even if large": "Pobierz mimo rozmiaru",

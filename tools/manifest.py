@@ -27,6 +27,7 @@ SERVICES = os.path.join(ROOT, "data", "services.json")
 WFS = os.path.join(ROOT, "data", "wfs.json")
 WODY = os.path.join(ROOT, "data", "wody.json")
 CARTO = os.path.join(ROOT, "data", "cartomatic.json")
+GDOS = os.path.join(ROOT, "data", "gdos.json")
 OUT = os.path.join(ROOT, "plugin.json")
 
 # The host's limits (docs/plugins.md, "plugin.json").
@@ -70,6 +71,9 @@ def load(path):
 def catalogue():
     """The WFS catalogue by id, and the ids the download tools may offer."""
     entries = load(WFS)
+    # The GDOŚ types are a catalogue of their own, built by tools/gdos.py.
+    if os.path.exists(GDOS):
+        entries = entries + load(GDOS)
     by_id, offered = {}, []
     for entry in entries:
         for key in ("id", "label", "url", "type", "geom", "max_span"):

@@ -221,7 +221,12 @@ fn fetch_cell(
             cell.truncated = true;
             break;
         }
-        let starts: Vec<usize> = (0..PAGES_IN_FLIGHT).map(|i| start + i * PAGE).collect();
+        let starts: Vec<usize> = if layer.pages {
+            (0..PAGES_IN_FLIGHT).map(|i| start + i * PAGE).collect()
+        } else {
+            // A service that refuses STARTINDEX answers one page, so a second page is a failure.
+            vec![0]
+        };
         let mut read = 0usize;
         for (_, page) in fetch_pages(layer, bbox, filter, &starts, lang, srs) {
             match page {
@@ -244,6 +249,11 @@ fn fetch_cell(
             }
         }
         report(&text::count(lang, layer.name, cell.features.len()));
+        if !layer.pages {
+            // One page is all the service gives: a full page means more features were left out.
+            cell.truncated |= read >= PAGE;
+            break;
+        }
         if read == 0 {
             break;
         }
@@ -275,7 +285,7 @@ fn fetch_pages(
                         cache::put(&url, &body);
                     }
                     if matches!(srs, Srs::Grid) {
-                        to_lon_lat(&mut rows);
+                        to_lon_lat(&mut rows, layer.xy);
                     }
                     Ok(rows)
                 });
@@ -291,31 +301,32 @@ fn fetch_pages(
 
 /// Turns features served in the national grid into longitude and latitude.
 ///
-/// EPSG:2180 answers carry the northing first, so a pair is (northing, easting).
-fn to_lon_lat(features: &mut [Value]) {
+/// GUGiK answers a pair as (northing, easting); GDOŚ answers (easting, northing), so `xy` decides.
+fn to_lon_lat(features: &mut [Value], xy: bool) {
     for feature in features {
         if let Some(geometry) = feature.get_mut("geometry") {
             if let Some(coordinates) = geometry.get_mut("coordinates") {
-                convert(coordinates);
+                convert(coordinates, xy);
             }
         }
     }
 }
 
-fn convert(value: &mut Value) {
+fn convert(value: &mut Value, xy: bool) {
     let Some(array) = value.as_array_mut() else {
         return;
     };
     if array.len() >= 2 && array[0].is_number() && array[1].is_number() {
-        let northing = array[0].as_f64().unwrap_or(0.0);
-        let easting = array[1].as_f64().unwrap_or(0.0);
+        let first = array[0].as_f64().unwrap_or(0.0);
+        let second = array[1].as_f64().unwrap_or(0.0);
+        let (northing, easting) = if xy { (second, first) } else { (first, second) };
         let (lon, lat) = gk92::inverse(northing, easting);
         array[0] = json!(lon);
         array[1] = json!(lat);
         return;
     }
     for item in array {
-        convert(item);
+        convert(item, xy);
     }
 }
 
@@ -370,7 +381,11 @@ fn page_url(
             ));
         }
     }
-    url.push_str(&format!("&MAXFEATURES={PAGE}&STARTINDEX={start}"));
+    url.push_str(&format!("&MAXFEATURES={PAGE}"));
+    // The first page needs no offset, and a service without paging refuses one.
+    if start > 0 {
+        url.push_str(&format!("&STARTINDEX={start}"));
+    }
     url
 }
 
@@ -378,6 +393,25 @@ fn page_url(
 mod tests {
     use super::*;
     use crate::catalog;
+
+    #[test]
+    fn the_first_page_asks_for_no_offset() {
+        let layer = catalog::wfs_by_label("dzialki").unwrap();
+        let url = page_url(layer, [21.0, 52.2, 21.01, 52.21], 0, None, Srs::LonLat);
+        // GDOŚ reads a STARTINDEX as a request for a natural order it cannot do.
+        assert!(!url.contains("STARTINDEX="), "{url}");
+        assert!(url.contains("MAXFEATURES="), "{url}");
+    }
+
+    #[test]
+    fn the_gdos_types_say_they_do_not_page() {
+        let culture = catalog::wfs_by_label("Ramsar (obszary wodno-błotne)").expect("a GDOŚ type");
+        assert!(!culture.pages, "GDOŚ refuses STARTINDEX");
+        assert_eq!(culture.geom_field, "geom");
+        let gugik = catalog::wfs_by_label("dzialki").expect("a GUGiK type");
+        assert!(gugik.pages, "GUGiK pages every answer");
+    }
+
 
     #[test]
     fn builds_a_wfs_1_1_request() {
@@ -403,7 +437,8 @@ mod tests {
         assert!(url.contains("&FILTER=%3CFilter%3E"));
         // GUGiK answers "BBOX and FILTER are mutually exclusive" if both are sent.
         assert!(!url.contains("BBOX="));
-        assert!(url.contains("STARTINDEX=0"));
+        // The first page asks for no offset, which some services refuse outright.
+        assert!(!url.contains("STARTINDEX="), "{url}");
     }
 
     #[test]

@@ -149,6 +149,10 @@ pub struct WfsLayer {
     /// A tile or sheet index: it locates downloadable archives, which this plugin cannot fetch.
     /// Kept in the catalogue (a script may still name it), not offered in the download tools.
     pub index: bool,
+    /// Whether the service pages its answers with `STARTINDEX`; GDOŚ answers one page only.
+    pub pages: bool,
+    /// Whether the reply lists easting before northing; GUGiK lists northing first.
+    pub xy: bool,
 }
 
 pub fn overlay(id: &str) -> Option<&'static Overlay> {
@@ -170,25 +174,39 @@ struct Raw {
     index: bool,
     #[serde(default)]
     tool: String,
+    /// Whether the service pages its answers. GDOŚ refuses `STARTINDEX`, so it answers one page.
+    #[serde(default = "paged")]
+    pages: bool,
+    /// Whether the reply lists x (easting) before y (northing); GUGiK lists northing first.
+    #[serde(default)]
+    xy: bool,
+}
+
+fn paged() -> bool {
+    true
 }
 
 const RAW: &str = include_str!("../data/wfs.json");
+/// The GDOŚ types, proved by `tools/gdos.py`; they filter in the national grid and do not page.
+const GDOS: &str = include_str!("../data/gdos.json");
 
 fn leaked(text: &str) -> &'static str {
     Box::leak(text.to_string().into_boxed_str())
 }
 
-/// Every national WFS type that answered a real request, proved once when the file was built.
+/// Every WFS type that answered a real request, proved once when a catalogue file was built.
 ///
-/// Entries are read one at a time: an entry the file's builder left incomplete is skipped and the
-/// rest of the catalogue still works. Reading the file as one array would lose every dataset to a
-/// single bad entry.
+/// Entries are read one at a time: an entry a builder left incomplete is skipped and the rest of
+/// the catalogue still works. Reading a file as one array would lose every dataset to one bad entry.
 pub fn wfs_layers() -> &'static [WfsLayer] {
     static ALL: std::sync::OnceLock<Vec<WfsLayer>> = std::sync::OnceLock::new();
     ALL.get_or_init(|| {
-        let Ok(entries) = serde_json::from_str::<Vec<serde_json::Value>>(RAW) else {
-            return Vec::new();
-        };
+        let mut entries: Vec<serde_json::Value> = Vec::new();
+        for text in [RAW, GDOS] {
+            if let Ok(mut list) = serde_json::from_str::<Vec<serde_json::Value>>(text) {
+                entries.append(&mut list);
+            }
+        }
         entries
             .into_iter()
             .filter_map(|entry| serde_json::from_value::<Raw>(entry).ok())
@@ -202,6 +220,8 @@ pub fn wfs_layers() -> &'static [WfsLayer] {
                 geom_field: leaked(&entry.geom),
                 index: entry.index,
                 tool: leaked(&entry.tool),
+                pages: entry.pages,
+                xy: entry.xy,
             })
             .collect()
     })
@@ -546,10 +566,13 @@ mod tests {
     fn every_entry_of_the_file_is_read() {
         let entries: Vec<serde_json::Value> =
             serde_json::from_str(RAW).expect("data/wfs.json is not a JSON array");
+        let gdos: Vec<serde_json::Value> =
+            serde_json::from_str(GDOS).expect("data/gdos.json is not a JSON array");
         assert!(entries.len() > 100, "only {} entries", entries.len());
+        assert!(!gdos.is_empty(), "data/gdos.json lists nothing");
         assert_eq!(
             wfs_layers().len(),
-            entries.len(),
+            entries.len() + gdos.len(),
             "an entry was skipped: a field is missing"
         );
     }
