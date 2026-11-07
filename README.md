@@ -47,7 +47,7 @@ zrzucie z `ui_shot` (1480 x 760, polski interfejs): treść kończy się na 1390
 | | Pozostałe dane | 21 zbiorów |
 | | Pakiety | Trzy skorowidze arkuszy (ortofoto, NMT, pozostałe) i pobieranie arkuszy do folderu |
 | **Wysokości** | Model | Teren KRON86 (GeoTIFF), teren EVRF2007, pokrycie NMPT i ustawianie stylu modelu |
-| **Wyszukiwanie** | Wyszukiwanie | Działka z ULDK i wysokość w punkcie |
+| **Wyszukiwanie** | Wyszukiwanie | Działka z ULDK, adres pod środkiem mapy i wysokość w punkcie |
 
 Łącznie: **211 poleceń** (27 własnych, 109 usług katalogu krajowego, 30 usług Wody Polskie i 45 map
 Cartomatic) oraz **9 narzędzi**. Wcześniej było 228 poleceń, z czego 108 pobierało dane natychmiast,
@@ -344,18 +344,23 @@ run_command  plugin:dane-pl/przytnij  {}
 run_command  plugin:dane-pl/dem  {"area": "obszar"}
 ```
 
-Cztery polecenia pytają usługi GUGiK wprost i są przede wszystkim dla agentów (na wstędze jest
-tylko Wysokość w punkcie, bo reszta potrzebuje argumentu, którego nie ma gdzie wpisać):
+Pięć poleceń pyta usługi GUGiK wprost. Na wstędze są trzy, które biorą środek mapy: Działka z
+ULDK, Adres w punkcie i Wysokość w punkcie. Geokoduj, Działka z numeru i EZiUDP potrzebują
+argumentu, więc są przede wszystkim dla agentów.
 
 ```
-run_command  plugin:dane-pl/geokoduj    {"adres": "Poznań, Głogowska 10"}
-run_command  plugin:dane-pl/wysokosc    {"x": 357873, "y": 506191}
-run_command  plugin:dane-pl/dzialka-id  {"id": "306401_1.0001.14/4"}
-run_command  plugin:dane-pl/eziudp      {"instytucja": "Geolog"}
+run_command  plugin:dane-pl/geokoduj        {"adres": "Poznań, Głogowska 10"}
+run_command  plugin:dane-pl/adres-odwrotnie {"lon": 21.020, "lat": 52.229}
+run_command  plugin:dane-pl/wysokosc        {"x": 357873, "y": 506191}
+run_command  plugin:dane-pl/dzialka-id      {"id": "306401_1.0001.14/4"}
+run_command  plugin:dane-pl/eziudp          {"instytucja": "Geolog"}
 ```
 
 - **Geokoduj** — UUG GUGiK, `services.gugik.gov.pl/uug`, JSON; dodaje punkt z miejscowością,
   ulicą, numerem, kodem i pozycją PL-1992.
+- **Adres w punkcie** — to samo UUG, `GetAddressReverse`, geometria WKT i `srid=4326`. Bez
+  parametrów bierze środek mapy, z parametrami (`lon`, `lat`) dowolny punkt. Dodaje punkt z
+  ulicą, numerem, kodem, TERYT, SIMC, ULIC i odległością od pytanego punktu.
 - **Wysokość w punkcie** — `services.gugik.gov.pl/nmt`, `GetHByXY`, PL-KRON86-NH.
 - **Działka z numeru** — ULDK `GetParcelById`, identyfikator w postaci `TERYT_R.OBRĘB.NUMER/ARK`.
 - **Rejestr EZiUDP** — `integracja.gugik.gov.pl/eziudp/api.php?format=json`: kto zgłasza jaki

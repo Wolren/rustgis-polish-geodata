@@ -1275,6 +1275,40 @@ pub fn uug_candidates(lang: Lang, count: usize) -> String {
     )
 }
 
+/// No address sits within the service's own radius of the point.
+pub fn uug_no_address_here(lang: Lang) -> String {
+    pick!(
+        lang,
+        "no address at that point",
+        "brak adresu w tym punkcie",
+    )
+    .to_string()
+}
+
+pub fn uug_reverse_layer(lang: Lang, address: &str) -> String {
+    let short: String = address.chars().take(40).collect();
+    pick!(
+        lang,
+        format!("Address at point: {short}"),
+        format!("Adres w punkcie: {short}")
+    )
+}
+
+/// The address the reverse lookup found, and how far the nearest one is.
+pub fn uug_here(lang: Lang, address: &str, distance: Option<f64>) -> String {
+    match distance {
+        Some(distance) => {
+            let metres = num(lang, distance, 1);
+            pick!(
+                lang,
+                format!("{address}, {metres} m from the point"),
+                format!("{address}, {metres} m od punktu")
+            )
+        }
+        None => pick!(lang, address.to_string(), address.to_string()),
+    }
+}
+
 pub fn height_failed(lang: Lang, detail: &str) -> String {
     pick!(
         lang,

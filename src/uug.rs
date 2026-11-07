@@ -106,6 +106,101 @@ pub fn geocode(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, Str
     }))
 }
 
+/// Finds the address at a point and adds it as a point layer.
+///
+/// The point is the map centre unless `lon` and `lat` name one. The service answers in degrees,
+/// so nothing is projected on the way in or out.
+pub fn reverse(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String> {
+    let (lon, lat) = match (
+        params.get("lon").and_then(Value::as_f64),
+        params.get("lat").and_then(Value::as_f64),
+    ) {
+        (Some(lon), Some(lat)) => (lon, lat),
+        _ => host.centre()?,
+    };
+    let url =
+        format!("{UUG}?request=GetAddressReverse&location=POINT({lon:.6}%20{lat:.6})&srid=4326");
+    let body = http::fetch(&url, 20, lang)?;
+    let answer: Value = serde_json::from_str(&body).map_err(|_| text::uug_unreadable(lang))?;
+    // The service answers the nearest address within its own radius, or nothing.
+    let found = answer
+        .get("results")
+        .and_then(Value::as_object)
+        .and_then(|results| results.values().next())
+        .ok_or_else(|| text::uug_no_address_here(lang))?;
+    let (found_lon, found_lat) = (
+        found.get("x").and_then(number).ok_or_else(|| text::uug_unreadable(lang))?,
+        found.get("y").and_then(number).ok_or_else(|| text::uug_unreadable(lang))?,
+    );
+    let address = address_of(found);
+    let distance = found.get("distance").and_then(number);
+
+    let mut properties = Map::new();
+    for (name, key) in [
+        ("city", "city"),
+        ("street", "street"),
+        ("number", "number"),
+        ("postcode", "code"),
+        ("teryt", "teryt"),
+        ("simc", "simc"),
+        ("ulic", "ulic"),
+    ] {
+        if let Some(value) = found.get(key).cloned() {
+            properties.insert(name.into(), value);
+        }
+    }
+    properties.insert("address".into(), json!(address));
+    if let Some(distance) = distance {
+        properties.insert("distance_m".into(), json!(distance));
+    }
+    let (x, y) = tm::to_2180(found_lon, found_lat);
+    properties.insert("pl1992".into(), json!([x, y]));
+
+    let collection = json!({
+        "type": "FeatureCollection",
+        "features": [{
+            "type": "Feature",
+            "geometry": { "type": "Point", "coordinates": [found_lon, found_lat] },
+            "properties": Value::Object(properties),
+        }],
+    });
+    let name = text::uug_reverse_layer(lang, &address);
+    host.add_layer(&name, collection)?;
+    host.notify(&text::uug_here(lang, &address, distance));
+    Ok(json!({
+        "layer": name,
+        "address": address,
+        "lon": found_lon,
+        "lat": found_lat,
+        "distance": distance,
+    }))
+}
+
+/// The address a reverse answer names: street and number, then the city.
+fn address_of(found: &Value) -> String {
+    let part = |key: &str| {
+        found
+            .get(key)
+            .and_then(Value::as_str)
+            .map(str::trim)
+            .filter(|s| !s.is_empty())
+    };
+    let mut out = String::new();
+    match (part("street"), part("number")) {
+        (Some(street), Some(number)) => out.push_str(&format!("{street} {number}")),
+        (Some(street), None) => out.push_str(street),
+        (None, Some(number)) => out.push_str(number),
+        (None, None) => {}
+    }
+    if let Some(city) = part("city") {
+        if !out.is_empty() {
+            out.push_str(", ");
+        }
+        out.push_str(city);
+    }
+    out
+}
+
 /// The candidate to show: nearest to a given PL-1992 point, else the most accurate.
 fn choose<'a>(candidates: &[&'a Value], near: Option<(f64, f64)>) -> &'a Value {
     let coords = |value: &Value| {
@@ -183,6 +278,17 @@ fn encode(text: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn an_address_names_street_number_and_city() {
+        let full = json!({"street": "ulica Żurawia", "number": "3/5", "city": "Warszawa"});
+        assert_eq!(address_of(&full), "ulica Żurawia 3/5, Warszawa");
+        // A point in the countryside answers with the city alone.
+        assert_eq!(address_of(&json!({"city": "Marki"})), "Marki");
+        // A street without a number keeps the street.
+        assert_eq!(address_of(&json!({"street": "ulica Polna", "city": "Marki"})), "ulica Polna, Marki");
+        assert_eq!(address_of(&json!({})), "");
+    }
 
     #[test]
     fn encodes_a_polish_address() {

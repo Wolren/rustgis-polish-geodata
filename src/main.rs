@@ -109,6 +109,7 @@ fn run(
         "katalog" => katalog::run(params, lang),
         "eziudp" => eziudp::search(params, lang),
         "geokoduj" => uug::geocode(host, params, lang),
+        "adres-odwrotnie" => uug::reverse(host, params, lang),
         "wysokosc" => uug::height(host, params, lang),
         "dzialka-id" => uldk::parcel_by_id(host, params, lang),
         "panel-state" => panel::state(host, lang, request),
