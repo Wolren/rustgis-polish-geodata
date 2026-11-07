@@ -2585,7 +2585,8 @@
             "items": [
               "parcel",
               "adres-odwrotnie",
-              "wysokosc"
+              "wysokosc",
+              "zrodla"
             ]
           },
           "tool:aktualizuj-rejestr"
