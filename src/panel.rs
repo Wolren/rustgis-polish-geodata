@@ -188,6 +188,10 @@ pub fn mapa(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, Strin
         let sub = json!({ "id": id, "params": {} });
         return crate::run(&sub, id, &json!({}), host, lang);
     }
+    if let Some(id) = row.strip_prefix("e:") {
+        let entry = crate::zrodla::find(id).ok_or_else(|| text::register_unknown(lang, id))?;
+        return crate::zrodla::add_service(host, entry, lang);
+    }
     let Some(rest) = row.strip_prefix("d:") else {
         return Err(text::map_unknown(lang, &row));
     };
@@ -252,10 +256,11 @@ fn download(host: &mut Host, tool: &str, dataset: &str, lang: Lang) -> Result<Va
 
 /// The panel's map list: every map under Podkłady, every downloadable dataset under Pobieranie.
 fn map_nodes(lang: Lang) -> Value {
-    let [maps, downloads] = text::map_roots(lang);
+    let [maps, downloads, register] = text::map_roots(lang);
     json!([
         { "id": "podklady", "label": maps, "children": map_leaves(lang) },
         { "id": "pobieranie", "label": downloads, "children": download_leaves(lang) },
+        { "id": "eziudp", "label": register, "children": crate::zrodla::branches(lang, 3000) },
     ])
 }
 
@@ -342,7 +347,8 @@ mod tests {
         );
         assert_eq!(folders.len(), DOWNLOAD_TOOLS.len());
         let total: usize = nodes.as_array().expect("nodes").iter().map(count_nodes).sum();
-        assert!(total <= 400, "{total} nodes");
+        // The host takes 5 000 nodes; the register brings the tree close to it, so keep the check.
+        assert!(total <= 4800, "{total} nodes");
 
         let mut ids: Vec<String> = Vec::new();
         for leaf in maps {

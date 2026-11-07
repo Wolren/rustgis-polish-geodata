@@ -272,15 +272,17 @@ drzewem przyciski, katalog i zapisane odpowiedzi. Wybierz w drzewie dowolną war
 czego, na przykład `Adresy → Gmina Poznań`. Przycisk **Przytnij do warstwy** robi wtedy to, co
 widać. Bez wyboru granicą jest warstwa „Obszar pobierania”.
 
-Pod drzewem granic stoi drugie drzewo, **Mapa**, też z wyszukiwarką i 304 wierszami. W **Podkładach**
+Pod drzewem granic stoi drugie drzewo, **Mapa**, też z wyszukiwarką i trzema korzeniami. W **Podkładach**
 jest każda mapa, którą wtyczka umie pokazać: siedem nakładek własnych, 111 usług katalogu, 30 usług
 Wody Polskie i 45 map Cartomatic. W **Pobieraniu** jest każdy zbiór, który umie pobrać, w sześciu
-folderach narzędzi. Wiersz niesie źródło w identyfikatorze: `v:<polecenie>` to mapa, a
-`d:<narzędzie>:<zbiór>` to pobieranie. Wybór wiersza uruchamia polecenie **Mapa** (`mapa`): `v:`
-wjeżdża tym samym poleceniem, które stoi na wstędze, a `d:` startuje narzędzie pobierania z tytułem
-zbioru i warstwą obszaru (albo warstwą aktywną, gdy obszaru nie ma). Wiersz folderu nic nie dodaje:
-polecenie odpowiada wtedy podpowiedzią, żeby wybrać mapę albo zbiór wewnątrz niego. Skrypt robi to
-samo:
+folderach narzędzi. W **Rejestrze EZiUDP** jest instytucja, a pod nią jej usługi WMS: 574 instytucje
+i 1 750 usług z pliku `data/eziudp.json`, a wyszukiwarka nad drzewem zawęża je po nazwie. Wiersz niesie
+źródło w identyfikatorze: `v:<polecenie>` to mapa, `d:<narzędzie>:<zbiór>` to pobieranie, a
+`e:<identyfikator>` to usługa z rejestru. Wybór wiersza uruchamia polecenie **Mapa** (`mapa`): `v:`
+wjeżdża tym samym poleceniem, które stoi na wstędze, `d:` startuje narzędzie pobierania z tytułem
+zbioru i warstwą obszaru (albo warstwą aktywną, gdy obszaru nie ma), a `e:` kładzie usługę rejestru jako
+nakładkę. Wiersz folderu nic nie dodaje: polecenie odpowiada wtedy podpowiedzią, żeby wybrać mapę albo
+zbiór wewnątrz niego. Skrypt robi to samo:
 
 ```
 run_command  plugin:dane-pl/mapa  {"panel": {"mapa": "v:bdot"}}

@@ -1125,8 +1125,12 @@ pub fn zoomed(lang: Lang) -> String {
 }
 
 /// The two roots of the panel's map list: every map first, then every download.
-pub fn map_roots(lang: Lang) -> [&'static str; 2] {
-    pick!(lang, ["Basemaps", "Downloads"], ["Podkłady", "Pobieranie"])
+pub fn map_roots(lang: Lang) -> [&'static str; 3] {
+    pick!(
+        lang,
+        ["Basemaps", "Downloads", "EZiUDP register"],
+        ["Podkłady", "Pobieranie", "Rejestr EZiUDP"]
+    )
 }
 
 /// Nothing chosen in the panel's map list, so the press has no row to act on.
@@ -1146,6 +1150,11 @@ pub fn map_unknown(lang: Lang, row: &str) -> String {
         format!("the panel list has no map or dataset for \"{row}\""),
         format!("lista w panelu nie ma mapy ani zbioru dla „{row}”")
     )
+}
+
+/// A register branch whose reporter the register does not name.
+pub fn register_other(lang: Lang) -> &'static str {
+    pick!(lang, "Other", "Inne")
 }
 
 /// The offline register has no service under this id.

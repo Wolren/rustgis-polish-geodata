@@ -292,6 +292,35 @@ pub fn update(params: &Value, lang: Lang) -> Result<Value, String> {
     Ok(json!({ "messages": [note] }))
 }
 
+/// The register as the panel's map list shows it: institution branches with their WMS leaves.
+pub fn branches(lang: Lang, limit: usize) -> Vec<Value> {
+    let other = pick_text(lang);
+    let mut groups: Vec<(String, Vec<Value>)> = Vec::new();
+    let mut leaves = 0usize;
+    for entry in all() {
+        if entry.kind != "wms" || leaves >= limit {
+            continue;
+        }
+        let leaf = json!({ "id": format!("e:{}", entry.id), "label": entry.name });
+        match groups.last_mut() {
+            Some((name, list)) if *name == entry.institution => list.push(leaf),
+            _ => groups.push((entry.institution.clone(), vec![leaf])),
+        }
+        leaves += 1;
+    }
+    groups
+        .into_iter()
+        .map(|(name, children)| {
+            let label = if name.trim().is_empty() { other.to_string() } else { name };
+            json!({ "id": format!("eziudp:{label}"), "label": label, "children": children })
+        })
+        .collect()
+}
+
+fn pick_text(lang: Lang) -> &'static str {
+    text::register_other(lang)
+}
+
 /// One address the register reports, before it is proved.
 struct Entry {
     id: String,
