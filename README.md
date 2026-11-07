@@ -27,6 +27,8 @@ zrzucie z `ui_shot` (1480 x 760, polski interfejs): treść kończy się na 1390
 | | Wektory | Działki (KIEG), Adresy, Granice PRG, Nazwy geograficzne |
 | **Obszar** | **Obszar z widoku** | Prostokąt z widoku mapy: jedno kliknięcie, bez rysowania. Dokładnie to, co widać |
 | | Narysuj obszar | Narzędzie poligonu na warstwie „Obszar pobierania”; kształt zostaje taki, jak narysowany |
+| | Narysuj prostokąt | Narzędzie prostokąta z aplikacji; rysuje grafikę na warstwie „Rysunek obszaru” |
+| | Prostokąt do obszaru | Przenosi narysowany prostokąt do „Obszar pobierania” i usuwa warstwę rysunku |
 | | Anuluj rysowanie | Wyłącza narzędzie rysowania i wraca do przeglądania |
 | | Usuń obszar | Usuwa warstwę „Obszar pobierania”, żeby zacząć od pustej |
 | **Narzędzia** | Panel | Panel ze statusami (widok, obszar, para warstwa → granica), przyciskami, drzewem warstw granicznych, drzewem map z wyszukiwarką, katalogiem i zapisanymi odpowiedziami; **Odśwież panel** czyta je od nowa |
@@ -229,12 +231,19 @@ Escape. Pobieranie idzie za narysowanym kształtem. Model wysokości jest natomi
 prostokątem, więc obejmuje prostokąt wokół kształtu i wtyczka mówi wtedy, jaki to prostokąt, a
 warstwa obszaru pokazuje go zamiast rysunku.
 
-To rozróżnienie jest jedyną prawdą, jaką wtyczka może powiedzieć: RustGIS rysuje obiekty
-edytowalne punkt po punkcie i nie ma narzędzia prostokąta (prostokąt „przeciągnij” istnieje tylko
-dla grafiki, nie dla warstwy wektorowej). Dlatego prostokąt bierze się z widoku, a nie z rysowania.
+**Narysuj prostokąt** uzbraja narzędzie prostokąta z aplikacji: przeciągnij po mapie, a RustGIS
+narysuje grafikę na warstwie „Rysunek obszaru”. **Prostokąt do obszaru** przenosi ją do „Obszar
+pobierania” i usuwa warstwę rysunku. To samo przeniesienie robi każde następne polecenie wtyczki,
+więc naciśnięcie dowolnego przycisku w panelu wystarcza. Narzędzie pobierania czyta warstwę obszaru
+z chwili startu, dlatego przy nim potrzebne jest jawne **Prostokąt do obszaru**.
 
 **Usuń obszar** usuwa warstwę, więc kolejny prostokąt albo rysunek zaczyna od zera. Bez tego
 drugi rysunek dokłada kształt do istniejącego i obszar się powiększa.
+
+To rozróżnienie jest jedyną prawdą, jaką wtyczka może powiedzieć: RustGIS rysuje obiekty
+edytowalne punkt po punkcie, a jego narzędzie prostokąta rysuje grafikę, nie obiekt warstwy
+wektorowej. Dlatego prostokąt z rysunku wymaga jednego kroku przeniesienia, a prostokąt z widoku
+jest zapisywany od razu.
 
 ### Przycinanie do granicy
 

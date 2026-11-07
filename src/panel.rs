@@ -76,6 +76,7 @@ pub fn state(host: &mut Host, lang: Lang, request: &Value) -> Result<Value, Stri
     let others = list
         .iter()
         .filter(|layer| !text::AREA_LAYERS.contains(&named(layer).as_str()))
+        .filter(|layer| !text::DRAW_LAYERS.contains(&named(layer).as_str()))
         .filter(|layer| layer.get("raster").and_then(Value::as_bool) != Some(true))
         .filter(|layer| features_of(layer) > 0)
         .count();

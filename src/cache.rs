@@ -20,6 +20,26 @@ pub fn dem_file(name: &str) -> PathBuf {
     dem_dir().join(name)
 }
 
+/// The graphics layer a rectangle is dragged into, until a command takes it as the area.
+pub fn area_draw_file() -> PathBuf {
+    root().join("area.draw")
+}
+
+/// The drawing layer a drawn rectangle waits in, when one does.
+pub fn pending_drawing() -> Option<String> {
+    let name = fs::read_to_string(area_draw_file()).ok()?;
+    let name = name.trim();
+    (!name.is_empty()).then(|| name.to_string())
+}
+
+pub fn remember_drawing(name: &str) {
+    let _ = fs::write(area_draw_file(), name);
+}
+
+pub fn forget_drawing() {
+    let _ = fs::remove_file(area_draw_file());
+}
+
 /// The mode of the last draw command, kept next to the cache so a model reads it in any session.
 pub fn area_mode_file() -> PathBuf {
     root().join("area.mode")

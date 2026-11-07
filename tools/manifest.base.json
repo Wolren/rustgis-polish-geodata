@@ -81,6 +81,18 @@
       "help": "Click the corners, then double-click to close the ring, or press Escape to stop. The shape stays as drawn: a download follows it, and the elevation model covers the rectangle around it."
     },
     {
+      "id": "obszar-prostokat",
+      "label": "Draw\nrectangle",
+      "icon": "g_rect",
+      "help": "Drag a rectangle with the app's own rectangle tool, which draws a graphic. Rectangle to area moves it into the area layer; the next command does that on its own."
+    },
+    {
+      "id": "obszar-przejmij",
+      "label": "Rectangle\nto area",
+      "icon": "g_rect",
+      "help": "Moves the rectangle drawn on the map into the area layer and removes the layer it was drawn in. A download and the elevation model use it."
+    },
+    {
       "id": "obszar-anuluj",
       "label": "Cancel\ndrawing",
       "icon": "erase",
@@ -487,6 +499,8 @@
         "items": [
           "obszar-widok",
           "obszar-rysuj",
+          "obszar-prostokat",
+          "obszar-przejmij",
           "obszar-anuluj",
           "obszar-wyczysc"
         ]
@@ -693,7 +707,9 @@
       "Dataset": "Zbiór",
       "Deletes the stored WFS answers (kept for 7 days by default) and the downloaded elevation grids, so the data is fetched again.": "Usuwa zapisane odpowiedzi WFS (domyślnie trzymane 7 dni) i pobrane siatki wysokości, żeby pobrać dane od nowa.",
       "Downloads": "Pobieranie",
+      "Drag a rectangle with the app's own rectangle tool, which draws a graphic. Rectangle to area moves it into the area layer; the next command does that on its own.": "Przeciągnij prostokąt narzędziem prostokąta z aplikacji, które rysuje grafikę. Prostokąt do obszaru przenosi go do warstwy obszaru; następne polecenie zrobi to samo.",
       "Draw\narea": "Narysuj\nobszar",
+      "Draw\nrectangle": "Narysuj\nprostokąt",
       "Drops the drawing tool and leaves the map in the explore tool. Escape does the same.": "Wyłącza narzędzie rysowania i zostawia mapę w trybie przeglądania. Escape robi to samo.",
       "Elevation": "Wysokości",
       "Filled in when the panel opens.": "Wypełniane przy otwarciu panelu.",
@@ -723,6 +739,7 @@
       "Measured when the panel opens.": "Mierzone przy otwarciu panelu.",
       "Model": "Model",
       "Monuments, archaeological records and UNESCO sites.": "Zabytki, rejestr archeologiczny i obiekty UNESCO.",
+      "Moves the rectangle drawn on the map into the area layer and removes the layer it was drawn in. A download and the elevation model use it.": "Przenosi prostokąt narysowany na mapie do warstwy obszaru i usuwa warstwę, w której go narysowano. Używa go pobieranie i model wysokości.",
       "Offices and courts": "Urzędy i sądy",
       "Open the panel to read the view.": "Otwórz panel, aby odczytać widok.",
       "Orthophoto and DEM": "Ortofoto i NMT",
@@ -747,6 +764,7 @@
       "Public offices, courts, schools, forests and other institutions.": "Urzędy, sądy, szkoły, nadleśnictwa i inne instytucje.",
       "Raster": "Rastry",
       "Reads the terrain model's height at the map centre, or at x/y given in PL-1992. PL-KRON86-NH, in metres above sea level.": "Odczytuje wysokość modelu terenu pod środkiem mapy albo w punkcie x/y w układzie PL-1992. PL-KRON86-NH, w metrach nad poziomem morza.",
+      "Rectangle\nto area": "Prostokąt\ndo obszaru",
       "Area\nfrom view": "Obszar\nz widoku",
       "Refresh the panel": "Odśwież panel",
       "Register\nEZiUDP": "Rejestr\nEZiUDP",

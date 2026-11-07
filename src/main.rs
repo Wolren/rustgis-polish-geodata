@@ -78,6 +78,15 @@ fn run(
     host: &mut host::Host,
     lang: Lang,
 ) -> Result<Value, String> {
+    // A rectangle dragged on the map becomes the area before a command that reads it runs.
+    if !matches!(
+        id,
+        "obszar-prostokat" | "obszar-przejmij" | "obszar-widok" | "obszar-anuluj" | "obszar-wyczysc"
+    ) {
+        if let Err(e) = obszar::take_rectangle(host, lang) {
+            host.notify(&e);
+        }
+    }
     if let Some(overlay) = catalog::overlay(id) {
         return tile::toggle(host, overlay, lang);
     }
@@ -90,6 +99,9 @@ fn run(
     }
     let mut answer = match id {
         "obszar-rysuj" => obszar::draw(host, lang),
+        "obszar-prostokat" => obszar::draw_rectangle(host, lang),
+        "obszar-przejmij" => obszar::take_rectangle(host, lang)?
+            .ok_or_else(|| text::area_nothing_drawn(lang)),
         "obszar-widok" => obszar::rectangle_from_view(host, lang),
         "obszar-anuluj" => obszar::abort(host, lang),
         "obszar-wyczysc" => obszar::clear(host, lang),
@@ -126,6 +138,8 @@ fn redraws_panel(id: &str) -> bool {
         id,
         "obszar-widok"
             | "obszar-rysuj"
+            | "obszar-prostokat"
+            | "obszar-przejmij"
             | "obszar-anuluj"
             | "obszar-wyczysc"
             | "parcel"

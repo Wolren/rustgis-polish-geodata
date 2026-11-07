@@ -311,6 +311,14 @@ pub fn area_layer(lang: Lang) -> &'static str {
 /// Both names, so a layer made in either language is still found.
 pub const AREA_LAYERS: [&str; 2] = ["Area to download", "Obszar pobierania"];
 
+/// The layer a rectangle is dragged into, before a command takes it as the area.
+pub fn draw_layer(lang: Lang) -> &'static str {
+    pick!(lang, "Area drawing", "Rysunek obszaru")
+}
+
+/// Both names, so a drawing layer made in either language is found.
+pub const DRAW_LAYERS: [&str; 2] = ["Area drawing", "Rysunek obszaru"];
+
 pub fn unknown_command(lang: Lang, id: &str) -> String {
     pick!(
         lang,
@@ -918,6 +926,40 @@ pub fn area_replaced(lang: Lang, name: &str) -> String {
         lang,
         format!("The rectangle replaced the shape drawn in {name}."),
         format!("Prostokąt zastąpił kształt narysowany w warstwie {name}.")
+    )
+}
+
+/// What the rectangle tool says: the drag, and the button that finishes the job.
+pub fn area_rect_armed(lang: Lang) -> String {
+    pick!(
+        lang,
+        "Drag a rectangle on the map, then press Rectangle to area.".to_string(),
+        "Przeciągnij prostokąt na mapie, a potem naciśnij Prostokąt do obszaru.".to_string()
+    )
+}
+
+/// The take command found no rectangle to take.
+pub fn area_nothing_drawn(lang: Lang) -> String {
+    pick!(
+        lang,
+        "No rectangle was drawn, so the area did not change.".to_string(),
+        "Nie narysowano prostokąta, więc obszar się nie zmienił.".to_string()
+    )
+}
+
+/// The drawn rectangle the area layer now holds, and how big it is.
+pub fn area_from_rectangle(lang: Lang, name: &str, size: (f64, f64)) -> String {
+    let (width, height) = (num(lang, size.0, 1), num(lang, size.1, 1));
+    pick!(
+        lang,
+        format!(
+            "The drawn rectangle is the area in {name}: {width} × {height} km. It is the area a \
+             download and the elevation model use."
+        ),
+        format!(
+            "Narysowany prostokąt jest obszarem w warstwie {name}: {width} × {height} km. To \
+             obszar, którego używa pobieranie i model wysokości."
+        )
     )
 }
 
