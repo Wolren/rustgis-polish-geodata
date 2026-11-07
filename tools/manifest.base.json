@@ -486,6 +486,28 @@
       ]
     },
     {
+      "id": "aktualizuj-rejestr",
+      "name": "Update the register",
+      "summary": "Reads the EZiUDP register and adds the addresses this plugin does not know yet, each checked with a real request.",
+      "toolbox": "Polish Geodata",
+      "params": [
+        {
+          "name": "pelna",
+          "label": "Check every address",
+          "kind": "bool",
+          "default": false,
+          "help": "Checks the whole register again instead of only the new addresses: slower, and it keeps what already answers."
+        },
+        {
+          "name": "limit",
+          "label": "Addresses to check",
+          "kind": "number",
+          "default": 0,
+          "help": "0 checks every new address; a small number makes a quick trial."
+        }
+      ]
+    },
+    {
       "id": "pobierz-gdos",
       "name": "Protected areas (GDOŚ)",
       "summary": "Natura 2000, nature reserves, landscape parks, Ramsar sites, ecological corridors, mesoregions and wind farms as features.",
@@ -681,7 +703,8 @@
               "adres-odwrotnie",
               "wysokosc"
             ]
-          }
+          },
+          "tool:aktualizuj-rejestr"
         ]
       }
     ]
@@ -951,6 +974,12 @@
       "Download limit (MB)": "Limit pobrania (MB)",
       "Download\nsettings": "Ustawienia\npobierania",
       "Find\nservice": "Znajdź\nusługę",
+      "Update the register": "Aktualizuj rejestr",
+      "Reads the EZiUDP register and adds the addresses this plugin does not know yet, each checked with a real request.": "Czyta rejestr EZiUDP i dodaje adresy, których wtyczka jeszcze nie zna; każdy sprawdzony prawdziwym żądaniem.",
+      "Check every address": "Sprawdź wszystkie adresy",
+      "Checks the whole register again instead of only the new addresses: slower, and it keeps what already answers.": "Sprawdza cały rejestr od nowa, nie tylko nowe adresy: wolniej, a to, co już odpowiada, zostaje.",
+      "Addresses to check": "Adresy do sprawdzenia",
+      "0 checks every new address; a small number makes a quick trial.": "0 sprawdza wszystkie nowe adresy; mała liczba robi szybką próbę.",
       "Searches the offline EZiUDP register: every Polish WMS and WFS that answered a real request. Pass dodaj with an id to add the WMS as an overlay.": "Przeszukuje offline rejestr EZiUDP: każdy polski WMS i WFS, który odpowiedział na prawdziwe żądanie. Parametr dodaj z identyfikatorem dodaje WMS jako nakładkę.",
       "Stores the panel's download size limit and its standing Download even if large tick, so the tools use them without the form.": "Zapisuje limit rozmiaru pobrania z panelu i stałe zaznaczenie Pobierz mimo rozmiaru, żeby narzędzia brały je bez formularza.",
       "A run stops at this size unless Download even if large is on. A confirmed run stops at 256 MB.": "Pobranie zatrzymuje się na tym rozmiarze, chyba że włączone jest Pobierz mimo rozmiaru. Potwierdzone pobranie kończy się na 256 MB."

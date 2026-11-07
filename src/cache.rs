@@ -45,6 +45,11 @@ pub fn area_mode_file() -> PathBuf {
     root().join("area.mode")
 }
 
+/// The register the update tool wrote, if it wrote one; the plugin falls back to its own copy.
+pub fn register_file() -> PathBuf {
+    root().join("eziudp.json")
+}
+
 /// The panel's two download settings, kept beside the cache so they outlast a session.
 pub struct Settings {
     pub confirm_large: bool,

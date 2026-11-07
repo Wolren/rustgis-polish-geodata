@@ -1166,6 +1166,51 @@ pub fn register_not_a_map(lang: Lang, name: &str) -> String {
     )
 }
 
+/// The update tool asked the register for its rows.
+pub fn register_reading(lang: Lang) -> String {
+    pick!(
+        lang,
+        "EZiUDP: reading the register".to_string(),
+        "EZiUDP: czytam rejestr".to_string()
+    )
+}
+
+/// How many rows the register answered with.
+pub fn register_rows(lang: Lang, rows: usize) -> String {
+    pick!(
+        lang,
+        format!("EZiUDP: {rows} rows, grouping the addresses"),
+        format!("EZiUDP: {rows} wierszy, grupuję adresy")
+    )
+}
+
+/// How many addresses the tool is about to prove.
+pub fn register_checking(lang: Lang, total: usize) -> String {
+    pick!(
+        lang,
+        format!("EZiUDP: checking {total} new addresses"),
+        format!("EZiUDP: sprawdzam {total} nowych adresów")
+    )
+}
+
+/// One address checked, of the run.
+pub fn register_progress(lang: Lang, done: usize, total: usize) -> String {
+    pick!(
+        lang,
+        format!("EZiUDP: {done} of {total}"),
+        format!("EZiUDP: {done} z {total}")
+    )
+}
+
+/// The register was rewritten.
+pub fn register_updated(lang: Lang, kept: usize, answered: usize, missed: usize) -> String {
+    pick!(
+        lang,
+        format!("register updated: {kept} services, {answered} new answered, {missed} did not"),
+        format!("rejestr zapisany: {kept} usług, {answered} nowych odpowiedziało, {missed} nie")
+    )
+}
+
 /// A folder row was chosen instead of a map or a dataset inside it.
 pub fn map_folder(lang: Lang, label: &str) -> String {
     pick!(

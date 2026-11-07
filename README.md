@@ -48,7 +48,7 @@ zrzucie z `ui_shot` (1480 x 760, polski interfejs): treść kończy się na 1390
 | | Ochrona przyrody (GDOŚ) | 15 typów WFS: Natura 2000, rezerwaty, parki, Ramsar, korytarze |
 | | Pakiety | Trzy skorowidze arkuszy (ortofoto, NMT, pozostałe) i pobieranie arkuszy do folderu |
 | **Wysokości** | Model | Teren KRON86 (GeoTIFF), teren EVRF2007, pokrycie NMPT i ustawianie stylu modelu |
-| **Wyszukiwanie** | Wyszukiwanie | Działka z ULDK, adres pod środkiem mapy i wysokość w punkcie |
+| **Wyszukiwanie** | Wyszukiwanie | Działka z ULDK, adres pod środkiem mapy, wysokość w punkcie i aktualizacja rejestru |
 
 Łącznie: **215 poleceń** (29 własnych, 111 usług katalogu krajowego, 30 usług Wody Polskie i 45 map
 Cartomatic) oraz **10 narzędzi**. Wcześniej było 228 poleceń, z czego 108 pobierało dane natychmiast,
@@ -389,6 +389,12 @@ run_command  plugin:dane-pl/eziudp          {"instytucja": "Geolog"}
   dowodzi każdy z nich prawdziwym żądaniem: kaflem `GetMap` dla WMS (z warstwą z `GetCapabilities`)
   albo dokumentem `GetCapabilities` dla WFS. Do pliku wchodzą tylko te, które odpowiedziały.
   Szuka po nazwie zbioru, instytucji i TERYT, a `dodaj` z identyfikatorem kładzie WMS jako nakładkę.
+- **Aktualizacja rejestru** — narzędzie `aktualizuj-rejestr` czyta rejestr EZiUDP na nowo, sprawdza
+  adresy, których plik nie ma, i zapisuje wynik w `%LOCALAPPDATA%\RustGIS\dane-pl\eziudp.json`.
+  Ten plik ma pierwszeństwo przed kopią w binarium, więc aktualizacja działa bez nowej wersji
+  wtyczki. Bez zaznaczenia **Sprawdź wszystkie adresy** sprawdza tylko nowe (około 1 200), z nim
+  całe 4 400. Plik zapisuje się przez plik tymczasowy i zmianę nazwy, więc przerwanie zostawia
+  stary rejestr nietknięty. Przebieg testowy na 40 adresach dołożył 14 usług.
 
 Agent zaczyna od katalogu, więc nie musi czytać manifestu:
 
