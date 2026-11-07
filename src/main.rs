@@ -144,6 +144,7 @@ fn redraws_panel(id: &str) -> bool {
             | "obszar-anuluj"
             | "obszar-wyczysc"
             | "parcel"
+            | "adres-odwrotnie"
             | "wyczysc-cache"
             | "dem-style"
             | "mapa"
