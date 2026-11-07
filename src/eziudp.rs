@@ -7,15 +7,14 @@
 //!
 //! The register answers with everything it has when it is given no filter: 12 000 records and nine
 //! megabytes. A query therefore has to narrow it, and this command says so instead of downloading
-//! the register.
+//! the register. A narrowed query comes back whole: the register ignores `limit` and `index`, and
+//! keeps no row out.
 
 use crate::http;
 use crate::text::{self, Lang};
 use serde_json::{json, Value};
 
 const API: &str = "https://integracja.gugik.gov.pl/eziudp/api.php";
-/// Rows kept in the answer. The count of all matches comes with them.
-const MAX_ROWS: usize = 50;
 
 /// Searches the register: by dataset (`szukaj`), by the body that reports it (`instytucja`), by
 /// TERYT, or by the kind of service (`usluga`: `wms`, `wfs`, `csw`…).
@@ -63,26 +62,7 @@ pub fn search(params: &Value, lang: Lang) -> Result<Value, String> {
         .and_then(Value::as_u64)
         .unwrap_or(rows.len() as u64);
 
-    let entries: Vec<Value> = rows
-        .iter()
-        .take(MAX_ROWS)
-        .map(|row| {
-            let services = row.get("uslugi").cloned().unwrap_or(Value::Null);
-            let (wfs, wfs_protocol) = wfs_endpoint(&services);
-            json!({
-                "id": row.get("idiip").cloned().unwrap_or(Value::Null),
-                "dataset": row.get("zbior").cloned().unwrap_or(Value::Null),
-                "institution": row.get("organ").cloned().unwrap_or(Value::Null),
-                "unit": row.get("jednostka").cloned().unwrap_or(Value::Null),
-                "area": row.get("obszar").cloned().unwrap_or(Value::Null),
-                "teryt": row.get("teryt").cloned().unwrap_or(Value::Null),
-                "wms": service(&services, "przegladania"),
-                "wfs": wfs,
-                "wfs_protocol": wfs_protocol,
-                "csw": service(&services, "wyszukiwania"),
-            })
-        })
-        .collect();
+    let entries = project(&rows);
 
     // An empty narrowed answer is not a fault: say so instead of leaving a bare zero.
     let note = entries.is_empty().then(|| {
@@ -100,6 +80,28 @@ pub fn search(params: &Value, lang: Lang) -> Result<Value, String> {
         "note": note,
         "how": "run_command  plugin:dane-pl/usluga  {\"service\": \"<name>\"} adds a WMS by its catalogue name",
     }))
+}
+
+/// One entry per register row: the dataset, the body that reports it and its service addresses.
+fn project(rows: &[Value]) -> Vec<Value> {
+    rows.iter()
+        .map(|row| {
+            let services = row.get("uslugi").cloned().unwrap_or(Value::Null);
+            let (wfs, wfs_protocol) = wfs_endpoint(&services);
+            json!({
+                "id": row.get("idiip").cloned().unwrap_or(Value::Null),
+                "dataset": row.get("zbior").cloned().unwrap_or(Value::Null),
+                "institution": row.get("organ").cloned().unwrap_or(Value::Null),
+                "unit": row.get("jednostka").cloned().unwrap_or(Value::Null),
+                "area": row.get("obszar").cloned().unwrap_or(Value::Null),
+                "teryt": row.get("teryt").cloned().unwrap_or(Value::Null),
+                "wms": service(&services, "przegladania"),
+                "wfs": wfs,
+                "wfs_protocol": wfs_protocol,
+                "csw": service(&services, "wyszukiwania"),
+            })
+        })
+        .collect()
 }
 
 /// The first address of one service kind, which is what a click or a script can use.
@@ -194,6 +196,17 @@ mod tests {
         let (address, protocol) = wfs_endpoint(&services);
         assert_eq!(address, json!("https://x/wfs"));
         assert_eq!(protocol, json!("WFS"));
+    }
+
+    /// A filtered query comes back whole: the register ignores limit and index.
+    #[test]
+    fn keeps_every_row_the_register_sent() {
+        let rows: Vec<Value> = (0..120)
+            .map(|n| json!({"idiip": n, "zbior": format!("zbiór {n}"), "organ": "Starosta"}))
+            .collect();
+        let entries = project(&rows);
+        assert_eq!(entries.len(), 120);
+        assert_eq!(entries[119]["dataset"], json!("zbiór 119"));
     }
 
     #[test]

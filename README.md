@@ -381,7 +381,9 @@ run_command  plugin:dane-pl/eziudp          {"instytucja": "Geolog"}
 - **Działka z numeru** — ULDK `GetParcelById`, identyfikator w postaci `TERYT_R.OBRĘB.NUMER/ARK`.
 - **Rejestr EZiUDP** — `integracja.gugik.gov.pl/eziudp/api.php?format=json`: kto zgłasza jaki
   zbiór i pod jakim adresem są jego WMS, WFS i CSW. Bez filtra rejestr ma 12 000 rekordów i 9 MB,
-  więc polecenie **odmawia** i prosi o zawężenie, zamiast go pobierać.
+  więc polecenie **odmawia** i prosi o zawężenie, zamiast go pobierać. Zawężone zapytanie wraca
+  w całości: rejestr ignoruje `limit` i `index`, więc nie ma czego stronicować, a odpowiedź niesie
+  wszystkie dopasowane wiersze (filtr `nazwa=Starosta` to 1726 wierszy i 1,2 MB).
 
 Agent zaczyna od katalogu, więc nie musi czytać manifestu:
 
