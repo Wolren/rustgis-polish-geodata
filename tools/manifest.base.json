@@ -121,6 +121,13 @@
       "params": "{\"lon\": 21.02, \"lat\": 52.23} (both optional: the map centre when absent)"
     },
     {
+      "id": "ustawienia",
+      "label": "Download\nsettings",
+      "icon": "settings",
+      "help": "Stores the panel's download size limit and its standing Download even if large tick, so the tools use them without the form.",
+      "params": "{\"potwierdz-duze\": false, \"limit-mb\": 25}"
+    },
+    {
       "id": "przytnij",
       "label": "Clip\nto layer",
       "icon": "buffer",
@@ -935,6 +942,8 @@
       "Downloads over 25 MB are refused until this is ticked, so a big run is a decision.": "Pobrania powyżej 25 MB są wstrzymane, dopóki tego nie zaznaczysz, żeby duże pobranie było decyzją.",
       "The tool form's tick, for every run: downloads over the size limit proceed without asking.": "Zaznaczenie z formularza narzędzia, ale na stałe: pobrania powyżej limitu idą bez pytania.",
       "Download limit (MB)": "Limit pobrania (MB)",
+      "Download\nsettings": "Ustawienia\npobierania",
+      "Stores the panel's download size limit and its standing Download even if large tick, so the tools use them without the form.": "Zapisuje limit rozmiaru pobrania z panelu i stałe zaznaczenie Pobierz mimo rozmiaru, żeby narzędzia brały je bez formularza.",
       "A run stops at this size unless Download even if large is on. A confirmed run stops at 256 MB.": "Pobranie zatrzymuje się na tym rozmiarze, chyba że włączone jest Pobierz mimo rozmiaru. Potwierdzone pobranie kończy się na 256 MB."
     }
   },
