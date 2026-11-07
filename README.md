@@ -124,8 +124,9 @@ skorowidze** (arkusze i siatki, które wskazują paczki do pobrania z Geoportalu
 jego obiekty. Skorowidz nadal da się wskazać po identyfikatorze, np.
 `dane-skorowidz-danych-pomiarowych-lidar-2024`.
 
-Pobieranie to **sześć narzędzi**, każde jako osobny przycisk w grupie **Pobieranie**. Każde ma listę
-swoich zbiorów:
+Pobieranie to **sześć narzędzi** w menu **Zbiory** grupy **Pobieranie**; obok stoi menu
+**Pakiety** ze skorowidzami. Oba menu trzymają wstęgę w jednej kolumnie, więc cała zakładka mieści
+się w 1366 px bez przewijania w poziomie. Każde narzędzie ma listę swoich zbiorów:
 
 | Narzędzie | Zbiory |
 | --- | --- |
@@ -137,7 +138,7 @@ swoich zbiorów:
 | Ochrona przyrody (GDOŚ) | 15 |
 
 1. Wskaż obszar: **Obszar z widoku**, **Narysuj obszar** albo własna warstwa.
-2. Naciśnij przycisk w grupie **Pobieranie**, na przykład **Adresy i budynki**.
+2. Naciśnij **Zbiory** w grupie **Pobieranie** i wybierz narzędzie, na przykład **Adresy i budynki**.
 3. W panelu Narzędzia wybierz zbiór i warstwę obszaru, naciśnij **Uruchom**.
 
 Narzędzie działa w tle: panel pokazuje postęp i ma przycisk przerwania. Wynik wjeżdża na mapę jako

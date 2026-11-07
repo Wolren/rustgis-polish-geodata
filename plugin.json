@@ -2449,12 +2449,19 @@
         "label": "Downloads",
         "layout": "small",
         "items": [
-          "tool:pobierz-adresy",
-          "tool:pobierz-granice",
-          "tool:pobierz-osnowy",
-          "tool:pobierz-urzedy",
-          "tool:pobierz-pozostale",
-          "tool:pobierz-gdos",
+          {
+            "menu": "Datasets",
+            "icon": "package",
+            "help": "The six download tools: addresses, boundaries, control points, offices, other data and protected areas.",
+            "items": [
+              "tool:pobierz-adresy",
+              "tool:pobierz-granice",
+              "tool:pobierz-osnowy",
+              "tool:pobierz-urzedy",
+              "tool:pobierz-pozostale",
+              "tool:pobierz-gdos"
+            ]
+          },
           {
             "menu": "Packages",
             "icon": "package",
@@ -2647,6 +2654,8 @@
       "A parcel, an address or the terrain height under the map centre.": "Działka, adres albo wysokość terenu pod środkiem mapy.",
       "Address\nat point": "Adres\nw punkcie",
       "The GDOŚ feature type to download.": "Typ obiektów GDOŚ do pobrania.",
+      "Datasets": "Zbiory",
+      "The six download tools: addresses, boundaries, control points, offices, other data and protected areas.": "Sześć narzędzi pobierania: adresy, granice, osnowy, urzędy, pozostałe dane i ochrona przyrody.",
       "Protected areas (GDOŚ)": "Ochrona przyrody (GDOŚ)",
       "Natura 2000, nature reserves, landscape parks, Ramsar sites, ecological corridors, mesoregions and wind farms as features.": "Natura 2000, rezerwaty, parki krajobrazowe, obszary Ramsar, korytarze ekologiczne, mezoregiony i elektrownie wiatrowe jako obiekty.",
       "The address at the map centre, from GUGiK's UUG service: street, number, postcode and the distance in metres. Pass lon and lat to ask about another point.": "Adres pod środkiem mapy z usługi UUG GUGiK: ulica, numer, kod pocztowy i odległość w metrach. Parametry lon i lat wskazują inny punkt.",
