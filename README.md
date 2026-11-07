@@ -263,11 +263,13 @@ widać. Bez wyboru granicą jest warstwa „Obszar pobierania”.
 
 Pod drzewem granic stoi drugie drzewo, **Mapa**, też z wyszukiwarką i 304 wierszami. W **Podkładach**
 jest każda mapa, którą wtyczka umie pokazać: siedem nakładek własnych, 111 usług katalogu, 30 usług
-Wody Polskie i 45 map Cartomatic. W **Pobieraniu** jest każdy zbiór, który umie pobrać, w pięciu
+Wody Polskie i 45 map Cartomatic. W **Pobieraniu** jest każdy zbiór, który umie pobrać, w sześciu
 folderach narzędzi. Wiersz niesie źródło w identyfikatorze: `v:<polecenie>` to mapa, a
 `d:<narzędzie>:<zbiór>` to pobieranie. Wybór wiersza uruchamia polecenie **Mapa** (`mapa`): `v:`
 wjeżdża tym samym poleceniem, które stoi na wstędze, a `d:` startuje narzędzie pobierania z tytułem
-zbioru i warstwą obszaru (albo warstwą aktywną, gdy obszaru nie ma). Skrypt robi to samo:
+zbioru i warstwą obszaru (albo warstwą aktywną, gdy obszaru nie ma). Wiersz folderu nic nie dodaje:
+polecenie odpowiada wtedy podpowiedzią, żeby wybrać mapę albo zbiór wewnątrz niego. Skrypt robi to
+samo:
 
 ```
 run_command  plugin:dane-pl/mapa  {"panel": {"mapa": "v:bdot"}}

@@ -1105,6 +1105,15 @@ pub fn map_unknown(lang: Lang, row: &str) -> String {
     )
 }
 
+/// A folder row was chosen instead of a map or a dataset inside it.
+pub fn map_folder(lang: Lang, label: &str) -> String {
+    pick!(
+        lang,
+        format!("pick a map or a dataset inside \"{label}\", not the folder itself"),
+        format!("wybierz mapę albo zbiór wewnątrz „{label}”, nie sam folder")
+    )
+}
+
 
 /// The raster's name: the product and its grid, the same in both languages.
 pub fn nmt_layer_name(surface: bool, datum: &str) -> String {

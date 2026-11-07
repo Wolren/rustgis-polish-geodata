@@ -142,6 +142,12 @@ pub fn state(host: &mut Host, lang: Lang, request: &Value) -> Result<Value, Stri
 /// Adds the map or the dataset the panel's list holds, as `v:` and `d:` rows name them.
 pub fn mapa(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, String> {
     let row = picked(request).ok_or_else(|| text::map_missing(lang))?;
+    // A folder is a row too, and choosing one adds nothing: say what to pick instead of failing.
+    if let Some(label) = folder_of(&row, lang) {
+        let note = text::map_folder(lang, &label);
+        host.notify(&note);
+        return Ok(json!({ "folder": row, "note": note }));
+    }
     if let Some(id) = row.strip_prefix("v:") {
         if !is_map(id) {
             return Err(text::map_unknown(lang, &row));
@@ -155,6 +161,26 @@ pub fn mapa(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, Strin
     };
     let (tool, dataset) = rest.split_once(':').ok_or_else(|| text::map_unknown(lang, &row))?;
     download(host, tool, dataset, lang)
+}
+
+/// The label of the folder a row names, when it names one of the list's folders.
+fn folder_of(row: &str, lang: Lang) -> Option<String> {
+    fn find(nodes: &[Value], row: &str) -> Option<String> {
+        for node in nodes {
+            let id = node.get("id").and_then(Value::as_str)?;
+            let label = node.get("label").and_then(Value::as_str).unwrap_or_default();
+            if id == row && node.get("children").is_some() {
+                return Some(label.to_string());
+            }
+            let children = node.get("children").and_then(Value::as_array)?;
+            if let Some(found) = find(children, row) {
+                return Some(found);
+            }
+        }
+        None
+    }
+    let nodes = map_nodes(lang);
+    find(nodes.as_array()?, row)
 }
 
 /// The row chosen in the panel's map list, which is the command's only input.
