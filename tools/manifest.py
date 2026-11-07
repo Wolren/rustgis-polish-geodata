@@ -22,6 +22,7 @@ import re
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RIBBON = os.path.join(ROOT, "data", "ribbon.json")
 BASE = os.path.join(ROOT, "tools", "manifest.base.json")
 SERVICES = os.path.join(ROOT, "data", "services.json")
 PIG = os.path.join(ROOT, "data", "pig.json")
@@ -298,6 +299,22 @@ def build():
     by_id, offered = catalogue()
 
     commands = list(base["commands"])
+
+    # Hand-picked register services: one command each, so the ribbon can offer them without the panel.
+    ribbon = load(RIBBON) if os.path.exists(RIBBON) else []
+    for entry in ribbon:
+        for key in ("command", "label", "icon", "help", "id"):
+            if key not in entry:
+                raise Bad(f"data/ribbon.json: an entry has no '{key}'")
+        commands.append(
+            {
+                "id": entry["command"],
+                "label": entry["label"],
+                "icon": entry["icon"],
+                "help": entry["help"],
+                "params": "{}",
+            }
+        )
     tools = list(base["tools"])
     group_of_tool = {}
     placed_index = {}
@@ -401,8 +418,7 @@ def build():
         )
     commands.extend(sorted(service_commands, key=lambda c: c["id"]))
 
-    # Two further map families, one command per service or map, with their own publisher line. The
-    # labels and the help lines are proper names and stay Polish in both languages.
+    # One command per service or map; labels and help lines are proper names, Polish in both languages.
     literal = set()
     wody_commands, carto_commands = [], []
     for service in wody_file["services"]:
@@ -501,8 +517,8 @@ def build():
         if layout not in MAX_GROUP_ITEMS:
             raise Bad(f"group {group['label']}: layout '{layout}' is not large or small")
         if "menus" in group:
-            # The host's GroupDecl has no `menus`: expand the menus into items, then drop the key.
-            group["items"] = [menu_decl(key, menus, folders) for key in group.pop("menus")]
+            # The host's GroupDecl has no `menus`: expand them into items; inline items follow them.
+            group["items"] = [menu_decl(key, menus, folders) for key in group.pop("menus")] + group.get("items", [])
         limit = MAX_GROUP_ITEMS[layout]
         if not 1 <= len(group["items"]) <= limit:
             raise Bad(

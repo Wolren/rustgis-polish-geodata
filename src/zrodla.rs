@@ -37,6 +37,31 @@ pub struct Registered {
 }
 
 const RAW: &str = include_str!("../data/eziudp.json");
+/// The six register services the ribbon offers, as `data/ribbon.json` names them.
+const RIBBON: &str = include_str!("../data/ribbon.json");
+
+/// One ribbon entry: the command the tab runs and the register service it adds.
+#[derive(Deserialize)]
+struct RibbonEntry {
+    command: String,
+    id: String,
+}
+
+/// The service a ribbon command adds, when the command is one of the register's.
+pub fn ribbon_target(command: &str) -> Option<&'static Registered> {
+    let entries: Vec<RibbonEntry> = serde_json::from_str(RIBBON).ok()?;
+    let entry = entries.into_iter().find(|entry| entry.command == command)?;
+    find(&entry.id)
+}
+
+/// Whether every ribbon command names a WMS the register holds, for the manifest test.
+pub fn ribbon_ids() -> Vec<(String, String)> {
+    serde_json::from_str::<Vec<RibbonEntry>>(RIBBON)
+        .unwrap_or_default()
+        .into_iter()
+        .map(|entry| (entry.command, entry.id))
+        .collect()
+}
 
 /// The register this process uses: the update tool's file when it holds one, else the binary's.
 pub fn all() -> &'static [Registered] {
@@ -461,6 +486,18 @@ mod tests {
     fn a_search_finds_a_warsaw_service() {
         let found = query(&json!({"instytucja": "Warszawy"}), Lang::En).unwrap();
         assert!(found["total"].as_u64().unwrap() > 0, "{found}");
+    }
+
+    /// The ribbon names services by id, so an id that drifts from the register leaves a dead button.
+    #[test]
+    fn every_ribbon_command_names_a_wms() {
+        let ids = ribbon_ids();
+        assert!(!ids.is_empty(), "data/ribbon.json lists nothing");
+        for (command, id) in ids {
+            let entry = find(&id).unwrap_or_else(|| panic!("{command}: no register entry {id}"));
+            assert_eq!(entry.kind, "wms", "{command}: {}", entry.url);
+            assert!(!entry.layer.is_empty(), "{command}: {}", entry.url);
+        }
     }
 
     #[test]

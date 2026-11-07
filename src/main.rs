@@ -125,7 +125,10 @@ fn run(
         "wyczysc-cache" => clear_cache(host, lang),
         "przytnij" => cut(host, request, lang),
         "parcel" => uldk::parcel(host, params, lang),
-        other => Err(text::unknown_command(lang, other)),
+        other => match zrodla::ribbon_target(other) {
+            Some(entry) => zrodla::add_service(host, entry, lang),
+            None => Err(text::unknown_command(lang, other)),
+        },
     }?;
     // The pane reads the panel's state once, when it opens: a command that changes it answers too.
     if redraws_panel(id) {

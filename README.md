@@ -38,6 +38,7 @@ zrzucie z `ui_shot` (1480 x 760, polski interfejs): treść kończy się na 1390
 | | Geologia (PIG) | 11 usług |
 | | Zabytki (NID) | 4 usługi |
 | | Lasy (BDL) | 4 usługi |
+| | Rejestr | GIOŚ: hałas, powietrze, wody podziemne; EGiB Poznań, Wrocław, Warszawa |
 | | Pozostałe instytucje | GDOŚ, PKP PLK, GUS, Wody Polskie, IMGW-PIB |
 | | Więcej map | 30 usług Wody Polskie (890 warstw) w trzech folderach i 45 map Cartomatic w dwóch folderach |
 | **Pobieranie** | Adresy i budynki | 19 zbiorów WFS |
@@ -386,6 +387,10 @@ run_command  plugin:dane-pl/eziudp          {"instytucja": "Geolog"}
   więc polecenie **odmawia** i prosi o zawężenie, zamiast go pobierać. Zawężone zapytanie wraca
   w całości: rejestr ignoruje `limit` i `index`, więc nie ma czego stronicować, a odpowiedź niesie
   wszystkie dopasowane wiersze (filtr `nazwa=Starosta` to 1726 wierszy i 1,2 MB).
+- **Menu Rejestr** — sześć usług z pliku `data/ribbon.json`, każda jako osobne polecenie: GIOŚ
+  (hałas, powietrze, wody podziemne) oraz własne EGiB Poznania, Wrocławia i Warszawy. Katalog
+  wtyczki ich nie ma, a rejestr je dowiódł. Menu nie dołożyło kolumny: grupa WMS ma osiem
+  pozycji w trzech kolumnach, tak jak siedem przed nim.
 - **Rejestr offline** — `zrodla`: ten sam rejestr, zbudowany raz przez `tools/eziudp.py`, leży
   w `data/eziudp.json` i wchodzi do binarium. Budowniczy bierze cały rejestr, grupuje adresy i
   dowodzi każdy z nich prawdziwym żądaniem: kaflem `GetMap` dla WMS (z warstwą z `GetCapabilities`)

@@ -641,6 +641,21 @@
           "lasy",
           "other",
           "more-maps"
+        ],
+        "items": [
+          {
+            "menu": "Register",
+            "icon": "globe_view",
+            "help": "Six services the EZiUDP register proved and this catalogue has no entry for: GIOŚ monitoring and three cities' own EGiB.",
+            "items": [
+              "rejestr-gios-halas",
+              "rejestr-gios-powietrze",
+              "rejestr-gios-wody",
+              "rejestr-egib-poznan",
+              "rejestr-egib-wroclaw",
+              "rejestr-egib-warszawa"
+            ]
+          }
         ]
       },
       {
@@ -975,6 +990,8 @@
       "Download limit (MB)": "Limit pobrania (MB)",
       "Download\nsettings": "Ustawienia\npobierania",
       "Find\nservice": "Znajdź\nusługę",
+      "Register": "Rejestr",
+      "Six services the EZiUDP register proved and this catalogue has no entry for: GIOŚ monitoring and three cities' own EGiB.": "Sześć usług, które rejestr EZiUDP dowiódł, a ten katalog nie ma dla nich wpisu: monitoring GIOŚ i własne EGiB trzech miast.",
       "Update the register": "Aktualizuj rejestr",
       "Reads the EZiUDP register and adds the addresses this plugin does not know yet, each checked with a real request.": "Czyta rejestr EZiUDP i dodaje adresy, których wtyczka jeszcze nie zna; każdy sprawdzony prawdziwym żądaniem.",
       "Check every address": "Sprawdź wszystkie adresy",
@@ -983,7 +1000,19 @@
       "0 checks every new address; a small number makes a quick trial.": "0 sprawdza wszystkie nowe adresy; mała liczba robi szybką próbę.",
       "Searches the offline EZiUDP register: every Polish WMS and WFS that answered a real request. Pass dodaj with an id to add the WMS as an overlay.": "Przeszukuje offline rejestr EZiUDP: każdy polski WMS i WFS, który odpowiedział na prawdziwe żądanie. Parametr dodaj z identyfikatorem dodaje WMS jako nakładkę.",
       "Stores the panel's download size limit and its standing Download even if large tick, so the tools use them without the form.": "Zapisuje limit rozmiaru pobrania z panelu i stałe zaznaczenie Pobierz mimo rozmiaru, żeby narzędzia brały je bez formularza.",
-      "A run stops at this size unless Download even if large is on. A confirmed run stops at 256 MB.": "Pobranie zatrzymuje się na tym rozmiarze, chyba że włączone jest Pobierz mimo rozmiaru. Potwierdzone pobranie kończy się na 256 MB."
+      "A run stops at this size unless Download even if large is on. A confirmed run stops at 256 MB.": "Pobranie zatrzymuje się na tym rozmiarze, chyba że włączone jest Pobierz mimo rozmiaru. Potwierdzone pobranie kończy się na 256 MB.",
+      "Environmental noise monitoring, GIOŚ's INSPIRE WMS, from the EZiUDP register.": "Monitoring hałasu GIOŚ, usługa INSPIRE, z rejestru EZiUDP.",
+      "Air quality monitoring, atmospheric deposition, GIOŚ's INSPIRE WMS, from the EZiUDP register.": "Monitoring jakości powietrza i chemizmu opadów GIOŚ, usługa INSPIRE, z rejestru EZiUDP.",
+      "Groundwater quality monitoring, GIOŚ's INSPIRE WMS, from the EZiUDP register.": "Monitoring jakości wód podziemnych GIOŚ, usługa INSPIRE, z rejestru EZiUDP.",
+      "Parcels and land use of Poznań, its own EGiB WMS, from the EZiUDP register.": "Działki i użytki Poznania z własnej usługi EGiB miasta, z rejestru EZiUDP.",
+      "Parcels of Wrocław, its own EGiB WMS, from the EZiUDP register.": "Działki Wrocławia z własnej usługi EGiB miasta, z rejestru EZiUDP.",
+      "Parcels and buildings of Warsaw, its own EGiB WMS, from the EZiUDP register.": "Działki i budynki Warszawy z własnej usługi EGiB miasta, z rejestru EZiUDP.",
+      "GIOŚ:\nhałas": "GIOŚ:\nhałas",
+      "GIOŚ:\npowietrze": "GIOŚ:\npowietrze",
+      "GIOŚ:\nwody podziemne": "GIOŚ:\nwody podziemne",
+      "EGiB:\nPoznań": "EGiB:\nPoznań",
+      "EGiB:\nWrocław": "EGiB:\nWrocław",
+      "EGiB:\nWarszawa": "EGiB:\nWarszawa"
     }
   },
   "moreMaps": {
