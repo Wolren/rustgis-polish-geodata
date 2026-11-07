@@ -1,6 +1,6 @@
 # Roadmap
 
-_Stan na 2026-11-03, wtyczka 0.6.0._
+_Stan na 2026-11-07, wtyczka 0.6.0 plus rejestr EZiUDP._
 
 Cel: jedna wtyczka do RustGIS, która kondensuje polskie dane — podzielone najpierw według
 instytucji, potem według tematu — i którą w całości da się sterować przez MCP.
@@ -50,6 +50,35 @@ instytucji, potem według tematu — i którą w całości da się sterować prz
   już unikalne tytuły, a gdyby się powtórzyły, wybór niesie w nawiasie identyfikator.
   Nie zrobione: LAZ i geobazy z dane.gov.pl (PGW, WORP, PZRP, PPSS, MZP) oraz wybór pojedynczych
   arkuszy w środku usługi.
+
+## Do przeniesienia z 0.7.0
+
+Gałąź `origin/main` ma commit `50ee781` (0.7.0), który odszedł od tego samego commita bazowego
+`291f358` co nasza linia. Scalanie odłożone: konflikt w 11 plikach, a nasza linia zostaje główna.
+Do przeniesienia wybrane rzeczy, w kolejności wartości:
+
+1. **`src/egib.rs`: działki i budynki wprost z powiatu.** ULDK `GetCountyByXY` nazywa powiat,
+   EZiUDP daje jego własny WFS EGiB, `GetCapabilities` daje typy (`wfs:dzialki`, `wfs:budynki`),
+   a jeden ograniczony `GetFeature` na typ, przycięty do widoku, kładzie warstwę wektorową.
+   To omija ograniczenie krajowego KIEG, który tylko rasteryzuje działki. Wymaga `quick-xml`
+   oraz modułów `src/gml.rs`, `src/filter.rs`, `src/gk92.rs` z tej gałęzi.
+2. **`src/wody.rs` i `data/wody.json`: 32 usługi i 904 warstwy.** Jedno polecenie na usługę, ale
+   parametr `warstwa` wybiera pojedynczą warstwę, a `warstwy` wypisuje, co usługa publikuje.
+   Nasza linia ma 30 usług bez wyboru warstwy w środku.
+3. **`src/clip.rs`: granica z zaznaczenia.** Warstwa poligonowa z zaznaczeniem jest kopiowana do
+   warstwy tymczasowej, więc cięcie idzie po wybranych kształtach. Dochodzi znacznik `from_view`,
+   który mówi, że granicą jest prostokąt widoku, a nie rysunek.
+4. **`src/nmt.rs`: teren 3D i wygląd modelu.** `set_terrain` stawia scenę 3D na modelu,
+   `height_range` podaje min i max, `Look` (barwy, pasma, cieniowanie) z `look_json`, mnożnik
+   `exaggeration` i polecenie `dem-terrain-off`. Nasza linia ma tylko barwy albo cieniowanie
+   i nie ustawia terenu.
+5. **`src/eziudp.rs`: `rejestr-widok`.** Rejestr zawężony do powiatu z widoku, jednym poleceniem.
+6. **`tools/probe.py`, `tools/smoke.py`, `tools/fixtures/*.geojson`.** Próba end-to-end i dymna
+   z fixturami (obszar, maski, działki), plus `.github/workflows/catalogue.yml` sprawdzający
+   katalogi w CI.
+
+Nie przenosimy z 0.7.0: ich wersji `main.rs` i `text.rs` (nasze mają więcej), ani usunięcia
+rodzin Cartomatic z wstęgi.
 
 ## Następne
 
