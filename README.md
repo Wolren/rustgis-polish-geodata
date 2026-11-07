@@ -35,7 +35,7 @@ zrzucie z `ui_shot` (1480 x 760, polski interfejs): treść kończy się na 1390
 | | Przytnij do warstwy | Tnie warstwę do wybranej w panelu granicy, domyślnie do „Obszar pobierania” |
 | **WMS (podgląd)** | GUGiK | 76 usług w czterech tematach: Ortofoto i NMT (20), Mapy (21), Kataster i granice (24), Pozostałe dane (11) |
 | | Mapy historyczne | 11 arkuszy WIG i map niemieckich |
-| | Geologia (PIG) | 9 usług |
+| | Geologia (PIG) | 11 usług |
 | | Zabytki (NID) | 4 usługi |
 | | Lasy (BDL) | 4 usługi |
 | | Pozostałe instytucje | GDOŚ, PKP PLK, GUS, Wody Polskie, IMGW-PIB |
@@ -50,13 +50,13 @@ zrzucie z `ui_shot` (1480 x 760, polski interfejs): treść kończy się na 1390
 | **Wysokości** | Model | Teren KRON86 (GeoTIFF), teren EVRF2007, pokrycie NMPT i ustawianie stylu modelu |
 | **Wyszukiwanie** | Wyszukiwanie | Działka z ULDK, adres pod środkiem mapy i wysokość w punkcie |
 
-Łącznie: **211 poleceń** (27 własnych, 109 usług katalogu krajowego, 30 usług Wody Polskie i 45 map
+Łącznie: **215 poleceń** (29 własnych, 111 usług katalogu krajowego, 30 usług Wody Polskie i 45 map
 Cartomatic) oraz **10 narzędzi**. Wcześniej było 228 poleceń, z czego 108 pobierało dane natychmiast,
 blokując okno.
 
 ### Usługi krajowe
 
-Katalog obejmuje **109 usług WMS** z Geoportalu Krajowego i od innych instytucji: BDOT10k (w tym nowe
+Katalog obejmuje **111 usług WMS** z Geoportalu Krajowego i od innych instytucji: BDOT10k (w tym nowe
 budynki i statystyki), ortofotomapę prawdziwą, wysokiej rozdzielczości i archiwalną, cieniowanie
 NMT, hipsometrię NMT, EMUiA, PRG, PRNG, RCN, KIMPZP, ISOK, POLSA, osnowy, mapy geologiczne PIG,
 BDL Lasów Państwowych, zabytki NID i inne. Każda pozycja przeszła realne żądanie kafla, więc lista
@@ -261,7 +261,7 @@ czego, na przykład `Adresy → Gmina Poznań`. Przycisk **Przytnij do warstwy**
 widać. Bez wyboru granicą jest warstwa „Obszar pobierania”.
 
 Pod drzewem granic stoi drugie drzewo, **Mapa**, też z wyszukiwarką i 304 wierszami. W **Podkładach**
-jest każda mapa, którą wtyczka umie pokazać: siedem nakładek własnych, 109 usług katalogu, 30 usług
+jest każda mapa, którą wtyczka umie pokazać: siedem nakładek własnych, 111 usług katalogu, 30 usług
 Wody Polskie i 45 map Cartomatic. W **Pobieraniu** jest każdy zbiór, który umie pobrać, w pięciu
 folderach narzędzi. Wiersz niesie źródło w identyfikatorze: `v:<polecenie>` to mapa, a
 `d:<narzędzie>:<zbiór>` to pobieranie. Wybór wiersza uruchamia polecenie **Mapa** (`mapa`): `v:`
@@ -533,6 +533,12 @@ pierwsze pytanie w lon/lat wraca puste, a odpowiedź przychodzi dopiero z układ
 `STARTINDEX` („Cannot do natural order without a primary key”), więc odpowiada jedną stronę i
 pobranie kończy się na niej, o czym mówi komunikat o przerwaniu; a współrzędne podaje jako
 (easting, northing), odwrotnie niż GUGiK, więc wtyczka czyta je w tej kolejności.
+
+Dwie warstwy PIG dochodzą z pliku `data/pig.json`, nie z `data/services.json`: ten drugi jest
+odbudowywany w całości z listy QGIS i nie zawiera tych usług. To **Bloki koncesyjne**
+(`cbdg_bloki_k`, warstwa 0) i **Obszary przetargowe dla węglowodorów 2023** (`konc_obsz_przetarg`,
+warstwa 0). Obie sprawdzone prawdziwym kafleniem: bloki rysują numer bloku nad Poznaniem i
+Małopolską, obszary przetargowe rysują się w skali kraju.
 
 ## Ograniczenia
 

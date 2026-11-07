@@ -24,6 +24,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = os.path.join(ROOT, "tools", "manifest.base.json")
 SERVICES = os.path.join(ROOT, "data", "services.json")
+PIG = os.path.join(ROOT, "data", "pig.json")
 WFS = os.path.join(ROOT, "data", "wfs.json")
 WODY = os.path.join(ROOT, "data", "wody.json")
 CARTO = os.path.join(ROOT, "data", "cartomatic.json")
@@ -285,6 +286,9 @@ def service_help(service):
 def build():
     base = load(BASE)
     services = load(SERVICES)
+    # The PIG services proved by hand; tools/services.py rebuilds the file above without them.
+    if os.path.exists(PIG):
+        services = services + load(PIG)
     wody_file = family(WODY, "wody")
     carto_file = family(CARTO, "cartomatic")
     if not wody_file.get("services"):

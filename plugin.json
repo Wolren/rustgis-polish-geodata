@@ -210,6 +210,13 @@
       "params": "{\"layer\": \"elevation model layer (optional)\", \"colours\": \"false\"}"
     },
     {
+      "id": "usluga-bloki-koncesyjne",
+      "label": "Bloki koncesyjne",
+      "icon": "basemap",
+      "help": "Bloki koncesyjne · Państwowy Instytut Geologiczny (PIG)",
+      "params": "{\"service\": \"Bloki koncesyjne\"}"
+    },
+    {
       "id": "usluga-ceny-nieruchomosci",
       "label": "Ceny nieruchomości",
       "icon": "basemap",
@@ -425,6 +432,13 @@
       "icon": "basemap",
       "help": "Obszary prognostyczne · Państwowy Instytut Geologiczny (PIG)",
       "params": "{\"service\": \"Obszary prognostyczne i perspektywiczne\"}"
+    },
+    {
+      "id": "usluga-obszary-przetargowe-weglowodory",
+      "label": "Obszary przetargowe",
+      "icon": "basemap",
+      "help": "Obszary przetargowe · Państwowy Instytut Geologiczny (PIG)",
+      "params": "{\"service\": \"Obszary przetargowe dla węglowodorów 2023\"}"
     },
     {
       "id": "usluga-ortofotomapa-prawdziwa",
@@ -2270,9 +2284,11 @@
             "icon": "relief",
             "help": "Geological, hydrogeological and environmental maps of the Polish Geological Institute.",
             "items": [
+              "usluga-bloki-koncesyjne",
               "usluga-hydrologia-monitoring-wod-podziemnych",
               "usluga-jaskinie",
               "usluga-obszary-prognostyczne-i-perspektywiczne",
+              "usluga-obszary-przetargowe-weglowodory",
               "usluga-osuwiska-i-tereny-zagrozone-ruchami-masowymi",
               "usluga-otwory-wiertnicze",
               "usluga-otwory-wiertnicze-hydrogeologiczne",

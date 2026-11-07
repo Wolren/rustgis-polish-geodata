@@ -42,11 +42,22 @@ impl Service {
 }
 
 const RAW: &str = include_str!("../data/services.json");
+/// The PIG services proved by hand: `data/services.json` is rebuilt from the QGIS list, which has
+/// none of them.
+const PIG: &str = include_str!("../data/pig.json");
 
 /// The catalogue, parsed once per process.
 pub fn all() -> &'static [Service] {
     static PARSED: std::sync::OnceLock<Vec<Service>> = std::sync::OnceLock::new();
-    PARSED.get_or_init(|| serde_json::from_str(RAW).unwrap_or_default())
+    PARSED.get_or_init(|| {
+        let mut list: Vec<Service> = Vec::new();
+        for text in [RAW, PIG] {
+            if let Ok(mut more) = serde_json::from_str::<Vec<Service>>(text) {
+                list.append(&mut more);
+            }
+        }
+        list
+    })
 }
 
 /// The service a request names, by id, command, catalogue name or short label.

@@ -1,0 +1,24 @@
+[
+ {
+  "id": "bloki-koncesyjne",
+  "name": "Bloki koncesyjne",
+  "source": "Państwowy Instytut Geologiczny (PIG)",
+  "url": "https://cbdgmapa.pgi.gov.pl/arcgis/services/cbdg_bloki_k/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=0&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
+  "layer": "0",
+  "zoom": 18,
+  "cmd": "usluga-bloki-koncesyjne",
+  "label": "Bloki koncesyjne",
+  "institution": "pig"
+ },
+ {
+  "id": "obszary-przetargowe-weglowodory",
+  "name": "Obszary przetargowe dla węglowodorów 2023",
+  "source": "Państwowy Instytut Geologiczny (PIG)",
+  "url": "https://cbdgmapa.pgi.gov.pl/arcgis/services/konc_obsz_przetarg/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=0&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
+  "layer": "0",
+  "zoom": 18,
+  "cmd": "usluga-obszary-przetargowe-weglowodory",
+  "label": "Obszary przetargowe",
+  "institution": "pig"
+ }
+]
