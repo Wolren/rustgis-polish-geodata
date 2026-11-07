@@ -240,6 +240,13 @@
           "kind": "bool",
           "default": false,
           "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
+        },
+        {
+          "name": "confirm",
+          "label": "Download even if large",
+          "kind": "bool",
+          "default": false,
+          "help": "Downloads over 25 MB are refused until this is ticked, so a big run is a decision."
         }
       ]
     },
@@ -270,6 +277,13 @@
           "kind": "bool",
           "default": false,
           "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
+        },
+        {
+          "name": "confirm",
+          "label": "Download even if large",
+          "kind": "bool",
+          "default": false,
+          "help": "Downloads over 25 MB are refused until this is ticked, so a big run is a decision."
         }
       ]
     },
@@ -300,6 +314,13 @@
           "kind": "bool",
           "default": false,
           "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
+        },
+        {
+          "name": "confirm",
+          "label": "Download even if large",
+          "kind": "bool",
+          "default": false,
+          "help": "Downloads over 25 MB are refused until this is ticked, so a big run is a decision."
         }
       ]
     },
@@ -330,6 +351,13 @@
           "kind": "bool",
           "default": false,
           "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
+        },
+        {
+          "name": "confirm",
+          "label": "Download even if large",
+          "kind": "bool",
+          "default": false,
+          "help": "Downloads over 25 MB are refused until this is ticked, so a big run is a decision."
         }
       ]
     },
@@ -360,6 +388,13 @@
           "kind": "bool",
           "default": false,
           "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
+        },
+        {
+          "name": "confirm",
+          "label": "Download even if large",
+          "kind": "bool",
+          "default": false,
+          "help": "Downloads over 25 MB are refused until this is ticked, so a big run is a decision."
         }
       ]
     },
@@ -458,6 +493,13 @@
           "kind": "bool",
           "default": false,
           "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
+        },
+        {
+          "name": "confirm",
+          "label": "Download even if large",
+          "kind": "bool",
+          "default": false,
+          "help": "Downloads over 25 MB are refused until this is ticked, so a big run is a decision."
         }
       ]
     },
@@ -867,7 +909,8 @@
       "The address at the map centre, from GUGiK's UUG service: street, number, postcode and the distance in metres. Pass lon and lat to ask about another point.": "Adres pod środkiem mapy z usługi UUG GUGiK: ulica, numer, kod pocztowy i odległość w metrach. Parametry lon i lat wskazują inny punkt.",
       "Orthophoto": "Ortofoto",
       "Download even if large": "Pobierz mimo rozmiaru",
-      "Files over 0,5 GB are refused until this is ticked, so a big run is a decision.": "Powyżej 0,5 GB pobranie jest wstrzymane, dopóki tego nie zaznaczysz, żeby duży przebieg był decyzją."
+      "Files over 0,5 GB are refused until this is ticked, so a big run is a decision.": "Powyżej 0,5 GB pobranie jest wstrzymane, dopóki tego nie zaznaczysz, żeby duży przebieg był decyzją.",
+      "Downloads over 25 MB are refused until this is ticked, so a big run is a decision.": "Pobrania powyżej 25 MB są wstrzymane, dopóki tego nie zaznaczysz, żeby duże pobranie było decyzją."
     }
   },
   "moreMaps": {

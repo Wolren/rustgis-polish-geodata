@@ -55,6 +55,10 @@ pub fn too_large(layer: &WfsLayer, bbox: [f64; 4]) -> bool {
 pub struct Download {
     pub features: Vec<Value>,
     pub truncated: bool,
+    /// Bytes the answers took, as the service sent them.
+    pub bytes: u64,
+    /// Whether the run stopped at its byte limit rather than at the end of the data.
+    pub limit_hit: bool,
     /// Requests that never answered, so the list is short of their features.
     pub failed: usize,
     /// `Some` when the shape could not filter, naming why the box went in instead.
@@ -72,6 +76,7 @@ pub fn fetch(
     area: Option<&Value>,
     report: &mut dyn FnMut(&str),
     lang: Lang,
+    limit: u64,
 ) -> Result<Download, String> {
     if ![bbox[0], bbox[1], bbox[2], bbox[3]]
         .iter()
@@ -87,11 +92,11 @@ pub fn fetch(
             None
         }
     });
-    let mut download = gather(layer, bbox, polygon.as_deref(), report, lang, Srs::LonLat)?;
+    let mut download = gather(layer, bbox, polygon.as_deref(), report, lang, Srs::LonLat, limit)?;
     if download.features.is_empty() && download.failed == 0 {
         // The address and street service answers an empty collection outside the national grid.
         let grid = area.and_then(|collection| filter::polygon_filter_grid(layer, collection).ok());
-        if let Ok(retry) = gather(layer, bbox, grid.as_deref(), report, lang, Srs::Grid) {
+        if let Ok(retry) = gather(layer, bbox, grid.as_deref(), report, lang, Srs::Grid, limit) {
             if !retry.features.is_empty() {
                 download = retry;
             }
@@ -109,13 +114,16 @@ fn gather(
     report: &mut dyn FnMut(&str),
     lang: Lang,
     srs: Srs,
+    limit: u64,
 ) -> Result<Download, String> {
     let areas = split_cells(bbox);
     report(&text::split_areas(lang, layer.name, areas.len()));
 
+    // The budget is shared out, so a run of many cells cannot pass the limit.
+    let budget = (limit / areas.len().max(1) as u64).max(1);
     let mut cells: Vec<Cell> = Vec::new();
     if areas.len() == 1 {
-        cells.push(fetch_cell(layer, areas[0], polygon, report, lang, srs));
+        cells.push(fetch_cell(layer, areas[0], polygon, report, lang, srs, budget));
     } else {
         let total = areas.len();
         let (sender, receiver) = std::sync::mpsc::channel();
@@ -124,7 +132,7 @@ fn gather(
                 let sender = sender.clone();
                 let area = *area;
                 scope.spawn(move || {
-                    let done = fetch_cell(layer, area, polygon, &mut |_: &str| {}, lang, srs);
+                    let done = fetch_cell(layer, area, polygon, &mut |_: &str| {}, lang, srs, budget);
                     let _ = sender.send((index, done));
                 });
             }
@@ -152,11 +160,15 @@ fn gather(
     let mut features: Vec<Value> = Vec::new();
     let mut seen: HashSet<String> = HashSet::new();
     let mut truncated = false;
+    let mut bytes = 0u64;
+    let mut limit_hit = false;
     let mut failed = 0usize;
     let mut answered = 0usize;
     let mut first_error: Option<String> = None;
     for cell in cells {
         truncated |= cell.truncated;
+        bytes += cell.bytes;
+        limit_hit |= cell.limit_hit;
         failed += cell.failed;
         answered += cell.answered;
         if first_error.is_none() {
@@ -182,7 +194,7 @@ fn gather(
         features.truncate(MAX_TOTAL);
         truncated = true;
     }
-    Ok(Download { features, truncated, failed, fallback: None })
+    Ok(Download { features, truncated, bytes, limit_hit, failed, fallback: None })
 }
 
 /// One cell's answer: the features that arrived, and the requests that did not.
@@ -190,6 +202,8 @@ fn gather(
 struct Cell {
     features: Vec<Value>,
     truncated: bool,
+    bytes: u64,
+    limit_hit: bool,
     /// Requests that answered, an empty page included.
     answered: usize,
     failed: usize,
@@ -207,6 +221,7 @@ fn fetch_cell(
     report: &mut dyn FnMut(&str),
     lang: Lang,
     srs: Srs,
+    limit: u64,
 ) -> Cell {
     let started = Instant::now();
     let mut cell = Cell::default();
@@ -228,7 +243,8 @@ fn fetch_cell(
             vec![0]
         };
         let mut read = 0usize;
-        for (_, page) in fetch_pages(layer, bbox, filter, &starts, lang, srs) {
+        for (_, page_bytes, page) in fetch_pages(layer, bbox, filter, &starts, lang, srs) {
+            cell.bytes += page_bytes;
             match page {
                 Ok(page) => {
                     cell.answered += 1;
@@ -248,7 +264,13 @@ fn fetch_cell(
                 break;
             }
         }
-        report(&text::count(lang, layer.name, cell.features.len()));
+        report(&text::count_size(lang, layer.name, cell.features.len(), cell.bytes));
+        if cell.bytes > limit {
+            // Over the byte limit the run stops here, and the tool says so before it adds anything.
+            cell.truncated = true;
+            cell.limit_hit = true;
+            break;
+        }
         if !layer.pages {
             // One page is all the service gives: a full page means more features were left out.
             cell.truncated |= read >= PAGE;
@@ -270,7 +292,7 @@ fn fetch_pages(
     starts: &[usize],
     lang: Lang,
     srs: Srs,
-) -> Vec<(usize, Result<Vec<Value>, String>)> {
+) -> Vec<(usize, u64, Result<Vec<Value>, String>)> {
     let (sender, receiver) = std::sync::mpsc::channel();
     std::thread::scope(|scope| {
         for &offset in starts {
@@ -278,23 +300,30 @@ fn fetch_pages(
             scope.spawn(move || {
                 let url = page_url(layer, bbox, offset, filter, srs);
                 let swap = matches!(srs, Srs::LonLat);
-                let parsed = http::get_unstored(&url, 120, lang).and_then(|body| {
-                    let mut rows = gml::parse_features(&body, swap, lang)?;
-                    // Only an answer parsed as features is stored, so an exception never sticks.
-                    if !rows.is_empty() {
-                        cache::put(&url, &body);
+                let answered = http::get_unstored(&url, 120, lang).map(|body| {
+                    let size = body.len() as u64;
+                    let mut rows = gml::parse_features(&body, swap, lang);
+                    if let Ok(rows) = rows.as_mut() {
+                        // Only an answer parsed as features is stored, so an exception never sticks.
+                        if !rows.is_empty() {
+                            cache::put(&url, &body);
+                        }
+                        if matches!(srs, Srs::Grid) {
+                            to_lon_lat(rows, layer.xy);
+                        }
                     }
-                    if matches!(srs, Srs::Grid) {
-                        to_lon_lat(&mut rows, layer.xy);
-                    }
-                    Ok(rows)
+                    (size, rows)
                 });
-                let _ = sender.send((offset, parsed));
+                let sent = match answered {
+                    Ok((size, rows)) => (offset, size, rows),
+                    Err(error) => (offset, 0, Err(error)),
+                };
+                let _ = sender.send(sent);
             });
         }
         drop(sender);
-        let mut pages: Vec<(usize, Result<Vec<Value>, String>)> = receiver.into_iter().collect();
-        pages.sort_by_key(|(offset, _)| *offset);
+        let mut pages: Vec<(usize, u64, Result<Vec<Value>, String>)> = receiver.into_iter().collect();
+        pages.sort_by_key(|(offset, _, _)| *offset);
         pages
     })
 }

@@ -303,6 +303,39 @@ pub fn count(lang: Lang, name: &str, n: usize) -> String {
     format!("{name}: {}", features(lang, n))
 }
 
+/// The same count with what the answers took so far, for a run that may grow past the limit.
+pub fn count_size(lang: Lang, name: &str, n: usize, bytes: u64) -> String {
+    format!("{name}: {}, {}", features(lang, n), size(lang, bytes as f64 / 1e6))
+}
+
+/// A download reached the size a run takes without asking.
+pub fn download_too_big(lang: Lang, name: &str, megabytes: f64, limit: f64) -> String {
+    pick!(
+        lang,
+        format!(
+            "{name}: {} so far, more than the {} a run takes without asking. Tick \u{201e}Download even \
+             if large\u{201d} in the tool form to fetch it.",
+            size(lang, megabytes),
+            size(lang, limit)
+        ),
+        format!(
+            "{name}: już {}, więcej niż {}, ile pobranie bierze bez pytania. Zaznacz \u{201e}Pobierz \
+             mimo rozmiaru\u{201d} w formularzu narzędzia, żeby je pobrać.",
+            size(lang, megabytes),
+            size(lang, limit)
+        )
+    )
+}
+
+/// A confirmed run stopped at the hard size cap.
+pub fn download_stopped(lang: Lang, name: &str, megabytes: f64) -> String {
+    pick!(
+        lang,
+        format!("{name}: stopped at {}", size(lang, megabytes)),
+        format!("{name}: przerwano na {}", size(lang, megabytes))
+    )
+}
+
 /// The layer the download takes as its area, named in the interface language.
 pub fn area_layer(lang: Lang) -> &'static str {
     pick!(lang, "Area to download", "Obszar pobierania")

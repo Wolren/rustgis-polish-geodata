@@ -146,6 +146,12 @@ warstwa wektorowa, jednym krokiem cofania. Opcje w formularzu to zbiór, warstwa
 opcjonalne **Najpierw usuń zapisane odpowiedzi**: nic więcej nie trzeba ustawiać, bo nic więcej nie
 jest zgadywane.
 
+**Rozmiar.** Postęp podaje obie liczby: obiekty i megabajty odpowiedzi. Pobranie, które przekroczy
+**25 MB**, zatrzymuje się z komunikatem, ile już przyszło, i z prośbą o zaznaczenie **Pobierz mimo
+rozmiaru** w formularzu. Zaznaczone pobranie ma twardy limit **256 MB**: po nim zatrzymuje się i
+mówi, ile weszło. Limit wielkości mierzy bajty odpowiedzi WFS, a nie gotową warstwę, więc jest
+górnym szacunkiem.
+
 Skrypt albo agent uruchamia to samo przez `gp.run`:
 
 ```
