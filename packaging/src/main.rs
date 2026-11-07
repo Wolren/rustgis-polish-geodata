@@ -72,6 +72,11 @@ fn run() -> Result<(), String> {
         fs::copy(path, &target).map_err(|e| format!("{}: {e}", path.display()))?;
         set_executable(&target)?;
     }
+    // Skills ship beside the binary, one folder each, as the assistant reads them from a package.
+    let skills = root.join("skills");
+    if skills.is_dir() {
+        copy_dir(&skills, &staging.join("skills"))?;
+    }
 
     let package = dist.join(format!("{id}-{version}.rgplugin"));
     if package.exists() {
@@ -242,6 +247,23 @@ fn sha256(path: &Path) -> Result<String, String> {
     let bytes = fs::read(path).map_err(|e| format!("{}: {e}", path.display()))?;
     let digest = Sha256::digest(&bytes);
     Ok(digest.iter().map(|b| format!("{b:02x}")).collect())
+}
+
+/// Copies a folder tree into the package, so a skill keeps its layout.
+fn copy_dir(from: &Path, to: &Path) -> Result<(), String> {
+    fs::create_dir_all(to).map_err(|e| format!("{}: {e}", to.display()))?;
+    let entries = fs::read_dir(from).map_err(|e| format!("{}: {e}", from.display()))?;
+    for entry in entries {
+        let entry = entry.map_err(|e| e.to_string())?;
+        let path = entry.path();
+        let target = to.join(entry.file_name());
+        if path.is_dir() {
+            copy_dir(&path, &target)?;
+        } else {
+            fs::copy(&path, &target).map_err(|e| format!("{}: {e}", path.display()))?;
+        }
+    }
+    Ok(())
 }
 
 #[cfg(unix)]

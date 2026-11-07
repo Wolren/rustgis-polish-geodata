@@ -114,6 +114,7 @@ fn run(
         "dzialka-id" => uldk::parcel_by_id(host, params, lang),
         "panel-state" => panel::state(host, lang, request),
         "mapa" => panel::mapa(host, request, lang),
+        "ustawienia" => panel::preferences(host, request, lang),
         "dem" => nmt::add(host, lang, request, nmt::Kind::TerrainKron),
         "dem-evr" => nmt::add(host, lang, request, nmt::Kind::TerrainEvrf),
         "dem-nmpt" => nmt::add(host, lang, request, nmt::Kind::SurfaceKron),
@@ -149,6 +150,7 @@ fn redraws_panel(id: &str) -> bool {
             | "dem-style"
             | "mapa"
             | "przytnij"
+            | "ustawienia"
     )
 }
 

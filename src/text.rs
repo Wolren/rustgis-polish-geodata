@@ -299,11 +299,7 @@ pub fn report_failed(lang: Lang, path: &str, error: &str) -> String {
 }
 
 /// "Layer: 12 features".
-pub fn count(lang: Lang, name: &str, n: usize) -> String {
-    format!("{name}: {}", features(lang, n))
-}
-
-/// The same count with what the answers took so far, for a run that may grow past the limit.
+/// A run's count with what the answers took so far, for a run that may grow past the limit.
 pub fn count_size(lang: Lang, name: &str, n: usize, bytes: u64) -> String {
     format!("{name}: {}, {}", features(lang, n), size(lang, bytes as f64 / 1e6))
 }
@@ -324,6 +320,20 @@ pub fn download_too_big(lang: Lang, name: &str, megabytes: f64, limit: f64) -> S
             size(lang, megabytes),
             size(lang, limit)
         )
+    )
+}
+
+/// The panel stored the two download settings.
+pub fn settings_saved(lang: Lang, limit_mb: i64, confirm: bool) -> String {
+    let asked = pick!(
+        lang,
+        if confirm { "downloads over the limit run without asking" } else { "downloads over the limit ask first" },
+        if confirm { "pobrania powyżej limitu idą bez pytania" } else { "pobrania powyżej limitu pytają najpierw" }
+    );
+    pick!(
+        lang,
+        format!("settings saved: limit {limit_mb} MB, {asked}"),
+        format!("ustawienia zapisane: limit {limit_mb} MB, {asked}")
     )
 }
 
@@ -1453,12 +1463,12 @@ mod tests {
         assert_eq!(clipped_suffix(Lang::En), " (clipped)");
         assert_eq!(clipped_suffix(Lang::Pl), " (po przycięciu)");
         assert_eq!(
-            count(Lang::Pl, "Działki (EGiB)", 5),
-            "Działki (EGiB): 5 obiektów"
+            count_size(Lang::Pl, "Działki (EGiB)", 5, 1_500_000),
+            "Działki (EGiB): 5 obiektów, 2 MB"
         );
         assert_eq!(
-            count(Lang::En, "Parcels (EGiB)", 5),
-            "Parcels (EGiB): 5 features"
+            count_size(Lang::En, "Parcels (EGiB)", 5, 1_500_000),
+            "Parcels (EGiB): 5 features, 2 MB"
         );
     }
 

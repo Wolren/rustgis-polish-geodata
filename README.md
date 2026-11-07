@@ -147,10 +147,15 @@ opcjonalne **Najpierw usuń zapisane odpowiedzi**: nic więcej nie trzeba ustawi
 jest zgadywane.
 
 **Rozmiar.** Postęp podaje obie liczby: obiekty i megabajty odpowiedzi. Pobranie, które przekroczy
-**25 MB**, zatrzymuje się z komunikatem, ile już przyszło, i z prośbą o zaznaczenie **Pobierz mimo
-rozmiaru** w formularzu. Zaznaczone pobranie ma twardy limit **256 MB**: po nim zatrzymuje się i
-mówi, ile weszło. Limit wielkości mierzy bajty odpowiedzi WFS, a nie gotową warstwę, więc jest
-górnym szacunkiem.
+**limit**, zatrzymuje się z komunikatem, ile już przyszło, i z prośbą o zaznaczenie **Pobierz mimo
+rozmiaru** w formularzu. Limit ustawia panel: suwak **Limit pobrania (MB)** (od 5 do 500, domyślnie
+25), a **Pobierz mimo rozmiaru** w panelu działa jak zaznaczenie formularza, ale na stałe. Potwierdzone
+pobranie ma twardy limit **256 MB**: po nim zatrzymuje się i mówi, ile weszło. Limit mierzy bajty
+odpowiedzi WFS, a nie gotową warstwę, więc jest górnym szacunkiem. Ustawienia leżą w
+`settings.json` w folderze wtyczki, obok cache.
+
+Parametry narzędzia obszaru przyjmują tylko warstwy poligonowe: lista nie pokazuje warstw punktowych
+ani liniowych, bo z punktu nie ma pola do pobrania.
 
 Skrypt albo agent uruchamia to samo przez `gp.run`:
 
@@ -393,6 +398,13 @@ Identyfikatory z tej odpowiedzi są dokładnie tymi, które przyjmuje `run_comma
 `describe_tool` i `search_tools` widzą wtyczkę po instalacji. `script.run` (łączenie kilku
 poleceń w jednym wywołaniu) jest zarezerwowane dla użytkownika i agent go nie użyje, dlatego
 `przytnij` działa bez argumentów.
+
+## Skill dla asystenta
+
+Pakiet niesie `skills/dane-pl/SKILL.md`, więc asystent w RustGIS widzi go jako `dane-pl:dane-pl`,
+dopóki wtyczka jest włączona. Skill mówi, jak wybrać obszar, którym narzędziem pobrać zbiór, jakie
+limity obowiązują oraz jak wołać wyszukiwania i przycinanie. Dzięki temu asystent nie zgaduje nazw
+poleceń ani etykiet zbiorów.
 
 ## Dlaczego proces, a nie WebAssembly
 

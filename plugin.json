@@ -23,6 +23,9 @@
     "files",
     "network"
   ],
+  "skills": [
+    "dane-pl"
+  ],
   "commands": [
     {
       "id": "orto",
@@ -112,7 +115,8 @@
       "id": "adres-odwrotnie",
       "label": "Address\nat point",
       "icon": "locate",
-      "help": "The address at the map centre, from GUGiK's UUG service: street, number, postcode and the distance in metres. Pass lon and lat to ask about another point."
+      "help": "The address at the map centre, from GUGiK's UUG service: street, number, postcode and the distance in metres. Pass lon and lat to ask about another point.",
+      "params": "{\"lon\": 21.02, \"lat\": 52.23} (both optional: the map centre when absent)"
     },
     {
       "id": "przytnij",
@@ -1551,7 +1555,7 @@
         {
           "name": "obszar",
           "label": "Area (layer)",
-          "kind": "vectorLayer",
+          "kind": "polygonLayer",
           "required": true,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         },
@@ -1614,7 +1618,7 @@
         {
           "name": "obszar",
           "label": "Area (layer)",
-          "kind": "vectorLayer",
+          "kind": "polygonLayer",
           "required": true,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         },
@@ -1674,7 +1678,7 @@
         {
           "name": "obszar",
           "label": "Area (layer)",
-          "kind": "vectorLayer",
+          "kind": "polygonLayer",
           "required": true,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         },
@@ -1734,7 +1738,7 @@
         {
           "name": "obszar",
           "label": "Area (layer)",
-          "kind": "vectorLayer",
+          "kind": "polygonLayer",
           "required": true,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         },
@@ -1794,7 +1798,7 @@
         {
           "name": "obszar",
           "label": "Area (layer)",
-          "kind": "vectorLayer",
+          "kind": "polygonLayer",
           "required": true,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         },
@@ -1886,7 +1890,7 @@
         {
           "name": "obszar",
           "label": "Area (layer)",
-          "kind": "vectorLayer",
+          "kind": "polygonLayer",
           "required": true,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         }
@@ -1954,7 +1958,7 @@
         {
           "name": "obszar",
           "label": "Area (layer)",
-          "kind": "vectorLayer",
+          "kind": "polygonLayer",
           "required": true,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         }
@@ -2042,7 +2046,7 @@
         {
           "name": "obszar",
           "label": "Area (layer)",
-          "kind": "vectorLayer",
+          "kind": "polygonLayer",
           "required": true,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         }
@@ -2081,7 +2085,7 @@
         {
           "name": "obszar",
           "label": "Area (layer)",
-          "kind": "vectorLayer",
+          "kind": "polygonLayer",
           "required": true,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         },
@@ -2704,7 +2708,10 @@
       "Orthophoto": "Ortofoto",
       "Download even if large": "Pobierz mimo rozmiaru",
       "Files over 0,5 GB are refused until this is ticked, so a big run is a decision.": "Powyżej 0,5 GB pobranie jest wstrzymane, dopóki tego nie zaznaczysz, żeby duży przebieg był decyzją.",
-      "Downloads over 25 MB are refused until this is ticked, so a big run is a decision.": "Pobrania powyżej 25 MB są wstrzymane, dopóki tego nie zaznaczysz, żeby duże pobranie było decyzją."
+      "Downloads over 25 MB are refused until this is ticked, so a big run is a decision.": "Pobrania powyżej 25 MB są wstrzymane, dopóki tego nie zaznaczysz, żeby duże pobranie było decyzją.",
+      "The tool form's tick, for every run: downloads over the size limit proceed without asking.": "Zaznaczenie z formularza narzędzia, ale na stałe: pobrania powyżej limitu idą bez pytania.",
+      "Download limit (MB)": "Limit pobrania (MB)",
+      "A run stops at this size unless Download even if large is on. A confirmed run stops at 256 MB.": "Pobranie zatrzymuje się na tym rozmiarze, chyba że włączone jest Pobierz mimo rozmiaru. Potwierdzone pobranie kończy się na 256 MB."
     }
   },
   "panel": {
@@ -2794,6 +2801,24 @@
         "id": "cache",
         "label": "Stored answers",
         "text": "Measured when the panel opens."
+      },
+      {
+        "kind": "checkbox",
+        "id": "potwierdz-duze",
+        "label": "Download even if large",
+        "help": "The tool form's tick, for every run: downloads over the size limit proceed without asking.",
+        "command": "ustawienia"
+      },
+      {
+        "kind": "slider",
+        "id": "limit-mb",
+        "label": "Download limit (MB)",
+        "help": "A run stops at this size unless Download even if large is on. A confirmed run stops at 256 MB.",
+        "min": 5,
+        "max": 500,
+        "default": 25,
+        "steps": true,
+        "command": "ustawienia"
       }
     ]
   }

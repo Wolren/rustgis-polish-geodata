@@ -45,6 +45,51 @@ pub fn area_mode_file() -> PathBuf {
     root().join("area.mode")
 }
 
+/// The panel's two download settings, kept beside the cache so they outlast a session.
+pub struct Settings {
+    pub confirm_large: bool,
+    pub limit_mb: i64,
+}
+
+impl Default for Settings {
+    fn default() -> Self {
+        Settings { confirm_large: false, limit_mb: 25 }
+    }
+}
+
+pub fn settings_file() -> PathBuf {
+    root().join("settings.json")
+}
+
+/// The stored settings: the file's own values, the defaults for anything it lacks or garbles.
+pub fn settings() -> Settings {
+    let Ok(text) = fs::read_to_string(settings_file()) else {
+        return Settings::default();
+    };
+    let Ok(value) = serde_json::from_str::<serde_json::Value>(&text) else {
+        return Settings::default();
+    };
+    Settings {
+        confirm_large: value
+            .get("confirm_large")
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(false),
+        limit_mb: value
+            .get("limit_mb")
+            .and_then(serde_json::Value::as_i64)
+            .filter(|mb| (5..=500).contains(mb))
+            .unwrap_or(25),
+    }
+}
+
+pub fn remember_settings(settings: &Settings) {
+    let body = format!(
+        "{{\"confirm_large\": {}, \"limit_mb\": {}}}\n",
+        settings.confirm_large, settings.limit_mb
+    );
+    let _ = fs::write(settings_file(), body);
+}
+
 pub fn dem_dir() -> PathBuf {
     root().join("dem")
 }

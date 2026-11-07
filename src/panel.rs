@@ -31,6 +31,33 @@ pub fn attach(answer: &mut Value, state: Value) {
     fields.insert("panel".to_string(), panel.clone());
 }
 
+/// The panel's two download settings, as the widgets name them.
+const CONFIRM_ID: &str = "potwierdz-duze";
+const LIMIT_ID: &str = "limit-mb";
+/// A slider's ends, and the limit a stored value must fall between.
+const LIMIT_MIN: i64 = 5;
+const LIMIT_MAX: i64 = 500;
+
+/// Stores what the panel's checkbox and slider say, then lets the panel answer with them.
+pub fn preferences(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, String> {
+    let values = request
+        .get("panel")
+        .and_then(|panel| panel.get("values"))
+        .cloned()
+        .unwrap_or_else(|| json!({}));
+    let mut settings = cache::settings();
+    if let Some(confirm) = values.get(CONFIRM_ID).and_then(Value::as_bool) {
+        settings.confirm_large = confirm;
+    }
+    if let Some(limit) = values.get(LIMIT_ID).and_then(Value::as_i64) {
+        settings.limit_mb = limit.clamp(LIMIT_MIN, LIMIT_MAX);
+    }
+    cache::remember_settings(&settings);
+    let note = text::settings_saved(lang, settings.limit_mb, settings.confirm_large);
+    host.notify(&note);
+    Ok(json!({ "note": note }))
+}
+
 /// Answers the panel: the view, the area, the layers a clip can cut, and the stored answers.
 pub fn state(host: &mut Host, lang: Lang, request: &Value) -> Result<Value, String> {
     // A missing extent is hidden, not shown as [0, 0, 0, 0]: that box looks like a real view.
@@ -131,8 +158,13 @@ pub fn state(host: &mut Host, lang: Lang, request: &Value) -> Result<Value, Stri
     );
     items.insert("wyczysc-cache".into(), json!({ "enabled": files > 0 }));
 
+    // The stored settings go back with the state, so the widgets show what a run will use.
+    let settings = cache::settings();
     Ok(json!({
-        "panel": { "items": items },
+        "panel": {
+            "items": items,
+            "values": { CONFIRM_ID: settings.confirm_large, LIMIT_ID: settings.limit_mb },
+        },
         "area": area.is_some(),
         "layers": others,
         "clip": { "layer": target, "boundary": boundary },

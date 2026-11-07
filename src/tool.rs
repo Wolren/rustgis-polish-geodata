@@ -21,8 +21,7 @@ use serde_json::{json, Value};
 
 /// The span the catalogue gives a dataset it sets no real limit for; those are counted instead.
 const UNLIMITED_SPAN: f64 = 20.0;
-/// What one run takes without asking, and what a ticked run may take before it stops.
-const CONFIRM_MB: f64 = 25.0;
+/// The cap any confirmed run stops at, whatever the panel's slider says.
 const HARD_MB: f64 = 256.0;
 
 pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
@@ -64,21 +63,24 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
 
     // A tool request carries no panel: the form's checkboxes arrive as parameters.
     let clear = params.get("clear").and_then(Value::as_bool).unwrap_or(false);
-    let confirm = params.get("confirm").and_then(Value::as_bool).unwrap_or(false);
+    // The panel's checkbox and slider set the default; the form's tick covers one run.
+    let settings = cache::settings();
+    let confirm = params.get("confirm").and_then(Value::as_bool).unwrap_or(false) || settings.confirm_large;
     // The cache goes before the first request, so the click that asked for fresh data gets it.
     let cleared = if clear { cache::clear().ok() } else { None };
 
     gate(layer, area, features_of_area, bbox, lang)?;
 
     // Past the unconfirmed limit the run stops before anything is added, and names its size.
-    let limit = if confirm { (HARD_MB * 1e6) as u64 } else { (CONFIRM_MB * 1e6) as u64 };
+    let asked_mb = settings.limit_mb as f64;
+    let limit = if confirm { (HARD_MB.max(asked_mb) * 1e6) as u64 } else { (asked_mb * 1e6) as u64 };
     let download = {
         let mut report = |text: &str| host::progress_line(text);
         wfs::fetch(layer, bbox, Some(features_of_area), &mut report, lang, limit)?
     };
     let megabytes = download.bytes as f64 / 1e6;
     if download.limit_hit && !confirm {
-        return Err(text::download_too_big(lang, layer.name, megabytes, limit as f64 / 1e6));
+        return Err(text::download_too_big(lang, layer.name, megabytes, asked_mb));
     }
     if download.features.is_empty() {
         return Err(text::no_features(lang, layer.name));
