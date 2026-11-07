@@ -22,10 +22,7 @@ import xml.etree.ElementTree as ET
 CACHE = os.path.join(os.path.dirname(__file__), ".cache")
 OUT = os.path.join(os.path.dirname(__file__), "..", "data", "services.json")
 
-# Where a tile is asked for, in EPSG:3857 metres: two boxes, 1.2 km and 0.6 km across. A service
-# that draws only part of the country (a coast, a river, a mountain park) answers at none of the
-# boxes over Poznań, so the probes walk four places: inland, the coast, the mountains, the
-# south-west. The first answer that is an image of some size wins.
+# Tiles are asked for in EPSG:3857 at five Polish places, so a regional service answers.
 BOXES = [
     ("Poznań", "1883782,6873571,1884382,6874171"),
     ("Poznań, close", "1883900,6873700,1884200,6874000"),
@@ -249,8 +246,7 @@ def main():
     for thread in threads:
         thread.join()
 
-    # A server that drops one connection must not lose a service, so the file only grows: every
-    # entry here answered a real GetMap in some run.
+    # The file only grows: every entry answered a real GetMap in some run.
     if os.path.exists(OUT):
         with open(OUT, encoding="utf-8") as f:
             for item in json.load(f):
@@ -270,8 +266,7 @@ def main():
         used[slug] = used.get(slug, 0) + 1
         if used[slug] > 1:
             item["id"] = f"{slug}-{used[slug]}"
-    # Every entry names the command a ribbon button runs and the short label it shows, so the
-    # manifest can be built from this file alone.
+    # Every entry names the command a ribbon button runs and its short label, so the manifest needs only this file.
     for item in good:
         item.setdefault("label", item["name"])
         if not item.get("cmd"):

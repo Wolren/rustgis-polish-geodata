@@ -3,7 +3,7 @@
     "id": "dane-pl",
     "name": "Polish Geodata",
     "version": "0.6.0",
-    "description": "Polish national geodetic data from GUGiK in one tab: orthophoto, BDOT10k, parcels, addresses, PRG boundaries, place names and hillshade as map layers; the national WFS catalogue through background download tools with progress and Cancel; a 1 m elevation model built from the area you point at; and a ULDK parcel lookup at the map centre.",
+    "description": "Polish national geodetic data in one tab: GUGiK orthophoto, BDOT10k, parcels, addresses, PRG boundaries, place names and hillshade; the national WFS catalogue and GDOŚ protected areas through background downloads with progress and Cancel; a 1 m elevation model from the area you point at; the EZiUDP register of 3 296 WMS and WFS addresses; and ULDK, UUG and NMT lookups.",
     "author": "Wolren",
     "license": "MIT",
     "runtime": "process",
@@ -920,7 +920,6 @@
       "Place\nnames": "Nazwy\ngeograficzne",
       "Place names from PRNG.": "Nazwy geograficzne z PRNG.",
       "Polish Geodata": "Dane PL",
-      "Polish national geodetic data from GUGiK in one tab: orthophoto, BDOT10k, parcels, addresses, PRG boundaries, place names and hillshade as map layers; the national WFS catalogue through background download tools with progress and Cancel; a 1 m elevation model built from the area you point at; and a ULDK parcel lookup at the map centre.": "Polskie dane geodezyjne GUGiK w jednej zakładce: ortofoto, BDOT10k, działki, adresy, granice PRG, nazwy geograficzne i cieniowanie NMT jako warstwy mapy; katalog krajowych usług WFS przez narzędzia pobierania działające w tle, z postępem i przyciskiem Anuluj; model wysokości 1 m dla wskazanego obszaru; oraz wyszukiwanie działki z ULDK pod środkiem mapy.",
       "Press Area from view to make one.": "Naciśnij przycisk Obszar z widoku, aby go utworzyć.",
       "Public offices, courts, schools, forests and other institutions.": "Urzędy, sądy, szkoły, nadleśnictwa i inne instytucje.",
       "Raster": "Rastry",
@@ -1012,7 +1011,8 @@
       "GIOŚ:\nwody podziemne": "GIOŚ:\nwody podziemne",
       "EGiB:\nPoznań": "EGiB:\nPoznań",
       "EGiB:\nWrocław": "EGiB:\nWrocław",
-      "EGiB:\nWarszawa": "EGiB:\nWarszawa"
+      "EGiB:\nWarszawa": "EGiB:\nWarszawa",
+      "Polish national geodetic data in one tab: GUGiK orthophoto, BDOT10k, parcels, addresses, PRG boundaries, place names and hillshade; the national WFS catalogue and GDOŚ protected areas through background downloads with progress and Cancel; a 1 m elevation model from the area you point at; the EZiUDP register of 3 296 WMS and WFS addresses; and ULDK, UUG and NMT lookups.": "Polskie dane geodezyjne w jednej zakładce: ortofoto, BDOT10k, działki, adresy, granice PRG, nazwy geograficzne i cieniowanie GUGiK; katalog krajowych usług WFS oraz ochrona przyrody GDOŚ przez pobierania w tle z postępem i przerwaniem; model wysokości 1 m z obszaru, który wskażesz; rejestr EZiUDP z 3 296 adresami WMS i WFS; oraz wyszukiwania ULDK, UUG i NMT."
     }
   },
   "moreMaps": {

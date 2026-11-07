@@ -1,15 +1,15 @@
 # Dane PL: polskie dane geodezyjne w RustGIS
 
 Wtyczka do [RustGIS](https://rustgis.app): jedna zakładka **Dane PL** z podkładami, usługami
-i danymi GUGiK, Wody Polskie oraz Cartomatic, bez kluczy API i bez pośredników.
+i danymi GUGiK, GDOŚ, PIG, Wody Polskie, Cartomatic i rejestru EZiUDP, bez kluczy API i bez pośredników.
 
 Zasada, która trzyma tę wtyczkę w kupie: **polecenie tylko pokazuje coś na mapie, a pobiera
 narzędzie.** Wstęga mówi to wprost nazwami grup: **WMS (podgląd)** tylko wyświetla, **Pobieranie**
 jako jedyne ściąga dane wektorowe i pliki, **Wyszukiwanie** pyta usługę punktową, **Narzędzia**
 zmieniają projekt. Polecenie wykonuje się w wątku interfejsu, więc pobieranie jako polecenie
-zamrażało okno na czas transferu. Dlatego na wstędze nie ma już 108 przycisków pobierania: jest
-dziewięć narzędzi w panelu Narzędzia, wszystkie w tle, z postępem i przyciskiem Anuluj, w tym pięć
-pobierających zbiory WFS i cztery od paczek.
+zamrażało okno na czas transferu. Dlatego na wstędze nie ma 108 przycisków pobierania: jest
+jedenaście narzędzi w panelu Narzędzia, wszystkie w tle, z postępem i przyciskiem Anuluj: sześć
+pobiera zbiory WFS, cztery obsługują paczki, a jedno odświeża rejestr EZiUDP.
 
 Jeden wyjątek jest opisany niżej: trzy polecenia w menu **Model** grupy **Wysokości** pobierają
 raster. Narzędzie geoprzetwarzania nie umie dodać warstwy rastrowej, więc raster pobiera i kładzie
@@ -17,9 +17,8 @@ na mapie polecenie.
 
 Wszystkie grupy jadą w układzie `small`, czyli trzy kontrolki w kolumnie, a katalog jest zwinięty
 najpierw według instytucji: GUGiK to jedna pozycja z czterema tematami w podmenu. Wstęga ma przez
-to 11 kolumn zamiast 28 i mieści się w oknie 1480 px bez strzałki przewijania. Zmierzone na
-zrzucie z `ui_shot` (1480 x 760, polski interfejs): treść kończy się na 1390 px, po zwinięciu
-**Wysokości** i **Wyszukiwania** w jedno menu każde. Przed zwinięciem było 1439 px.
+to 10 kolumn zamiast 28 i mieści się w oknie 1366 px bez strzałki przewijania. Zmierzone na
+zrzucie z `ui_shot` (1366 x 900, polski interfejs): treść kończy się na 1290 px.
 
 | Grupa | Pozycja | Co robi |
 | --- | --- | --- |
@@ -31,7 +30,7 @@ zrzucie z `ui_shot` (1480 x 760, polski interfejs): treść kończy się na 1390
 | | Prostokąt do obszaru | Przenosi narysowany prostokąt do „Obszar pobierania” i usuwa warstwę rysunku |
 | | Anuluj rysowanie | Wyłącza narzędzie rysowania i wraca do przeglądania |
 | | Usuń obszar | Usuwa warstwę „Obszar pobierania”, żeby zacząć od pustej |
-| **Narzędzia** | Panel | Panel ze statusami (widok, obszar, para warstwa → granica), przyciskami, drzewem warstw granicznych, drzewem map z wyszukiwarką, katalogiem i zapisanymi odpowiedziami; **Odśwież panel** czyta je od nowa |
+| **Narzędzia** | Panel | Panel ze statusami (widok, obszar, para warstwa → granica), przyciskami, drzewem warstw granicznych, drzewem map z trzema korzeniami (podkłady, pobieranie, rejestr EZiUDP), suwakiem i zaznaczeniem limitu pobrania, katalogiem i zapisanymi odpowiedziami; **Odśwież panel** czyta je od nowa |
 | | Przytnij do warstwy | Tnie warstwę do wybranej w panelu granicy, domyślnie do „Obszar pobierania” |
 | **WMS (podgląd)** | GUGiK | 76 usług w czterech tematach: Ortofoto i NMT (20), Mapy (21), Kataster i granice (24), Pozostałe dane (11) |
 | | Mapy historyczne | 11 arkuszy WIG i map niemieckich |
@@ -49,10 +48,10 @@ zrzucie z `ui_shot` (1480 x 760, polski interfejs): treść kończy się na 1390
 | | Ochrona przyrody (GDOŚ) | 15 typów WFS: Natura 2000, rezerwaty, parki, Ramsar, korytarze |
 | | Pakiety | Trzy skorowidze arkuszy (ortofoto, NMT, pozostałe) i pobieranie arkuszy do folderu |
 | **Wysokości** | Model | Teren KRON86 (GeoTIFF), teren EVRF2007, pokrycie NMPT i ustawianie stylu modelu |
-| **Wyszukiwanie** | Wyszukiwanie | Działka z ULDK, adres pod środkiem mapy, wysokość w punkcie i aktualizacja rejestru |
+| **Wyszukiwanie** | Wyszukiwanie | Działka z ULDK, adres pod środkiem mapy, wysokość w punkcie i wyszukiwanie w rejestrze EZiUDP; obok **Aktualizuj rejestr** |
 
-Łącznie: **215 poleceń** (29 własnych, 111 usług katalogu krajowego, 30 usług Wody Polskie i 45 map
-Cartomatic) oraz **10 narzędzi**. Wcześniej było 228 poleceń, z czego 108 pobierało dane natychmiast,
+Łącznie: **223 polecenia** (37 własnych, 111 usług katalogu krajowego, 30 usług Wody Polskie i 45 map
+Cartomatic) oraz **11 narzędzi**. Wcześniej było 228 poleceń, z czego 108 pobierało dane natychmiast,
 blokując okno.
 
 ### Usługi krajowe
@@ -455,6 +454,12 @@ będzie: kod języka innego niż `pl` daje angielski.
   wtyczka mówi od siebie: przyciski, menu, błędy, postęp.
 - **`choices`**: wartością jest polska nazwa zbioru albo tytuł skorowidza, a kod przyjmuje też
   identyfikator i nazwę typu, więc zapisane wywołanie działa niezależnie od języka interfejsu.
+- **Menu Rejestr i rejestr EZiUDP:** etykiety pozycji są nazwami usług, więc zostają w obu językach
+  takie same („GIOŚ: hałas”, „EGiB: Poznań”), a podpowiedzi są tłumaczone.
+- **Kontrola kompletności:** `tools/manifest.py` **odrzuca** build, gdy tekst interfejsu nie ma
+  polskiego tłumaczenia, a także gdy tłumaczenie nie pasuje do żadnego tekstu. Sprawdzone:
+  180 tekstów interfejsu, 178 wpisów `i18n.pl`, zero braków i zero sierot; 316 nazw danych
+  (usługi, zbiory) jest własnych i nie jest tłumaczonych.
 
 `rustgis-cli` zawsze wysyła `lang: "en"`, bo język ustawia tylko aplikacja z interfejsem. Wersję
 polską sprawdza się na poziomie protokołu: podaj żądanie z `"lang": "pl"` na standardowe wejście

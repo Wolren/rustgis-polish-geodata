@@ -23,8 +23,7 @@ TOOL = "pobierz-gdos"
 POLAND_2180 = (170000.0, 140000.0, 880000.0, 880000.0)
 TIMEOUT = 90
 
-# (feature type, short label, full title). Labels are the tool's choices, so they must be unique
-# and at most 32 characters: the longest title of this set does not fit.
+# (feature type, short label, full title); labels are the tool choices, unique and at most 32 characters.
 TYPES = [
     ("GDOS:ObszarySpecjalnejOchrony", "Natura 2000 ptasie (OSO)", "Natura 2000 Obszary Specjalnej Ochrony"),
     ("GDOS:SpecjalneObszaryOchrony", "Natura 2000 siedliskowe (SOO)", "Natura 2000 Specjalne Obszary Ochrony"),

@@ -22,8 +22,7 @@ OUT = os.path.join(ROOT, "data", "eziudp.json")
 API = "https://integracja.gugik.gov.pl/eziudp/api.php?format=json"
 AGENT = "Mozilla/5.0 (compatible; dane-pl/0.6; tools/eziudp.py)"
 TIMEOUT = 25
-# Where a WMS tile is asked for, in EPSG:3857 metres: Poznań, the coast and the mountains, so a
-# service that covers only part of Poland still answers one of them.
+# WMS tiles are asked for in EPSG:3857 over Poznań, the coast and the mountains, so a partial service answers.
 BOXES = [
     ("Poznań", "1883782,6873571,1884382,6874171"),
     ("Gdańsk", "2075809,7236423,2076409,7237023"),
