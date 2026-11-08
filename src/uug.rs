@@ -5,7 +5,7 @@
 //! user wants it now, and a height is a property of the terrain, not of a document.
 
 use crate::catalog;
-use crate::host::Host;
+use crate::host::{self, Host};
 use crate::http;
 use crate::text::{self, Lang};
 use crate::tm;
@@ -26,6 +26,143 @@ fn point(host: &mut Host, params: &Value) -> Result<(f64, f64), String> {
             Ok(tm::to_2180(lon, lat))
         }
     }
+}
+
+/// One address as UUG answers it: the point in lon and lat, and the properties it names.
+pub fn locate(address: &str, lang: Lang) -> Result<(f64, f64, Map<String, Value>), String> {
+    let url = format!("{UUG}?request=GetAddress&address={}", encode(address));
+    let body = http::fetch(&url, 25, lang)?;
+    let answer: Value = serde_json::from_str(&body).map_err(|_| text::uug_unreadable(lang))?;
+    let candidates: Vec<&Value> = answer
+        .get("results")
+        .and_then(Value::as_object)
+        .map(|results| results.values().collect())
+        .unwrap_or_default();
+    if candidates.is_empty() {
+        return Err(text::uug_no_address(lang, address));
+    }
+    let found = choose(&candidates, None);
+    let x = found.get("x").and_then(number).ok_or_else(|| text::uug_unreadable(lang))?;
+    let y = found.get("y").and_then(number).ok_or_else(|| text::uug_unreadable(lang))?;
+    let [lon, lat] = tm::to_wgs84(x, y);
+    let mut properties = Map::new();
+    for (name, key) in [
+        ("city", "city"),
+        ("street", "street"),
+        ("number", "number"),
+        ("postcode", "code"),
+        ("teryt", "teryt"),
+        ("accuracy", "accuracy"),
+        ("jednostka", "jednostka"),
+    ] {
+        if let Some(value) = found.get(key).cloned() {
+            properties.insert(name.into(), value);
+        }
+    }
+    properties.insert("query".into(), json!(address));
+    properties.insert("pl1992".into(), json!([x, y]));
+    Ok((lon, lat, properties))
+}
+
+/// Geocodes the addresses of a CSV file into one point layer, as a tool.
+pub fn geocode_csv(request: &Value, lang: Lang) -> Result<Value, String> {
+    let params = request.get("params").cloned().unwrap_or(Value::Null);
+    let path = params
+        .get("file")
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|path| !path.is_empty())
+        .ok_or_else(|| text::csv_needs_file(lang))?;
+    let limit = params
+        .get("limit")
+        .and_then(Value::as_u64)
+        .unwrap_or(500)
+        .clamp(1, 5000) as usize;
+    let column = params
+        .get("kolumna")
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|name| !name.is_empty());
+
+    let body = std::fs::read_to_string(path).map_err(|e| text::file_failed(lang, path, &e.to_string()))?;
+    let rows = read_csv(&body, column);
+    if rows.is_empty() {
+        return Err(text::csv_empty(lang, path));
+    }
+    let total = rows.len().min(limit);
+    let mut features = Vec::new();
+    let mut failed = 0usize;
+    for (index, (address, extra)) in rows.iter().take(total).enumerate() {
+        match locate(address, lang) {
+            Ok((lon, lat, mut properties)) => {
+                properties.insert("adres".into(), json!(address));
+                for (key, value) in extra {
+                    properties.insert(key.clone(), value.clone());
+                }
+                features.push(json!({
+                    "type": "Feature",
+                    "geometry": { "type": "Point", "coordinates": [lon, lat] },
+                    "properties": Value::Object(properties),
+                }));
+            }
+            Err(_) => failed += 1,
+        }
+        if index % 25 == 24 {
+            host::progress_line(&text::csv_progress(lang, index + 1, total));
+        }
+    }
+    if features.is_empty() {
+        return Err(text::csv_all_failed(lang, total));
+    }
+    let name = text::csv_layer(lang);
+    let collection = json!({ "type": "FeatureCollection", "features": features });
+    let note = text::csv_done(lang, features.len(), failed);
+    Ok(json!({
+        "layers": [{ "name": name, "geojson": collection }],
+        "messages": [note],
+    }))
+}
+
+/// The addresses of a CSV: the column the caller names, else the first one that looks like an address.
+fn read_csv(body: &str, column: Option<&str>) -> Vec<(String, Map<String, Value>)> {
+    let mut lines = body.lines().filter(|line| !line.trim().is_empty());
+    let Some(header) = lines.next() else {
+        return Vec::new();
+    };
+    let separator = if header.matches(';').count() >= header.matches(',').count() {
+        ';'
+    } else {
+        ','
+    };
+    let names: Vec<String> = header
+        .split(separator)
+        .map(|name| name.trim().trim_matches('"').to_lowercase())
+        .collect();
+    let wanted = column.map(|name| name.to_lowercase());
+    let index = wanted
+        .as_ref()
+        .and_then(|name| names.iter().position(|cell| cell == name))
+        .or_else(|| {
+            names
+                .iter()
+                .position(|cell| cell.contains("adres") || cell == "address")
+        })
+        .unwrap_or(0);
+    let mut rows = Vec::new();
+    for line in lines {
+        let cells: Vec<&str> = line.split(separator).map(|cell| cell.trim().trim_matches('"')).collect();
+        let Some(address) = cells.get(index).map(|cell| cell.trim()).filter(|cell| !cell.is_empty()) else {
+            continue;
+        };
+        let mut extra = Map::new();
+        for (position, cell) in cells.iter().enumerate() {
+            if position != index && !cell.is_empty() {
+                extra.insert(names.get(position).cloned().unwrap_or_default(), json!(cell));
+            }
+        }
+        rows.push((address.to_string(), extra));
+    }
+    rows
 }
 
 /// Finds one address and adds it as a point layer.

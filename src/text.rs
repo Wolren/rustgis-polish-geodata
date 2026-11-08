@@ -1435,12 +1435,72 @@ pub fn egib_capped(lang: Lang, cap: usize) -> String {
     )
 }
 
+/// The county run has read part of its pages.
+pub fn egib_progress(lang: Lang, count: usize) -> String {
+    pick!(
+        lang,
+        format!("county EGiB: {count} features so far"),
+        format!("EGiB powiatu: {count} obiektów na razie")
+    )
+}
+
 /// The county layer is on the map.
 pub fn egib_added(lang: Lang, layer: &str, count: usize, county: &str) -> String {
     pick!(
         lang,
         format!("{layer}: {count} features from the EGiB of {county}"),
         format!("{layer}: {count} obiektów z EGiB {county}")
+    )
+}
+
+/// The CSV geocoder got no file.
+pub fn csv_needs_file(lang: Lang) -> String {
+    pick!(
+        lang,
+        "pick the CSV file with the addresses",
+        "wskaż plik CSV z adresami"
+    )
+    .to_string()
+}
+
+/// The CSV holds no usable row.
+pub fn csv_empty(lang: Lang, path: &str) -> String {
+    pick!(
+        lang,
+        format!("{path} holds no address row"),
+        format!("{path} nie ma żadnego wiersza z adresem")
+    )
+}
+
+/// The geocoder is partway through the file.
+pub fn csv_progress(lang: Lang, done: usize, total: usize) -> String {
+    pick!(
+        lang,
+        format!("geocoding: {done} of {total}"),
+        format!("geokodowanie: {done} z {total}")
+    )
+}
+
+/// No row of the CSV could be geocoded.
+pub fn csv_all_failed(lang: Lang, total: usize) -> String {
+    pick!(
+        lang,
+        format!("UUG found none of the {total} addresses"),
+        format!("UUG nie znalazło żadnego z {total} adresów")
+    )
+}
+
+/// The point layer built from the CSV.
+pub fn csv_layer(lang: Lang) -> String {
+    pick!(lang, "Geocoded addresses", "Geokodowane adresy").to_string()
+}
+
+/// How the CSV run went.
+pub fn csv_done(lang: Lang, found: usize, failed: usize) -> String {
+    pick!(
+        lang,
+        format!("geocoded {found}, {failed} not found"),
+        format!("zgeokodowane {found}, nie znaleziono {failed}")
     )
 }
 

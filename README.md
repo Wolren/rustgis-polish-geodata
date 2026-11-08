@@ -53,13 +53,13 @@ dowolnej warstwie poligonowej wybranej w drzewie.
 Skrypt ustawia obszar bez rysowania: `obszar-json` bierze `{"bbox": [zachód, południe, wschód,
 północ]}` albo `{"geojson": <Feature>}` i używa jego zasięgu.
 
-`obszar-jednostka` bierze gminę, powiat albo województwo po nazwie, z PRG. Parametr `przytnij`
-tnie wskazaną warstwę do tej jednostki w tym samym przebiegu, więc jedno wywołanie daje warstwę
-już przyciętą do granicy.
+`obszar-jednostka` bierze gminę, powiat, województwo, obręb albo miasto po nazwie, z PRG. Parametr
+`przytnij` tnie wskazaną warstwę do tej jednostki w tym samym przebiegu, więc jedno wywołanie daje
+warstwę już przyciętą do granicy. Miasto, którego PRG nie ma w warstwie miast, wraca jako gmina.
 
 `dzialki-powiat` kładzie własne EGiB powiatu jako wektorowe działki i budynki. ULDK nazywa powiat
-pod obszarem, rejestr podaje adres WFS tego powiatu, a jedno ograniczone żądanie na typ wraca jako
-warstwa. Limit to 6 000 obiektów; większy obszar dostaje komunikat.
+pod obszarem, rejestr podaje adres WFS tego powiatu, a strony po 1 000 obiektów (`STARTINDEX`) wracają
+jako jedna warstwa. Sufit to 20 000 obiektów, a parametr `limit` obniża go.
 
 ## Pobieranie
 
@@ -116,6 +116,7 @@ warstwę zamiast wszystkich. Tytuły pochodzą z `GetCapabilities` i leżą w `d
 | Polecenie | Usługa | Co odpowiada |
 | --- | --- | --- |
 | `geokoduj` | UUG | punkt, ulica, numer i kod dla adresu |
+| **Geocode a CSV** (narzędzie) | UUG | warstwa punktowa z pliku CSV, z liczbą adresów, których nie znalazł |
 | `adres-odwrotnie` | UUG | adres pod środkiem mapy albo pod `lon`, `lat` |
 | `wysokosc` | NMT | wysokość w PL-KRON86-NH w punkcie |
 | `dzialka-id` | ULDK | granica działki dla identyfikatora |

@@ -28,6 +28,7 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     // The sheet downloader and the register update name no dataset, so they run before `dane`.
     match request.get("id").and_then(Value::as_str) {
         Some("pobierz-arkusze") => return sheets::run(request, lang),
+        Some("geokoduj-csv") => return crate::uug::geocode_csv(request, lang),
         Some("aktualizuj-rejestr") => {
             let params = request.get("params").cloned().unwrap_or_else(|| json!({}));
             return crate::zrodla::update(&params, lang);

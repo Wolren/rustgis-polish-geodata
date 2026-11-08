@@ -6,7 +6,7 @@
 //! capabilities name the types, and one bounded `GetFeature` per type becomes a layer.
 
 use crate::gml;
-use crate::host::Host;
+use crate::host::{self, Host};
 use crate::http;
 use crate::text::{self, Lang};
 use crate::zrodla;
@@ -14,8 +14,10 @@ use serde_json::{json, Value};
 
 const ULDK: &str = "https://uldk.gugik.gov.pl/";
 
-/// How many features one type may answer: a city's parcels run to thousands.
-const MAX_FEATURES: usize = 6000;
+/// How many features one run may collect: a city's parcels run to thousands.
+const MAX_FEATURES: usize = 20_000;
+/// How many features one page asks for.
+const PAGE: usize = 1000;
 
 /// Adds the county's parcels and buildings for the area the request names.
 pub fn from_area(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String> {
@@ -43,14 +45,28 @@ pub fn from_area(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, S
         return Err(text::egib_no_types(lang, &county));
     }
 
+    let cap = params
+        .get("limit")
+        .and_then(Value::as_u64)
+        .map(|limit| (limit as usize).clamp(1, MAX_FEATURES))
+        .unwrap_or(MAX_FEATURES);
     let mut collection: Vec<Value> = Vec::new();
     for type_name in &types {
-        let url = bounded_url(&service.url, type_name, box_lon);
-        let body = http::fetch(&url, 110, lang)?;
-        let mut rows = gml::parse_features(&body, false, lang)?;
-        rows.truncate(MAX_FEATURES.saturating_sub(collection.len()));
-        collection.extend(rows);
-        if collection.len() >= MAX_FEATURES {
+        let mut start = 0usize;
+        loop {
+            let url = page_url(&service.url, type_name, box_lon, PAGE, start);
+            let body = http::fetch(&url, 110, lang)?;
+            let mut rows = gml::parse_features(&body, false, lang)?;
+            let got = rows.len();
+            rows.truncate(cap.saturating_sub(collection.len()));
+            collection.extend(rows);
+            if got < PAGE || collection.len() >= cap {
+                break;
+            }
+            start += got;
+            host::progress_line(&text::egib_progress(lang, collection.len()));
+        }
+        if collection.len() >= cap {
             break;
         }
     }
@@ -59,12 +75,12 @@ pub fn from_area(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, S
     }
 
     let name = text::egib_layer(lang, &county);
-    let capped = collection.len() >= MAX_FEATURES;
+    let capped = collection.len() >= cap;
     let geojson = json!({ "type": "FeatureCollection", "features": collection });
     host.add_layer(&name, geojson)?;
     host.notify(&text::egib_added(lang, &name, collection.len(), &county));
     if capped {
-        host.notify(&text::egib_capped(lang, MAX_FEATURES));
+        host.notify(&text::egib_capped(lang, cap));
     }
     Ok(json!({
         "layer": name,
@@ -182,14 +198,14 @@ fn capability_types(body: &str) -> Vec<String> {
     names
 }
 
-/// The `GetFeature` address for one type, bounded by the area.
-fn bounded_url(url: &str, type_name: &str, box_lon: [f64; 4]) -> String {
+/// The `GetFeature` address for one type and page, bounded by the area.
+fn page_url(url: &str, type_name: &str, box_lon: [f64; 4], count: usize, start: usize) -> String {
     let box_text = format!(
         "{:.6},{:.6},{:.6},{:.6},EPSG:4326",
         box_lon[0], box_lon[1], box_lon[2], box_lon[3]
     );
     format!(
-        "{url}?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES={}&SRSNAME=EPSG:4326&COUNT={MAX_FEATURES}&BBOX={box_text}",
+        "{url}?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES={}&SRSNAME=EPSG:4326&COUNT={count}&STARTINDEX={start}&BBOX={box_text}",
         encode(type_name)
     )
 }
@@ -239,9 +255,10 @@ mod tests {
 
     #[test]
     fn a_bounded_url_names_the_box_and_the_type() {
-        let url = bounded_url("https://x/wfs", "gmgml:dzialki", [16.9, 52.4, 17.0, 52.5]);
+        let url = page_url("https://x/wfs", "gmgml:dzialki", [16.9, 52.4, 17.0, 52.5], 1000, 2000);
         assert!(url.contains("TYPENAMES=gmgml:dzialki"), "{url}");
         assert!(url.contains("BBOX=16.900000,52.400000,17.000000,52.500000,EPSG:4326"));
-        assert!(url.contains("COUNT=6000"));
+        assert!(url.contains("COUNT=1000"));
+        assert!(url.contains("STARTINDEX=2000"));
     }
 }

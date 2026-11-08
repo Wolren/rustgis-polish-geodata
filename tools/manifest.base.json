@@ -124,8 +124,8 @@
       "id": "obszar-jednostka",
       "label": "Area from a\nunit",
       "icon": "polygon_tool",
-      "help": "Sets the area from a gmina, a powiat or a voivodeship by name, from PRG. Pass przytnij to cut a layer to it in the same run.",
-      "params": "{\"nazwa\": \"Poznań\", \"poziom\": \"gmina\"|\"powiat\"|\"wojewodztwo\", \"przytnij\": \"layer name (optional)\"}"
+      "help": "Sets the area from a gmina, a powiat, a voivodeship, an obręb or a city by name, from PRG. Pass przytnij to cut a layer to it in the same run.",
+      "params": "{\"nazwa\": \"Poznań\", \"poziom\": \"gmina\"|\"powiat\"|\"wojewodztwo\"|\"obreb\"|\"miasto\", \"przytnij\": \"layer name (optional)\"}"
     },
     {
       "id": "obszar-anuluj",
@@ -623,6 +623,36 @@
           "help": "Files over 0,5 GB are refused until this is ticked, so a big run is a decision."
         }
       ]
+    },
+    {
+      "id": "geokoduj-csv",
+      "name": "Geocode a CSV",
+      "summary": "Geocodes the addresses of a CSV file with UUG and adds them as one point layer, with a count of the rows it could not find.",
+      "toolbox": "Polish Geodata",
+      "params": [
+        {
+          "name": "file",
+          "label": "CSV file",
+          "kind": "file",
+          "extensions": [
+            "csv"
+          ],
+          "help": "One address per row, with a header naming the column."
+        },
+        {
+          "name": "kolumna",
+          "label": "Address column",
+          "kind": "text",
+          "help": "Header name of the address column; the first column when left out."
+        },
+        {
+          "name": "limit",
+          "label": "Rows to geocode",
+          "kind": "number",
+          "default": 500,
+          "help": "500 by default, 5000 at most."
+        }
+      ]
     }
   ],
   "tab": {
@@ -1063,9 +1093,17 @@
       "Wody\nlayers": "Wody:\nwarstwy",
       "Lists the layers of one Wody Polskie service: the id to pass as warstwa, and its title. Without usluga it lists the services with their layer counts.": "Wypisuje warstwy jednej usługi Wody Polskie: identyfikator do parametru warstwa i tytuł. Bez uslugi wypisuje usługi z liczbą warstw.",
       "Area from a\nunit": "Obszar z\njednostki",
-      "Sets the area from a gmina, a powiat or a voivodeship by name, from PRG. Pass przytnij to cut a layer to it in the same run.": "Ustawia obszar z gminy, powiatu albo województwa po nazwie, z PRG. Parametr przytnij tnie warstwę do niego w tym samym przebiegu.",
       "Parcels from\nthe county": "Działki\nz powiatu",
-      "Adds the county's own EGiB as vector parcels and buildings for the area: ULDK names the county, the register gives its WFS, and one bounded request per type lands as a layer.": "Dodaje własne EGiB powiatu jako wektorowe działki i budynki dla obszaru: ULDK nazywa powiat, rejestr podaje jego WFS, a jedno ograniczone żądanie na typ kładzie warstwę."
+      "Adds the county's own EGiB as vector parcels and buildings for the area: ULDK names the county, the register gives its WFS, and one bounded request per type lands as a layer.": "Dodaje własne EGiB powiatu jako wektorowe działki i budynki dla obszaru: ULDK nazywa powiat, rejestr podaje jego WFS, a jedno ograniczone żądanie na typ kładzie warstwę.",
+      "Sets the area from a gmina, a powiat, a voivodeship, an obręb or a city by name, from PRG. Pass przytnij to cut a layer to it in the same run.": "Ustawia obszar z gminy, powiatu, województwa, obrębu albo miasta po nazwie, z PRG. Parametr przytnij tnie warstwę do niego w tym samym przebiegu.",
+      "Geocode a CSV": "Geokoduj CSV",
+      "Geocodes the addresses of a CSV file with UUG and adds them as one point layer, with a count of the rows it could not find.": "Geokoduje adresy z pliku CSV w UUG i dodaje je jako jedną warstwę punktową, z liczbą wierszy, których nie znalazł.",
+      "CSV file": "Plik CSV",
+      "One address per row, with a header naming the column.": "Jeden adres w wierszu, z nagłówkiem nazywającym kolumnę.",
+      "Address column": "Kolumna adresu",
+      "Header name of the address column; the first column when left out.": "Nazwa nagłówka kolumny z adresem; bez niej pierwsza kolumna.",
+      "Rows to geocode": "Wiersze do geokodowania",
+      "500 by default, 5000 at most.": "Domyślnie 500, najwyżej 5000."
     }
   },
   "moreMaps": {

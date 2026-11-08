@@ -98,12 +98,11 @@ potem według tematu, i którą całą da się sterować przez MCP.
 
 ### Wyszukiwanie i ULDK
 
-- **Geokodowanie z pliku CSV**: narzędzie z parametrem `file` (CSV → warstwa punktowa), jak
-  „Geokodowanie Adresów UUG GUGiK”. Dziś `geokoduj` obsługuje jeden adres.
 - **ULDK po obrębie**: kaskada województwo → powiat → gmina → obręb → numer, import z CSV i kontrola
   całej warstwy działek.
-- **Obszar z jednostki administracyjnej**: zrobione jako `obszar-jednostka` (gmina, powiat,
-  województwo) z opcjonalnym `przytnij`. Zostaje dzielnica i obręb (typy A04 i A06 w PRG).
+- **Obszar z jednostki administracyjnej**: zrobione jako `obszar-jednostka` dla gminy, powiatu,
+  województwa, obrębu i miasta, z opcjonalnym `przytnij`. Miasto nieobecne w warstwie miast wraca
+  jako gmina.
 
 ### Host (RustGIS)
 

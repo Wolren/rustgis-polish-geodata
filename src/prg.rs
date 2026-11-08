@@ -18,6 +18,8 @@ const LEVELS: &[(&str, &str)] = &[
     ("gmina", "A03_Granice_gmin"),
     ("powiat", "A02_Granice_powiatow"),
     ("wojewodztwo", "A01_Granice_wojewodztw"),
+    ("obreb", "A06_Granice_obrebow_ewidencyjnych"),
+    ("miasto", "A04_Granice_miast"),
 ];
 
 /// Sets the area from a unit the request names, and cuts a layer to it when asked.
@@ -38,7 +40,11 @@ pub fn area(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String
         .to_lowercase();
     let type_name = level_type(&level).ok_or_else(|| text::prg_levels(lang))?;
 
-    let features = fetch(name, type_name, &level, lang)?;
+    let mut features = fetch(name, type_name, &level, lang)?;
+    // A city that PRG lists as a gmina only still has its boundary there, so it falls back.
+    if features.is_empty() && level.starts_with("miasto") {
+        features = fetch(name, "A03_Granice_gmin", "gmina", lang)?;
+    }
     let rings = rings_of(&features);
     if rings.is_empty() {
         return Err(text::prg_no_unit(lang, name, &level));
@@ -145,6 +151,10 @@ fn spellings(name: &str, level: &str) -> Vec<String> {
         out.push(format!("powiat {lower}"));
         out.push(format!("powiat {}", lower.trim_start_matches("powiat ")));
     }
+    // PRG writes an obręb in capitals and a city as "Janów Lubelski - miasto".
+    out.push(name.to_uppercase());
+    out.push(format!("{name} - miasto"));
+    out.push(format!("{name} - miasto").to_uppercase());
     let mut first = name.chars();
     if let Some(letter) = first.next() {
         let capitalised = format!("{}{}", letter.to_uppercase(), first.as_str());
@@ -230,6 +240,8 @@ mod tests {
         assert_eq!(level_type("powiat"), Some("A02_Granice_powiatow"));
         assert_eq!(level_type("województwo"), Some("A01_Granice_wojewodztw"));
         assert_eq!(level_type("powiaty"), Some("A02_Granice_powiatow"));
+        assert_eq!(level_type("obreb"), Some("A06_Granice_obrebow_ewidencyjnych"));
+        assert_eq!(level_type("miasto"), Some("A04_Granice_miast"));
         assert_eq!(level_type("dzielnica"), None);
     }
 
