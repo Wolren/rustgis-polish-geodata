@@ -1,69 +1,139 @@
 ---
 name: polish-geodata
-description: Polish national geodata from GUGiK, GDOŚ and PIG in RustGIS — pick an area, download WFS datasets as layers, look up a parcel, an address or a height. Use for Polish parcels, addresses, boundaries, orthophoto, Natura 2000, reserves, geological layers and anything "z Geoportalu" or "z GUGiK".
+description: Polish national geodata in RustGIS: raster overlays, vector WFS datasets downloaded as layers, the county EGiB, a 3 296-address service register, 1 m elevation models with 3D terrain, and ULDK, UUG and NMT lookups. Use for Polish parcels, addresses, boundaries, orthophoto, protected areas, geology, elevation, and anything "z Geoportalu" or "z GUGiK".
 ---
 
-# Polish geodata (polish-geodata)
+# Polish geodata
 
-Based on the plugin's README. Commands are `plugin:polish-geodata/<id>`, tools `plugin:polish-geodata/<id>`.
+Based on the plugin's README. Commands are `plugin:polish-geodata/<id>`, tools
+`plugin:polish-geodata/<id>`. Every command declares its arguments, so `search_commands` and
+`rustgis-cli commands` show them.
+
+## Two halves
+
+A **command** shows something at once: it adds a tile layer or a layer from ULDK. A **tool** runs in
+the background with progress and Cancel, and returns layers. Three elevation commands are the
+exception: they download inside the command, because a tool cannot add a raster layer.
 
 ## Area first
 
-Every download takes an area layer (`obszar`), a polygon layer on the map:
+Every download takes an area layer, a polygon layer on the map. The layer is "Area to download"
+(Polish "Obszar pobierania"). A selection on it narrows the download.
 
-- `obszar-widok` makes the area from the current view.
-- `obszar-rysuj` arms the map's polygon tool; the drawn shape lands in "Area to download".
-- `obszar-prostokat` arms the app's rectangle tool: it draws a graphic, not a feature. Any plugin
-  command then takes it, and `obszar-przejmij` does it at once.
-- `obszar-anuluj` drops a pending drawing, `obszar-wyczysc` removes the area layer.
-
-The layer is named "Area to download" (Polish: "Obszar pobierania"). A selection on it narrows the
-download.
-
-## Download
-
-`run_tool` with one of the six tools and `{"dane": <label>, "obszar": <area layer>, "confirm": false}`:
-
-| Tool | Datasets |
+| Command | What it sets |
 | --- | --- |
-| `pobierz-adresy` | addresses, buildings, parcels of a district |
-| `pobierz-granice` | PRG units, EGIB boundaries |
-| `pobierz-osnowy` | control points, levelling |
-| `pobierz-urzedy` | offices, courts, health |
-| `pobierz-pozostale` | maritime, historic monuments, the rest |
-| `pobierz-gdos` | Natura 2000, reserves, parks, Ramsar, corridors, wind farms |
+| `obszar-widok` | the current view, as it is |
+| `obszar-json` | `{"bbox": [west, south, east, north]}` or `{"geojson": <Feature>}` |
+| `obszar-jednostka` | `{"nazwa": "Poznań", "poziom": "gmina"}`; levels are `gmina`, `powiat`, `wojewodztwo`, `obreb`, `miasto` |
+| `obszar-jednostka` + `przytnij` | the same, and a named layer is cut to that unit in the same run |
+| `obszar-rysuj` | arms the polygon tool; a drawn shape lands in the area |
+| `obszar-prostokat` | arms the app's rectangle tool, which draws a graphic |
+| `obszar-przejmij` | moves that graphic into the area layer |
+| `obszar-anuluj` | drops a pending drawing |
+| `obszar-wyczysc` | removes the area layer |
 
-`dane` is a label from the catalogue, so read it first: `run_command plugin:polish-geodata/katalog {}`
-gives every dataset's id, label, tool and area limit. `search_commands` finds datasets by word.
+A city that PRG lists only as a gmina falls back to its gmina boundary. An inverted or short box is
+refused with the shape the command wants.
 
-Rules the tool enforces, so plan for them:
+## Downloads
 
-- 6000 features per run. A bigger area returns what fits and says so.
-- Datasets with a small `max_span` refuse a wide area by name; give a smaller area.
-- 25 MB of WFS answers per run, unless the panel's slider or the form's `confirm` raises it; a
-  confirmed run stops at 256 MB. The message names the size.
-- The result is a new layer named after the dataset, added in one undo step.
+`run_tool` with a tool id and `{"dane": <dataset id>, "obszar": <area layer>}`. Read the catalogue
+first: `run_command plugin:polish-geodata/katalog {}` lists every dataset's id, label, tool and
+limit.
+
+| Tool | What it takes |
+| --- | --- |
+| `pobierz-adresy` | address points, streets, buildings |
+| `pobierz-granice` | PRG units, obręby, EGiB boundaries |
+| `pobierz-osnowy` | control networks |
+| `pobierz-urzedy` | offices, courts, health facilities |
+| `pobierz-pozostale` | the rest, including monuments and maritime data |
+| `pobierz-gdos` | 15 protected-area types: parks, reserves, Natura 2000, landscape parks |
+| `pobierz-arkusze`, `pobierz-skorowidz-orto`, `pobierz-skorowidz-nmt`, `pobierz-skorowidz-inne` | sheet indexes and the files their features point at |
+| `aktualizuj-rejestr` | reads the EZiUDP register again and writes the new addresses |
+
+Limits the tools enforce:
+
+- 6 000 features per run, and a bigger area gets a count and a refusal.
+- A small `max_span` dataset refuses a wide area by name.
+- 25 MB per run unless the panel raises it; the slider sets 5 to 500 MB, the hard ceiling is 256 MB.
+- An area the service counts at zero stops before the first page.
+
+The result is a layer named after the dataset, in one undo step. A WFS filter returns whole features
+that touch the area, so **Clip to layer** (`przytnij`) is what cuts them to the boundary.
+
+## County parcels and any register service
+
+- `dzialki-powiat {"limit": 20000}` reads ULDK for the county, the register for its EGiB WFS, and
+  pages one bounded request per type. It tries every WFS the county reports before it refuses.
+- `rejestr-pobierz {"usluga": "<register id>", "typy": "dzialki,budynki"}` reads any WFS the register
+  holds the same way. A server that refuses WFS 2.0.0 is asked again as 1.1.0.
+
+## Register of services
+
+- `zrodla {"szukaj": "geologia"}` searches 3 296 proved addresses by dataset, institution and TERYT.
+- `zrodla {"dodaj": "<id>"}` adds one service as a tile layer.
+- `rejestr-widok {"rodzaj": "wfs"}` narrows the register to the county under the map view.
+- `eziudp {"instytucja": "GIOŚ"}` asks the live register, which needs a filter: the whole register is
+  9 MB.
+- The panel's **Mapa** tree has a Register EZiUDP root: institution, then its WMS.
+
+## Elevation
+
+- `dem`, `dem-evr`, `dem-nmpt` add a 1 m model from the area: `{"area": "<layer>"}` optional.
+- `look` is `colours`, `classes` or `shading`; `terrain` is on by default; `exaggeration` runs 0 to 20.
+- A model becomes the 3D scene's ground with `map.terrain`, and the message names the height range.
+- `dem-terrain-off` takes the model off the ground again.
+- `dem-style {"layer": "…", "look": "classes"}` restyles a model already on the map.
+- A big grid waits for a second press within 120 s; the first press counts cells, MB and seconds.
 
 ## Lookups
 
-- `geokoduj {"adres": "Poznań, Głogowska 10"}` adds a point for an address.
-- `adres-odwrotnie {"lon": 21.02, "lat": 52.23}` names the address at a point (the map centre when
-  the parameters are absent) with the distance in metres.
-- `dzialka-id {"id": "…"}` fetches a parcel from ULDK by its identifier.
-- `wysokosc {"x": 356000, "y": 487000}` reads the terrain height at PL-1992 coordinates; without
-  them it uses the map centre.
-- `parcel` takes the parcel under the map centre.
+| Command | What it answers |
+| --- | --- |
+| `geokoduj {"adres": "Poznań, Głogowska 10"}` | a point for an address |
+| `adres-odwrotnie {"lon": 21.02, "lat": 52.23}` | the address at a point, else under the map centre |
+| `wysokosc {"x": 356000, "y": 487000}` | the terrain height in PL-KRON86-NH |
+| `dzialka-id {"id": "306401_1.0001.14/4"}` | a parcel boundary by ULDK identifier |
+| `parcel` | the parcel under the map centre |
+| `obreby {"teryt": "306401_1"}` | the cadastral obręby of a unit, with the codes parcels use |
 
-## Clip and panel
+## CSV tools
 
-- `przytnij` cuts the area's layer to the boundary layer chosen in the panel.
-- `panel-state` shows the view, the area, the layers, the catalogue and the stored answers.
-- `mapa {"panel": {"values": {"mapa": "v:orto"}}}` adds a map from the panel's list; `v:<command>`
-  is a map, `d:<tool>:<dataset>` runs a download. A folder row answers what to pick instead.
-- The panel's checkbox and slider store the download size limit for later runs.
+Both take a file through the host: the tool receives the bytes in `files`, and the parameter holds
+the name. A script may pass `{"name": "x.csv", "data": <base64>}` instead.
 
-## Maps
+- `geokoduj-csv {"file": …, "kolumna": "adres", "limit": 500}` geocodes a CSV with UUG and returns one
+  point layer, plus a count of the addresses it did not find.
+- `dzialki-csv {"file": …, "kolumna": "id", "limit": 200}` checks ULDK identifiers and returns the
+  parcels it found, plus a count of the misses.
 
-`plugin:polish-geodata/katalog` lists the overlays too: GUGiK (orthophoto, BDOT10k, parcels, addresses,
-PRG, place names, hillshade), GDOŚ, PIG, PKP PLK, GUS, Wody Polskie, IMGW and 45 Cartomatic maps.
-Each is one command that adds a tile layer, and a second run of the same command removes it.
+## Clip, panel, settings
+
+- `przytnij {"layer": "<layer>", "obszar": "<boundary>"}` cuts a layer to a boundary. A selection on
+  the boundary layer is copied to a temporary layer, so the cut follows the selected shapes.
+- `panel-state` shows the view, the area, the boundary pair, the layers, the catalogue and the stored
+  answers.
+- `mapa {"panel": {"mapa": "v:orto"}}` adds a map from the panel's list: `v:<command>` is a map,
+  `d:<tool>:<dataset>` runs a download. A folder row answers what to pick instead.
+- `ustawienia {"potwierdz-duze": true, "limit-mb": 50}` stores the download size limit.
+- `wyczysc-cache` clears the stored answers and the downloaded models.
+- `zoom-polska` brings the map to Poland, the only extent GUGiK serves.
+
+## Maps and Water
+
+`katalog` lists the overlays: 112 WMS, including GUGiK (76), historical maps, PIG geology, NID, BDL,
+IMGW, GUS, Wody Polskie (32 services) and Cartomatic (45 maps). Each is one command that adds a tile
+layer, and a second run of the same command removes it.
+
+`wody-warstwy {"usluga": "wody-apgw"}` lists a service's layers with their titles, and
+`wody-apgw {"warstwa": "Główne rzeki"}` puts one layer on the map instead of all of them.
+
+## Habits that avoid wasted runs
+
+- Read `katalog` before a download; a wrong dataset id names itself in the refusal.
+- Make the area as small as the question needs: parcels weigh about 1.3 KB each, a commune boundary
+  about 140 KB.
+- Ask for a refusal to be read: every limit message names the measured size and the next step.
+- A repeated run is cheap: answers are cached for seven days, pages are streamed and parsed as they
+  arrive.

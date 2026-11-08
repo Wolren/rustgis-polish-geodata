@@ -1,9 +1,9 @@
-"""Checks that every command and tool a README names is really in the manifest.
+"""Checks that every command and tool the docs name is really in the manifest.
 
-Two READMEs drift apart, and a reader trusts them more than the code. This check makes the drift
-loud: a name that `plugin.json` does not hold fails the build.
+Two READMEs and the skill drift apart, and a reader trusts them more than the code. This check
+makes the drift loud: a name that `plugin.json` does not hold fails the build.
 
-    python tools/readme_check.py          both READMEs
+    python tools/readme_check.py          both READMEs and the skill
 """
 
 import json
@@ -13,7 +13,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MANIFEST = os.path.join(ROOT, "plugin.json")
-READMES = ("README.md", "README.pl.md")
+READMES = ("README.md", "README.pl.md", os.path.join("skills", "polish-geodata", "SKILL.md"))
 
 # `plugin:polish-geodata/<name>` in a call, and a bare `/`de name in a table row.
 CALL = re.compile(r"plugin:polish-geodata/([a-z0-9-]+)")
