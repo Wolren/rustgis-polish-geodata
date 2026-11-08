@@ -312,8 +312,7 @@ fn fetch_pages(
             scope.spawn(move || {
                 let url = page_url(layer, bbox, offset, filter, srs, count);
                 let swap = matches!(srs, Srs::LonLat);
-                // The body is parsed as it arrives, so a heavy page never becomes one string and
-                // one tree; the bytes land in the cache on the way through.
+                // The body is parsed as it arrives, so a heavy page never becomes one string.
                 let answered = http::stream_body(&url, 120, lang, |reader| {
                     gml::parse_features_stream(reader, swap, lang)
                 })
