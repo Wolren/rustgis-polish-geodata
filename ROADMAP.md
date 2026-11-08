@@ -1,116 +1,130 @@
 # Roadmap
 
-_Stan na 2026-11-07, wtyczka 0.6.0 plus rejestr EZiUDP._
+_Stan na 2026-11-08, wtyczka 0.6.0 plus rejestr EZiUDP._
 
-Cel: jedna wtyczka do RustGIS, która kondensuje polskie dane — podzielone najpierw według
-instytucji, potem według tematu — i którą w całości da się sterować przez MCP.
+Cel: jedna wtyczka do RustGIS, która kondensuje polskie dane, dzieli je najpierw według instytucji,
+potem według tematu, i którą całą da się sterować przez MCP.
 
-## Zrobione (0.6.0)
+## Zrobione
 
-- Pobieranie przestało być 108 poleceniami na wstędze: pięć narzędzi w tle, z postępem i
-  przerwaniem, jedna lista zbiorów na narzędzie (`data/wfs.json` zna swoje narzędzie).
-- Obszar: prostokąt z widoku, rysowanie, anulowanie, czyszczenie. Bez łańcucha zgadywania.
-- Wstęga mówi, co robi: **WMS (podgląd)** tylko wyświetla, **Pobieranie** tylko ściąga.
-- **Wysokości** to jedyny wyjątek od tej zasady: trzy polecenia pobierają raster, bo narzędzie
-  nie umie dodać warstwy rastrowej.
-- Katalog generowany z danych (`tools/manifest.py` + `tools/manifest.base.json`), instytucja
-  i menu siedzą w `data/services.json`.
-- `katalog` — cały katalog jako JSON dla agentów.
-- `geokoduj` (UUG), `wysokosc` (NMT API), `dzialka-id` (ULDK po identyfikatorze),
-  `eziudp` (krajowy rejestr zbiorów i usług).
-- 109 usług WMS, w tym 11 arkuszy historycznych (WIG, mapy niemieckie) z Cartomatic.
-- Wstęga mieści się w oknie: wszystkie grupy w układzie `small`, katalog zwinięty według
-  instytucji (**GUGiK** z czterema tematami w podmenu, pięć menu pozostałych instytucji), a
-  pobieranie to pięć osobnych przycisków i menu **Pakiety**. 11 kolumn zamiast 28, a w polskim
-  interfejsie treść kończy się na zmierzonych 1390 px z 1480 (zrzut z `ui_shot`), bez strzałki
-  przewijania: **Wysokości** i **Wyszukiwanie** to po jednym menu. Wymaga RustGIS 0.5.0
-  (zagnieżdżone menu i kolumny `small`), stąd `minRustgisVersion`.
-- **Przycinanie do dowolnej granicy.** Panel ma drzewo warstw poligonowych z liczbą obiektów
-  i wyszukiwarką; wybór ustawia granicę, a wiersz **Przytnij** pokazuje parę
-  „warstwa → granica”. Cięta jest warstwa aktywna, a bez niej najnowsza.
-- **Panel bez wypychania przycisków.** Statusy, para „warstwa → granica” i drzewo granicy stoją
-  nad przyciskami, a **Odśwież panel** czyta widok, obszar, katalog i zapisane odpowiedzi od nowa.
-  Każde narzędzie pobierania ma parametr `clear` zamiast pola wyboru w panelu.
-- **Wody Polskie: 30 usług, 890 warstw.** Menu **Więcej map** ma folder **Wody Polskie** z jednym
-  poleceniem na usługę: przycisk kładzie na mapę wszystkie warstwy tej usługi, drugie naciśnięcie je
-  zdejmuje, a podpowiedź niesie atrybucję i liczbę warstw („PGW Wody Polskie (ISOK) · 11 warstw”).
-  Generuje to `tools/manifest.py` z `data/wody.json`, więc nowa usługa trafia na wstęgę sama.
-  Nie zrobione: wybór pojedynczej warstwy w środku usługi (jedna usługa to nadal jedno polecenie).
-- **Cartomatic: 45 map.** Pozostałe warstwy serwera (plany miast i atlasy, mapy topograficzne
-  i przeglądowe) stoją w dwóch folderach tego samego menu, obok jedenastu arkuszy historycznych
-  w menu **Mapy historyczne**. Etykieta folderu jest angielska w manifeście, a polska w `i18n`,
-  więc oba języki pokazują swoją nazwę serii. Gdy folder przekroczy 32 pozycje, generator dzieli
-  go po pierwszym słowie tytułu i wypisuje, co podzielił.
-- **Pakiety: skorowidz, folder, CSV.** Menu **Pakiety** w grupie **Pobieranie** ma trzy narzędzia
-  skorowidzy (ortofoto 54 zbiory, NMT 44, pozostałe 64; katalog WFS nie ma pola `theme`, więc
-  generator czyta temat z tytułu: „ortofotomap”, „pokrycia terenu”, „modelu terenu”; każde
-  narzędzie bierze zbiór i warstwę obszaru, jak pięć narzędzi WFS) i czwarte, **Pobierz arkusze**:
-  bierze warstwę skorowidza, folder i `clear`, pobiera pliki wskazane w polu `url_do_pobrania`
-  zaznaczonych obiektów i pisze raport CSV. Wybór w trzech narzędziach to tytuł zbioru; katalog ma
-  już unikalne tytuły, a gdyby się powtórzyły, wybór niesie w nawiasie identyfikator.
-  Nie zrobione: LAZ i geobazy z dane.gov.pl (PGW, WORP, PZRP, PPSS, MZP) oraz wybór pojedynczych
-  arkuszy w środku usługi.
+### Zakładka i zasada
 
-## Do przeniesienia z 0.7.0
-
-Gałąź `origin/main` ma commit `50ee781` (0.7.0), który odszedł od tego samego commita bazowego
-`291f358` co nasza linia. Scalanie odłożone: konflikt w 11 plikach, a nasza linia zostaje główna.
-Do przeniesienia wybrane rzeczy, w kolejności wartości:
-
-1. **`src/egib.rs`: działki i budynki wprost z powiatu.** ULDK `GetCountyByXY` nazywa powiat,
-   EZiUDP daje jego własny WFS EGiB, `GetCapabilities` daje typy (`wfs:dzialki`, `wfs:budynki`),
-   a jeden ograniczony `GetFeature` na typ, przycięty do widoku, kładzie warstwę wektorową.
-   To omija ograniczenie krajowego KIEG, który tylko rasteryzuje działki. Wymaga `quick-xml`
-   oraz modułów `src/gml.rs`, `src/filter.rs`, `src/gk92.rs` z tej gałęzi.
-2. **`src/wody.rs` i `data/wody.json`: 32 usługi i 904 warstwy.** Jedno polecenie na usługę, ale
-   parametr `warstwa` wybiera pojedynczą warstwę, a `warstwy` wypisuje, co usługa publikuje.
-   Nasza linia ma 30 usług bez wyboru warstwy w środku.
-3. **`src/clip.rs`: granica z zaznaczenia.** Warstwa poligonowa z zaznaczeniem jest kopiowana do
-   warstwy tymczasowej, więc cięcie idzie po wybranych kształtach. Dochodzi znacznik `from_view`,
-   który mówi, że granicą jest prostokąt widoku, a nie rysunek.
-4. **`src/nmt.rs`: teren 3D i wygląd modelu.** `set_terrain` stawia scenę 3D na modelu,
-   `height_range` podaje min i max, `Look` (barwy, pasma, cieniowanie) z `look_json`, mnożnik
-   `exaggeration` i polecenie `dem-terrain-off`. Nasza linia ma tylko barwy albo cieniowanie
-   i nie ustawia terenu.
-5. **`src/eziudp.rs`: `rejestr-widok`.** Rejestr zawężony do powiatu z widoku, jednym poleceniem.
-6. **`tools/probe.py`, `tools/smoke.py`, `tools/fixtures/*.geojson`.** Próba end-to-end i dymna
-   z fixturami (obszar, maski, działki), plus `.github/workflows/catalogue.yml` sprawdzający
-   katalogi w CI.
-
-Nie przenosimy z 0.7.0: ich wersji `main.rs` i `text.rs` (nasze mają więcej), ani usunięcia
-rodzin Cartomatic z wstęgi.
-
-## Następne
+- Jedna zasada trzyma wstęgę: polecenie pokazuje coś od razu, narzędzie pobiera w tle z postępem
+  i przyciskiem Anuluj. Wyjątkiem są trzy polecenia modeli wysokości, bo narzędzie nie umie dodać
+  warstwy rastrowej.
+- 223 polecenia (37 własnych, 111 usług katalogu, 30 Wody Polskie, 45 Cartomatic, 6 rejestru)
+  i 11 narzędzi. Grupy w układzie `small`, katalog zwinięty według instytucji, 10 kolumn.
+  Zmierzone: treść kończy się na 1290 px w oknie 1366 px, bez przewijania w poziomie.
+- Każde polecenie deklaruje argumenty w `params`. `katalog` wypisuje usługi, zbiory i identyfikatory
+  dla agenta.
 
 ### Dane
 
-- **Wody/geologia/ochrona środowiska** - przejrzeć EZiUDP po instytucjach i dobrać brakujące
-  usługi narodowe; wszystko przez `tools/services.py` (weryfikacja realnym kafliem). Zmierzone:
-  IMGW ma w rejestrze 3 zbiory (mamy 1), GUS 2 (mamy 1), GUNB i KOWR rejestr nie zna pod tą nazwą.
+- **Katalog WMS**: 109 usług GUGiK i innych instytucji plus dwie własne warstwy PIG. Każda
+  sprawdzona prawdziwym kaflem przez `tools/services.py`.
+- **WFS**: 106 zbiorów mapowych, 162 skorowidze, 15 typów obszarów chronionych GDOŚ. Pobieranie
+  przez sześć narzędzi i narzędzie ochrony przyrody, plus cztery narzędzia paczek (skorowidz jako
+  warstwa i pliki z pola `url_do_pobrania`).
+- **Rejestr EZiUDP offline**: `data/eziudp.json`, 3 296 adresów, każdy dowiedziony żądaniem przy
+  budowie: 1 742 WMS od 570 instytucji i 1 554 WFS. `tools/eziudp.py` grupuje adresy i sprawdza
+  je równolegle, z ponowieniem w WMS 1.1.1.
+- **Rejestr na żywo**: `eziudp` pyta `api.php` i odmawia bez filtra, bo cały rejestr to 9 MB.
+  Zawężone zapytanie wraca w całości.
+- **Menu Rejestr**: sześć usług, których katalog nie ma, dowiedzionych przez budowniczego: GIOŚ
+  (hałas, powietrze, wody podziemne) i własne EGiB Poznania, Wrocławia i Warszawy.
+- **Aktualizacja rejestru w locie**: narzędzie `aktualizuj-rejestr` czyta rejestr, sprawdza tylko
+  nowe adresy i zapisuje plik obok cache, który ma pierwszeństwo przed kopią w binarium. Zapis przez
+  plik tymczasowy, więc przerwanie zostawia stary rejestr.
+
+### Obszar, pobieranie, granica
+
+- Obszar to zawsze warstwa: prostokąt z widoku, rysowanie, prostokąt z narzędzia aplikacji
+  (`obszar-prostokat` i `obszar-przejmij`), anulowanie i usuwanie. Wtyczka nie zgaduje obszaru
+  z aktywnej warstwy.
+- Filtr WFS zwraca całe obiekty, więc po pobraniu jest **Przytnij do warstwy**: wbudowany Clip
+  zastępuje warstwę wynikiem. Granicą jest warstwa wybrana w drzewie, domyślnie warstwa obszaru.
+- **Bramka rozmiaru**: pobranie powyżej limitu pyta najpierw. Limit ma domyślnie 25 MB, a suwak w
+  panelu pozwala 5 do 500 MB. Twardy sufit to 256 MB. Zaznaczenie w panelu odpowiada za wszystkie
+  następne przebiegi bez pytania.
+- Limit pobrania: 6 000 obiektów, zasięg 0,15° dla działek i budynków, 20° dla granic.
+
+### Panel i dialog
+
+- Panel ma statusy (widok, obszar, para „warstwa → granica”), drzewo warstw granicznych, drzewo
+  **Mapa** z trzema korzeniami (podkłady, pobieranie, rejestr EZiUDP), suwak i zaznaczenie limitu,
+  katalog i zapisane odpowiedzi. Wybór wiersza folderu odpowiada podpowiedzią zamiast błędu.
+- `mapa` uruchamia wiersz drzewa, `ustawienia` zapisuje wartości panelu, `panel-state` czyta stan.
+
+### Wyszukiwania i asystent
+
+- `geokoduj` (UUG), `adres-odwrotnie` (UUG, z `lon` i `lat`), `wysokosc` (NMT), `dzialka-id`
+  (ULDK), `parcel` (działka pod środkiem mapy).
+- `skills/dane-pl/SKILL.md` w paczce, więc asystent widzi ją jako `dane-pl:dane-pl`.
+
+### Języki i build
+
+- Angielski jest bazą, polski tłumaczeniem: 178 wpisów `i18n.pl`, zero braków i zero sierot.
+  Generator odrzuca build w obu tych przypadkach.
+- Manifest generowany z `data/` i `tools/manifest.base.json`, z `--check` dla CI. Budowniczowie
+  dowodzą każdy adres, który zapisują.
+
+## Następne
+
+### Sterowanie zdalne (MCP)
+
+- **Rysowanie myszą zostaje ręczne.** `obszar-rysuj` i `obszar-prostokat` uzbrajają narzędzie
+  gospodarza, więc potrzebują kliknięcia. Do automatyzacji jest `obszar-widok` albo własna warstwa
+  podana jako `obszar`. Docelowo narzędzie przyjmujące GeoJSON obszaru, bez rysowania.
+- **Brak polecenia otwierającego panel.** Treść panelu czyta `panel-state`, ale samego okna agent
+  nie otworzy. Wymaga pola w manifeście, którego host 0.5.0 nie ma.
+- **Okno parametrów polecenia** ([#1547](https://github.com/opengeos/RustGIS/issues/1547), otwarte,
+  bez PR). Po wejściu `geokoduj`, `dzialka-id`, `eziudp` i potwierdzenie rozmiaru pobrania dostaną
+  formularz z wstęgi i z wiersza rejestru.
+- **Potwierdzenie rozmiaru przed pobraniem.** Dziś próg jest zaznaczeniem w panelu i komunikatem.
+  Dialog z rozmiarem i przyciskami OK/Anuluj czeka na #1547. Wariant bez hosta: dwa naciśnięcia,
+  pierwsze liczy MB i nic nie pobiera.
+
+### Dane
+
+- **Wybór pojedynczej warstwy w Wody Polskie.** Jedno polecenie pokazuje wszystkie warstwy usługi.
+  Wariant z gałęzi `backup/v0.7.0` ma parametr `warstwa` i polecenie `warstwy`.
+- **Brakujące usługi narodowe.** Rejestr zna IMGW 3 zbiory (mamy 1), GUS 2 (mamy 1). GUNB i KOWR
+  rejestr nie zna pod tą nazwą. Wszystko przez `tools/services.py` z weryfikacją kaflem.
+- **Rejestr: instytucje bez WMS.** 1 554 adresy WFS są w rejestrze, ale nie mają ścieżki pobierania
+  po typie. Wymaga odczytu `GetCapabilities` i wspólnego szablonu z narzędziami WFS.
 
 ### Wyszukiwanie i ULDK
 
-- **Geokodowanie z pliku CSV** — narzędzie z parametrem `file` (CSV → warstwa punktowa),
-  tak jak „Geokodowanie Adresów UUG GUGiK". Dziś `geokoduj` obsługuje jeden adres.
-- **ULDK po obrębie** — wybór z listy województwo → powiat → gmina → obręb → numer, oraz
-  import z CSV i „Sprawdź warstwę" (walidacja całej warstwy działek). Wzorzec: wtyczka
-  GIS Support.
-- **Obszar z jednostki administracyjnej** — gmina/powiat jako obszar pobierania, bez rysowania.
-  Wymaga kaskady (dwa narzędzia: województwo, potem jednostka po nazwie), bo formularz
-  narzędzi nie ma pól zależnych.
+- **Geokodowanie z pliku CSV**: narzędzie z parametrem `file` (CSV → warstwa punktowa), jak
+  „Geokodowanie Adresów UUG GUGiK”. Dziś `geokoduj` obsługuje jeden adres.
+- **ULDK po obrębie**: kaskada województwo → powiat → gmina → obręb → numer, import z CSV i kontrola
+  całej warstwy działek.
+- **Obszar z jednostki administracyjnej**: gmina albo powiat jako obszar pobierania, bez rysowania.
+  Wymaga dwóch narzędzi, bo formularz nie ma pól zależnych.
 
 ### Host (RustGIS)
 
-- **Menu kontekstowe dla wtyczek** — `commands[].contexts` w manifeście plus wpisy w
-  `mapmenu.rs` i `layer_menu`. Bez tego pobieranie „tutaj" spod prawego przycisku jest
-  niemożliwe; wtyczka nie może dodać własnej pozycji.
-- **Narzędzie prostokąta dla warstw edytowalnych** (`createRectangle`) — dziś przeciąganie
-  prostokąta istnieje tylko dla grafiki. Prostokąt obszaru bierzemy z widoku.
-- **Okno parametrów polecenia** — polecenia bez argumentów nie da się uruchomić z wstęgi,
-  dlatego `geokoduj`, `dzialka-id` i `eziudp` są tylko dla skryptów i agentów.
+- **Menu kontekstowe dla wtyczek**: `commands[].contexts` w manifeście plus wpisy w `mapmenu.rs`
+  i `layer_menu`. Bez tego pobieranie spod prawego przycisku jest niemożliwe.
+- **`createRectangle` dla warstw edytowalnych**: prostokąt z narzędzia aplikacji rysuje grafikę,
+  więc obszar wymaga kroku **Prostokąt do obszaru**.
 
-### Interfejs
+## Do przeniesienia z 0.7.0
 
-- **`eziudp` → dodanie usługi z rejestru.** Rejestr zna adresy WMS/WFS; wtyczka mogłaby
-  dodać usługę spoza katalogu, gdyby host przyjmował szablon kafli zbudowany w locie.
-  To samo dotyczy „Integratora usług danych przestrzennych" z przeglądu wtyczek 2024.
+Gałąź `backup/v0.7.0` ma commit `50ee781`, który odszedł od tego samego commita bazowego `291f358`.
+Scalanie odłożone: konflikt w 11 plikach, nasza linia zostaje główna. Do przeniesienia, w kolejności
+wartości:
+
+1. **`src/egib.rs`: działki i budynki wprost z powiatu.** ULDK `GetCountyByXY` nazywa powiat,
+   EZiUDP daje jego WFS EGiB, a `GetCapabilities` daje typy. Ograniczony `GetFeature` na typ kładzie
+   warstwę wektorową zamiast rastra KIEG. Wymaga `quick-xml` oraz `src/gml.rs`, `src/filter.rs`
+   i `src/gk92.rs` z tej gałęzi.
+2. **`src/wody.rs` i `data/wody.json`: 32 usługi i 904 warstwy** z parametrem `warstwa`.
+3. **`src/clip.rs`: granica z zaznaczenia**, kopiowana do warstwy tymczasowej, plus znacznik
+   `from_view`.
+4. **`src/nmt.rs`: teren 3D i wygląd modelu** (`set_terrain`, `height_range`, `Look`,
+   `exaggeration`, `dem-terrain-off`).
+5. **`src/eziudp.rs`: `rejestr-widok`**, rejestr zawężony do powiatu z widoku.
+6. **`tools/probe.py`, `tools/smoke.py`, `tools/fixtures/*.geojson`** i workflow katalogów w CI.
+
+Nie przenosimy: ich `main.rs` i `text.rs` (nasze mają więcej) ani usunięcia Cartomatic ze wstęgi.
