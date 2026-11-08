@@ -27,7 +27,7 @@ Pythona ani GDAL-a. Wymaga RustGIS 0.5.0 lub nowszego.
 | **Narzędzia** | panel i przycinanie do granicy |
 | **WMS (podgląd)** | GUGiK (76), mapy historyczne (11), geologia PIG (11), NID (4), BDL (4), pozostałe instytucje, **Więcej map** (Wody Polskie 30, Cartomatic 45), **Rejestr** (6) |
 | **Pobieranie** | sześć narzędzi WFS, cztery narzędzia paczek, ochrona przyrody (GDOŚ) |
-| **Wysokości** | trzy modele wysokości i przełącznik stylu |
+| **Wysokości** | trzy modele wysokości, styl, teren 3D i jego wyłączenie |
 | **Wyszukiwanie** | działka, adres, wysokość, znajdź usługę, aktualizacja rejestru |
 
 Zakładkę trzyma jedna zasada: **polecenie pokazuje coś od razu, narzędzie pobiera w tle**, z
@@ -57,6 +57,10 @@ północ]}` albo `{"geojson": <Feature>}` i używa jego zasięgu.
 `przytnij` tnie wskazaną warstwę do tej jednostki w tym samym przebiegu, więc jedno wywołanie daje
 warstwę już przyciętą do granicy. Miasto, którego PRG nie ma w warstwie miast, wraca jako gmina.
 
+`rejestr-pobierz` czyta dowolny WFS z rejestru: podaj `usluga` (identyfikator z rejestru) i
+opcjonalnie `typy`, a jedno ograniczone, stronicowane żądanie na typ wraca jako warstwa. Tak wchodzą
+działki, adresy, osnowy i plany miejscowe z tych powiatów, które publikują WFS.
+
 `dzialki-powiat` kładzie własne EGiB powiatu jako wektorowe działki i budynki. ULDK nazywa powiat
 pod obszarem, rejestr podaje adres WFS tego powiatu, a strony po 1 000 obiektów (`STARTINDEX`) wracają
 jako jedna warstwa. Sufit to 20 000 obiektów, a parametr `limit` obniża go.
@@ -80,6 +84,10 @@ zaznaczenie **Pobierz mimo rozmiaru** odpowiada za wszystkie następne przebiegi
 
 Filtr WFS zwraca całe obiekty, które dotykają obszaru. **Przytnij do warstwy** tnie je wbudowanym
 Clipem i zastępuje warstwę wynikiem.
+
+Model ustawia się jako teren sceny 3D (`terrain`, domyślnie włączony), z mnożnikiem `exaggeration`
+od 0 do 20. Wygląd wybiera `look`: `colours` (barwy wysokości), `classes` (pasma) albo `shading`
+(cieniowanie). **Teren 3D wyłącz** zdejmuje model z podłoża sceny.
 
 Duża siatka wysokości czeka na drugie naciśnięcie. Pierwsze liczy komórki, MB i sekundy i nic nie
 pobiera. Drugie, w ciągu 120 s, pobiera. Mała siatka idzie od razu, a pobrana wcześniej liczy się z

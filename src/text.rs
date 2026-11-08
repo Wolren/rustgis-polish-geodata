@@ -1263,20 +1263,48 @@ pub fn nmt_added(
     size: (u32, u32),
     megabytes: f64,
     source: &str,
-    colours: bool,
+    look: &str,
+    terrain: bool,
+    heights: Option<(f64, f64)>,
 ) -> String {
     let (width, height) = size;
     let megabytes = num(lang, megabytes, 1);
-    let look = if colours {
-        pick!(lang, "colours", "barwy")
+    let look = match (lang, look) {
+        (Lang::Pl, "shading") => "cieniowany",
+        (Lang::Pl, "classes") => "w pasmach",
+        (Lang::Pl, _) => "w barwach wysokości",
+        (Lang::En, "shading") => "shaded",
+        (Lang::En, "classes") => "in bands",
+        (Lang::En, _) => "in height colours",
+    };
+    let terrain = if terrain {
+        pick!(lang, ", set as the 3D terrain", ", ustawiony jako teren 3D")
     } else {
-        pick!(lang, "shaded", "cieniowany")
+        ""
+    };
+    let heights = match heights {
+        Some((min, max)) => pick!(
+            lang,
+            format!(", heights {min:.1} to {max:.1} m"),
+            format!(", wysokości {min:.1} do {max:.1} m")
+        ),
+        None => String::new(),
     };
     pick!(
         lang,
-        format!("{name} added from {source}: {datum}, {width} × {height} cells, {megabytes} MB, {look}."),
-        format!("Dodano {name} z {source}: {datum}, {width} × {height} komórek, {megabytes} MB, {look}.")
+        format!("{name} added from {source}: {datum}, {width} × {height} cells, {megabytes} MB, {look}{heights}{terrain}."),
+        format!("Dodano {name} z {source}: {datum}, {width} × {height} komórek, {megabytes} MB, {look}{heights}{terrain}.")
     )
+}
+
+/// The 3D scene no longer stands on a model.
+pub fn nmt_terrain_off(lang: Lang) -> String {
+    pick!(
+        lang,
+        "3D terrain off: the map is flat again.",
+        "Teren 3D wyłączony: mapa jest znowu płaska."
+    )
+    .to_string()
 }
 
 /// The GeoTIFF is left to the app, which fetches it off the frame: nothing is styled yet.
@@ -1444,6 +1472,61 @@ pub fn egib_progress(lang: Lang, count: usize) -> String {
     )
 }
 
+/// The register download got no service id.
+pub fn register_download_needs_service(lang: Lang) -> String {
+    pick!(
+        lang,
+        "name the register service: {\"usluga\": \"<id>\"}",
+        "podaj usługę z rejestru: {\"usluga\": \"<id>\"}"
+    )
+    .to_string()
+}
+
+/// A register entry is a map service, so it cannot be downloaded.
+pub fn register_not_a_download(lang: Lang, name: &str) -> String {
+    pick!(
+        lang,
+        format!("\"{name}\" is a WMS; the download reads a WFS"),
+        format!("„{name}” to WMS; pobieranie czyta WFS")
+    )
+}
+
+/// The service published nothing the filter asked for.
+pub fn register_no_types(lang: Lang, name: &str) -> String {
+    pick!(
+        lang,
+        format!("{name} publishes no feature type the request asks for"),
+        format!("{name} nie publikuje typu, o który prosi żądanie")
+    )
+}
+
+/// The service answered no feature in the area.
+pub fn register_no_features(lang: Lang, name: &str) -> String {
+    pick!(
+        lang,
+        format!("{name} answered no feature in this area"),
+        format!("{name} nie zwrócił żadnego obiektu w tym obszarze")
+    )
+}
+
+/// The layer a register download builds.
+pub fn register_layer(lang: Lang, name: &str) -> String {
+    pick!(
+        lang,
+        format!("{name} (register)"),
+        format!("{name} (rejestr)")
+    )
+}
+
+/// The register layer is on the map.
+pub fn register_added(lang: Lang, layer: &str, count: usize) -> String {
+    pick!(
+        lang,
+        format!("{layer}: {count} features from the register"),
+        format!("{layer}: {count} obiektów z rejestru")
+    )
+}
+
 /// The county layer is on the map.
 pub fn egib_added(lang: Lang, layer: &str, count: usize, county: &str) -> String {
     pick!(
@@ -1552,19 +1635,14 @@ pub fn nmt_nothing_to_style(lang: Lang) -> String {
     .to_string()
 }
 
-pub fn nmt_styled(lang: Lang, layer: &str, colours: bool) -> String {
-    if !colours {
-        pick!(
-            lang,
-            format!("{layer}: shaded."),
-            format!("{layer}: cieniowanie.")
-        )
-    } else {
-        pick!(
-            lang,
-            format!("{layer}: heights in colours."),
-            format!("{layer}: wysokości w barwach.")
-        )
+pub fn nmt_styled(lang: Lang, layer: &str, look: &str) -> String {
+    match (lang, look) {
+        (Lang::Pl, "shading") => format!("{layer}: cieniowanie."),
+        (Lang::Pl, "classes") => format!("{layer}: wysokości w pasmach."),
+        (Lang::Pl, _) => format!("{layer}: wysokości w barwach."),
+        (Lang::En, "shading") => format!("{layer}: shaded."),
+        (Lang::En, "classes") => format!("{layer}: heights in bands."),
+        _ => format!("{layer}: heights in colours."),
     }
 }
 

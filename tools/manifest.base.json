@@ -86,6 +86,13 @@
       "params": "{\"obszar\": \"area layer (optional)\", \"typy\": \"dzialki,budynki (optional)\"}"
     },
     {
+      "id": "rejestr-pobierz",
+      "label": "Download\nfrom the register",
+      "icon": "table",
+      "help": "Reads a WFS the register lists: one bounded, paged GetFeature per feature type, as one layer. Name the register id and optionally the types.",
+      "params": "{\"usluga\": \"<register id>\", \"typy\": \"dzialki,budynki (optional)\", \"obszar\": \"area layer (optional)\", \"limit\": 20000}"
+    },
+    {
       "id": "obszar-widok",
       "label": "Area\nfrom view",
       "icon": "g_rect",
@@ -251,28 +258,35 @@
       "label": "Terrain\nKRON86",
       "icon": "relief",
       "help": "Adds the 1 m terrain model of the area, shaded. GUGiK serves PL-KRON86-NH as GeoTIFF.",
-      "params": "{\"area\": \"area layer name (optional)\", \"colours\": \"false\"}"
+      "params": "{\"area\": \"area layer name (optional)\", \"look\": \"colours|classes|shading\", \"terrain\": \"true\", \"exaggeration\": \"1.5 (0 to 20)\"}"
     },
     {
       "id": "dem-evr",
       "label": "Terrain\nEVRF2007",
       "icon": "relief",
       "help": "The terrain model in PL-EVRF2007-NH. GUGiK serves it as an ASCII grid, so one click covers less ground than the GeoTIFF.",
-      "params": "{\"area\": \"area layer name (optional)\", \"colours\": \"false\"}"
+      "params": "{\"area\": \"area layer name (optional)\", \"look\": \"colours|classes|shading\", \"terrain\": \"true\", \"exaggeration\": \"1.5 (0 to 20)\"}"
     },
     {
       "id": "dem-nmpt",
       "label": "Surface\nNMPT",
       "icon": "relief",
       "help": "The surface model, buildings and trees kept, in PL-KRON86-NH. An ASCII grid.",
-      "params": "{\"area\": \"area layer name (optional)\", \"colours\": \"false\"}"
+      "params": "{\"area\": \"area layer name (optional)\", \"look\": \"colours|classes|shading\", \"terrain\": \"true\", \"exaggeration\": \"1.5 (0 to 20)\"}"
     },
     {
       "id": "dem-style",
       "label": "Set the model's style",
       "icon": "map",
       "help": "Shades the newest elevation model again. Pass colours to band the heights instead.",
-      "params": "{\"layer\": \"elevation model layer (optional)\", \"colours\": \"false\"}"
+      "params": "{\"layer\": \"elevation model layer (optional)\", \"look\": \"colours|classes|shading\", \"terrain\": \"true\", \"exaggeration\": \"1.5 (0 to 20)\"}"
+    },
+    {
+      "id": "dem-terrain-off",
+      "label": "Terrain\noff",
+      "icon": "relief",
+      "help": "Turns the 3D terrain off, so the map is flat again after a model goes.",
+      "params": "{}"
     }
   ],
   "tools": [
@@ -1103,7 +1117,11 @@
       "Address column": "Kolumna adresu",
       "Header name of the address column; the first column when left out.": "Nazwa nagłówka kolumny z adresem; bez niej pierwsza kolumna.",
       "Rows to geocode": "Wiersze do geokodowania",
-      "500 by default, 5000 at most.": "Domyślnie 500, najwyżej 5000."
+      "500 by default, 5000 at most.": "Domyślnie 500, najwyżej 5000.",
+      "Terrain\noff": "Teren 3D\nwyłącz",
+      "Turns the 3D terrain off, so the map is flat again after a model goes.": "Wyłącza teren 3D, więc po usunięciu modelu mapa jest znowu płaska.",
+      "Download\nfrom the register": "Pobierz\nz rejestru",
+      "Reads a WFS the register lists: one bounded, paged GetFeature per feature type, as one layer. Name the register id and optionally the types.": "Czyta WFS z rejestru: jedno ograniczone, stronicowane GetFeature na typ, jako jedna warstwa. Podaj identyfikator z rejestru i opcjonalnie typy."
     }
   },
   "moreMaps": {

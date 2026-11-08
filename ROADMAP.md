@@ -94,8 +94,9 @@ potem według tematu, i którą całą da się sterować przez MCP.
 
 - **Brakujące usługi narodowe.** Rejestr zna IMGW 3 zbiory (mamy 1), GUS 2 (mamy 1). GUNB i KOWR
   rejestr nie zna pod tą nazwą. Wszystko przez `tools/services.py` z weryfikacją kaflem.
-- **Rejestr: instytucje bez WMS.** 1 554 adresy WFS są w rejestrze, ale nie mają ścieżki pobierania
-  po typie. Wymaga odczytu `GetCapabilities` i wspólnego szablonu z narzędziami WFS.
+- **Rejestr: instytucje bez WMS.** Zrobione jako `rejestr-pobierz`: czyta `GetCapabilities`, bierze
+  typy z żądania i ściąga strony po 1 000. Część usług powiatowych odpowiada własnym wyjątkiem
+  (Częstochowa EMUiA: „Value cannot be null”), a wtyczka przekazuje go dalej.
 
 ### Wyszukiwanie i ULDK
 

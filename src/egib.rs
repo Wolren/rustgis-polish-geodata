@@ -64,8 +64,7 @@ pub fn from_area(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, S
     for type_name in &types {
         let mut start = 0usize;
         loop {
-            let url = page_url(&service.url, type_name, box_lon, PAGE, start);
-            let body = http::fetch(&url, 110, lang)?;
+            let body = fetch_page(&service.url, type_name, box_lon, PAGE, start, lang)?;
             let mut rows = gml::parse_features(&body, false, lang)?;
             let got = rows.len();
             rows.truncate(cap.saturating_sub(collection.len()));
@@ -103,8 +102,104 @@ pub fn from_area(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, S
     }))
 }
 
+/// Downloads features from any WFS the register lists, by type, for the area.
+///
+/// The county command is this one with the service picked for you: here the caller names the
+/// register id, so the 1 554 WFS addresses the register proves can be read as layers too.
+pub fn from_register(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String> {
+    let wanted = params
+        .get("usluga")
+        .or_else(|| params.get("service"))
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|name| !name.is_empty())
+        .ok_or_else(|| text::register_download_needs_service(lang))?;
+    let service = zrodla::find(wanted)
+        .or_else(|| {
+            zrodla::all()
+                .iter()
+                .find(|entry| entry.kind == "wfs" && entry.url == wanted)
+        })
+        .ok_or_else(|| text::register_unknown(lang, wanted))?;
+    if service.kind != "wfs" {
+        return Err(text::register_not_a_download(lang, &service.name));
+    }
+    let (area, features) = area_features(host, params, lang)?;
+    let box_lon = lon_lat_bounds(&features).ok_or_else(|| text::area_no_geometry(lang, &area))?;
+    let wanted_types = params
+        .get("typy")
+        .or_else(|| params.get("types"))
+        .and_then(Value::as_str)
+        .map(|list| {
+            list.split(',')
+                .map(|part| part.trim().to_lowercase())
+                .filter(|part| !part.is_empty())
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+    let body = http::fetch(
+        &format!("{}?SERVICE=WFS&REQUEST=GetCapabilities", service.url),
+        90,
+        lang,
+    )?;
+    let mut types: Vec<String> = capability_types(&body);
+    if !wanted_types.is_empty() {
+        types.retain(|name| {
+            let lower = name.to_lowercase();
+            wanted_types.iter().any(|want| lower.contains(want.as_str()))
+        });
+    }
+    types.truncate(8);
+    if types.is_empty() {
+        return Err(text::register_no_types(lang, &service.name));
+    }
+
+    let cap = params
+        .get("limit")
+        .and_then(Value::as_u64)
+        .map(|limit| (limit as usize).clamp(1, MAX_FEATURES))
+        .unwrap_or(MAX_FEATURES);
+    let mut collection: Vec<Value> = Vec::new();
+    for type_name in &types {
+        let mut start = 0usize;
+        loop {
+            let body = fetch_page(&service.url, type_name, box_lon, PAGE, start, lang)?;
+            let mut rows = gml::parse_features(&body, false, lang)?;
+            let got = rows.len();
+            rows.truncate(cap.saturating_sub(collection.len()));
+            collection.extend(rows);
+            if got < PAGE || collection.len() >= cap {
+                break;
+            }
+            start += got;
+            host::progress_line(&text::egib_progress(lang, collection.len()));
+        }
+        if collection.len() >= cap {
+            break;
+        }
+    }
+    if collection.is_empty() {
+        return Err(text::register_no_features(lang, &service.name));
+    }
+    let name = text::register_layer(lang, &service.name);
+    let capped = collection.len() >= cap;
+    let geojson = json!({ "type": "FeatureCollection", "features": collection });
+    host.add_layer(&name, geojson)?;
+    host.notify(&text::register_added(lang, &name, collection.len()));
+    if capped {
+        host.notify(&text::egib_capped(lang, cap));
+    }
+    Ok(json!({
+        "layer": name,
+        "service": service.url,
+        "types": types,
+        "features": collection.len(),
+        "capped": capped,
+    }))
+}
+
 /// The area layer the request names, else the one the map holds.
-fn area_features(host: &mut Host, params: &Value, lang: Lang) -> Result<(String, Vec<Value>), String> {
+pub(crate) fn area_features(host: &mut Host, params: &Value, lang: Lang) -> Result<(String, Vec<Value>), String> {
     let named = params
         .get("obszar")
         .and_then(Value::as_str)
@@ -192,7 +287,7 @@ fn wanted_types(url: &str, params: &Value, lang: Lang) -> Result<Vec<String>, St
 }
 
 /// The feature type names a capabilities document lists, whatever namespace its tags carry.
-fn capability_types(body: &str) -> Vec<String> {
+pub(crate) fn capability_types(body: &str) -> Vec<String> {
     let mut names = Vec::new();
     let mut rest = body;
     while let Some(at) = rest.find("Name>") {
@@ -211,8 +306,28 @@ fn capability_types(body: &str) -> Vec<String> {
     names
 }
 
+/// The same page asked in WFS 1.1.0, for the servers that refuse 2.0.0.
+fn page_url_v1(url: &str, type_name: &str, box_lon: [f64; 4], count: usize, start: usize) -> String {
+    let box_text = format!(
+        "{:.6},{:.6},{:.6},{:.6},EPSG:4326",
+        box_lon[0], box_lon[1], box_lon[2], box_lon[3]
+    );
+    format!(
+        "{url}?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME={}&SRSNAME=EPSG:4326&MAXFEATURES={count}&STARTINDEX={start}&BBOX={box_text}",
+        encode(type_name)
+    )
+}
+
+/// A page of one type: WFS 2.0.0 first, then 1.1.0, because register servers vary.
+fn fetch_page(url: &str, type_name: &str, box_lon: [f64; 4], count: usize, start: usize, lang: Lang) -> Result<String, String> {
+    match http::fetch(&page_url(url, type_name, box_lon, count, start), 110, lang) {
+        Ok(body) => Ok(body),
+        Err(_) => http::fetch(&page_url_v1(url, type_name, box_lon, count, start), 110, lang),
+    }
+}
+
 /// The `GetFeature` address for one type and page, bounded by the area.
-fn page_url(url: &str, type_name: &str, box_lon: [f64; 4], count: usize, start: usize) -> String {
+pub(crate) fn page_url(url: &str, type_name: &str, box_lon: [f64; 4], count: usize, start: usize) -> String {
     let box_text = format!(
         "{:.6},{:.6},{:.6},{:.6},EPSG:4326",
         box_lon[0], box_lon[1], box_lon[2], box_lon[3]
@@ -224,7 +339,7 @@ fn page_url(url: &str, type_name: &str, box_lon: [f64; 4], count: usize, start: 
 }
 
 /// The box around every feature, in lon and lat.
-fn lon_lat_bounds(features: &[Value]) -> Option<[f64; 4]> {
+pub(crate) fn lon_lat_bounds(features: &[Value]) -> Option<[f64; 4]> {
     let mut extent = [f64::MAX, f64::MAX, f64::MIN, f64::MIN];
     let mut any = false;
     for feature in features {
@@ -243,7 +358,7 @@ fn lon_lat_bounds(features: &[Value]) -> Option<[f64; 4]> {
 }
 
 /// Percent-encoding for the query string.
-fn encode(text: &str) -> String {
+pub(crate) fn encode(text: &str) -> String {
     let mut out = String::new();
     for byte in text.bytes() {
         match byte {
