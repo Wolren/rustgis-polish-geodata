@@ -128,6 +128,10 @@ Co wykrył i co z tego wynika:
 - **Naprawione: powiat z nie swoją usługą.** Rejestr podaje dla Poznania adres „EGiB”, który
   naprawdę serwuje EMUiA, więc polecenie odmawiało komunikatem o braku typów. Teraz próbuje
   wszystkich WFS-ów powiatu, zanim odmówi.
+- **Naprawione: strumień zamiast drzewa.** Treść jest parsowana w trakcie czytania, po jednym
+  członie, a bajty idą do cache po drodze. Cztery strony adresów: 0,71 s zimne i 0,27 s ciepłe
+  (wcześniej 0,87 s i 0,36 s). Strona gmin 5 MB: 1,11 s ciepła (wcześniej 1,34 s). Pamięć jest
+  ograniczona do jednego członu, więc odpowiedź 40 MB nie buduje już drzewa z miliona węzłów.
 - **Naprawione: puste obszary.** Gdy usługa liczy zero obiektów, przebieg kończy się przed
   pierwszym żądaniem strony. Otwarte morze: 0,9 s i komunikat, zamiast strony i pustej warstwy.
 - **Naprawione: połączenia i transfer.** Jedna współdzielona sesja HTTP trzyma połączenie między
@@ -139,6 +143,9 @@ Co wykrył i co z tego wynika:
   2° skrócił się z 15 s do 5,2 s. Zostaje nadwyżka: jedna strona gmin waży około 33 MB, bo obiekt
   ma około 140 KB, a strona ma 500 obiektów. Usprawnienie: pierwsze żądanie o 20 obiektów, pomiar
   bajtów na obiekt i prognoza całości przed resztą stron.
+- **Do poprawy: liczby w liście współrzędnych.** Największy koszt ciepłego przebiegu to nadal
+  budowa węzłów dla `posList`: 5 MB strony to około 0,8 s. Usprawnienie: czytać pary liczb wprost
+  z tekstu, bez węzłów i bez `String` na każdą współrzędną.
 - **Do poprawy: brak oceny gęstości w teście.** Fuzzer mierzy czas i werdykt, ale nie sprawdza, czy
   liczba obiektów zgadza się z zasięgiem. Usprawnienie: porównać obiekty na km² z prognozą.
 

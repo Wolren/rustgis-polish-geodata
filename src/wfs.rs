@@ -9,7 +9,6 @@
 //!   layer's native EPSG:2180 and answer nothing),
 //! - removes the features that fall into two cells, by their `gml:id`.
 
-use crate::cache;
 use crate::catalog::WfsLayer;
 use crate::filter;
 use crate::gk92;
@@ -313,19 +312,16 @@ fn fetch_pages(
             scope.spawn(move || {
                 let url = page_url(layer, bbox, offset, filter, srs, count);
                 let swap = matches!(srs, Srs::LonLat);
-                let answered = http::get_unstored(&url, 120, lang).map(|body| {
-                    let size = body.len() as u64;
-                    let mut rows = gml::parse_features(&body, swap, lang);
-                    if let Ok(rows) = rows.as_mut() {
-                        // Only an answer parsed as features is stored, so an exception never sticks.
-                        if !rows.is_empty() {
-                            cache::put(&url, &body);
-                        }
-                        if matches!(srs, Srs::Grid) {
-                            to_lon_lat(rows, layer.xy);
-                        }
+                // The body is parsed as it arrives, so a heavy page never becomes one string and
+                // one tree; the bytes land in the cache on the way through.
+                let answered = http::stream_body(&url, 120, lang, |reader| {
+                    gml::parse_features_stream(reader, swap, lang)
+                })
+                .map(|(size, mut rows)| {
+                    if matches!(srs, Srs::Grid) {
+                        to_lon_lat(&mut rows, layer.xy);
                     }
-                    (size, rows)
+                    (size, Ok(rows))
                 });
                 let sent = match answered {
                     Ok((size, rows)) => (offset, size, rows),

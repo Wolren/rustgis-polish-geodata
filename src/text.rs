@@ -451,14 +451,6 @@ pub fn clipped_unreported(lang: Lang) -> String {
     .to_string()
 }
 
-/// The boundary picked in the panel is no longer on the map, so the press reports it.
-pub fn boundary_gone(lang: Lang, name: &str) -> String {
-    pick!(
-        lang,
-        format!("the boundary layer \"{name}\" is no longer on the map, choose another"),
-        format!("warstwy granicy „{name}” nie ma już na mapie, wybierz inną")
-    )
-}
 
 /// What the Clip button will do: the layer first, then the boundary it cuts to.
 pub fn clip_text(layer: &str, area: &str) -> String {

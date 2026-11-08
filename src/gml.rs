@@ -346,6 +346,83 @@ pub fn parse_features(xml: &str, swap: bool, lang: Lang) -> Result<Vec<Value>, S
     Ok(features)
 }
 
+/// Reads features from a GML stream, one member at a time, so no whole document sits in a tree.
+///
+/// A 5 MB page of communes costs about 1.5 s and a tree of a million nodes when read whole. The
+/// stream keeps one member in memory, and the answer grows feature by feature.
+pub fn parse_features_stream<R: std::io::BufRead>(
+    reader: R,
+    swap: bool,
+    lang: Lang,
+) -> Result<Vec<Value>, String> {
+    let mut reader = Reader::from_reader(reader);
+    reader.config_mut().trim_text(false);
+    let mut buffer = Vec::new();
+    let mut stack: Vec<Node> = Vec::new();
+    let mut outside: Vec<Node> = Vec::new();
+    let mut features: Vec<Value> = Vec::new();
+    loop {
+        buffer.clear();
+        match reader.read_event_into(&mut buffer) {
+            Ok(Event::Start(e)) => {
+                let name = e.local_name().as_ref().to_vec();
+                stack.push(Node::new(&name, gml_id(&e), srs_dimension(&e)));
+            }
+            Ok(Event::Empty(e)) => {
+                let name = e.local_name().as_ref().to_vec();
+                let node = Node::new(&name, gml_id(&e), srs_dimension(&e));
+                push_node(&mut stack, &mut outside, node);
+            }
+            Ok(Event::Text(t)) => {
+                if let Some(top) = stack.last_mut() {
+                    let text = t
+                        .unescape()
+                        .map(|c| c.into_owned())
+                        .unwrap_or_else(|_| String::from_utf8_lossy(&t).into_owned());
+                    top.text.push_str(&text);
+                }
+            }
+            Ok(Event::CData(t)) => {
+                if let Some(top) = stack.last_mut() {
+                    top.text.push_str(&String::from_utf8_lossy(&t));
+                }
+            }
+            Ok(Event::End(_)) => {
+                if let Some(node) = stack.pop() {
+                    // A finished member becomes features and leaves memory; the rest waits for
+                    // an exception check at the end.
+                    if is_member(&node) {
+                        collect_members(&node, swap, &mut features);
+                    } else {
+                        push_node(&mut stack, &mut outside, node);
+                    }
+                }
+            }
+            Ok(Event::Eof) => break,
+            Err(e) => return Err(text::gml_unreadable(lang, &e.to_string())),
+            _ => {}
+        }
+    }
+    if !stack.is_empty() {
+        return Err(text::gml_unclosed(lang));
+    }
+    if let Some(exception) = exception_of(&outside) {
+        return Err(text::service_exception(lang, &exception));
+    }
+    // A server that wraps no member still gets its features read, at the cost of the tree.
+    if features.is_empty() {
+        for root in &outside {
+            collect_members(root, swap, &mut features);
+        }
+    }
+    Ok(features)
+}
+
+/// Whether a finished element is a feature wrapper: WFS 2.0 writes `member`, 1.1.0 `featureMember`.
+fn is_member(node: &Node) -> bool {
+    matches!(node.name.as_str(), "member" | "featureMember")
+}
+
 /// The text of the OGC exception the document carries, clipped to one message line.
 fn exception_of(roots: &[Node]) -> Option<String> {
     let node = roots.iter().find_map(find_exception)?;
@@ -637,5 +714,26 @@ mod serviced_points {
         let (lon, lat) = crate::gk92::inverse(northing, easting);
         assert!((lon - 16.93).abs() < 0.02, "lon {lon}");
         assert!((lat - 52.40).abs() < 0.02, "lat {lat}");
+    }
+
+    #[test]
+    fn a_stream_reads_both_member_wrappers() {
+        let body = r#"<wfs:FeatureCollection xmlns:wfs="http://www.opengis.net/wfs" xmlns:gml="http://www.opengis.net/gml" xmlns:ms="http://mapserver.gis.umn.edu/mapserver">
+            <wfs:member><ms:dane><gml:Point><gml:pos>16.9 52.4</gml:pos></gml:Point><ms:nazwa>Poznań</ms:nazwa></ms:dane></wfs:member>
+            <gml:featureMember><ms:dane><gml:Point><gml:pos>17.0 52.5</gml:pos></gml:Point><ms:nazwa>Kórnik</ms:nazwa></ms:dane></gml:featureMember>
+        </wfs:FeatureCollection>"#;
+        let rows = parse_features_stream(std::io::Cursor::new(body.as_bytes()), false, Lang::En).expect("stream");
+        assert_eq!(rows.len(), 2, "{rows:?}");
+        assert_eq!(rows[0]["properties"]["nazwa"], "Poznań");
+    }
+
+    #[test]
+    fn a_stream_reports_an_exception_and_an_unclosed_document() {
+        let exception = r#"<ows:ExceptionReport xmlns:ows="http://www.opengis.net/ows"><ows:Exception><ows:ExceptionText>Boom</ows:ExceptionText></ows:Exception></ows:ExceptionReport>"#;
+        let refused = parse_features_stream(std::io::Cursor::new(exception.as_bytes()), false, Lang::En);
+        assert!(refused.is_err());
+
+        let cut = r#"<wfs:FeatureCollection><wfs:member><ms:dane><gml:Point>"#;
+        assert!(parse_features_stream(std::io::Cursor::new(cut.as_bytes()), false, Lang::En).is_err());
     }
 }

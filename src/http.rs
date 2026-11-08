@@ -5,7 +5,7 @@
 
 use crate::cache;
 use crate::text::{self, Lang};
-use std::io::Read;
+use std::io::{Read, Write};
 use std::time::Duration;
 
 const UA: &str = concat!("dane-pl/", env!("CARGO_PKG_VERSION"), " (RustGIS plugin)");
@@ -105,6 +105,78 @@ fn request(url: &str, timeout_secs: u64) -> Result<String, Failure> {
         return Err(Failure::TooBig);
     }
     String::from_utf8(bytes).map_err(|_| Failure::NotUtf8)
+}
+
+/// Streams a body into `sink`, from the cache when fresh, and keeps it for the next run.
+///
+/// The sink parses while the bytes arrive, so a 40 MB answer never becomes one string and one
+/// tree. The bytes are copied to the cache as they pass, so a second run reads a file.
+pub fn stream_body<T>(
+    url: &str,
+    timeout_secs: u64,
+    lang: Lang,
+    sink: impl FnOnce(&mut dyn std::io::BufRead) -> Result<T, String>,
+) -> Result<(u64, T), String> {
+    if let Some(cached) = cache::get(url) {
+        let mut reader = std::io::BufReader::new(cached.as_bytes());
+        let value = sink(&mut reader)?;
+        return Ok((cached.len() as u64, value));
+    }
+    let response = agent()
+        .get(url)
+        .timeout(Duration::from_secs(timeout_secs))
+        .set("User-Agent", UA)
+        .set("Accept-Encoding", "gzip")
+        .call()
+        .map_err(|e| match e {
+            ureq::Error::Status(code, response) => {
+                text::http_status(lang, code, short(url), &error_detail(response))
+            }
+            ureq::Error::Transport(t) => text::http_transport(short(url), &t.to_string()),
+        })?;
+    let dir = cache::dir();
+    let _ = std::fs::create_dir_all(&dir);
+    let part = dir.join(format!("{}.part", cache::key(url)));
+    let file = match std::fs::File::create(&part) {
+        Ok(file) => Some(file),
+        Err(_) => None,
+    };
+    let tee = Tee { inner: response.into_reader(), copy: file, written: 0 };
+    let mut reader = std::io::BufReader::with_capacity(64 * 1024, tee);
+    let value = match sink(&mut reader) {
+        Ok(value) => value,
+        Err(error) => {
+            let _ = std::fs::remove_file(&part);
+            return Err(error);
+        }
+    };
+    let counted = reader.into_inner();
+    let bytes = counted.written;
+    // A body that parsed keeps its bytes, and the next run reads them from the file.
+    if counted.copy.is_some() {
+        let _ = std::fs::rename(&part, dir.join(cache::key(url)));
+    }
+    Ok((bytes, value))
+}
+
+/// A reader that copies every byte it hands on, so a stream can be cached as it is parsed.
+struct Tee<R: Read> {
+    inner: R,
+    copy: Option<std::fs::File>,
+    written: u64,
+}
+
+impl<R: Read> Read for Tee<R> {
+    fn read(&mut self, buffer: &mut [u8]) -> std::io::Result<usize> {
+        let read = self.inner.read(buffer)?;
+        if read > 0 {
+            self.written += read as u64;
+            if let Some(file) = self.copy.as_mut() {
+                let _ = file.write_all(&buffer[..read]);
+            }
+        }
+        Ok(read)
+    }
 }
 
 /// Streams a coverage to a file, so 20 or 99 MB never sits in memory.
