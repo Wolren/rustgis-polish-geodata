@@ -146,7 +146,8 @@ listy zostaje pięć rzeczy.
    `from_view`.
 2. **`src/nmt.rs`: teren 3D i wygląd modelu** (`set_terrain`, `height_range`, `Look`,
    `exaggeration`, `dem-terrain-off`).
-3. **`src/eziudp.rs`: `rejestr-widok`**, rejestr zawężony do powiatu z widoku.
+3. **`src/eziudp.rs`: `rejestr-widok`** zrobione: ULDK nazywa powiat pod środkiem widoku, a
+   polecenie wypisuje jego usługi z rejestru, z podziałem na `wms` i `wfs`.
 4. **`data/wody.json`: 32 usługi** zamiast 30. Nasza linia ma 875 tytułów warstw i parametr
    `warstwa`, więc zostaje tylko nowszy katalog.
 5. **`tools/probe.py`, `tools/smoke.py`, `tools/fixtures/*.geojson`** i workflow katalogów w CI.

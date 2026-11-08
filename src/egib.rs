@@ -229,7 +229,7 @@ pub(crate) fn area_features(host: &mut Host, params: &Value, lang: Lang) -> Resu
 }
 
 /// The county a point falls in, as ULDK gives it: the TERYT and the name.
-fn county_at(lon: f64, lat: f64, lang: Lang) -> Result<(String, String), String> {
+pub(crate) fn county_at(lon: f64, lat: f64, lang: Lang) -> Result<(String, String), String> {
     let url = format!("{ULDK}?request=GetCountyByXY&xy={lon:.6},{lat:.6},4326&result=teryt,county");
     let body = http::fetch(&url, 60, lang)?;
     // ULDK answers a status line first, then the data line: "2464|powiat Częstochowa".

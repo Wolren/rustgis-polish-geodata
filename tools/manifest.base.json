@@ -170,6 +170,13 @@
       "params": "{\"szukaj\": \"geologia\", \"instytucja\": \"Warszawy\", \"teryt\": \"14\", \"rodzaj\": \"wms\", \"limit\": 50, \"dodaj\": \"<id>\"}"
     },
     {
+      "id": "rejestr-widok",
+      "label": "Register for\nthe view",
+      "icon": "table",
+      "help": "Lists the register services of the county under the map view, so a lookup starts where the map is.",
+      "params": "{\"rodzaj\": \"wms|wfs\"}"
+    },
+    {
       "id": "ustawienia",
       "label": "Download\nsettings",
       "icon": "settings",
@@ -1121,7 +1128,9 @@
       "Terrain\noff": "Teren 3D\nwyłącz",
       "Turns the 3D terrain off, so the map is flat again after a model goes.": "Wyłącza teren 3D, więc po usunięciu modelu mapa jest znowu płaska.",
       "Download\nfrom the register": "Pobierz\nz rejestru",
-      "Reads a WFS the register lists: one bounded, paged GetFeature per feature type, as one layer. Name the register id and optionally the types.": "Czyta WFS z rejestru: jedno ograniczone, stronicowane GetFeature na typ, jako jedna warstwa. Podaj identyfikator z rejestru i opcjonalnie typy."
+      "Reads a WFS the register lists: one bounded, paged GetFeature per feature type, as one layer. Name the register id and optionally the types.": "Czyta WFS z rejestru: jedno ograniczone, stronicowane GetFeature na typ, jako jedna warstwa. Podaj identyfikator z rejestru i opcjonalnie typy.",
+      "Register for\nthe view": "Rejestr dla\nwidoku",
+      "Lists the register services of the county under the map view, so a lookup starts where the map is.": "Wypisuje usługi rejestru dla powiatu pod widokiem mapy, więc szukanie zaczyna się tam, gdzie jest mapa."
     }
   },
   "moreMaps": {

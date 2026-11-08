@@ -111,6 +111,8 @@ granica”), drzewo warstw granicznych z wyszukiwarką, drzewo **Mapa** z trzema
   (hałas, powietrze, wody podziemne) oraz własne EGiB Poznania, Wrocławia i Warszawy.
 - **Polecenie `zrodla`:** szuka po nazwie zbioru, instytucji i TERYT, także wśród WFS-ów, a
   `{"dodaj": "<id>"}` dodaje jedną usługę.
+- **Polecenie `rejestr-widok`:** zawęża rejestr do powiatu pod widokiem mapy, więc szukanie zaczyna
+  się tam, gdzie stoi mapa. Parametr `rodzaj` wybiera `wms` albo `wfs`.
 
 Narzędzie **Aktualizuj rejestr** czyta rejestr EZiUDP na nowo. Sprawdza tylko adresy, których plik
 nie ma, i zapisuje wynik poza paczką. Polecenie `eziudp` pyta rejestr na żywo i prosi o zawężenie,

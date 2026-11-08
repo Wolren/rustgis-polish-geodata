@@ -82,6 +82,41 @@ pub fn find(id: &str) -> Option<&'static Registered> {
 
 /// Searches the offline register: `szukaj` over the dataset and institution names, `instytucja`,
 /// `teryt`, `rodzaj` (`wms` or `wfs`), `limit`, or `dodaj` with an id to add the WMS.
+pub fn for_view(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String> {
+    let (lon, lat) = host.centre()?;
+    let mut county = None;
+    for (x, y) in [(lon, lat), (lat, lon)] {
+        if let Ok(found) = crate::egib::county_at(x, y, lang) {
+            county = Some(found);
+            break;
+        }
+    }
+    let (code, name) = county.ok_or_else(|| text::register_off_county(lang))?;
+    let kind = params
+        .get("rodzaj")
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|kind| matches!(*kind, "wms" | "wfs"))
+        .unwrap_or("wms");
+    let entries: Vec<Value> = all()
+        .iter()
+        .filter(|entry| {
+            entry.kind == kind && (entry.teryt.starts_with(&code) || code.starts_with(&entry.teryt))
+        })
+        .map(|entry| {
+            json!({
+                "id": entry.id,
+                "name": entry.name,
+                "institution": entry.institution,
+                "url": entry.url,
+                "kind": entry.kind,
+            })
+        })
+        .collect();
+    host.notify(&text::register_county(lang, &name, &code, kind, entries.len()));
+    Ok(json!({ "county": name, "teryt": code, "kind": kind, "count": entries.len(), "services": entries }))
+}
+
 pub fn search(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String> {
     if let Some(id) = wanted(params, "dodaj") {
         let entry = find(&id).ok_or_else(|| text::register_unknown(lang, &id))?;

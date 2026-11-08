@@ -1240,6 +1240,25 @@ pub fn area_from_box(lang: Lang, name: &str, size: (f64, f64)) -> String {
     )
 }
 
+/// The view sits where ULDK names no county.
+pub fn register_off_county(lang: Lang) -> String {
+    pick!(
+        lang,
+        "ULDK named no county under the view: point the map inside Poland",
+        "ULDK nie podało powiatu pod widokiem: ustaw mapę w Polsce"
+    )
+    .to_string()
+}
+
+/// How many services the county under the view publishes.
+pub fn register_county(lang: Lang, county: &str, teryt: &str, kind: &str, count: usize) -> String {
+    pick!(
+        lang,
+        format!("{count} {kind} services for {county} (TERYT {teryt})"),
+        format!("{count} usług {kind} dla {county} (TERYT {teryt})")
+    )
+}
+
 /// A folder row was chosen instead of a map or a dataset inside it.
 pub fn map_folder(lang: Lang, label: &str) -> String {
     pick!(

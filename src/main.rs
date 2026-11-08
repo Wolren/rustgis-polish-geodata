@@ -118,6 +118,7 @@ fn run(
         "eziudp" => eziudp::search(params, lang),
         "wody-warstwy" => tile::wody_layers(params, lang),
         "zrodla" => zrodla::search(host, params, lang),
+        "rejestr-widok" => zrodla::for_view(host, params, lang),
         "geokoduj" => uug::geocode(host, params, lang),
         "adres-odwrotnie" => uug::reverse(host, params, lang),
         "wysokosc" => uug::height(host, params, lang),
