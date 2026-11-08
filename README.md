@@ -53,6 +53,14 @@ dowolnej warstwie poligonowej wybranej w drzewie.
 Skrypt ustawia obszar bez rysowania: `obszar-json` bierze `{"bbox": [zachód, południe, wschód,
 północ]}` albo `{"geojson": <Feature>}` i używa jego zasięgu.
 
+`obszar-jednostka` bierze gminę, powiat albo województwo po nazwie, z PRG. Parametr `przytnij`
+tnie wskazaną warstwę do tej jednostki w tym samym przebiegu, więc jedno wywołanie daje warstwę
+już przyciętą do granicy.
+
+`dzialki-powiat` kładzie własne EGiB powiatu jako wektorowe działki i budynki. ULDK nazywa powiat
+pod obszarem, rejestr podaje adres WFS tego powiatu, a jedno ograniczone żądanie na typ wraca jako
+warstwa. Limit to 6 000 obiektów; większy obszar dostaje komunikat.
+
 ## Pobieranie
 
 Sześć narzędzi bierze dane WFS po zbiorze: 106 zbiorów mapowych i 162 skorowidze. GDOŚ dokłada 15

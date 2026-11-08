@@ -47,7 +47,7 @@ impl Mode {
         })
     }
 
-    fn remember(self) {
+    pub fn remember(self) {
         std::fs::write(cache::area_mode_file(), self.key()).ok();
     }
 
@@ -236,7 +236,7 @@ fn read_box(params: &Value) -> Option<[f64; 4]> {
 }
 
 /// Every coordinate pair under a geometry, nested as deep as GeoJSON puts them.
-fn collect_points(value: &Value, out: &mut Vec<[f64; 2]>, depth: usize) {
+pub(crate) fn collect_points(value: &Value, out: &mut Vec<[f64; 2]>, depth: usize) {
     if depth > 8 || out.len() >= 200_000 {
         return;
     }
@@ -363,6 +363,54 @@ fn present(host: &mut Host, name: &str) -> Result<Option<i64>, String> {
         .flatten()
         .find(|layer| layer.get("name").and_then(Value::as_str) == Some(name))
         .map(|layer| layer.get("features").and_then(Value::as_i64).unwrap_or(0)))
+}
+
+/// The area layer's name, for a command that fills it from its own geometry.
+pub fn area_layer_name(host: &mut Host, lang: Lang) -> Result<String, String> {
+    area_layer(host, lang)
+}
+
+/// Fills the area layer with one feature per polygon, so a unit with exclaves keeps them all.
+pub fn fill_polygons(
+    host: &mut Host,
+    name: &str,
+    rings: &[Vec<[f64; 2]>],
+    lang: Lang,
+) -> Result<(), String> {
+    let answer = host.call(
+        "layer.template",
+        json!({ "template": "areas", "name": format!("{name} (new)") }),
+    )?;
+    let made = answer
+        .get("layer")
+        .cloned()
+        .ok_or_else(|| text::area_failed(lang))?;
+    host.call("edit.enable", json!({ "on": true }))?;
+    for ring in rings {
+        host.call(
+            "edit.addFeature",
+            json!({ "layer": made.clone(), "geometry": { "type": "Polygon", "coordinates": [ring] } }),
+        )?;
+    }
+    // The old layer goes last: a failure above leaves the area as it was.
+    if present(host, name)?.is_some() {
+        host.call("layer.remove", json!({ "layer": [name] }))?;
+    }
+    host.call("layer.rename", json!({ "layer": made, "name": name }))?;
+    Ok(())
+}
+
+/// The box around every ring of a shape.
+pub fn bounds_of(rings: &[Vec<[f64; 2]>]) -> [f64; 4] {
+    let mut extent = [f64::MAX, f64::MAX, f64::MIN, f64::MIN];
+    for ring in rings {
+        let box_lon = bounds(ring);
+        extent[0] = extent[0].min(box_lon[0]);
+        extent[1] = extent[1].min(box_lon[1]);
+        extent[2] = extent[2].max(box_lon[2]);
+        extent[3] = extent[3].max(box_lon[3]);
+    }
+    extent
 }
 
 /// Makes the area layer hold `ring`, building the new layer before the old one goes.

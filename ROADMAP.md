@@ -102,8 +102,8 @@ potem według tematu, i którą całą da się sterować przez MCP.
   „Geokodowanie Adresów UUG GUGiK”. Dziś `geokoduj` obsługuje jeden adres.
 - **ULDK po obrębie**: kaskada województwo → powiat → gmina → obręb → numer, import z CSV i kontrola
   całej warstwy działek.
-- **Obszar z jednostki administracyjnej**: gmina albo powiat jako obszar pobierania, bez rysowania.
-  Wymaga dwóch narzędzi, bo formularz nie ma pól zależnych.
+- **Obszar z jednostki administracyjnej**: zrobione jako `obszar-jednostka` (gmina, powiat,
+  województwo) z opcjonalnym `przytnij`. Zostaje dzielnica i obręb (typy A04 i A06 w PRG).
 
 ### Host (RustGIS)
 

@@ -77,6 +77,13 @@
       "params": "{}"
     },
     {
+      "id": "dzialki-powiat",
+      "label": "Parcels from\nthe county",
+      "icon": "polygon_layer",
+      "help": "Adds the county's own EGiB as vector parcels and buildings for the area: ULDK names the county, the register gives its WFS, and one bounded request per type lands as a layer.",
+      "params": "{\"obszar\": \"area layer (optional)\", \"typy\": \"dzialki,budynki (optional)\"}"
+    },
+    {
       "id": "obszar-widok",
       "label": "Area\nfrom view",
       "icon": "g_rect",
@@ -110,6 +117,13 @@
       "icon": "g_rect",
       "help": "Sets the area from a box or a GeoJSON shape a script hands in, so no drawing is needed.",
       "params": "{\"bbox\": [16.85, 52.35, 16.95, 52.45]} or {\"geojson\": <Feature or FeatureCollection>}"
+    },
+    {
+      "id": "obszar-jednostka",
+      "label": "Area from a\nunit",
+      "icon": "polygon_tool",
+      "help": "Sets the area from a gmina, a powiat or a voivodeship by name, from PRG. Pass przytnij to cut a layer to it in the same run.",
+      "params": "{\"nazwa\": \"Poznań\", \"poziom\": \"gmina\"|\"powiat\"|\"wojewodztwo\", \"przytnij\": \"layer name (optional)\"}"
     },
     {
       "id": "obszar-anuluj",
@@ -2863,7 +2877,11 @@
       "Area from a\nbox": "Obszar z\nprostokąta",
       "Sets the area from a box or a GeoJSON shape a script hands in, so no drawing is needed.": "Ustawia obszar z prostokąta albo kształtu GeoJSON podanego przez skrypt, więc rysowanie nie jest potrzebne.",
       "Wody\nlayers": "Wody:\nwarstwy",
-      "Lists the layers of one Wody Polskie service: the id to pass as warstwa, and its title. Without usluga it lists the services with their layer counts.": "Wypisuje warstwy jednej usługi Wody Polskie: identyfikator do parametru warstwa i tytuł. Bez uslugi wypisuje usługi z liczbą warstw."
+      "Lists the layers of one Wody Polskie service: the id to pass as warstwa, and its title. Without usluga it lists the services with their layer counts.": "Wypisuje warstwy jednej usługi Wody Polskie: identyfikator do parametru warstwa i tytuł. Bez uslugi wypisuje usługi z liczbą warstw.",
+      "Area from a\nunit": "Obszar z\njednostki",
+      "Sets the area from a gmina, a powiat or a voivodeship by name, from PRG. Pass przytnij to cut a layer to it in the same run.": "Ustawia obszar z gminy, powiatu albo województwa po nazwie, z PRG. Parametr przytnij tnie warstwę do niego w tym samym przebiegu.",
+      "Parcels from\nthe county": "Działki\nz powiatu",
+      "Adds the county's own EGiB as vector parcels and buildings for the area: ULDK names the county, the register gives its WFS, and one bounded request per type lands as a layer.": "Dodaje własne EGiB powiatu jako wektorowe działki i budynki dla obszaru: ULDK nazywa powiat, rejestr podaje jego WFS, a jedno ograniczone żądanie na typ kładzie warstwę."
     }
   },
   "panel": {

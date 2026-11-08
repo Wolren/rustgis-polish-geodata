@@ -1323,6 +1323,127 @@ pub fn wody_no_layer(lang: Lang, service: &str, count: usize) -> String {
     )
 }
 
+/// The unit command got no name, so it says which levels it knows.
+pub fn prg_needs_name(lang: Lang) -> String {
+    pick!(
+        lang,
+        "name a unit: {\"nazwa\": \"Poznań\", \"poziom\": \"gmina\"}",
+        "podaj jednostkę: {\"nazwa\": \"Poznań\", \"poziom\": \"gmina\"}"
+    )
+    .to_string()
+}
+
+/// The level asked for is not one PRG offers.
+pub fn prg_levels(lang: Lang) -> String {
+    pick!(
+        lang,
+        "poziom is missing or unknown: use gmina, powiat or wojewodztwo",
+        "poziom jest błędny albo go nie ma: podaj gmina, powiat albo wojewodztwo"
+    )
+    .to_string()
+}
+
+/// PRG answered with no feature for that name and level.
+pub fn prg_no_unit(lang: Lang, name: &str, level: &str) -> String {
+    pick!(
+        lang,
+        format!("PRG has no {level} named \"{name}\"; check the spelling"),
+        format!("PRG nie ma jednostki „{name}” na poziomie {level}; sprawdź pisownię")
+    )
+}
+
+/// The area now holds the unit's own boundary.
+pub fn prg_area_set(lang: Lang, layer: &str, name: &str, parts: usize) -> String {
+    pick!(
+        lang,
+        format!("area {layer} set from {name}: {parts} polygon(s)"),
+        format!("obszar {layer} ustawiony z jednostki {name}: {parts} poligon(y)")
+    )
+}
+
+/// The county EGiB command found no area to work from.
+pub fn egib_needs_area(lang: Lang) -> String {
+    pick!(
+        lang,
+        "make an area first: the county command reads it",
+        "najpierw zrób obszar: polecenie powiatowe czyta go"
+    )
+    .to_string()
+}
+
+/// The area layer the request named holds no feature.
+pub fn egib_empty_area(lang: Lang, name: &str) -> String {
+    pick!(
+        lang,
+        format!("the area layer \"{name}\" holds no shape"),
+        format!("warstwa obszaru „{name}” nie ma żadnego kształtu")
+    )
+}
+
+/// ULDK named no county for the area's centre.
+pub fn egib_no_county(lang: Lang) -> String {
+    pick!(
+        lang,
+        "ULDK named no county under the area: point the map inside Poland",
+        "ULDK nie podało powiatu pod obszarem: ustaw mapę w Polsce"
+    )
+    .to_string()
+}
+
+/// The register holds no EGiB WFS for that county.
+pub fn egib_no_service(lang: Lang, county: &str, teryt: &str) -> String {
+    pick!(
+        lang,
+        format!("the register holds no EGiB WFS for {county} (TERYT {teryt})"),
+        format!("rejestr nie ma WFS EGiB dla {county} (TERYT {teryt})")
+    )
+}
+
+/// The county's WFS published no parcels or buildings type.
+pub fn egib_no_types(lang: Lang, county: &str) -> String {
+    pick!(
+        lang,
+        format!("the WFS of {county} publishes no parcels or buildings type"),
+        format!("WFS dla {county} nie publikuje typu działek ani budynków")
+    )
+}
+
+/// The county's WFS answered with no feature in the area.
+pub fn egib_empty(lang: Lang, county: &str) -> String {
+    pick!(
+        lang,
+        format!("the WFS of {county} answered no feature in this area"),
+        format!("WFS dla {county} nie zwrócił żadnego obiektu w tym obszarze")
+    )
+}
+
+/// The layer built from the county's own EGiB.
+pub fn egib_layer(lang: Lang, county: &str) -> String {
+    pick!(
+        lang,
+        format!("Parcels and buildings ({county})"),
+        format!("Działki i budynki ({county})")
+    )
+}
+
+/// The county answered more features than one layer takes, so the rest is left out.
+pub fn egib_capped(lang: Lang, cap: usize) -> String {
+    pick!(
+        lang,
+        format!("the county answered more than {cap} features: shrink the area for the rest"),
+        format!("powiat zwrócił więcej niż {cap} obiektów: zmniejsz obszar, żeby zobaczyć resztę")
+    )
+}
+
+/// The county layer is on the map.
+pub fn egib_added(lang: Lang, layer: &str, count: usize, county: &str) -> String {
+    pick!(
+        lang,
+        format!("{layer}: {count} features from the EGiB of {county}"),
+        format!("{layer}: {count} obiektów z EGiB {county}")
+    )
+}
+
 /// The 3D scene no longer stands on a model.
 pub fn nmt_needs_area(lang: Lang) -> String {
     pick!(

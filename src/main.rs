@@ -12,6 +12,7 @@
 mod cache;
 mod catalog;
 mod clip;
+mod egib;
 mod filter;
 mod eziudp;
 mod gk92;
@@ -22,6 +23,7 @@ mod katalog;
 mod nmt;
 mod obszar;
 mod panel;
+mod prg;
 mod services;
 mod sheets;
 mod text;
@@ -106,6 +108,8 @@ fn run(
             .ok_or_else(|| text::area_nothing_drawn(lang)),
         "obszar-widok" => obszar::rectangle_from_view(host, lang),
         "obszar-json" => obszar::from_json(host, request, lang),
+        "obszar-jednostka" => prg::area(host, params, lang),
+        "dzialki-powiat" => egib::from_area(host, params, lang),
         "obszar-anuluj" => obszar::abort(host, lang),
         "obszar-wyczysc" => obszar::clear(host, lang),
         other if other.starts_with("usluga-") => services::toggle(host, lang, request),
@@ -148,6 +152,7 @@ fn redraws_panel(id: &str) -> bool {
         id,
         "obszar-widok"
             | "obszar-json"
+            | "obszar-jednostka"
             | "obszar-rysuj"
             | "obszar-prostokat"
             | "obszar-przejmij"
