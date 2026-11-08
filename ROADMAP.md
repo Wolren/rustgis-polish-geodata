@@ -40,8 +40,9 @@ potem według tematu, i którą całą da się sterować przez MCP.
 
 - Obszar to zawsze warstwa: prostokąt z widoku, rysowanie, prostokąt z narzędzia aplikacji
   (`obszar-prostokat` i `obszar-przejmij`), anulowanie i usuwanie. `obszar-json` bierze `bbox`
-  albo GeoJSON, więc skrypt ustawia obszar bez rysowania. Wtyczka nie zgaduje obszaru z aktywnej
-  warstwy.
+  albo GeoJSON, a `obszar-jednostka` gminę, powiat, województwo, obręb albo miasto, więc skrypt
+  ustawia obszar bez rysowania. Parametr `przytnij` tnie warstwę do jednostki w tym samym
+  przebiegu. Wtyczka nie zgaduje obszaru z aktywnej warstwy.
 - Filtr WFS zwraca całe obiekty, więc po pobraniu jest **Przytnij do warstwy**: wbudowany Clip
   zastępuje warstwę wynikiem. Granicą jest warstwa wybrana w drzewie, domyślnie warstwa obszaru.
 - **Duża siatka wysokości**: pierwsze naciśnięcie liczy komórki, MB i sekundy i nic nie pobiera.
@@ -100,9 +101,6 @@ potem według tematu, i którą całą da się sterować przez MCP.
 
 - **ULDK po obrębie**: kaskada województwo → powiat → gmina → obręb → numer, import z CSV i kontrola
   całej warstwy działek.
-- **Obszar z jednostki administracyjnej**: zrobione jako `obszar-jednostka` dla gminy, powiatu,
-  województwa, obrębu i miasta, z opcjonalnym `przytnij`. Miasto nieobecne w warstwie miast wraca
-  jako gmina.
 
 ### Host (RustGIS)
 
@@ -137,17 +135,16 @@ Gałąź `backup/v0.7.0` ma commit `50ee781`, który odszedł od tego samego com
 Scalanie odłożone: konflikt w 11 plikach, nasza linia zostaje główna. Do przeniesienia, w kolejności
 wartości:
 
-1. **`src/egib.rs`: działki i budynki wprost z powiatu.** ULDK `GetCountyByXY` nazywa powiat,
-   EZiUDP daje jego WFS EGiB, a `GetCapabilities` daje typy. Ograniczony `GetFeature` na typ kładzie
-   warstwę wektorową zamiast rastra KIEG. Wymaga `quick-xml` oraz `src/gml.rs`, `src/filter.rs`
-   i `src/gk92.rs` z tej gałęzi.
-2. **`src/wody.rs` i `data/wody.json`: 32 usługi** z wyborem warstwy po stronie gałęzi. Nasza
-   linia ma 30 usług, 875 tytułów warstw i parametr `warstwa`, więc zostaje tylko nowszy katalog.
-3. **`src/clip.rs`: granica z zaznaczenia**, kopiowana do warstwy tymczasowej, plus znacznik
+`src/egib.rs` jest przeniesiony: mamy własne polecenie `dzialki-powiat` z pagingiem, więc z tej
+listy zostaje pięć rzeczy.
+
+1. **`src/clip.rs`: granica z zaznaczenia**, kopiowana do warstwy tymczasowej, plus znacznik
    `from_view`.
-4. **`src/nmt.rs`: teren 3D i wygląd modelu** (`set_terrain`, `height_range`, `Look`,
+2. **`src/nmt.rs`: teren 3D i wygląd modelu** (`set_terrain`, `height_range`, `Look`,
    `exaggeration`, `dem-terrain-off`).
-5. **`src/eziudp.rs`: `rejestr-widok`**, rejestr zawężony do powiatu z widoku.
-6. **`tools/probe.py`, `tools/smoke.py`, `tools/fixtures/*.geojson`** i workflow katalogów w CI.
+3. **`src/eziudp.rs`: `rejestr-widok`**, rejestr zawężony do powiatu z widoku.
+4. **`data/wody.json`: 32 usługi** zamiast 30. Nasza linia ma 875 tytułów warstw i parametr
+   `warstwa`, więc zostaje tylko nowszy katalog.
+5. **`tools/probe.py`, `tools/smoke.py`, `tools/fixtures/*.geojson`** i workflow katalogów w CI.
 
 Nie przenosimy: ich `main.rs` i `text.rs` (nasze mają więcej) ani usunięcia Cartomatic ze wstęgi.
