@@ -17,6 +17,15 @@ editable layers.
 | Lookups | parcel by identifier or point, address and reverse address, height, obręb lists, CSV runs |
 | Agent ready | 236 commands, 13 tools, every command declaring its arguments, a skill for the assistant |
 
+![The Polish Geodata tab](assets/tab-en.png)
+
+The tab holds seven groups: basemaps, area, tools, WMS overlays, downloads, elevation and lookups.
+
+![The Register menu](assets/register-en.png)
+
+The Register menu carries six services the catalogue does not hold: GIOŚ noise, air and groundwater,
+and the EGiB of Poznań, Wrocław and Warsaw.
+
 ## Install
 
 - **From a package:** install `polish-geodata-0.1.0.rgplugin` through **Plugins › Plugin Manager ›

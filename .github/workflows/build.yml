@@ -31,5 +31,8 @@ jobs:
       - name: READMEs name real commands
         run: python tools/readme_check.py
 
+      - name: The manifest passes the registry rules
+        run: python tools/manifest_check.py
+
       - name: Packager builds
         run: cargo build --release -p package

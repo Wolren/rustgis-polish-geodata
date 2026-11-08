@@ -92,6 +92,9 @@ jobs:
           cargo run --release --locked -p package -- \
             --source-url "https://github.com/${{ github.repository }}/releases/download/${GITHUB_REF_NAME}/polish-geodata-${GITHUB_REF_NAME#v}.rgplugin"
 
+      - name: the package holds every platform
+        run: python3 tools/manifest_check.py --release
+
       - name: check it twice
         run: |
           first=$(sha256sum dist/polish-geodata-*.rgplugin | cut -d' ' -f1)

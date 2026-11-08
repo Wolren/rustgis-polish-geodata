@@ -32,6 +32,8 @@ Pythona ani GDAL-a. Wymaga RustGIS 0.5.0 lub nowszego.
 | **Wysokości** | trzy modele wysokości, styl, teren 3D i jego wyłączenie |
 | **Wyszukiwanie** | działka, adres, wysokość, znajdź usługę, aktualizacja rejestru |
 
+![Zakładka Polish Geodata](assets/ribbon-pl.png)
+
 Zakładkę trzyma jedna zasada: **polecenie pokazuje coś od razu, narzędzie pobiera w tle**, z
 postępem i przyciskiem Anuluj. Wyjątkiem są trzy polecenia wysokości, bo narzędzie nie umie dodać
 warstwy rastrowej.
