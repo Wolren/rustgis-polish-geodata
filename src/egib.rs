@@ -38,12 +38,22 @@ pub fn from_area(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, S
         }
     }
     let (county_code, county) = found.ok_or_else(|| text::egib_no_county(lang))?;
-    let service = service_for(&county_code)
-        .ok_or_else(|| text::egib_no_service(lang, &county, &county_code))?;
-    let types = wanted_types(&service.url, params, lang)?;
-    if types.is_empty() {
-        return Err(text::egib_no_types(lang, &county));
+    let services = services_for(&county_code);
+    if services.is_empty() {
+        return Err(text::egib_no_service(lang, &county, &county_code));
     }
+    // A county may report several WFS addresses; the one that publishes parcels wins.
+    let mut chosen = None;
+    for service in &services {
+        let types = wanted_types(&service.url, params, lang)?;
+        if !types.is_empty() {
+            chosen = Some((*service, types));
+            break;
+        }
+    }
+    let Some((service, types)) = chosen else {
+        return Err(text::egib_no_types(lang, &county));
+    };
 
     let cap = params
         .get("limit")
@@ -142,14 +152,17 @@ fn county_at(lon: f64, lat: f64, lang: Lang) -> Result<(String, String), String>
     Ok((code, name))
 }
 
-/// The register's EGiB WFS for a county: its TERYT matches the start or the whole of the entry's.
-fn service_for(county_code: &str) -> Option<&'static zrodla::Registered> {
+/// Every register WFS a county reports with an EGiB dataset, in register order.
+fn services_for(county_code: &str) -> Vec<&'static zrodla::Registered> {
     let wanted = county_code.trim();
-    zrodla::all().iter().find(|entry| {
-        entry.kind == "wfs"
-            && entry.name.to_lowercase().contains("ewidencja grunt")
-            && (entry.teryt.starts_with(wanted) || wanted.starts_with(&entry.teryt))
-    })
+    zrodla::all()
+        .iter()
+        .filter(|entry| {
+            entry.kind == "wfs"
+                && entry.name.to_lowercase().contains("ewidencja grunt")
+                && (entry.teryt.starts_with(wanted) || wanted.starts_with(&entry.teryt))
+        })
+        .collect()
 }
 
 /// The feature types to fetch: `dzialki` and `budynki` unless the request names `typy`.
@@ -247,6 +260,28 @@ fn encode(text: &str) -> String {
 mod tests {
     use super::*;
 
+/// A small deterministic generator, so a fuzz case failing here fails everywhere.
+struct Lcg(u64);
+
+impl Lcg {
+    fn new(seed: u64) -> Self {
+        Lcg(seed | 1)
+    }
+
+    fn next(&mut self) -> u64 {
+        self.0 = self.0.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+        self.0 >> 33
+    }
+
+    fn below(&mut self, bound: u64) -> u64 {
+        self.next() % bound.max(1)
+    }
+
+    fn pick<'a, T>(&mut self, items: &'a [T]) -> &'a T {
+        &items[self.below(items.len() as u64) as usize]
+    }
+}
+
     #[test]
     fn capabilities_name_their_types() {
         let body = "<WFS_Capabilities><FeatureTypeList><FeatureType><Name>gmgml:dzialki</Name></FeatureType><FeatureType><Name>gmgml:budynki</Name></FeatureType></FeatureTypeList></WFS_Capabilities>";
@@ -261,4 +296,27 @@ mod tests {
         assert!(url.contains("COUNT=1000"));
         assert!(url.contains("STARTINDEX=2000"));
     }
+    /// Capabilities as real servers send them: namespaces, nesting, empty names, stray text.
+    #[test]
+    fn capabilities_are_read_from_any_shape() {
+        let mut rng = Lcg::new(5);
+        let chunks = [
+            "<FeatureType><Name>gmgml:dzialki</Name></FeatureType>",
+            "<wfs:FeatureType><wfs:Name>wfs:budynki</wfs:Name></wfs:FeatureType>",
+            "<Name></Name>",
+            "<Name>no-colon</Name>",
+            "<Name>a b</Name>",
+            "<FeatureType>",
+            "plain text",
+        ];
+        for _ in 0..300 {
+            let count = rng.below(6) as usize;
+            let body: String = (0..count).map(|_| *rng.pick(&chunks)).collect();
+            let names = capability_types(&body);
+            for name in names {
+                assert!(name.contains(':') && !name.contains(' '), "{name}");
+            }
+        }
+    }
+
 }

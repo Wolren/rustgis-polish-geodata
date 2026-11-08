@@ -1463,6 +1463,25 @@ pub fn csv_needs_file(lang: Lang) -> String {
     .to_string()
 }
 
+/// The CSV the run carried is not readable text.
+pub fn csv_bad_content(lang: Lang) -> String {
+    pick!(
+        lang,
+        "the CSV the run carried is not base64 text",
+        "CSV przekazany w przebiegu nie jest tekstem base64"
+    )
+    .to_string()
+}
+
+/// The CSV path could not be read.
+pub fn csv_read_failed(lang: Lang, path: &str, reason: &str) -> String {
+    pick!(
+        lang,
+        format!("{path} could not be read: {reason}"),
+        format!("nie udało się przeczytać {path}: {reason}")
+    )
+}
+
 /// The CSV holds no usable row.
 pub fn csv_empty(lang: Lang, path: &str) -> String {
     pick!(

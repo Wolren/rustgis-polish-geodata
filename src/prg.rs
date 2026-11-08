@@ -234,6 +234,28 @@ fn encode(text: &str) -> String {
 mod tests {
     use super::*;
 
+/// A small deterministic generator, so a fuzz case failing here fails everywhere.
+struct Lcg(u64);
+
+impl Lcg {
+    fn new(seed: u64) -> Self {
+        Lcg(seed | 1)
+    }
+
+    fn next(&mut self) -> u64 {
+        self.0 = self.0.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+        self.0 >> 33
+    }
+
+    fn below(&mut self, bound: u64) -> u64 {
+        self.next() % bound.max(1)
+    }
+
+    fn pick<'a, T>(&mut self, items: &'a [T]) -> &'a T {
+        &items[self.below(items.len() as u64) as usize]
+    }
+}
+
     #[test]
     fn a_level_names_its_type() {
         assert_eq!(level_type("gmina"), Some("A03_Granice_gmin"));
@@ -262,4 +284,22 @@ mod tests {
         assert_eq!(rings.len(), 1);
         assert_eq!(rings[0].len(), 5);
     }
+    /// Names a user types: empty, spaced, mixed case, with diacritics and punctuation.
+    #[test]
+    fn every_spelling_of_a_name_is_tried_without_a_panic() {
+        let mut rng = Lcg::new(3);
+        let pool = ["Poznań", "poznański", "WOJEWÓDZTWO", "", "  ", "powiat ostrowski", "A&B", "100%", "Ünïcode"];
+        let levels = ["gmina", "powiat", "wojewodztwo", "obreb", "miasto", "dzielnica"];
+        for _ in 0..300 {
+            let name = *rng.pick(&pool);
+            let level = *rng.pick(&levels);
+            let spellings = spellings(name, level);
+            assert!(!spellings.is_empty());
+            for spelling in &spellings {
+                assert!(!encode(spelling).contains(' '), "{spelling}");
+            }
+        }
+        assert_eq!(encode("A&B"), "A%26B");
+    }
+
 }

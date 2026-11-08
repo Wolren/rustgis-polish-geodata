@@ -67,12 +67,14 @@ pub fn locate(address: &str, lang: Lang) -> Result<(f64, f64, Map<String, Value>
 /// Geocodes the addresses of a CSV file into one point layer, as a tool.
 pub fn geocode_csv(request: &Value, lang: Lang) -> Result<Value, String> {
     let params = request.get("params").cloned().unwrap_or(Value::Null);
-    let path = params
+    let body = file_text(request, &params, lang)?;
+    let name = params
         .get("file")
         .and_then(Value::as_str)
         .map(str::trim)
         .filter(|path| !path.is_empty())
-        .ok_or_else(|| text::csv_needs_file(lang))?;
+        .unwrap_or("file")
+        .to_string();
     let limit = params
         .get("limit")
         .and_then(Value::as_u64)
@@ -84,10 +86,9 @@ pub fn geocode_csv(request: &Value, lang: Lang) -> Result<Value, String> {
         .map(str::trim)
         .filter(|name| !name.is_empty());
 
-    let body = std::fs::read_to_string(path).map_err(|e| text::file_failed(lang, path, &e.to_string()))?;
     let rows = read_csv(&body, column);
     if rows.is_empty() {
-        return Err(text::csv_empty(lang, path));
+        return Err(text::csv_empty(lang, &name));
     }
     let total = rows.len().min(limit);
     let mut features = Vec::new();
@@ -121,6 +122,59 @@ pub fn geocode_csv(request: &Value, lang: Lang) -> Result<Value, String> {
         "layers": [{ "name": name, "geojson": collection }],
         "messages": [note],
     }))
+}
+
+/// The CSV text the run carries: the host puts the file's bytes in `files`, a path still reads.
+fn file_text(request: &Value, params: &Value, lang: Lang) -> Result<String, String> {
+    let name = params.get("file").and_then(Value::as_str).unwrap_or_default();
+    let carried = request
+        .get("files")
+        .and_then(Value::as_object)
+        .and_then(|files| files.get("file"))
+        .and_then(|entry| entry.get("data"))
+        .and_then(Value::as_str)
+        .or_else(|| {
+            params
+                .get("file")
+                .and_then(Value::as_object)
+                .and_then(|entry| entry.get("data"))
+                .and_then(Value::as_str)
+        });
+    if let Some(data) = carried {
+        let bytes = base64_decode(data).ok_or_else(|| text::csv_bad_content(lang))?;
+        return String::from_utf8(bytes).map_err(|_| text::csv_bad_content(lang));
+    }
+    // A path from a script or a test still opens the file itself.
+    if !name.is_empty() && std::path::Path::new(name).is_file() {
+        return std::fs::read_to_string(name).map_err(|e| text::csv_read_failed(lang, name, &e.to_string()));
+    }
+    Err(text::csv_needs_file(lang))
+}
+
+/// Standard base64 with padding, enough for the host's file encoding.
+fn base64_decode(text: &str) -> Option<Vec<u8>> {
+    let mut out = Vec::new();
+    let mut buffer = 0u32;
+    let mut bits = 0u8;
+    for byte in text.bytes() {
+        let value = match byte {
+            b'A'..=b'Z' => byte - b'A',
+            b'a'..=b'z' => byte - b'a' + 26,
+            b'0'..=b'9' => byte - b'0' + 52,
+            b'+' => 62,
+            b'/' => 63,
+            b'=' | b'\n' | b'\r' | b' ' => continue,
+            _ => return None,
+        };
+        buffer = (buffer << 6) | u32::from(value);
+        bits += 6;
+        if bits >= 8 {
+            bits -= 8;
+            out.push((buffer >> bits) as u8);
+            buffer &= (1 << bits) - 1;
+        }
+    }
+    Some(out)
 }
 
 /// The addresses of a CSV: the column the caller names, else the first one that looks like an address.
@@ -416,6 +470,28 @@ fn encode(text: &str) -> String {
 mod tests {
     use super::*;
 
+/// A small deterministic generator, so a fuzz case failing here fails everywhere.
+struct Lcg(u64);
+
+impl Lcg {
+    fn new(seed: u64) -> Self {
+        Lcg(seed | 1)
+    }
+
+    fn next(&mut self) -> u64 {
+        self.0 = self.0.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+        self.0 >> 33
+    }
+
+    fn below(&mut self, bound: u64) -> u64 {
+        self.next() % bound.max(1)
+    }
+
+    fn pick<'a, T>(&mut self, items: &'a [T]) -> &'a T {
+        &items[self.below(items.len() as u64) as usize]
+    }
+}
+
     #[test]
     fn an_address_names_street_number_and_city() {
         let full = json!({"street": "ulica Żurawia", "number": "3/5", "city": "Warszawa"});
@@ -467,4 +543,28 @@ mod tests {
         let near = candidate(100.0, 100.0, "0.4");
         assert_eq!(choose(&[&far, &near], Some((0.0, 0.0))), &near);
     }
+    /// CSV files as people make them: separators swapped, quotes, blank lines, no header.
+    #[test]
+    fn a_csv_of_any_shape_gives_addresses_or_nothing() {
+        let mut rng = Lcg::new(13);
+        let separators = [';', ','];
+        let rows = ["Poznań, Głogowska 10", "Warszawa;Marszałkowska 1", "", "  ", "\"quoted, with comma\""];
+        for _ in 0..200 {
+            let separator = *rng.pick(&separators);
+            let count = rng.below(6) as usize;
+            let mut body = format!("adres{separator}nazwa\n");
+            for _ in 0..count {
+                body.push_str(*rng.pick(&rows));
+                body.push_str(&separator.to_string());
+                body.push_str("x\n");
+            }
+            let read = read_csv(&body, None);
+            assert!(read.len() <= 6);
+            for (address, _) in read {
+                assert!(!address.trim().is_empty());
+            }
+        }
+        assert!(read_csv("", None).is_empty());
+    }
+
 }

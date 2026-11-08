@@ -459,6 +459,28 @@ fn size_km(extent: [f64; 4]) -> (f64, f64) {
 mod tests {
     use super::*;
 
+/// A small deterministic generator, so a fuzz case failing here fails everywhere.
+struct Lcg(u64);
+
+impl Lcg {
+    fn new(seed: u64) -> Self {
+        Lcg(seed | 1)
+    }
+
+    fn next(&mut self) -> u64 {
+        self.0 = self.0.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+        self.0 >> 33
+    }
+
+    fn below(&mut self, bound: u64) -> u64 {
+        self.next() % bound.max(1)
+    }
+
+    fn pick<'a, T>(&mut self, items: &'a [T]) -> &'a T {
+        &items[self.below(items.len() as u64) as usize]
+    }
+}
+
     fn feature(ring: &[(f64, f64)]) -> Value {
         let coordinates: Vec<Value> = ring.iter().map(|(x, y)| json!([x, y])).collect();
         json!({
@@ -532,4 +554,42 @@ mod tests {
         assert_eq!(Mode::of(&[feature(&view), feature(&view)]), Some(Mode::Drawn));
         assert_eq!(Mode::of(&[]), None, "an empty layer says nothing");
     }
+    /// Boxes a script can send: wrong lengths, inverted corners, huge numbers, non-numbers.
+    #[test]
+    fn a_box_from_a_script_is_read_or_refused_but_never_a_panic() {
+        let mut rng = Lcg::new(7);
+        let pool = [0.0_f64, -1.0, 16.9, 52.4, 180.0, 360.0, 1e300, f64::NAN, f64::INFINITY];
+        let bad = json!({"bbox": "16.9,52.4"});
+        assert!(read_box(&bad).is_none());
+        assert!(read_box(&json!({"bbox": [16.9, 52.4, 17.0]})).is_none());
+        assert!(read_box(&json!({"bbox": [17.0, 52.4, 16.9, 52.5]})).is_none());
+        for _ in 0..500 {
+            let count = rng.below(6) as usize;
+            let values: Vec<Value> = (0..count)
+                .map(|_| json!(rng.pick(&pool)))
+                .collect();
+            let params = json!({ "bbox": values });
+            // Only a sane box comes back, and a bad one is a refusal rather than a panic.
+            if let Some(box_lon) = read_box(&params) {
+                assert!(box_lon[2] > box_lon[0] && box_lon[3] > box_lon[1], "{box_lon:?}");
+            }
+        }
+    }
+
+    /// Geometry a script can send: deep nesting, mixed types, a stray number pair.
+    #[test]
+    fn a_shape_from_a_script_is_walked_to_a_stop() {
+        let mut rng = Lcg::new(11);
+        for _ in 0..200 {
+            let depth = rng.below(12) as usize;
+            let mut value = json!([[16.9, 52.4], [17.0, 52.5]]);
+            for _ in 0..depth {
+                value = json!([value, "x", 3]);
+            }
+            let mut points = Vec::new();
+            collect_points(&value, &mut points, 0);
+            assert!(points.len() <= 200_000);
+        }
+    }
+
 }

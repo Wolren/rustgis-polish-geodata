@@ -150,7 +150,7 @@ narzędzia pobierania, dopóki wtyczka jest włączona.
 | --- | --- |
 | `src/` | wtyczka, jeden moduł na temat |
 | `data/` | katalogi: usługi, zbiory WFS, Wody, Cartomatic, GDOŚ, PIG, rejestr, wstęga |
-| `tools/` | budowniczowie, którzy dowodzą każdy adres zapisany do `data/` |
+| `tools/` | budowniczowie, którzy dowodzą każdy adres zapisany do `data/`, i fuzzer pobierania |
 | `packaging/` | pakowacz w Rust, który robi `.rgplugin` |
 | `plugin.json` | generowany z `data/` i `tools/manifest.base.json` |
 
@@ -168,7 +168,12 @@ python tools/manifest.py --check    # kończy się kodem 1, gdy plugin.json jest
 cargo test
 cargo build --release
 cargo run --release -p package -- --allow-missing
+python tools/fuzz.py --cases 12 --seed 1 --report D:/Scratch/fuzz.json
 ```
+
+`tools/fuzz.py` uruchamia prawdziwe pobrania z ziarnem i limitem czasu, więc ten sam przebieg daje
+te same przypadki. Klasyfikuje wynik na OK, REFUSED, TIMEOUT i CRASH, a na końcu wypisuje wnioski
+o ścieżce pobierania.
 
 Pakowacz pisze `dist\dane-pl\` (folder dla menedżera wtyczek), `dist\dane-pl-0.6.0.rgplugin` i
 `dist\dane-pl.json` (wpis do rejestru). Archiwum jest deterministyczne: dwa przebiegi na tych

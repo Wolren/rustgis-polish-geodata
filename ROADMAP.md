@@ -111,6 +111,26 @@ potem według tematu, i którą całą da się sterować przez MCP.
 - **`createRectangle` dla warstw edytowalnych**: prostokąt z narzędzia aplikacji rysuje grafikę,
   więc obszar wymaga kroku **Prostokąt do obszaru**.
 
+## Fuzz pobierania
+
+`tools/fuzz.py` uruchamia prawdziwe pobrania z ziarnem i limitem czasu (`--cases`, `--seed`,
+`--timeout`, `--report`) i klasyfikuje wynik na OK, REFUSED, TIMEOUT i CRASH. Trzy przebiegi po
+9 do 12 przypadków nie dały ani jednego crashu i ani jednego timeoutu.
+
+Co wykrył i co z tego wynika:
+
+- **Naprawione: umowa pliku w narzędziu.** Gospodarz podaje plik w `files` jako base64, a parametr
+  trzyma samą nazwę, więc `geokoduj-csv` czytał ścieżkę i kończył się błędem „fuzz.csv could not be
+  written”. Teraz czyta `files`, a ścieżkę traktuje jako wariant zapasowy.
+- **Naprawione: powiat z nie swoją usługą.** Rejestr podaje dla Poznania adres „EGiB”, który
+  naprawdę serwuje EMUiA, więc polecenie odmawiało komunikatem o braku typów. Teraz próbuje
+  wszystkich WFS-ów powiatu, zanim odmówi.
+- **Do poprawy: bramka rozmiaru mierzy po pobraniu.** Obszar 2° pobrał 32 MB w 15 s i dopiero wtedy
+  odmówił przy 25 MB. Usprawnienie: oszacować rozmiar przed żądaniem (zasięg × zmierzona gęstość
+  z `tools/wfs.py`) albo spytać przed startem.
+- **Do poprawy: brak oceny gęstości w teście.** Fuzzer mierzy czas i werdykt, ale nie sprawdza, czy
+  liczba obiektów zgadza się z zasięgiem. Usprawnienie: porównać obiekty na km² z prognozą.
+
 ## Do przeniesienia z 0.7.0
 
 Gałąź `backup/v0.7.0` ma commit `50ee781`, który odszedł od tego samego commita bazowego `291f358`.
