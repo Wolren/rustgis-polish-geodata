@@ -70,10 +70,26 @@ pub fn fetch(url: &str, timeout_secs: u64, lang: Lang) -> Result<String, String>
     }
 }
 
+/// One agent for the whole process, so a page of addresses reuses its connection.
+///
+/// A fresh agent per request costs a TLS handshake each time: a download of four pages pays four.
+fn agent() -> &'static ureq::Agent {
+    static AGENT: std::sync::OnceLock<ureq::Agent> = std::sync::OnceLock::new();
+    AGENT.get_or_init(|| {
+        ureq::AgentBuilder::new()
+            .max_idle_connections(16)
+            .max_idle_connections_per_host(8)
+            .build()
+    })
+}
+
 fn request(url: &str, timeout_secs: u64) -> Result<String, Failure> {
-    let response = ureq::get(url)
+    let response = agent()
+        .get(url)
         .timeout(Duration::from_secs(timeout_secs))
         .set("User-Agent", UA)
+        // GML is highly compressible: GUGiK sends 5 MB of a page as 400 KB when asked.
+        .set("Accept-Encoding", "gzip")
         .call()
         .map_err(|e| match e {
             ureq::Error::Status(code, response) => Failure::Status(code, error_detail(response)),
@@ -116,9 +132,11 @@ fn stream(url: &str, path: &std::path::Path, timeout_secs: u64, lang: Lang) -> R
         std::fs::create_dir_all(parent)
             .map_err(|e| text::file_failed(lang, &parent.display().to_string(), &e.to_string()))?;
     }
-    let response = ureq::get(url)
+    let response = agent()
+        .get(url)
         .timeout(Duration::from_secs(timeout_secs))
         .set("User-Agent", UA)
+        .set("Accept-Encoding", "gzip")
         .call()
         .map_err(|e| match e {
             ureq::Error::Status(code, response) => {
