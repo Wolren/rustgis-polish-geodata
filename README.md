@@ -112,7 +112,7 @@ run_command  plugin:dane-pl/mapa      {"panel": {"mapa": "v:bdot"}}
 run_tool     plugin:dane-pl/pobierz-granice  {"dane": "A03_Granice_gmin", "obszar": "Obszar pobierania"}
 ```
 
-`katalog` wypisuje każdą usługę, zbiór i identyfikator, więc agent nie czyta manifestu. Paczka
+Każde polecenie deklaruje swoje argumenty w `params`, więc `rustgis-cli commands` i asystent widzą je bez czytania kodu. `katalog` wypisuje każdą usługę, zbiór i identyfikator, więc agent nie czyta manifestu. Paczka
 niesie `skills/dane-pl/SKILL.md`. Dzięki temu asystent w RustGIS zna polecenia obszaru, limity i
 narzędzia pobierania, dopóki wtyczka jest włączona.
 
