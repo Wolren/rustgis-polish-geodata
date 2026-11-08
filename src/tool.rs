@@ -143,6 +143,10 @@ fn gate(
     let filter = filter::polygon_filter(layer, collection).ok();
     host::progress_line(&text::counting(lang, layer.name, area));
     if let Some(wanted) = needed(layer, bbox, filter.as_deref(), lang) {
+        // A zero count ends the run before a page is asked for, which would cost a request.
+        if wanted == 0 {
+            return Err(text::area_empty(lang, layer.name, area));
+        }
         if wanted > wfs::MAX_TOTAL {
             return Err(text::area_over_budget(
                 lang,

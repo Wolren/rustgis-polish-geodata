@@ -128,6 +128,8 @@ Co wykrył i co z tego wynika:
 - **Naprawione: powiat z nie swoją usługą.** Rejestr podaje dla Poznania adres „EGiB”, który
   naprawdę serwuje EMUiA, więc polecenie odmawiało komunikatem o braku typów. Teraz próbuje
   wszystkich WFS-ów powiatu, zanim odmówi.
+- **Naprawione: puste obszary.** Gdy usługa liczy zero obiektów, przebieg kończy się przed
+  pierwszym żądaniem strony. Otwarte morze: 0,9 s i komunikat, zamiast strony i pustej warstwy.
 - **Naprawione: połączenia i transfer.** Jedna współdzielona sesja HTTP trzyma połączenie między
   stronami: pobranie czterech stron adresów spadło z 0,87 s do 0,63 s, bo cztery uzgadniania TLS
   stały się jednym. Gzip tnie transfer strony gmin z 362 701 do 164 041 bajtów (45 %), a strona

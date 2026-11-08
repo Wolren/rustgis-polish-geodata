@@ -1353,6 +1353,15 @@ pub fn clip_boundary_layer(lang: Lang) -> String {
     pick!(lang, "Clip boundary", "Granica cięcia").to_string()
 }
 
+/// The service counts no feature in the area, so no page is worth a request.
+pub fn area_empty(lang: Lang, layer: &str, area: &str) -> String {
+    pick!(
+        lang,
+        format!("{layer} has no feature in {area}: the run stops before a page"),
+        format!("{layer} nie ma żadnego obiektu w {area}: przebieg kończy się przed stroną")
+    )
+}
+
 /// The 3D scene no longer stands on a model.
 pub fn nmt_terrain_off(lang: Lang) -> String {
     pick!(
