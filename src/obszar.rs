@@ -198,6 +198,71 @@ pub fn take_rectangle(host: &mut Host, lang: Lang) -> Result<Option<Value>, Stri
     Ok(Some(json!({ "layer": name, "mode": Mode::Drawn.key(), "box": box_lon })))
 }
 
+/// Fills the area layer from a box or a polygon a script hands in, with no drawing at all.
+///
+/// `bbox` takes `[west, south, east, north]` in lon and lat; `geojson` takes any Feature, Feature
+/// Collection or geometry and uses its bounds, which is what a WFS filter needs.
+pub fn from_json(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, String> {
+    let params = request.get("params").cloned().unwrap_or(Value::Null);
+    let box_lon = read_box(&params).ok_or_else(|| text::area_needs_box(lang))?;
+    drop_drawing(host);
+    let name = area_layer(host, lang)?;
+    let replaced = present(host, &name)?.unwrap_or(0) > 0;
+    refill(host, &name, &ring(box_lon), lang)?;
+    host.call("layer.select", json!({ "layer": name }))?;
+    Mode::View.remember();
+    if replaced {
+        host.notify(&text::area_replaced(lang, &name));
+    }
+    host.notify(&text::area_from_box(lang, &name, size_km(box_lon)));
+    Ok(json!({ "layer": name, "mode": Mode::View.key(), "box": box_lon }))
+}
+
+/// The box a request names, from `bbox` numbers or from a GeoJSON shape's bounds.
+fn read_box(params: &Value) -> Option<[f64; 4]> {
+    if let Some(values) = params.get("bbox").and_then(Value::as_array) {
+        let numbers: Vec<f64> = values.iter().filter_map(Value::as_f64).collect();
+        let box_lon = [*numbers.first()?, *numbers.get(1)?, *numbers.get(2)?, *numbers.get(3)?];
+        return (box_lon[2] > box_lon[0] && box_lon[3] > box_lon[1]).then_some(box_lon);
+    }
+    let shape = params.get("geojson").or_else(|| params.get("geometry"))?;
+    let mut points: Vec<[f64; 2]> = Vec::new();
+    collect_points(shape, &mut points, 0);
+    if points.is_empty() {
+        return None;
+    }
+    let box_lon = bounds(&points);
+    (box_lon[2] > box_lon[0] && box_lon[3] > box_lon[1]).then_some(box_lon)
+}
+
+/// Every coordinate pair under a geometry, nested as deep as GeoJSON puts them.
+fn collect_points(value: &Value, out: &mut Vec<[f64; 2]>, depth: usize) {
+    if depth > 8 || out.len() >= 200_000 {
+        return;
+    }
+    match value {
+        Value::Array(items) => {
+            if items.len() == 2 && items.iter().all(Value::is_number) {
+                if let (Some(lon), Some(lat)) = (items[0].as_f64(), items[1].as_f64()) {
+                    out.push([lon, lat]);
+                }
+                return;
+            }
+            for item in items {
+                collect_points(item, out, depth + 1);
+            }
+        }
+        Value::Object(map) => {
+            for key in ["geometry", "features", "coordinates"] {
+                if let Some(inner) = map.get(key) {
+                    collect_points(inner, out, depth + 1);
+                }
+            }
+        }
+        _ => {}
+    }
+}
+
 /// Removes the layer a drawn rectangle waits in, so the next drag starts empty.
 pub fn drop_drawing(host: &mut Host) {
     if let Some(name) = cache::pending_drawing() {

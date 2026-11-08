@@ -55,6 +55,7 @@ pub fn ribbon_target(command: &str) -> Option<&'static Registered> {
 }
 
 /// Whether every ribbon command names a WMS the register holds, for the manifest test.
+#[cfg(test)]
 pub fn ribbon_ids() -> Vec<(String, String)> {
     serde_json::from_str::<Vec<RibbonEntry>>(RIBBON)
         .unwrap_or_default()
