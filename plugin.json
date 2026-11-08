@@ -2,7 +2,7 @@
   "id": "polish-geodata",
   "name": "Polish Geodata",
   "version": "0.6.0",
-  "description": "Polish national geodetic data in one tab: GUGiK orthophoto, BDOT10k, parcels, addresses, PRG boundaries, place names and hillshade; the national WFS catalogue and GDOŚ protected areas through background downloads with progress and Cancel; a 1 m elevation model from the area you point at; the EZiUDP register of 3 296 WMS and WFS addresses; and ULDK, UUG and NMT lookups.",
+  "description": "Polish national geodata in one tab, with the vector half the basemap plugins lack: 106 WFS datasets, 162 sheet indexes and 15 protected-area types downloaded as editable layers, the county EGiB as parcels, 112 raster overlays, a 3 296-address service register, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.",
   "author": "Wolren",
   "license": "MIT",
   "runtime": "process",
@@ -3007,7 +3007,6 @@
       "EGiB:\nPoznań": "EGiB:\nPoznań",
       "EGiB:\nWrocław": "EGiB:\nWrocław",
       "EGiB:\nWarszawa": "EGiB:\nWarszawa",
-      "Polish national geodetic data in one tab: GUGiK orthophoto, BDOT10k, parcels, addresses, PRG boundaries, place names and hillshade; the national WFS catalogue and GDOŚ protected areas through background downloads with progress and Cancel; a 1 m elevation model from the area you point at; the EZiUDP register of 3 296 WMS and WFS addresses; and ULDK, UUG and NMT lookups.": "Polskie dane geodezyjne w jednej zakładce: ortofoto, BDOT10k, działki, adresy, granice PRG, nazwy geograficzne i cieniowanie GUGiK; katalog krajowych usług WFS oraz ochrona przyrody GDOŚ przez pobierania w tle z postępem i przerwaniem; model wysokości 1 m z obszaru, który wskażesz; rejestr EZiUDP z 3 296 adresami WMS i WFS; oraz wyszukiwania ULDK, UUG i NMT.",
       "Area from a\nbox": "Obszar z\nprostokąta",
       "Sets the area from a box or a GeoJSON shape a script hands in, so no drawing is needed.": "Ustawia obszar z prostokąta albo kształtu GeoJSON podanego przez skrypt, więc rysowanie nie jest potrzebne.",
       "Wody\nlayers": "Wody:\nwarstwy",
@@ -3038,7 +3037,8 @@
       "Identifier column": "Kolumna identyfikatora",
       "Header name of the identifier column; the first column when left out.": "Nazwa nagłówka kolumny z identyfikatorem; bez niej pierwsza kolumna.",
       "Rows to check": "Wiersze do sprawdzenia",
-      "200 by default, 2000 at most.": "Domyślnie 200, najwyżej 2000."
+      "200 by default, 2000 at most.": "Domyślnie 200, najwyżej 2000.",
+      "Polish national geodata in one tab, with the vector half the basemap plugins lack: 106 WFS datasets, 162 sheet indexes and 15 protected-area types downloaded as editable layers, the county EGiB as parcels, 112 raster overlays, a 3 296-address service register, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.": "Polskie dane narodowe w jednej zakładce, z wektorową połową, której nie mają wtyczki podkładowe: 106 zbiorów WFS, 162 skorowidze i 15 typów obszarów chronionych pobierane jako warstwy edytowalne, EGiB powiatu jako działki, 112 nakładek rastrowych, rejestr 3 296 adresów usług, model wysokości 1 m z terenem 3D oraz wyszukiwania ULDK, UUG i NMT."
     }
   },
   "panel": {

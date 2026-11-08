@@ -1,139 +1,154 @@
-# Dane PL: polskie dane geodezyjne w RustGIS
+# Polish Geodata for RustGIS
 
-Jedna zakładka z polskimi danymi publicznymi: podkładami, działkami, adresami, granicami,
-obszarami chronionymi, geologią, modelami wysokości i przeszukiwalnym rejestrem 3 296 adresów
-WMS i WFS. Bez kluczy API i bez pośredników.
+One tab for Polish public geodata, and the one thing the basemap plugins do not do: it downloads
+**vector WFS data as editable layers**, not pictures.
 
-## Instalacja
+Polish Basemaps serves 61 tile services. This plugin serves those too, and adds the vector half:
+106 WFS datasets, 162 sheet indexes, 15 protected-area types, the county EGiB as parcels, a
+register of 3 296 proved service addresses, and lookups by parcel, address and height. Everything
+lands as a layer you can select, clip and export.
 
-- **Z paczki:** zainstaluj `polish-geodata-0.6.0.rgplugin` przez **Plugins › Plugin Manager › Install from file**.
-- **Z folderu:** wskaż `dist\polish-geodata` przez **Plugins › Plugin Manager › Settings › Add Plugin
-  Folder…**.
-- **Bez instalacji:**
+| | Polish Basemaps | This plugin |
+| --- | --- | --- |
+| Raster overlays (WMS) | 61 | 112 |
+| Vector WFS datasets | none | 106 map datasets, 162 indexes, 15 GDOŚ types |
+| Downloads with progress and Cancel | none | 11 tools |
+| Area, from a box, GeoJSON or an administrative unit | none | 8 commands |
+| Clip a layer to a boundary | none | in the panel, or `przytnij` in the same run |
+| Service register | none | 3 296 WMS and WFS addresses, updated by a tool |
+| County EGiB as vectors | none | `dzialki-powiat`, paged to 20 000 features |
+| Elevation model with 3D terrain | none | 3 models, three looks, exaggeration |
+| Parcel, address and height lookup | none | ULDK, UUG, NMT, plus CSV runs |
+| Commands and tools for agents | 64 commands, no tools | 236 commands, 13 tools, a skill |
+
+No API keys, no proxy, and no service of ours in the middle.
+
+## Install
+
+- **From a package:** install `polish-geodata-0.6.0.rgplugin` through **Plugins › Plugin Manager ›
+  Install from file**.
+- **From a folder:** point at `dist\polish-geodata` through **Plugins › Plugin Manager › Settings ›
+  Add Plugin Folder…**.
+- **Without installing:**
 
 ```powershell
 rustgis-cli run --plugin .\dist\polish-geodata --sample --cmd 'plugin:polish-geodata/obszar-widok={}'
 ```
 
-Wtyczka to jeden statyczny plik `.exe`, który RustGIS uruchamia przy każdym wywołaniu. Nie wymaga
-Pythona ani GDAL-a. Wymaga RustGIS 0.5.0 lub nowszego.
+The plugin is one static `.exe` that RustGIS starts on each call. It needs no Python and no GDAL.
+RustGIS 0.5.0 or newer.
 
-## Zakładka
+## The tab
 
-| Grupa | Co zawiera |
+| Group | What it holds |
 | --- | --- |
-| **Podkłady** | 4 mapy rastrowe i 4 nakładki wektorowe: ortofoto, BDOT10k, działki, adresy, granice |
-| **Obszar** | obszar z widoku, rysowanie, prostokąt, przejęcie, anulowanie, usuwanie |
-| **Narzędzia** | panel i przycinanie do granicy |
-| **WMS (podgląd)** | GUGiK (76), mapy historyczne (11), geologia PIG (11), NID (4), BDL (4), pozostałe instytucje (w tym IMGW 4 i GUS 2), **Więcej map** (Wody Polskie 30, Cartomatic 45), **Rejestr** (6) |
-| **Pobieranie** | sześć narzędzi WFS, cztery narzędzia paczek, ochrona przyrody (GDOŚ) |
-| **Wysokości** | trzy modele wysokości, styl, teren 3D i jego wyłączenie |
-| **Wyszukiwanie** | działka, adres, wysokość, znajdź usługę, aktualizacja rejestru |
+| **Basemaps** | 4 raster maps and 4 vector overlays: orthophoto, BDOT10k, parcels, addresses, boundaries |
+| **Area** | area from the view, draw, rectangle, adopt, cancel, remove |
+| **Tools** | the panel and the clip to a boundary |
+| **WMS overlays** | GUGiK (76), historical maps (11), PIG geology (11), NID (4), BDL (4), other institutions (IMGW 4, GUS 2), **More maps** (Wody Polskie 32, Cartomatic 45), **Register** (6) |
+| **Downloads** | six WFS tools, four package tools, protected areas (GDOŚ), the county EGiB, any register WFS |
+| **Elevation** | three elevation models, a look switch, 3D terrain and its switch off |
+| **Lookups** | parcel, address, height, find a service, update the register, obręby, the view's register |
 
-Zakładkę trzyma jedna zasada: **polecenie pokazuje coś od razu, narzędzie pobiera w tle**, z
-postępem i przyciskiem Anuluj. Wyjątkiem są trzy polecenia wysokości, bo narzędzie nie umie dodać
-warstwy rastrowej.
+One rule holds the tab together: **a command shows something at once, a tool downloads in the
+background**, with progress and a Cancel button. The exception is the three elevation commands,
+because a tool cannot add a raster layer.
 
-## Obszar
+## Area
 
-Narzędzie pobierania wymaga warstwy obszaru. Pięć przycisków tworzy jedną:
+Every download needs an area layer. Five buttons make one, and three commands set it from a script:
 
-| Przycisk | Co robi |
+| Button | What it does |
 | --- | --- |
-| **Obszar z widoku** | zapisuje bieżący widok jako obszar, dokładnie to, co widać |
-| **Narysuj obszar** | rysuje poligon, a pobieranie idzie za kształtem |
-| **Narysuj prostokąt** | uzbraja narzędzie prostokąta z aplikacji, które rysuje grafikę |
-| **Prostokąt do obszaru** | przenosi tę grafikę do warstwy obszaru |
-| **Usuń obszar** | zaczyna od pustej warstwy |
+| **Area from the view** | saves the current view as the area, exactly what you see |
+| **Draw area** | draws a polygon, and the download follows the shape |
+| **Draw rectangle** | arms the app's rectangle tool, which draws a graphic |
+| **Rectangle to area** | moves that graphic into the area layer |
+| **Remove area** | starts from an empty layer |
 
-Wtyczka nie zgaduje obszaru z aktywnej warstwy. Narysowany poligon staje się prostokątem dla modelu
-wysokości, a komunikat podaje, którym. Przycinanie w panelu idzie po warstwie obszaru albo po
-dowolnej warstwie poligonowej wybranej w drzewie.
-
-Skrypt ustawia obszar bez rysowania: `obszar-json` bierze `{"bbox": [zachód, południe, wschód,
-północ]}` albo `{"geojson": <Feature>}` i używa jego zasięgu.
-
-`obszar-jednostka` bierze gminę, powiat, województwo, obręb albo miasto po nazwie, z PRG. Parametr
-`przytnij` tnie wskazaną warstwę do tej jednostki w tym samym przebiegu, więc jedno wywołanie daje
-warstwę już przyciętą do granicy. Miasto, którego PRG nie ma w warstwie miast, wraca jako gmina.
-
-`rejestr-pobierz` czyta dowolny WFS z rejestru: podaj `usluga` (identyfikator z rejestru) i
-opcjonalnie `typy`, a jedno ograniczone, stronicowane żądanie na typ wraca jako warstwa. Tak wchodzą
-działki, adresy, osnowy i plany miejscowe z tych powiatów, które publikują WFS.
-
-`dzialki-powiat` kładzie własne EGiB powiatu jako wektorowe działki i budynki. ULDK nazywa powiat
-pod obszarem, rejestr podaje adres WFS tego powiatu, a strony po 1 000 obiektów (`STARTINDEX`) wracają
-jako jedna warstwa. Sufit to 20 000 obiektów, a parametr `limit` obniża go.
-
-## Pobieranie
-
-Sześć narzędzi bierze dane WFS po zbiorze: 106 zbiorów mapowych i 162 skorowidze. GDOŚ dokłada 15
-typów obszarów chronionych. Cztery narzędzia paczek kładą skorowidz jako warstwę i pobierają pliki,
-które wskazują jego obiekty.
-
-| Limit | Wartość |
+| Command | What it takes |
 | --- | --- |
-| Obiektów na pobranie | 6 000 |
-| Zasięg dla działek i budynków | 0,15° |
-| Zasięg dla granic i jednostek | 20° |
-| Próg rozmiaru przed startem | 25 MB, w panelu suwak 5 do 500 MB |
-| Twardy sufit | 256 MB |
+| `obszar-json` | `{"bbox": [west, south, east, north]}` or `{"geojson": <Feature>}` |
+| `obszar-jednostka` | `{"nazwa": "Poznań", "poziom": "gmina"}` and optional `przytnij` |
+| `obreby` | `{"teryt": "306401_1"}`, the obręby a unit publishes |
 
-Działki dla miasta ważą około 9 MB, zmierzone na Warszawie: 5 248 działek. Próg pyta raz, a
-zaznaczenie **Pobierz mimo rozmiaru** odpowiada za wszystkie następne przebiegi.
+`poziom` accepts `gmina`, `powiat`, `wojewodztwo`, `obreb` or `miasto`. A city that PRG lists only
+as a gmina falls back to its gmina boundary. `przytnij` cuts a named layer to that unit in the same
+run, so one call gives a layer already clipped to the boundary.
 
-Filtr WFS zwraca całe obiekty, które dotykają obszaru. **Przytnij do warstwy** tnie je wbudowanym
-Clipem i zastępuje warstwę wynikiem.
+The plugin never guesses an area from the active layer. A drawn polygon becomes a rectangle for the
+elevation model, and the message says which.
 
-Model ustawia się jako teren sceny 3D (`terrain`, domyślnie włączony), z mnożnikiem `exaggeration`
-od 0 do 20. Wygląd wybiera `look`: `colours` (barwy wysokości), `classes` (pasma) albo `shading`
-(cieniowanie). **Teren 3D wyłącz** zdejmuje model z podłoża sceny.
+## Downloads
 
-Duża siatka wysokości czeka na drugie naciśnięcie. Pierwsze liczy komórki, MB i sekundy i nic nie
-pobiera. Drugie, w ciągu 120 s, pobiera. Mała siatka idzie od razu, a pobrana wcześniej liczy się z
-pliku w cache.
+Six tools take WFS data by dataset: 106 map datasets and 162 sheet indexes. GDOŚ adds 15 protected
+area types. Four package tools put a sheet index on the map and fetch the files its features point
+at.
 
-## Panel
+| Limit | Value |
+| --- | --- |
+| Features per download | 6 000 |
+| Span for parcels and buildings | 0.15° |
+| Span for boundaries and units | 20° |
+| Size gate before the run | 25 MB, the panel slider sets 5 to 500 MB |
+| Hard ceiling | 256 MB |
 
-Panel grupuje wszystko, czego potrzebuje jeden przebieg: statusy (widok, obszar, para „warstwa →
-granica”), drzewo warstw granicznych z wyszukiwarką, drzewo **Mapa** z trzema korzeniami
-(podkłady, pobieranie, rejestr), suwak i zaznaczenie limitu pobrania, katalog i zapisane odpowiedzi.
-**Odśwież panel** czyta widok, obszar i katalog od nowa.
+A city's parcels weigh about 9 MB, measured on Warsaw: 5 248 parcels. The gate asks once, and the
+**Download even if large** tick answers for every later run. An area the service counts at zero
+stops before the first page.
 
-## Rejestr usług
+The WFS filter returns whole features that touch the area. **Clip to layer** cuts them with the
+built-in Clip and replaces the layer with the result.
 
-`data/eziudp.json` niesie 3 296 adresów. Każdy odpowiedział na prawdziwe żądanie przy budowie:
-1 742 WMS od 570 instytucji i 1 554 WFS. Trzy drogi do nich:
+`rejestr-pobierz` reads any WFS the register lists: name the register id and optionally the types,
+and one bounded, paged request per type comes back as a layer. `dzialki-powiat` is the same idea for
+the county EGiB, with ULDK naming the county and the register giving its address.
 
-- **Panel, drzewo Mapa, korzeń Rejestr EZiUDP:** instytucja, a pod nią jej WMS. Klik kładzie usługę
-  jako nakładkę.
-- **Wstęga, menu Rejestr:** sześć usług, których katalog nie ma, wszystkie dowiedzione: GIOŚ
-  (hałas, powietrze, wody podziemne) oraz własne EGiB Poznania, Wrocławia i Warszawy.
-- **Polecenie `zrodla`:** szuka po nazwie zbioru, instytucji i TERYT, także wśród WFS-ów, a
-  `{"dodaj": "<id>"}` dodaje jedną usługę.
-- **Polecenie `rejestr-widok`:** zawęża rejestr do powiatu pod widokiem mapy, więc szukanie zaczyna
-  się tam, gdzie stoi mapa. Parametr `rodzaj` wybiera `wms` albo `wfs`.
+## Elevation
 
-Narzędzie **Aktualizuj rejestr** czyta rejestr EZiUDP na nowo. Sprawdza tylko adresy, których plik
-nie ma, i zapisuje wynik poza paczką. Polecenie `eziudp` pyta rejestr na żywo i prosi o zawężenie,
-bo bez filtra rejestr ma 9 MB.
+Three models from GUGiK at 1 m: terrain in PL-EVRF2007-NH, surface in PL-KRON86-NH, and a model of
+the whole country. A model becomes the 3D scene's ground with `map.terrain`, and the vertical scale
+is set by `exaggeration` from 0 to 20. The look is `colours`, `classes` or `shading`. **Terrain 3D
+off** takes the model off the ground again.
 
-Wody Polskie: `wody-warstwy` wypisuje warstwy usługi z tytułami, a parametr `warstwa` kładzie jedną
-warstwę zamiast wszystkich. Tytuły pochodzą z `GetCapabilities` i leżą w `data/wody.json`.
+A big grid waits for a second press. The first press counts cells, MB and seconds and downloads
+nothing. The second press, within 120 s, downloads. A small grid goes at once, and a grid already in
+the cache needs no press at all.
 
-## Wyszukiwania
+## Register of services
 
-| Polecenie | Usługa | Co odpowiada |
+`data/eziudp.json` carries 3 296 addresses. Each one answered a real request when the register was
+built: 1 742 WMS from 570 institutions and 1 554 WFS. Three roads to them:
+
+- **Panel, Mapa tree, Register EZiUDP root:** an institution, then its WMS. A click adds the service
+  as an overlay.
+- **Ribbon, Register menu:** six services the catalogue does not hold, all proved: GIOŚ (noise, air,
+  groundwater) and the EGiB of Poznań, Wrocław and Warsaw.
+- **Command `zrodla`:** searches by dataset name, institution and TERYT, WFS included, and
+  `{"dodaj": "<id>"}` adds one service.
+- **Command `rejestr-widok`:** narrows the register to the county under the map view, so a search
+  starts where the map is.
+
+The tool **Update register** reads the EZiUDP register again. It checks only the addresses the file
+does not hold, and writes the result outside the package. The command `eziudp` asks the live register
+and demands a filter, because the whole register is 9 MB.
+
+Wody Polskie: `wody-warstwy` lists a service's layers with their titles, and the `warstwa` parameter
+puts one layer on the map instead of all of them.
+
+## Lookups
+
+| Command or tool | Service | What it answers |
 | --- | --- | --- |
-| `geokoduj` | UUG | punkt, ulica, numer i kod dla adresu |
-| **Geocode a CSV** (narzędzie) | UUG | warstwa punktowa z pliku CSV, z liczbą adresów, których nie znalazł |
-| **Check parcels from a CSV** (narzędzie) | ULDK | warstwa działek z pliku CSV, z liczbą identyfikatorów, których nie znalazł |
-| `adres-odwrotnie` | UUG | adres pod środkiem mapy albo pod `lon`, `lat` |
-| `wysokosc` | NMT | wysokość w PL-KRON86-NH w punkcie |
-| `dzialka-id` | ULDK | granica działki dla identyfikatora |
-| `parcel` | ULDK | działka pod środkiem mapy |
+| `geokoduj` | UUG | point, street, number and postcode for an address |
+| `adres-odwrotnie` | UUG | the address under the map centre or under `lon`, `lat` |
+| `wysokosc` | NMT | the height in PL-KRON86-NH at a point |
+| `dzialka-id` | ULDK | the parcel boundary for an identifier |
+| `parcel` | ULDK | the parcel under the map centre |
+| **Geocode a CSV** (tool) | UUG | a point layer from a CSV, with a count of the misses |
+| **Check parcels from a CSV** (tool) | ULDK | a parcel layer from a CSV, with a count of the misses |
 
-## Dla agenta
+## For agents
 
 ```text
 run_command  plugin:polish-geodata/katalog   {}
@@ -142,38 +157,43 @@ run_command  plugin:polish-geodata/mapa      {"panel": {"mapa": "v:bdot"}}
 run_tool     plugin:polish-geodata/pobierz-granice  {"dane": "A03_Granice_gmin", "obszar": "Obszar pobierania"}
 ```
 
-Każde polecenie deklaruje swoje argumenty w `params`, więc `rustgis-cli commands` i asystent widzą je bez czytania kodu. `katalog` wypisuje każdą usługę, zbiór i identyfikator, więc agent nie czyta manifestu. Paczka
-niesie `skills/polish-geodata/SKILL.md`. Dzięki temu asystent w RustGIS zna polecenia obszaru, limity i
-narzędzia pobierania, dopóki wtyczka jest włączona.
+Every command declares its arguments in `params`, so `rustgis-cli commands` and the assistant see
+them without reading code. `katalog` lists every service, dataset and identifier, so an agent does
+not read the manifest.
 
-## Ograniczenia
+The package carries `skills/polish-geodata/SKILL.md`. The assistant in RustGIS knows the area
+commands, the limits and the download tools while the plugin is on.
 
-- Pobranie kończy się na 6 000 obiektach. Większy obszar dostaje licznik i przerwanie.
-- Przycinanie tnie po zasięgu granicy, nie po jej poligonach.
-- Polecenia Wody Polskie pokazują wszystkie warstwy usługi. Nie ma wyboru jednej warstwy.
-- WFS GUGiK odpowiada tylko GML-em. Wtyczka zamienia go lokalnie na GeoJSON.
-- Brak plików LAZ i geobaz z dane.gov.pl. Narzędzia paczek biorą to, co wskazuje pole
-  `url_do_pobrania` w skorowidzu.
+## Limits
 
-## Repozytorium
+- A download ends at 6 000 features. A bigger area gets a count and a refusal.
+- The clip cuts by the boundary's box, not by its polygons.
+- Wody Polskie commands put all of a service's layers on the map unless `warstwa` names one.
+- A county may publish several WFS addresses. The county EGiB command tries each before it refuses.
+- GUGiK's WFS answers GML only. The plugin converts it locally to GeoJSON, streamed.
+- No LAZ files and no geodatabases from dane.gov.pl. The package tools take what the sheet index's
+  `url_do_pobrania` points at.
+- An empty area stops before the first request, which saves a page.
 
-| Ścieżka | Co to |
+## Repository
+
+| Path | What it is |
 | --- | --- |
-| `src/` | wtyczka, jeden moduł na temat |
-| `data/` | katalogi: usługi, zbiory WFS, Wody, Cartomatic, GDOŚ, PIG, rejestr, wstęga |
-| `tools/` | budowniczowie, którzy dowodzą każdy adres zapisany do `data/`, i fuzzer pobierania |
-| `packaging/` | pakowacz w Rust, który robi `.rgplugin` |
-| `plugin.json` | generowany z `data/` i `tools/manifest.base.json` |
+| `src/` | the plugin, one module per subject |
+| `data/` | the catalogues: services, WFS datasets, Wody, Cartomatic, GDOŚ, PIG, register, ribbon |
+| `tools/` | the builders that prove every address written to `data/`, plus the fuzzer |
+| `packaging/` | the packager in Rust, which writes `.rgplugin` |
+| `plugin.json` | generated from `data/` and `tools/manifest.base.json` |
 
-`plugin.json` niesie 223 polecenia, 11 narzędzi i 178 polskich tłumaczeń. Jest generowany, więc
-zmieniaj `tools/manifest.base.json`.
+`plugin.json` carries 236 commands, 13 tools and 209 Polish translations. It is generated, so change
+`tools/manifest.base.json`.
 
 ```powershell
-python tools/manifest.py            # zapisuje plugin.json
-python tools/manifest.py --check    # kończy się kodem 1, gdy plugin.json jest nieaktualny
+python tools/manifest.py            # writes plugin.json
+python tools/manifest.py --check    # exits 1 when plugin.json is stale
 ```
 
-## Budowanie
+## Build
 
 ```powershell
 cargo test
@@ -182,24 +202,26 @@ cargo run --release -p package -- --allow-missing
 python tools/fuzz.py --cases 12 --seed 1 --report D:/Scratch/fuzz.json
 ```
 
-`tools/fuzz.py` uruchamia prawdziwe pobrania z ziarnem i limitem czasu, więc ten sam przebieg daje
-te same przypadki. Klasyfikuje wynik na OK, REFUSED, TIMEOUT i CRASH, a na końcu wypisuje wnioski
-o ścieżce pobierania.
+The packager writes `dist\polish-geodata\` (the folder for the plugin manager),
+`dist\polish-geodata-0.6.0.rgplugin` and `dist\polish-geodata.json` (the registry entry). The
+archive is deterministic: two runs on the same binaries give the same SHA-256.
 
-Pakowacz pisze `dist\polish-geodata\` (folder dla menedżera wtyczek), `dist\polish-geodata-0.6.0.rgplugin` i
-`dist\polish-geodata.json` (wpis do rejestru). Archiwum jest deterministyczne: dwa przebiegi na tych
-samych binariach dają ten sam SHA-256.
+`tools/fuzz.py` runs real downloads with a seed and a timeout, so the same run gives the same cases.
+It sorts each case into OK, REFUSED, TIMEOUT or CRASH, and prints what the run says about the
+download path. `tools/probe.py` checks every catalogue address against a real tile, and
+`tools/smoke.py` runs every command over the app's MCP session.
 
-## Języki
+## Languages
 
-Angielski jest bazą, polski tłumaczeniem, a każdy inny kod języka odpowiada po angielsku.
-Tekst interfejsu leży w `i18n.pl`, komunikaty czasu działania w `src/text.rs`, oba kompletne.
-Build przerywa się, gdy tekst interfejsu nie ma polskiej wersji albo polska wersja nie pasuje do
-żadnego tekstu. Nazwy danych zostają takie, jak je opublikowano, więc „Działki” i „GIOŚ: hałas”
-czytają się w obu językach tak samo.
+English is the base, Polish the translation, and every other language code answers in English.
+Interface text lives in `i18n.pl`, runtime messages in `src/text.rs`, both complete. The build stops
+when an interface string has no Polish version, or when a Polish line matches no string. Data names
+stay as published, so "Działki" and "GIOŚ: hałas" read the same in both languages.
 
-## Źródła
+## Sources
 
-Dane pochodzą z GUGiK ([geoportal.gov.pl](https://www.geoportal.gov.pl)), GDOŚ, PIG, Wód Polskich i
-Cartomatic. Każda warstwa niesie instytucję jako atrybucję. Wtyczka czyta publiczne usługi i nie
-przepuszcza danych przez własny serwer.
+Data comes from GUGiK ([geoportal.gov.pl](https://www.geoportal.gov.pl)), GDOŚ, PIG, Wody Polskie
+and Cartomatic. Every layer carries its institution as attribution. The plugin reads public services
+and sends no data through a server of ours.
+
+Polish version: [README.pl.md](README.pl.md).
