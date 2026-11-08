@@ -25,7 +25,7 @@ Pythona ani GDAL-a. Wymaga RustGIS 0.5.0 lub nowszego.
 | **Podkłady** | 4 mapy rastrowe i 4 nakładki wektorowe: ortofoto, BDOT10k, działki, adresy, granice |
 | **Obszar** | obszar z widoku, rysowanie, prostokąt, przejęcie, anulowanie, usuwanie |
 | **Narzędzia** | panel i przycinanie do granicy |
-| **WMS (podgląd)** | GUGiK (76), mapy historyczne (11), geologia PIG (11), NID (4), BDL (4), pozostałe instytucje, **Więcej map** (Wody Polskie 30, Cartomatic 45), **Rejestr** (6) |
+| **WMS (podgląd)** | GUGiK (76), mapy historyczne (11), geologia PIG (11), NID (4), BDL (4), pozostałe instytucje (w tym IMGW 4 i GUS 2), **Więcej map** (Wody Polskie 30, Cartomatic 45), **Rejestr** (6) |
 | **Pobieranie** | sześć narzędzi WFS, cztery narzędzia paczek, ochrona przyrody (GDOŚ) |
 | **Wysokości** | trzy modele wysokości, styl, teren 3D i jego wyłączenie |
 | **Wyszukiwanie** | działka, adres, wysokość, znajdź usługę, aktualizacja rejestru |

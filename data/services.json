@@ -1278,5 +1278,53 @@
     "label": "Übersichtskarte von Mitteleuropa 1:300 000",
     "cmd": "usluga-ubersichtskarte-von-mitteleuropa-1-300-000",
     "institution": "cartomatic"
+  },
+  {
+    "id": "obserwacje-hydrologiczne-imgw",
+    "name": "Obserwacje i pomiary hydrologiczne",
+    "source": "Instytut Meteorologii i Gospodarki Wodnej",
+    "url": "https://imgw.isok.gov.pl/wss/INSPIRE/INSPIRE_OM_HYDRO_WMS?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=EF.PointTimeSeriesObservation&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
+    "layer": "EF.PointTimeSeriesObservation",
+    "zoom": 18,
+    "cmd": "usluga-obserwacje-hydrologiczne-imgw",
+    "label": "Hydrologia IMGW",
+    "institution": "imgw",
+    "institutionMenu": "other"
+  },
+  {
+    "id": "obserwacje-meteorologiczne-imgw",
+    "name": "Obserwacje i pomiary meteorologiczne",
+    "source": "Instytut Meteorologii i Gospodarki Wodnej",
+    "url": "https://imgw.isok.gov.pl/wss/INSPIRE/INSPIRE_OM_METEO_WMS?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=AC-MF.PointTimeSeriesObservation&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
+    "layer": "AC-MF.PointTimeSeriesObservation",
+    "zoom": 18,
+    "cmd": "usluga-obserwacje-meteorologiczne-imgw",
+    "label": "Meteorologia IMGW",
+    "institution": "imgw",
+    "institutionMenu": "other"
+  },
+  {
+    "id": "siec-pomiarowa-imgw",
+    "name": "System Zarządzania Siecią (sieć pomiarowo-obserwacyjna IMGW)",
+    "source": "Instytut Meteorologii i Gospodarki Wodnej",
+    "url": "https://imgw.isok.gov.pl/wss/INSPIRE/INSPIRE_EF_SZS_WMS?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=EF.EnvironmentalMonitoringFacilities&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
+    "layer": "EF.EnvironmentalMonitoringFacilities",
+    "zoom": 18,
+    "cmd": "usluga-siec-pomiarowa-imgw",
+    "label": "Sieć IMGW",
+    "institution": "imgw",
+    "institutionMenu": "other"
+  },
+  {
+    "id": "obwody-spisowe-gus",
+    "name": "Rejony statystyczne i obwody spisowe",
+    "source": "Główny Urząd Statystyczny",
+    "url": "https://geo.stat.gov.pl/wss/wms_inspire/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=PdBrec2011ObwTotalPop&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
+    "layer": "PdBrec2011ObwTotalPop",
+    "zoom": 18,
+    "cmd": "usluga-obwody-spisowe-gus",
+    "label": "Obwody spisowe GUS",
+    "institution": "gus",
+    "institutionMenu": "other"
   }
 ]

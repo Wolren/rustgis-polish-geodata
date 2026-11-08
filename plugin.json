@@ -546,6 +546,20 @@
       "params": "{\"service\": \"Obręby - modernizacja\"}"
     },
     {
+      "id": "usluga-obserwacje-hydrologiczne-imgw",
+      "label": "Hydrologia IMGW",
+      "icon": "basemap",
+      "help": "Hydrologia IMGW · Instytut Meteorologii i Gospodarki Wodnej",
+      "params": "{\"service\": \"Obserwacje i pomiary hydrologiczne\"}"
+    },
+    {
+      "id": "usluga-obserwacje-meteorologiczne-imgw",
+      "label": "Meteorologia IMGW",
+      "icon": "basemap",
+      "help": "Meteorologia IMGW · Instytut Meteorologii i Gospodarki Wodnej",
+      "params": "{\"service\": \"Obserwacje i pomiary meteorologiczne\"}"
+    },
+    {
       "id": "usluga-obszary-prognostyczne-i-perspektywiczne",
       "label": "Obszary prognostyczne",
       "icon": "basemap",
@@ -558,6 +572,13 @@
       "icon": "basemap",
       "help": "Obszary przetargowe · Państwowy Instytut Geologiczny (PIG)",
       "params": "{\"service\": \"Obszary przetargowe dla węglowodorów 2023\"}"
+    },
+    {
+      "id": "usluga-obwody-spisowe-gus",
+      "label": "Obwody spisowe GUS",
+      "icon": "basemap",
+      "help": "Obwody spisowe GUS · Główny Urząd Statystyczny",
+      "params": "{\"service\": \"Rejony statystyczne i obwody spisowe\"}"
     },
     {
       "id": "usluga-ortofotomapa-prawdziwa",
@@ -810,6 +831,13 @@
       "icon": "basemap",
       "help": "Drogi (OSM) · GUGiK",
       "params": "{\"service\": \"Sieć drogowa z bazy projektu OpenStreetMap\"}"
+    },
+    {
+      "id": "usluga-siec-pomiarowa-imgw",
+      "label": "Sieć IMGW",
+      "icon": "basemap",
+      "help": "Sieć IMGW · Instytut Meteorologii i Gospodarki Wodnej",
+      "params": "{\"service\": \"System Zarządzania Siecią (sieć pomiarowo-obserwacyjna IMGW)\"}"
     },
     {
       "id": "usluga-skorowidz-map-baza-danych-obiektow-topograficznych-bdot",
@@ -2541,6 +2569,10 @@
               "usluga-infrastruktura-kolejowa",
               "usluga-jednostki-statystyczne-brec-2017",
               "usluga-mapa-zagrozenia-powodziowego",
+              "usluga-obserwacje-hydrologiczne-imgw",
+              "usluga-obserwacje-meteorologiczne-imgw",
+              "usluga-obwody-spisowe-gus",
+              "usluga-siec-pomiarowa-imgw",
               "usluga-strefy-zagrozenia-naturalnego-zjawiska-meteorologiczne-w"
             ]
           },

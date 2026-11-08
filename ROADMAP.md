@@ -92,8 +92,10 @@ potem według tematu, i którą całą da się sterować przez MCP.
 
 ### Dane
 
-- **Brakujące usługi narodowe.** Rejestr zna IMGW 3 zbiory (mamy 1), GUS 2 (mamy 1). GUNB i KOWR
-  rejestr nie zna pod tą nazwą. Wszystko przez `tools/services.py` z weryfikacją kaflem.
+- **Brakujące usługi narodowe.** Zrobione: doszły cztery usługi z rejestru, każda sprawdzona
+  kaflem: IMGW hydrologia (`INSPIRE_OM_HYDRO_WMS`), IMGW meteorologia (`INSPIRE_OM_METEO_WMS`),
+  sieć pomiarowa IMGW (`INSPIRE_EF_SZS_WMS`) i obwody spisowe GUS (`PdBrec2011ObwTotalPop`).
+  Katalog ma teraz 113 usług. Zostaje GUNB i KOWR, których rejestr nie zna pod tą nazwą.
 - **Rejestr: instytucje bez WMS.** Zrobione jako `rejestr-pobierz`: czyta `GetCapabilities`, bierze
   typy z żądania i ściąga strony po 1 000. Część usług powiatowych odpowiada własnym wyjątkiem
   (Częstochowa EMUiA: „Value cannot be null”), a wtyczka przekazuje go dalej.
@@ -125,8 +127,10 @@ Co wykrył i co z tego wynika:
   naprawdę serwuje EMUiA, więc polecenie odmawiało komunikatem o braku typów. Teraz próbuje
   wszystkich WFS-ów powiatu, zanim odmówi.
 - **Do poprawy: bramka rozmiaru mierzy po pobraniu.** Obszar 2° pobrał 32 MB w 15 s i dopiero wtedy
-  odmówił przy 25 MB. Usprawnienie: oszacować rozmiar przed żądaniem (zasięg × zmierzona gęstość
-  z `tools/wfs.py`) albo spytać przed startem.
+  odmówił przy 25 MB. Liczba obiektów nie wystarcza jako prognoza: gminy ważą około 140 KB na
+  obiekt (92 obiekty to 13 MB), więc kontrola `RESULTTYPE=hits` przepuszcza obszar, który i tak
+  przekroczy limit. Usprawnienie: po pierwszej stronie zmierzyć bajty na obiekt i oszacować całość,
+  zanim pójdą kolejne strony.
 - **Do poprawy: brak oceny gęstości w teście.** Fuzzer mierzy czas i werdykt, ale nie sprawdza, czy
   liczba obiektów zgadza się z zasięgiem. Usprawnienie: porównać obiekty na km² z prognozą.
 
