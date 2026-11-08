@@ -22,7 +22,7 @@ const MAX_PACKAGE: u64 = 64 * 1024 * 1024;
 const MAX_ENTRIES: usize = 4096;
 /// Where the releases of this plugin live, for the registry entry a local package writes.
 /// `--source-url` overrides it: CI names the release it is building.
-const REPOSITORY: &str = "Wolren/rustgis-dane-pl";
+const REPOSITORY: &str = "Wolren/rustgis-polish-geodata";
 
 fn main() -> ExitCode {
     match run() {

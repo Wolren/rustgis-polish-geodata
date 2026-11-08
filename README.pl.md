@@ -4,7 +4,7 @@ Wersja polska. Wersja angielska, wysyłana w paczce: [README.md](README.md).
 
 Jedna zakładka z polskimi danymi publicznymi: podkładami, działkami, adresami, granicami,
 obszarami chronionymi, geologią, modelami wysokości i przeszukiwalnym rejestrem 3 296 adresów
-WMS i WFS. Bez kluczy API i bez pośredników.
+WMS i WFS.
 
 ## Instalacja
 

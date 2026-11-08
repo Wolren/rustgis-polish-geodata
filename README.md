@@ -1,7 +1,7 @@
 # Polish Geodata for RustGIS
 
 One tab for Polish public geodata: 112 raster overlays, and the national vector data downloaded as
-editable layers. No API keys, and no service of ours in the middle.
+editable layers.
 
 | What it gives you | Detail |
 | --- | --- |
