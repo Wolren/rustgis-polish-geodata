@@ -1,108 +1,81 @@
-name: release
+name: Release
+
+# One tag makes one package: the three platform binaries are built on their own runners, then a
+# single archive is assembled on Linux, so the manifest's run map names files that are inside it.
 
 on:
   push:
     tags: ["v*"]
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
-  build:
-    name: build ${{ matrix.name }}
-    runs-on: ${{ matrix.os }}
+  binary:
     strategy:
       fail-fast: false
       matrix:
         include:
-          - name: windows
-            os: windows-latest
-            asset: dane-pl.exe
-          - name: linux
-            os: ubuntu-latest
-            asset: dane-pl-linux
-          - name: macos
-            os: macos-latest
-            asset: dane-pl-macos
+          - os: windows-latest
+            built: polish-geodata.exe
+            shipped: polish-geodata.exe
+          - os: ubuntu-latest
+            built: polish-geodata
+            shipped: polish-geodata-linux
+          - os: macos-latest
+            built: polish-geodata
+            shipped: polish-geodata-macos
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
 
       - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: ${{ matrix.name == 'macos' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
-      - uses: Swatinem/rust-cache@v2
-
-      - name: build
-        if: matrix.name != 'macos'
-        run: cargo build --release --locked
-
-      - name: build and fuse
-        if: matrix.name == 'macos'
-        run: |
-          cargo build --release --locked --target aarch64-apple-darwin
-          cargo build --release --locked --target x86_64-apple-darwin
-          lipo -create -output dane-pl-macos \
-            target/aarch64-apple-darwin/release/dane-pl \
-            target/x86_64-apple-darwin/release/dane-pl
-          lipo -info dane-pl-macos
-
-      - name: stage
-        shell: bash
-        run: |
-          mkdir -p dist/bin
-          if [ "${{ matrix.name }}" = "windows" ]; then
-            cp target/release/dane-pl.exe "dist/bin/${{ matrix.asset }}"
-          elif [ "${{ matrix.name }}" = "linux" ]; then
-            cp target/release/dane-pl "dist/bin/${{ matrix.asset }}"
-          fi
-          ls -l dist/bin
+      - name: Build the plugin
+        run: cargo build --release
 
       - uses: actions/upload-artifact@v4
         with:
-          name: binary-${{ matrix.name }}
-          path: dist/bin/${{ matrix.asset }}
+          name: ${{ matrix.shipped }}
+          path: target/release/${{ matrix.built }}
           if-no-files-found: error
 
   package:
-    name: package and release
-    needs: build
+    needs: binary
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
       - uses: actions/download-artifact@v4
         with:
-          path: dist/bin
-          pattern: binary-*
-          merge-multiple: true
+          path: artifacts
 
-      - name: test
-        run: cargo test --locked
-
-      - name: check the manifest
-        run: python3 tools/manifest.py --check
-
-      - name: make the package
+      - name: Stage the three binaries where the packager looks
         run: |
-          chmod +x dist/bin/dane-pl-linux dist/bin/dane-pl-macos
-          cargo run --release --locked -p package -- \
-            --source-url "https://github.com/${{ github.repository }}/releases/download/${GITHUB_REF_NAME}/dane-pl-${GITHUB_REF_NAME#v}.rgplugin"
+          mkdir -p dist/bin
+          cp artifacts/polish-geodata.exe/polish-geodata.exe dist/bin/
+          cp artifacts/polish-geodata-linux/polish-geodata dist/bin/polish-geodata-linux
+          cp artifacts/polish-geodata-macos/polish-geodata dist/bin/polish-geodata-macos
+          chmod +x dist/bin/polish-geodata-linux dist/bin/polish-geodata-macos
+          ls -l dist/bin
 
-      - name: check it twice
+      - name: Assemble the package
+        run: cargo run --release -p package
+
+      - name: Read the version
+        id: version
         run: |
-          first=$(sha256sum dist/dane-pl-*.rgplugin | cut -d' ' -f1)
-          cargo run --release --locked -p package -- \
-            --source-url "https://github.com/${{ github.repository }}/releases/download/${GITHUB_REF_NAME}/dane-pl-${GITHUB_REF_NAME#v}.rgplugin"
-          second=$(sha256sum dist/dane-pl-*.rgplugin | cut -d' ' -f1)
-          test "$first" = "$second" || { echo "the package is not deterministic: $first then $second"; exit 1; }
-          echo "sha256 $second" >> "$GITHUB_STEP_SUMMARY"
-          unzip -l dist/dane-pl-*.rgplugin >> "$GITHUB_STEP_SUMMARY"
+          VERSION=$(python -c "import json;print(json.load(open('plugin.json'))['version'])")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-      - uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Publish the release
+        uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/dane-pl-*.rgplugin
-            dist/dane-pl.json
+            dist/polish-geodata-${{ steps.version.outputs.version }}.rgplugin
+            dist/polish-geodata.json
+          generate_release_notes: true

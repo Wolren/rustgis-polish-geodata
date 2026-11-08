@@ -30,7 +30,7 @@ BOXES = [
     ("Zakopane", "2220524,6325619,2221124,6326219"),
     ("Wrocław", "1895471,6640475,1896071,6641075"),
 ]
-AGENT = "Mozilla/5.0 (compatible; RustGIS-dane-pl/0.1)"
+AGENT = "Mozilla/5.0 (compatible; RustGIS-polish-geodata/0.1)"
 
 
 def fetch(url, timeout=30):

@@ -1,11 +1,11 @@
 ---
-name: dane-pl
+name: polish-geodata
 description: Polish national geodata from GUGiK, GDOŚ and PIG in RustGIS — pick an area, download WFS datasets as layers, look up a parcel, an address or a height. Use for Polish parcels, addresses, boundaries, orthophoto, Natura 2000, reserves, geological layers and anything "z Geoportalu" or "z GUGiK".
 ---
 
-# Polish geodata (dane-pl)
+# Polish geodata (polish-geodata)
 
-Based on the plugin's README. Commands are `plugin:dane-pl/<id>`, tools `plugin:dane-pl/<id>`.
+Based on the plugin's README. Commands are `plugin:polish-geodata/<id>`, tools `plugin:polish-geodata/<id>`.
 
 ## Area first
 
@@ -33,7 +33,7 @@ download.
 | `pobierz-pozostale` | maritime, historic monuments, the rest |
 | `pobierz-gdos` | Natura 2000, reserves, parks, Ramsar, corridors, wind farms |
 
-`dane` is a label from the catalogue, so read it first: `run_command plugin:dane-pl/katalog {}`
+`dane` is a label from the catalogue, so read it first: `run_command plugin:polish-geodata/katalog {}`
 gives every dataset's id, label, tool and area limit. `search_commands` finds datasets by word.
 
 Rules the tool enforces, so plan for them:
@@ -64,6 +64,6 @@ Rules the tool enforces, so plan for them:
 
 ## Maps
 
-`plugin:dane-pl/katalog` lists the overlays too: GUGiK (orthophoto, BDOT10k, parcels, addresses,
+`plugin:polish-geodata/katalog` lists the overlays too: GUGiK (orthophoto, BDOT10k, parcels, addresses,
 PRG, place names, hillshade), GDOŚ, PIG, PKP PLK, GUS, Wody Polskie, IMGW and 45 Cartomatic maps.
 Each is one command that adds a tile layer, and a second run of the same command removes it.

@@ -42,7 +42,7 @@ use text::Lang;
 fn main() {
     let mut line = String::new();
     if std::io::stdin().read_line(&mut line).unwrap_or(0) == 0 {
-        eprintln!("dane-pl: no request on standard input");
+        eprintln!("polish-geodata: no request on standard input");
         std::process::exit(1);
     }
     let request: Value = match serde_json::from_str(&line) {

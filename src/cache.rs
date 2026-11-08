@@ -130,7 +130,7 @@ fn root() -> PathBuf {
         .or_else(|_| std::env::var("HOME"))
         .map(PathBuf::from)
         .unwrap_or_else(|_| std::env::temp_dir());
-    base.join("RustGIS").join("dane-pl")
+    base.join("RustGIS").join("polish-geodata")
 }
 
 pub fn key(url: &str) -> String {

@@ -178,7 +178,7 @@ pub fn query(params: &Value, lang: Lang) -> Result<Value, String> {
         "total": found.len(),
         "returned": entries.len(),
         "entries": entries,
-        "how": "run_command  plugin:dane-pl/zrodla  {\"dodaj\": \"<id>\"} adds a WMS as an overlay",
+        "how": "run_command  plugin:polish-geodata/zrodla  {\"dodaj\": \"<id>\"} adds a WMS as an overlay",
     }))
 }
 

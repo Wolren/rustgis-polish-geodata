@@ -69,7 +69,7 @@ potem według tematu, i którą całą da się sterować przez MCP.
 
 - `geokoduj` (UUG), `adres-odwrotnie` (UUG, z `lon` i `lat`), `wysokosc` (NMT), `dzialka-id`
   (ULDK), `parcel` (działka pod środkiem mapy).
-- `skills/dane-pl/SKILL.md` w paczce, więc asystent widzi ją jako `dane-pl:dane-pl`.
+- `skills/polish-geodata/SKILL.md` w paczce, więc asystent widzi ją jako `polish-geodata:polish-geodata`.
 
 ### Języki i build
 

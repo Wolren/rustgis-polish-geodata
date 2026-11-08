@@ -78,7 +78,7 @@ pub fn search(params: &Value, lang: Lang) -> Result<Value, String> {
         "returned": entries.len(),
         "entries": entries,
         "note": note,
-        "how": "run_command  plugin:dane-pl/usluga  {\"service\": \"<name>\"} adds a WMS by its catalogue name",
+        "how": "run_command  plugin:polish-geodata/usluga  {\"service\": \"<name>\"} adds a WMS by its catalogue name",
     }))
 }
 

@@ -65,7 +65,7 @@ class Session:
         self.counter = 0
         self.send({"jsonrpc": "2.0", "id": 1, "method": "initialize",
                    "params": {"protocolVersion": "2024-11-05", "capabilities": {},
-                              "clientInfo": {"name": "dane-pl smoke", "version": "0"}}})
+                              "clientInfo": {"name": "polish-geodata smoke", "version": "0"}}})
         self.read()
         self.send({"jsonrpc": "2.0", "method": "notifications/initialized"})
 
@@ -108,7 +108,7 @@ def text_of(result):
 
 
 def run(session, command, params=None):
-    arguments = {"command": "plugin:dane-pl/" + command}
+    arguments = {"command": "plugin:polish-geodata/" + command}
     if params is not None:
         arguments["params"] = params
     return text_of(session.call("run_command", arguments))

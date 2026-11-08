@@ -40,7 +40,7 @@ PLACES[3] = ("Wroclaw", "1895471,6640475,1896071,6641075")
 # Half-widths in metres around each place: the country, then 20 km, then 600 m.
 SPANS = [("country", 1_500_000), ("20 km", 20_000), ("1 km", 600)]
 
-AGENT = "Mozilla/5.0 (compatible; RustGIS-dane-pl probe)"
+AGENT = "Mozilla/5.0 (compatible; RustGIS-polish-geodata probe)"
 TIMEOUT = 90
 # An empty transparent 256 px tile is a few hundred bytes; anything under this draws nothing.
 MIN_BYTES = 1200

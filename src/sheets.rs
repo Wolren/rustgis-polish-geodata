@@ -397,7 +397,7 @@ mod tests {
         assert!((megabytes - 6000.0).abs() < 0.1, "{megabytes}");
         let request = json!({
             "id": "pobierz-arkusze",
-            "params": { "folder": std::env::temp_dir().join("dane-pl-refused").display().to_string(), "skorowidz": "sheets" },
+            "params": { "folder": std::env::temp_dir().join("polish-geodata-refused").display().to_string(), "skorowidz": "sheets" },
             "layers": { "sheets": collection },
             "lang": "en",
         });

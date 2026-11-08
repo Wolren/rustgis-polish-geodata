@@ -111,16 +111,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "dane-pl"
-version = "0.6.0"
-dependencies = [
- "quick-xml",
- "serde",
- "serde_json",
- "ureq",
-]
-
-[[package]]
 name = "derive_arbitrary"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -391,6 +381,16 @@ name = "percent-encoding"
 version = "2.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9b4f627cb1b25917193a259e49bdad08f671f8d9708acfd5fe0a8c1455d87220"
+
+[[package]]
+name = "polish-geodata"
+version = "0.6.0"
+dependencies = [
+ "quick-xml",
+ "serde",
+ "serde_json",
+ "ureq",
+]
 
 [[package]]
 name = "potential_utf"

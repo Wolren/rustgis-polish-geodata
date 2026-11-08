@@ -19,7 +19,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor
 
-AGENT = "Mozilla/5.0 (compatible; RustGIS-dane-pl/0.1)"
+AGENT = "Mozilla/5.0 (compatible; RustGIS-polish-geodata/0.1)"
 CACHE = os.path.join(os.path.dirname(__file__), ".cache")
 OUT = os.path.join(os.path.dirname(__file__), "..", "data", "wfs.json")
 BOX_4326 = (16.900, 52.395, 16.930, 52.410)

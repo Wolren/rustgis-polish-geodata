@@ -94,8 +94,8 @@ pub fn run(params: &Value, lang: Lang) -> Result<Value, String> {
         "indexes": index_list,
         "counts": counts,
         "how": {
-            "service": "run_command  plugin:dane-pl/<command>",
-            "download": "gp.run  {\"tool\": \"plugin:dane-pl/<tool>\", \"params\": {\"dane\": \"<title>\", \"obszar\": \"<area layer>\"}}",
+            "service": "run_command  plugin:polish-geodata/<command>",
+            "download": "gp.run  {\"tool\": \"plugin:polish-geodata/<tool>\", \"params\": {\"dane\": \"<title>\", \"obszar\": \"<area layer>\"}}",
             "area": text::area_layer(lang),
         },
     }))

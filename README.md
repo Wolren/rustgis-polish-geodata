@@ -6,13 +6,13 @@ WMS i WFS. Bez kluczy API i bez pośredników.
 
 ## Instalacja
 
-- **Z paczki:** zainstaluj `dane-pl-0.6.0.rgplugin` przez **Plugins › Plugin Manager › Install from file**.
-- **Z folderu:** wskaż `dist\dane-pl` przez **Plugins › Plugin Manager › Settings › Add Plugin
+- **Z paczki:** zainstaluj `polish-geodata-0.6.0.rgplugin` przez **Plugins › Plugin Manager › Install from file**.
+- **Z folderu:** wskaż `dist\polish-geodata` przez **Plugins › Plugin Manager › Settings › Add Plugin
   Folder…**.
 - **Bez instalacji:**
 
 ```powershell
-rustgis-cli run --plugin .\dist\dane-pl --sample --cmd 'plugin:dane-pl/obszar-widok={}'
+rustgis-cli run --plugin .\dist\polish-geodata --sample --cmd 'plugin:polish-geodata/obszar-widok={}'
 ```
 
 Wtyczka to jeden statyczny plik `.exe`, który RustGIS uruchamia przy każdym wywołaniu. Nie wymaga
@@ -136,14 +136,14 @@ warstwę zamiast wszystkich. Tytuły pochodzą z `GetCapabilities` i leżą w `d
 ## Dla agenta
 
 ```text
-run_command  plugin:dane-pl/katalog   {}
-run_command  plugin:dane-pl/zrodla    {"instytucja": "GIOŚ", "rodzaj": "wms"}
-run_command  plugin:dane-pl/mapa      {"panel": {"mapa": "v:bdot"}}
-run_tool     plugin:dane-pl/pobierz-granice  {"dane": "A03_Granice_gmin", "obszar": "Obszar pobierania"}
+run_command  plugin:polish-geodata/katalog   {}
+run_command  plugin:polish-geodata/zrodla    {"instytucja": "GIOŚ", "rodzaj": "wms"}
+run_command  plugin:polish-geodata/mapa      {"panel": {"mapa": "v:bdot"}}
+run_tool     plugin:polish-geodata/pobierz-granice  {"dane": "A03_Granice_gmin", "obszar": "Obszar pobierania"}
 ```
 
 Każde polecenie deklaruje swoje argumenty w `params`, więc `rustgis-cli commands` i asystent widzą je bez czytania kodu. `katalog` wypisuje każdą usługę, zbiór i identyfikator, więc agent nie czyta manifestu. Paczka
-niesie `skills/dane-pl/SKILL.md`. Dzięki temu asystent w RustGIS zna polecenia obszaru, limity i
+niesie `skills/polish-geodata/SKILL.md`. Dzięki temu asystent w RustGIS zna polecenia obszaru, limity i
 narzędzia pobierania, dopóki wtyczka jest włączona.
 
 ## Ograniczenia
@@ -186,8 +186,8 @@ python tools/fuzz.py --cases 12 --seed 1 --report D:/Scratch/fuzz.json
 te same przypadki. Klasyfikuje wynik na OK, REFUSED, TIMEOUT i CRASH, a na końcu wypisuje wnioski
 o ścieżce pobierania.
 
-Pakowacz pisze `dist\dane-pl\` (folder dla menedżera wtyczek), `dist\dane-pl-0.6.0.rgplugin` i
-`dist\dane-pl.json` (wpis do rejestru). Archiwum jest deterministyczne: dwa przebiegi na tych
+Pakowacz pisze `dist\polish-geodata\` (folder dla menedżera wtyczek), `dist\polish-geodata-0.6.0.rgplugin` i
+`dist\polish-geodata.json` (wpis do rejestru). Archiwum jest deterministyczne: dwa przebiegi na tych
 samych binariach dają ten sam SHA-256.
 
 ## Języki

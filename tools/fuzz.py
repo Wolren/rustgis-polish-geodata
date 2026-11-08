@@ -20,7 +20,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CLI = os.path.join(
     os.environ.get("LOCALAPPDATA", ""), "Programs", "RustGIS", "rustgis-cli.exe"
 )
-PLUGIN = os.path.join(ROOT, "dist", "dane-pl")
+PLUGIN = os.path.join(ROOT, "dist", "polish-geodata")
 
 # Real Polish places, so a case lands where the services have data.
 PLACES = [
@@ -126,10 +126,10 @@ def run_case(commands: list, timeout: int) -> dict:
         if command.get("tool"):
             # A tool runs through the geoprocessing command, and needs the area layer by name.
             params.setdefault("obszar", "Area to download")
-            call = {"tool": f"plugin:dane-pl/{command['id']}", "params": params}
+            call = {"tool": f"plugin:polish-geodata/{command['id']}", "params": params}
             args += ["--cmd", f"gp.run={json.dumps(call)}"]
         else:
-            args += ["--cmd", f"plugin:dane-pl/{command['id']}={json.dumps(params)}"]
+            args += ["--cmd", f"plugin:polish-geodata/{command['id']}={json.dumps(params)}"]
     started = time.time()
     try:
         done = subprocess.run(args, capture_output=True, text=True, timeout=timeout, encoding="utf-8", errors="replace")

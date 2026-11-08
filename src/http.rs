@@ -8,7 +8,7 @@ use crate::text::{self, Lang};
 use std::io::{Read, Write};
 use std::time::Duration;
 
-const UA: &str = concat!("dane-pl/", env!("CARGO_PKG_VERSION"), " (RustGIS plugin)");
+const UA: &str = concat!("polish-geodata/", env!("CARGO_PKG_VERSION"), " (RustGIS plugin)");
 /// The largest document one request may bring back. A page of 500 communes is a few MB.
 const MAX_BYTES: u64 = 64 * 1024 * 1024;
 /// A coverage is never smaller than its header, so a short answer is an error page.

@@ -149,7 +149,7 @@ pub fn wody_layers(params: &Value, lang: Lang) -> Result<Value, String> {
             .map(|service| json!({ "service": service.id, "title": service.title, "layers": service.layers.len() }))
             .collect();
         let _ = lang;
-        return Ok(json!({ "services": services, "how": "run_command  plugin:dane-pl/wody-warstwy  {\"usluga\": \"<service>\"}" }));
+        return Ok(json!({ "services": services, "how": "run_command  plugin:polish-geodata/wody-warstwy  {\"usluga\": \"<service>\"}" }));
     };
     let service = catalog::find_wody(wanted).ok_or_else(|| text::unknown_command(lang, wanted))?;
     let layers: Vec<Value> = service
