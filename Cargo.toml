@@ -3,7 +3,7 @@ members = ["packaging"]
 
 [package]
 name = "polish-geodata"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Polish geodata for RustGIS: GUGiK overlays, WFS downloads and parcel lookup"
 license = "MIT"

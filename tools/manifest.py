@@ -223,6 +223,17 @@ def more_maps(meta, wody, carto, titles, literal):
     }
 
 
+def flatten_folders(items):
+    """Puts a folder's themes on the group, since the registry checks one menu level."""
+    out = []
+    for item in items:
+        if isinstance(item, dict) and item.get("items") and all(isinstance(i, dict) for i in item["items"]):
+            out.extend(flatten_folders(item["items"]))
+        else:
+            out.append(item)
+    return out
+
+
 def menu_decl(key, menus, folders, depth=1):
     """A menu of the tab: a leaf of services, or a folder of leaves one level down."""
     if key in folders:
@@ -522,6 +533,7 @@ def build():
         if "menus" in group:
             # The host's GroupDecl has no `menus`: expand them into items; inline items follow them.
             group["items"] = [menu_decl(key, menus, folders) for key in group.pop("menus")] + group.get("items", [])
+            group["items"] = flatten_folders(group["items"])
         limit = MAX_GROUP_ITEMS[layout]
         if not 1 <= len(group["items"]) <= limit:
             raise Bad(

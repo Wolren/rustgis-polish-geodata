@@ -28,7 +28,7 @@ and the EGiB of Poznań, Wrocław and Warsaw.
 
 ## Install
 
-- **From a package:** install `polish-geodata-0.1.0.rgplugin` through **Plugins › Plugin Manager ›
+- **From a package:** install `polish-geodata-0.1.1.rgplugin` through **Plugins › Plugin Manager ›
   Install from file**.
 - **From a folder:** point at `dist\polish-geodata` through **Plugins › Plugin Manager › Settings ›
   Add Plugin Folder…**.
@@ -209,7 +209,7 @@ python tools/fuzz.py --cases 12 --seed 1 --report D:/Scratch/fuzz.json
 ```
 
 The packager writes `dist\polish-geodata\` (the folder for the plugin manager),
-`dist\polish-geodata-0.1.0.rgplugin` and `dist\polish-geodata.json` (the registry entry). The
+`dist\polish-geodata-0.1.1.rgplugin` and `dist\polish-geodata.json` (the registry entry). The
 archive is deterministic: two runs on the same binaries give the same SHA-256.
 
 `tools/fuzz.py` runs real downloads with a seed and a timeout, so the same run gives the same cases.
