@@ -68,7 +68,7 @@ def probe(type_name):
         "MAXFEATURES": "2",
     }
     url = URL + "?" + urllib.parse.urlencode(params)
-    request = urllib.request.Request(url, headers={"User-Agent": "polish-geodata/0.6 (+tools/gdos.py)"})
+    request = urllib.request.Request(url, headers={"User-Agent": "polish-geodata/0.1 (+tools/gdos.py)"})
     with urllib.request.urlopen(request, timeout=TIMEOUT) as answer:
         body = answer.read().decode("utf-8", "replace")
     if "ExceptionReport" in body or "ExceptionText" in body:

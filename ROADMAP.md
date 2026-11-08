@@ -1,6 +1,6 @@
 # Roadmap
 
-_Stan na 2026-11-08, wtyczka 0.6.0 plus rejestr EZiUDP._
+_Stan na 2026-11-08, wtyczka 0.1.0._
 
 Cel: jedna wtyczka do RustGIS, która kondensuje polskie dane, dzieli je najpierw według instytucji,
 potem według tematu, i którą całą da się sterować przez MCP.

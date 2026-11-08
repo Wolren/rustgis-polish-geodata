@@ -1,31 +1,25 @@
 # Polish Geodata for RustGIS
 
-One tab for Polish public geodata, and the one thing the basemap plugins do not do: it downloads
-**vector WFS data as editable layers**, not pictures.
+One tab for Polish public geodata: 112 raster overlays, and the national vector data downloaded as
+editable layers. No API keys, and no service of ours in the middle.
 
-Polish Basemaps serves 61 tile services. This plugin serves those too, and adds the vector half:
-106 WFS datasets, 162 sheet indexes, 15 protected-area types, the county EGiB as parcels, a
-register of 3 296 proved service addresses, and lookups by parcel, address and height. Everything
-lands as a layer you can select, clip and export.
-
-| | Polish Basemaps | This plugin |
-| --- | --- | --- |
-| Raster overlays (WMS) | 61 | 112 |
-| Vector WFS datasets | none | 106 map datasets, 162 indexes, 15 GDOŚ types |
-| Downloads with progress and Cancel | none | 11 tools |
-| Area, from a box, GeoJSON or an administrative unit | none | 8 commands |
-| Clip a layer to a boundary | none | in the panel, or `przytnij` in the same run |
-| Service register | none | 3 296 WMS and WFS addresses, updated by a tool |
-| County EGiB as vectors | none | `dzialki-powiat`, paged to 20 000 features |
-| Elevation model with 3D terrain | none | 3 models, three looks, exaggeration |
-| Parcel, address and height lookup | none | ULDK, UUG, NMT, plus CSV runs |
-| Commands and tools for agents | 64 commands, no tools | 236 commands, 13 tools, a skill |
-
-No API keys, no proxy, and no service of ours in the middle.
+| What it gives you | Detail |
+| --- | --- |
+| Raster overlays | 112 WMS: orthophoto, BDOT10k, parcels, addresses, boundaries, place names, historical maps, geology, protected areas, Wody Polskie, Cartomatic |
+| Vector download | 106 WFS datasets and 162 sheet indexes, as layers with progress and Cancel |
+| Protected areas | 15 GDOŚ types: national parks, reserves, Natura 2000, landscape parks |
+| County parcels | `dzialki-powiat`: the county's own EGiB, paged to 20 000 features |
+| Any register service | `rejestr-pobierz`: a WFS from the register by id, one bounded request per type |
+| Service register | 3 296 proved addresses, 1 742 WMS from 570 institutions and 1 554 WFS, with an update tool |
+| Area | from the view, a box, a GeoJSON shape, or a gmina, powiat, voivodeship, obręb or city |
+| Clip | any layer to a boundary, in the panel or in the same run with `przytnij` |
+| Elevation | three 1 m models, three looks, 3D terrain with a vertical scale |
+| Lookups | parcel by identifier or point, address and reverse address, height, obręb lists, CSV runs |
+| Agent ready | 236 commands, 13 tools, every command declaring its arguments, a skill for the assistant |
 
 ## Install
 
-- **From a package:** install `polish-geodata-0.6.0.rgplugin` through **Plugins › Plugin Manager ›
+- **From a package:** install `polish-geodata-0.1.0.rgplugin` through **Plugins › Plugin Manager ›
   Install from file**.
 - **From a folder:** point at `dist\polish-geodata` through **Plugins › Plugin Manager › Settings ›
   Add Plugin Folder…**.
@@ -53,6 +47,9 @@ RustGIS 0.5.0 or newer.
 One rule holds the tab together: **a command shows something at once, a tool downloads in the
 background**, with progress and a Cancel button. The exception is the three elevation commands,
 because a tool cannot add a raster layer.
+
+Every download lands as a layer you can select, clip, style and export. A WFS filter returns whole
+features that touch the area, so the clip is what cuts them to the boundary.
 
 ## Area
 
@@ -203,7 +200,7 @@ python tools/fuzz.py --cases 12 --seed 1 --report D:/Scratch/fuzz.json
 ```
 
 The packager writes `dist\polish-geodata\` (the folder for the plugin manager),
-`dist\polish-geodata-0.6.0.rgplugin` and `dist\polish-geodata.json` (the registry entry). The
+`dist\polish-geodata-0.1.0.rgplugin` and `dist\polish-geodata.json` (the registry entry). The
 archive is deterministic: two runs on the same binaries give the same SHA-256.
 
 `tools/fuzz.py` runs real downloads with a seed and a timeout, so the same run gives the same cases.

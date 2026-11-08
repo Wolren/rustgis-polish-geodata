@@ -1,8 +1,8 @@
 {
   "id": "polish-geodata",
   "name": "Polish Geodata",
-  "version": "0.6.0",
-  "description": "Polish national geodata in one tab, with the vector half the basemap plugins lack: 106 WFS datasets, 162 sheet indexes and 15 protected-area types downloaded as editable layers, the county EGiB as parcels, 112 raster overlays, a 3 296-address service register, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.",
+  "version": "0.1.0",
+  "description": "Polish national geodata in one tab: 112 raster overlays, 106 WFS datasets and 162 sheet indexes downloaded as editable layers with progress and Cancel, 15 GDOŚ protected-area types, the county EGiB as parcels, a 3 296-address service register with an update tool, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.",
   "author": "Wolren",
   "license": "MIT",
   "runtime": "process",
@@ -3038,7 +3038,7 @@
       "Header name of the identifier column; the first column when left out.": "Nazwa nagłówka kolumny z identyfikatorem; bez niej pierwsza kolumna.",
       "Rows to check": "Wiersze do sprawdzenia",
       "200 by default, 2000 at most.": "Domyślnie 200, najwyżej 2000.",
-      "Polish national geodata in one tab, with the vector half the basemap plugins lack: 106 WFS datasets, 162 sheet indexes and 15 protected-area types downloaded as editable layers, the county EGiB as parcels, 112 raster overlays, a 3 296-address service register, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.": "Polskie dane narodowe w jednej zakładce, z wektorową połową, której nie mają wtyczki podkładowe: 106 zbiorów WFS, 162 skorowidze i 15 typów obszarów chronionych pobierane jako warstwy edytowalne, EGiB powiatu jako działki, 112 nakładek rastrowych, rejestr 3 296 adresów usług, model wysokości 1 m z terenem 3D oraz wyszukiwania ULDK, UUG i NMT."
+      "Polish national geodata in one tab: 112 raster overlays, 106 WFS datasets and 162 sheet indexes downloaded as editable layers with progress and Cancel, 15 GDOŚ protected-area types, the county EGiB as parcels, a 3 296-address service register with an update tool, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.": "Polskie dane narodowe w jednej zakładce: 112 nakładek rastrowych, 106 zbiorów WFS i 162 skorowidze pobierane jako warstwy edytowalne z postępem i Anuluj, 15 typów obszarów chronionych GDOŚ, EGiB powiatu jako działki, rejestr 3 296 adresów usług z narzędziem aktualizacji, model wysokości 1 m z terenem 3D oraz wyszukiwania ULDK, UUG i NMT."
     }
   },
   "panel": {
