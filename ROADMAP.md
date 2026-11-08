@@ -39,10 +39,13 @@ potem według tematu, i którą całą da się sterować przez MCP.
 ### Obszar, pobieranie, granica
 
 - Obszar to zawsze warstwa: prostokąt z widoku, rysowanie, prostokąt z narzędzia aplikacji
-  (`obszar-prostokat` i `obszar-przejmij`), anulowanie i usuwanie. Wtyczka nie zgaduje obszaru
-  z aktywnej warstwy.
+  (`obszar-prostokat` i `obszar-przejmij`), anulowanie i usuwanie. `obszar-json` bierze `bbox`
+  albo GeoJSON, więc skrypt ustawia obszar bez rysowania. Wtyczka nie zgaduje obszaru z aktywnej
+  warstwy.
 - Filtr WFS zwraca całe obiekty, więc po pobraniu jest **Przytnij do warstwy**: wbudowany Clip
   zastępuje warstwę wynikiem. Granicą jest warstwa wybrana w drzewie, domyślnie warstwa obszaru.
+- **Duża siatka wysokości**: pierwsze naciśnięcie liczy komórki, MB i sekundy i nic nie pobiera.
+  Drugie, w ciągu 120 s, pobiera. Zmierzone na 1,6 x 2,1 km: 1559 x 2211 komórek i 70,3 MB.
 - **Bramka rozmiaru**: pobranie powyżej limitu pyta najpierw. Limit ma domyślnie 25 MB, a suwak w
   panelu pozwala 5 do 500 MB. Twardy sufit to 256 MB. Zaznaczenie w panelu odpowiada za wszystkie
   następne przebiegi bez pytania.
@@ -54,6 +57,12 @@ potem według tematu, i którą całą da się sterować przez MCP.
   **Mapa** z trzema korzeniami (podkłady, pobieranie, rejestr EZiUDP), suwak i zaznaczenie limitu,
   katalog i zapisane odpowiedzi. Wybór wiersza folderu odpowiada podpowiedzią zamiast błędu.
 - `mapa` uruchamia wiersz drzewa, `ustawienia` zapisuje wartości panelu, `panel-state` czyta stan.
+
+### Wody Polskie
+
+- 30 usług, 875 tytułów warstw pobranych z `GetCapabilities` i zapisanych w `data/wody.json`.
+  `wody-warstwy` wypisuje warstwy usługi z tytułami, a parametr `warstwa` kładzie jedną warstwę
+  zamiast wszystkich.
 
 ### Wyszukiwania i asystent
 
@@ -72,22 +81,16 @@ potem według tematu, i którą całą da się sterować przez MCP.
 
 ### Sterowanie zdalne (MCP)
 
-- **Rysowanie myszą zostaje ręczne.** `obszar-rysuj` i `obszar-prostokat` uzbrajają narzędzie
-  gospodarza, więc potrzebują kliknięcia. Do automatyzacji jest `obszar-widok` albo własna warstwa
-  podana jako `obszar`. Docelowo narzędzie przyjmujące GeoJSON obszaru, bez rysowania.
 - **Brak polecenia otwierającego panel.** Treść panelu czyta `panel-state`, ale samego okna agent
   nie otworzy. Wymaga pola w manifeście, którego host 0.5.0 nie ma.
 - **Okno parametrów polecenia** ([#1547](https://github.com/opengeos/RustGIS/issues/1547), otwarte,
-  bez PR). Po wejściu `geokoduj`, `dzialka-id`, `eziudp` i potwierdzenie rozmiaru pobrania dostaną
-  formularz z wstęgi i z wiersza rejestru.
-- **Potwierdzenie rozmiaru przed pobraniem.** Dziś próg jest zaznaczeniem w panelu i komunikatem.
-  Dialog z rozmiarem i przyciskami OK/Anuluj czeka na #1547. Wariant bez hosta: dwa naciśnięcia,
-  pierwsze liczy MB i nic nie pobiera.
+  bez PR). Po wejściu `geokoduj`, `dzialka-id`, `eziudp` i wiersz rejestru dostaną formularz ze
+  wstęgi. Obszar bez rysowania już działa przez `obszar-json`.
+- **Dialog zamiast dwóch naciśnięć.** Duża siatka wysokości prosi o drugie naciśnięcie. Po #1547
+  to samo miejsce dostanie okno z MB, sekundami i przyciskami OK/Anuluj.
 
 ### Dane
 
-- **Wybór pojedynczej warstwy w Wody Polskie.** Jedno polecenie pokazuje wszystkie warstwy usługi.
-  Wariant z gałęzi `backup/v0.7.0` ma parametr `warstwa` i polecenie `warstwy`.
 - **Brakujące usługi narodowe.** Rejestr zna IMGW 3 zbiory (mamy 1), GUS 2 (mamy 1). GUNB i KOWR
   rejestr nie zna pod tą nazwą. Wszystko przez `tools/services.py` z weryfikacją kaflem.
 - **Rejestr: instytucje bez WMS.** 1 554 adresy WFS są w rejestrze, ale nie mają ścieżki pobierania
@@ -119,7 +122,8 @@ wartości:
    EZiUDP daje jego WFS EGiB, a `GetCapabilities` daje typy. Ograniczony `GetFeature` na typ kładzie
    warstwę wektorową zamiast rastra KIEG. Wymaga `quick-xml` oraz `src/gml.rs`, `src/filter.rs`
    i `src/gk92.rs` z tej gałęzi.
-2. **`src/wody.rs` i `data/wody.json`: 32 usługi i 904 warstwy** z parametrem `warstwa`.
+2. **`src/wody.rs` i `data/wody.json`: 32 usługi** z wyborem warstwy po stronie gałęzi. Nasza
+   linia ma 30 usług, 875 tytułów warstw i parametr `warstwa`, więc zostaje tylko nowszy katalog.
 3. **`src/clip.rs`: granica z zaznaczenia**, kopiowana do warstwy tymczasowej, plus znacznik
    `from_view`.
 4. **`src/nmt.rs`: teren 3D i wygląd modelu** (`set_terrain`, `height_range`, `Look`,

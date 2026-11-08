@@ -107,6 +107,13 @@
       "params": "{} adopts the rectangle drawn on the map"
     },
     {
+      "id": "obszar-json",
+      "label": "Area from a\nbox",
+      "icon": "g_rect",
+      "help": "Sets the area from a box or a GeoJSON shape a script hands in, so no drawing is needed.",
+      "params": "{\"bbox\": [16.85, 52.35, 16.95, 52.45]} or {\"geojson\": <Feature or FeatureCollection>}"
+    },
+    {
       "id": "obszar-anuluj",
       "label": "Cancel\ndrawing",
       "icon": "erase",
@@ -203,6 +210,13 @@
       "icon": "globe_view",
       "help": "Searches the national register of spatial data sets and services: which body holds what, and the address of its WMS, WFS and CSW. Narrows the register, never dumps it.",
       "params": "{\"szukaj\": \"ortofoto\", \"instytucja\": \"Geolog\", \"teryt\": \"3064\", \"usluga\": \"wms\"}"
+    },
+    {
+      "id": "wody-warstwy",
+      "label": "Wody\nlayers",
+      "icon": "table",
+      "help": "Lists the layers of one Wody Polskie service: the id to pass as warstwa, and its title. Without usluga it lists the services with their layer counts.",
+      "params": "{\"usluga\": \"wody-apgw\"} (optional: the service to list)"
     },
     {
       "id": "panel-state",
@@ -1029,7 +1043,11 @@
       "EGiB:\nPoznań": "EGiB:\nPoznań",
       "EGiB:\nWrocław": "EGiB:\nWrocław",
       "EGiB:\nWarszawa": "EGiB:\nWarszawa",
-      "Polish national geodetic data in one tab: GUGiK orthophoto, BDOT10k, parcels, addresses, PRG boundaries, place names and hillshade; the national WFS catalogue and GDOŚ protected areas through background downloads with progress and Cancel; a 1 m elevation model from the area you point at; the EZiUDP register of 3 296 WMS and WFS addresses; and ULDK, UUG and NMT lookups.": "Polskie dane geodezyjne w jednej zakładce: ortofoto, BDOT10k, działki, adresy, granice PRG, nazwy geograficzne i cieniowanie GUGiK; katalog krajowych usług WFS oraz ochrona przyrody GDOŚ przez pobierania w tle z postępem i przerwaniem; model wysokości 1 m z obszaru, który wskażesz; rejestr EZiUDP z 3 296 adresami WMS i WFS; oraz wyszukiwania ULDK, UUG i NMT."
+      "Polish national geodetic data in one tab: GUGiK orthophoto, BDOT10k, parcels, addresses, PRG boundaries, place names and hillshade; the national WFS catalogue and GDOŚ protected areas through background downloads with progress and Cancel; a 1 m elevation model from the area you point at; the EZiUDP register of 3 296 WMS and WFS addresses; and ULDK, UUG and NMT lookups.": "Polskie dane geodezyjne w jednej zakładce: ortofoto, BDOT10k, działki, adresy, granice PRG, nazwy geograficzne i cieniowanie GUGiK; katalog krajowych usług WFS oraz ochrona przyrody GDOŚ przez pobierania w tle z postępem i przerwaniem; model wysokości 1 m z obszaru, który wskażesz; rejestr EZiUDP z 3 296 adresami WMS i WFS; oraz wyszukiwania ULDK, UUG i NMT.",
+      "Area from a\nbox": "Obszar z\nprostokąta",
+      "Sets the area from a box or a GeoJSON shape a script hands in, so no drawing is needed.": "Ustawia obszar z prostokąta albo kształtu GeoJSON podanego przez skrypt, więc rysowanie nie jest potrzebne.",
+      "Wody\nlayers": "Wody:\nwarstwy",
+      "Lists the layers of one Wody Polskie service: the id to pass as warstwa, and its title. Without usluga it lists the services with their layer counts.": "Wypisuje warstwy jednej usługi Wody Polskie: identyfikator do parametru warstwa i tytuł. Bez uslugi wypisuje usługi z liczbą warstw."
     }
   },
   "moreMaps": {

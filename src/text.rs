@@ -1220,6 +1220,26 @@ pub fn register_updated(lang: Lang, kept: usize, answered: usize, missed: usize)
     )
 }
 
+/// A script named no usable box, so the area command says what it wants.
+pub fn area_needs_box(lang: Lang) -> String {
+    pick!(
+        lang,
+        "give a box: {\"bbox\": [west, south, east, north]} in lon and lat, or a GeoJSON shape in \"geojson\"",
+        "podaj prostokąt: {\"bbox\": [zachód, południe, wschód, północ]} w lon i lat, albo kształt GeoJSON w \"geojson\""
+    )
+    .to_string()
+}
+
+/// The area came from a box a script named.
+pub fn area_from_box(lang: Lang, name: &str, size: (f64, f64)) -> String {
+    let (width, height) = size;
+    pick!(
+        lang,
+        format!("area {name} set from the box: {width:.1} × {height:.1} km"),
+        format!("obszar {name} ustawiony z prostokąta: {width:.1} × {height:.1} km")
+    )
+}
+
 /// A folder row was chosen instead of a map or a dataset inside it.
 pub fn map_folder(lang: Lang, label: &str) -> String {
     pick!(
@@ -1272,7 +1292,38 @@ pub fn nmt_pending(lang: Lang, name: &str, source: &str) -> String {
     )
 }
 
-/// The model is built from what the user pointed at, so the view plays no part.
+/// A big elevation grid waits for a second press, which the first press explains.
+pub fn nmt_confirm_box(lang: Lang, cells: f64, megabytes: f64, seconds: f64, wait: u64) -> String {
+    let (cells, megabytes, seconds) = (
+        num(lang, cells, 0),
+        num(lang, megabytes, 0),
+        num(lang, seconds, 0),
+    );
+    pick!(
+        lang,
+        format!(
+            "The area is {cells} cells at 1 m: {megabytes} MB, about {seconds} s, and the window waits for it. Press the same button again within {wait} s to download it."
+        ),
+        format!(
+            "Obszar ma {cells} komórek w rozdzielczości 1 m: {megabytes} MB, około {seconds} s, a okno czeka na pobranie. Naciśnij ten sam przycisk ponownie w ciągu {wait} s, żeby pobrać."
+        )
+    )
+}
+
+/// A `warstwa` value names nothing in the service, so the message counts what is there.
+pub fn wody_no_layer(lang: Lang, service: &str, count: usize) -> String {
+    pick!(
+        lang,
+        format!(
+            "{service} has no layer like that: it publishes {count}; run wody-warstwy with \"usluga\": \"{service}\" to list them"
+        ),
+        format!(
+            "{service} nie ma takiej warstwy: publikuje {count}; uruchom wody-warstwy z \"usluga\": \"{service}\", żeby je wypisać"
+        )
+    )
+}
+
+/// The 3D scene no longer stands on a model.
 pub fn nmt_needs_area(lang: Lang) -> String {
     pick!(
         lang,
@@ -1291,24 +1342,6 @@ pub fn nmt_outside_poland(lang: Lang) -> String {
     .to_string()
 }
 
-/// The download holds the window, so the area is measured against the measured speed first.
-pub fn nmt_budget(lang: Lang, cells: f64, megabytes: f64, seconds: f64, budget: f64) -> String {
-    let (cells, megabytes, seconds, budget) = (
-        num(lang, cells, 0),
-        num(lang, megabytes, 0),
-        num(lang, seconds, 0),
-        num(lang, budget, 0),
-    );
-    pick!(
-        lang,
-        format!(
-            "The area is {cells} cells at 1 m: {megabytes} MB, about {seconds} s to download. One click may hold the window for {budget} s. Select a smaller area."
-        ),
-        format!(
-            "Obszar ma {cells} komórek w rozdzielczości 1 m: {megabytes} MB, około {seconds} s pobierania. Jedno kliknięcie może zablokować okno na {budget} s. Zaznacz mniejszy obszar."
-        )
-    )
-}
 
 pub fn nmt_nothing_to_style(lang: Lang) -> String {
     pick!(

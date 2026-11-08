@@ -83,20 +83,92 @@ impl Picture<'_> {
 }
 
 /// Adds a Wody Polskie service, or takes it away when the same layer is already on the map.
-pub fn toggle_wody(host: &mut Host, id: &str, lang: Lang) -> Result<Value, String> {
+pub fn toggle_wody(host: &mut Host, id: &str, request: &Value, lang: Lang) -> Result<Value, String> {
     let service = catalog::find_wody(id).ok_or_else(|| text::unknown_command(lang, id))?;
     let family = catalog::wody_family();
+    let wanted = request
+        .get("params")
+        .and_then(|params| params.get("warstwa"))
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|layer| !layer.is_empty());
+    let (name, layers) = match wanted {
+        Some(wanted) => {
+            let index = layer_index(service, wanted)
+                .ok_or_else(|| text::wody_no_layer(lang, service.title, service.layers.len()))?;
+            let title = service.titles.get(index).copied().unwrap_or_default();
+            let label = if title.is_empty() {
+                format!("{} · {}", service.title, service.layers[index])
+            } else {
+                format!("{} · {title}", service.title)
+            };
+            (label, service.layers[index].to_string())
+        }
+        None => (service.title.to_string(), service.layers_csv()),
+    };
     toggle_wms(
         host,
         &Picture {
-            name: service.title,
+            name: &name,
             url: service.url,
-            layers: &service.layers_csv(),
+            layers: &layers,
             attribution: family.attribution,
             max_zoom: family.zoom,
         },
         lang,
     )
+}
+
+/// The layer a `warstwa` value names: its id, its title, or a piece of the title.
+fn layer_index(service: &catalog::WodyService, wanted: &str) -> Option<usize> {
+    if let Some(index) = service.layers.iter().position(|layer| *layer == wanted) {
+        return Some(index);
+    }
+    let wanted = wanted.to_lowercase();
+    service
+        .layers
+        .iter()
+        .enumerate()
+        .find(|(index, layer)| {
+            layer.to_lowercase() == wanted
+                || service.titles.get(*index).is_some_and(|title| title.to_lowercase().contains(&wanted))
+        })
+        .map(|(index, _)| index)
+}
+
+/// Lists what one Wody Polskie service publishes, so a script can pick `warstwa` by name.
+pub fn wody_layers(params: &Value, lang: Lang) -> Result<Value, String> {
+    let wanted = params
+        .get("usluga")
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|name| !name.is_empty());
+    let Some(wanted) = wanted else {
+        let services: Vec<Value> = catalog::wody()
+            .iter()
+            .map(|service| json!({ "service": service.id, "title": service.title, "layers": service.layers.len() }))
+            .collect();
+        let _ = lang;
+        return Ok(json!({ "services": services, "how": "run_command  plugin:dane-pl/wody-warstwy  {\"usluga\": \"<service>\"}" }));
+    };
+    let service = catalog::find_wody(wanted).ok_or_else(|| text::unknown_command(lang, wanted))?;
+    let layers: Vec<Value> = service
+        .layers
+        .iter()
+        .enumerate()
+        .map(|(index, layer)| {
+            json!({
+                "id": layer,
+                "title": service.titles.get(index).copied().unwrap_or_default(),
+            })
+        })
+        .collect();
+    Ok(json!({
+        "service": service.id,
+        "title": service.title,
+        "count": layers.len(),
+        "layers": layers,
+    }))
 }
 
 /// Adds a Cartomatic map, or takes it away when the same layer is already on the map.

@@ -435,7 +435,10 @@ def build():
                 "label": label,
                 "icon": MAP_ICON,
                 "help": help_text,
-                "params": json.dumps({"service": service["id"]}, ensure_ascii=False),
+                "params": json.dumps(
+                    {"service": service["id"], "warstwa": "layer id or title (optional, all layers when left out)"},
+                    ensure_ascii=False,
+                ),
             }
         )
         literal.update((label, help_text))

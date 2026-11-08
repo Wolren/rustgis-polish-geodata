@@ -134,16 +134,21 @@ pub fn add(host: &mut Host, lang: Lang, request: &Value, kind: Kind) -> Result<V
             // The grid is already on disk: the click costs no download, so no budget either.
             megabytes = file.metadata().map(|meta| meta.len()).unwrap_or(0) as f64 / 1e6;
         } else {
-            // This download runs inside the command and holds the window, so it is measured first.
+            // A big grid is measured first: the second press within two minutes downloads it.
             if seconds > BUDGET_SECONDS {
-                return Err(text::nmt_budget(
-                    lang,
-                    cells,
-                    megabytes,
-                    seconds,
-                    BUDGET_SECONDS,
-                ));
+                let key = format!("{}:{x0},{y0},{width}x{height}", kind.coverage());
+                if cache::dem_confirm(std::time::SystemTime::now()).as_deref() != Some(key.as_str()) {
+                    cache::remember_dem_confirm(&key, std::time::SystemTime::now());
+                    return Err(text::nmt_confirm_box(
+                        lang,
+                        cells,
+                        megabytes,
+                        seconds,
+                        cache::CONFIRM_SECONDS,
+                    ));
+                }
             }
+            cache::forget_dem_confirm();
             megabytes = http::download(&address, &file, 110, lang)? as f64 / 1e6;
         }
         // An ASCII grid carries no CRS, so the sidecar places it.

@@ -50,6 +50,9 @@ Wtyczka nie zgaduje obszaru z aktywnej warstwy. Narysowany poligon staje się pr
 wysokości, a komunikat podaje, którym. Przycinanie w panelu idzie po warstwie obszaru albo po
 dowolnej warstwie poligonowej wybranej w drzewie.
 
+Skrypt ustawia obszar bez rysowania: `obszar-json` bierze `{"bbox": [zachód, południe, wschód,
+północ]}` albo `{"geojson": <Feature>}` i używa jego zasięgu.
+
 ## Pobieranie
 
 Sześć narzędzi bierze dane WFS po zbiorze: 106 zbiorów mapowych i 162 skorowidze. GDOŚ dokłada 15
@@ -69,6 +72,10 @@ zaznaczenie **Pobierz mimo rozmiaru** odpowiada za wszystkie następne przebiegi
 
 Filtr WFS zwraca całe obiekty, które dotykają obszaru. **Przytnij do warstwy** tnie je wbudowanym
 Clipem i zastępuje warstwę wynikiem.
+
+Duża siatka wysokości czeka na drugie naciśnięcie. Pierwsze liczy komórki, MB i sekundy i nic nie
+pobiera. Drugie, w ciągu 120 s, pobiera. Mała siatka idzie od razu, a pobrana wcześniej liczy się z
+pliku w cache.
 
 ## Panel
 
@@ -92,6 +99,9 @@ granica”), drzewo warstw granicznych z wyszukiwarką, drzewo **Mapa** z trzema
 Narzędzie **Aktualizuj rejestr** czyta rejestr EZiUDP na nowo. Sprawdza tylko adresy, których plik
 nie ma, i zapisuje wynik poza paczką. Polecenie `eziudp` pyta rejestr na żywo i prosi o zawężenie,
 bo bez filtra rejestr ma 9 MB.
+
+Wody Polskie: `wody-warstwy` wypisuje warstwy usługi z tytułami, a parametr `warstwa` kładzie jedną
+warstwę zamiast wszystkich. Tytuły pochodzą z `GetCapabilities` i leżą w `data/wody.json`.
 
 ## Wyszukiwania
 

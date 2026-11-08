@@ -82,7 +82,8 @@ fn run(
     // A rectangle dragged on the map becomes the area before a command that reads it runs.
     if !matches!(
         id,
-        "obszar-prostokat" | "obszar-przejmij" | "obszar-widok" | "obszar-anuluj" | "obszar-wyczysc"
+        "obszar-prostokat" | "obszar-przejmij" | "obszar-widok" | "obszar-json" | "obszar-anuluj"
+            | "obszar-wyczysc"
     ) {
         if let Err(e) = obszar::take_rectangle(host, lang) {
             host.notify(&e);
@@ -92,8 +93,8 @@ fn run(
         return tile::toggle(host, overlay, lang);
     }
     // The family files name their own commands, one per service or map.
-    if id.starts_with("wody-") {
-        return tile::toggle_wody(host, id, lang);
+    if id.starts_with("wody-") && catalog::find_wody(id).is_some() {
+        return tile::toggle_wody(host, id, request, lang);
     }
     if id.starts_with("carto-") {
         return tile::toggle_carto(host, id, lang);
@@ -104,11 +105,13 @@ fn run(
         "obszar-przejmij" => obszar::take_rectangle(host, lang)?
             .ok_or_else(|| text::area_nothing_drawn(lang)),
         "obszar-widok" => obszar::rectangle_from_view(host, lang),
+        "obszar-json" => obszar::from_json(host, request, lang),
         "obszar-anuluj" => obszar::abort(host, lang),
         "obszar-wyczysc" => obszar::clear(host, lang),
         other if other.starts_with("usluga-") => services::toggle(host, lang, request),
         "katalog" => katalog::run(params, lang),
         "eziudp" => eziudp::search(params, lang),
+        "wody-warstwy" => tile::wody_layers(params, lang),
         "zrodla" => zrodla::search(host, params, lang),
         "geokoduj" => uug::geocode(host, params, lang),
         "adres-odwrotnie" => uug::reverse(host, params, lang),
@@ -144,6 +147,7 @@ fn redraws_panel(id: &str) -> bool {
     matches!(
         id,
         "obszar-widok"
+            | "obszar-json"
             | "obszar-rysuj"
             | "obszar-prostokat"
             | "obszar-przejmij"

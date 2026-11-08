@@ -319,6 +319,9 @@ struct WodyEntry {
     url: String,
     #[serde(default)]
     layers: Vec<String>,
+    /// The readable title of each layer, by its id; a layer the service leaves unnamed is missing.
+    #[serde(default)]
+    titles: std::collections::BTreeMap<String, String>,
 }
 
 /// A Wody Polskie service: every layer it draws, in one request.
@@ -329,6 +332,8 @@ pub struct WodyService {
     pub url: &'static str,
     /// The service's layer ids, in the order the file lists them.
     pub layers: &'static [&'static str],
+    /// The title of each layer, in the same order; empty text when the service names none.
+    pub titles: &'static [&'static str],
 }
 
 impl WodyService {
@@ -363,6 +368,13 @@ pub fn wody() -> &'static [WodyService] {
                 title: leaked(&entry.title),
                 url: leaked(&entry.url),
                 layers: leaked_list(&entry.layers),
+                titles: leaked_list(
+                    &entry
+                        .layers
+                        .iter()
+                        .map(|layer| entry.titles.get(layer).cloned().unwrap_or_default())
+                        .collect::<Vec<_>>(),
+                ),
             })
             .collect()
     })

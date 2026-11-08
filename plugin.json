@@ -105,6 +105,13 @@
       "params": "{} adopts the rectangle drawn on the map"
     },
     {
+      "id": "obszar-json",
+      "label": "Area from a\nbox",
+      "icon": "g_rect",
+      "help": "Sets the area from a box or a GeoJSON shape a script hands in, so no drawing is needed.",
+      "params": "{\"bbox\": [16.85, 52.35, 16.95, 52.45]} or {\"geojson\": <Feature or FeatureCollection>}"
+    },
+    {
       "id": "obszar-anuluj",
       "label": "Cancel\ndrawing",
       "icon": "erase",
@@ -201,6 +208,13 @@
       "icon": "globe_view",
       "help": "Searches the national register of spatial data sets and services: which body holds what, and the address of its WMS, WFS and CSW. Narrows the register, never dumps it.",
       "params": "{\"szukaj\": \"ortofoto\", \"instytucja\": \"Geolog\", \"teryt\": \"3064\", \"usluga\": \"wms\"}"
+    },
+    {
+      "id": "wody-warstwy",
+      "label": "Wody\nlayers",
+      "icon": "table",
+      "help": "Lists the layers of one Wody Polskie service: the id to pass as warstwa, and its title. Without usluga it lists the services with their layer counts.",
+      "params": "{\"usluga\": \"wody-apgw\"} (optional: the service to list)"
     },
     {
       "id": "panel-state",
@@ -1068,210 +1082,210 @@
       "label": "aPGW",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 11 warstw",
-      "params": "{\"service\": \"wody-apgw\"}"
+      "params": "{\"service\": \"wody-apgw\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-apgw2",
       "label": "IIaPGW",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 17 warstw",
-      "params": "{\"service\": \"wody-apgw2\"}"
+      "params": "{\"service\": \"wody-apgw2\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mrp3",
       "label": "MRP 0,2% (raz na 500lat) negatywne\nkonsekwencje dla życia i zdrowia ludzi",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 22 warstwy",
-      "params": "{\"service\": \"wody-mrp3\"}"
+      "params": "{\"service\": \"wody-mrp3\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mrp8",
       "label": "MRP 0,2%(raz na 500lat) negatywne\nkonsekwencje dla środowiska, dziedzictwa\nkult. i działalności gosp.",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 40 warstw",
-      "params": "{\"service\": \"wody-mrp8\"}"
+      "params": "{\"service\": \"wody-mrp8\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mrp2",
       "label": "MRP 1% (raz na 100lat) negatywne\nkonsekwencje dla życia i zdrowia ludzi",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 22 warstwy",
-      "params": "{\"service\": \"wody-mrp2\"}"
+      "params": "{\"service\": \"wody-mrp2\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mrp7",
       "label": "MRP 1%(raz na 100lat) negatywne konsekwencje\ndla środowiska, dziedzictwa kult. i\ndziałalności gosp.",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 40 warstw",
-      "params": "{\"service\": \"wody-mrp7\"}"
+      "params": "{\"service\": \"wody-mrp7\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mrp1",
       "label": "MRP 10% (raz na 10lat) negatywne\nkonsekwencje dla życia i zdrowia ludzi",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 9 warstw",
-      "params": "{\"service\": \"wody-mrp1\"}"
+      "params": "{\"service\": \"wody-mrp1\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mrp6",
       "label": "MRP 10%(raz na 10lat) negatywne konsekwencje\ndla środowiska, dziedzictwa kulturowego i\ndziałalności gosp.",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 18 warstw",
-      "params": "{\"service\": \"wody-mrp6\"}"
+      "params": "{\"service\": \"wody-mrp6\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mrp12",
       "label": "MRP-zniszczenie lub uszkodzenie budowli\npiętrzącej-negatywne skutki dla środowiska,\ndziedzictwa kult. i działalności gosp.",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 146 warstw",
-      "params": "{\"service\": \"wody-mrp12\"}"
+      "params": "{\"service\": \"wody-mrp12\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mrp11",
       "label": "MRP-zniszczenie lub uszkodzenie budowli\npiętrzącej-negatywne skutki dla życia i\nzdrowia ludzi",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 187 warstw",
-      "params": "{\"service\": \"wody-mrp11\"}"
+      "params": "{\"service\": \"wody-mrp11\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mrp9",
       "label": "MRP-zniszczenie wału przeciwpow.-negatywne\nskutki dla środowiska, dziedzictwa kult. i\ndziałalności gosp.",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 18 warstw",
-      "params": "{\"service\": \"wody-mrp9\"}"
+      "params": "{\"service\": \"wody-mrp9\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mrp4",
       "label": "MRP-zniszczenie wału przeciwpow.-negatywne\nskutki dla życia i zdrowia ludzi",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 9 warstw",
-      "params": "{\"service\": \"wody-mrp4\"}"
+      "params": "{\"service\": \"wody-mrp4\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mrp10",
       "label": "MRP-zniszczenie wału\nprzeciwsztorm.-negatywne skutki dla\nśrodowiska, dziedzictwa kult. i działalności\ngosp.",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 22 warstwy",
-      "params": "{\"service\": \"wody-mrp10\"}"
+      "params": "{\"service\": \"wody-mrp10\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mrp5",
       "label": "MRP-zniszczenie wału\nprzeciwsztorm.-negatywne skutki dla życia i\nzdrowia ludzi",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 12 warstw",
-      "params": "{\"service\": \"wody-mrp5\"}"
+      "params": "{\"service\": \"wody-mrp5\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mzp9",
       "label": "MZP od strony morza-całkowite zniszczenie\nwału przeciwsztormowego",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 13 warstw",
-      "params": "{\"service\": \"wody-mzp9\"}"
+      "params": "{\"service\": \"wody-mzp9\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mzp1",
       "label": "MZP z głębokością wody-0,2%(raz na 500 lat)",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 24 warstwy",
-      "params": "{\"service\": \"wody-mzp1\"}"
+      "params": "{\"service\": \"wody-mzp1\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mzp2",
       "label": "MZP z głębokością wody-1%(raz na 100 lat)",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 24 warstwy",
-      "params": "{\"service\": \"wody-mzp2\"}"
+      "params": "{\"service\": \"wody-mzp2\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mzp3",
       "label": "MZP z głębokością wody-10%(raz na 10 lat)",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 10 warstw",
-      "params": "{\"service\": \"wody-mzp3\"}"
+      "params": "{\"service\": \"wody-mzp3\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mzp4",
       "label": "MZP z prędkością wody-0,2%(raz na 500 lat)",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 9 warstw",
-      "params": "{\"service\": \"wody-mzp4\"}"
+      "params": "{\"service\": \"wody-mzp4\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mzp5",
       "label": "MZP z prędkością wody-1%(raz na 100 lat)",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 9 warstw",
-      "params": "{\"service\": \"wody-mzp5\"}"
+      "params": "{\"service\": \"wody-mzp5\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mzp6",
       "label": "MZP z prędkością wody-10%(raz na 10 lat)",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 9 warstw",
-      "params": "{\"service\": \"wody-mzp6\"}"
+      "params": "{\"service\": \"wody-mzp6\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mzp10",
       "label": "MZP-Obszary szczególnego zagrożenia powodzią",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 2 warstwy",
-      "params": "{\"service\": \"wody-mzp10\"}"
+      "params": "{\"service\": \"wody-mzp10\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mzp8",
       "label": "MZP-zniszczenie lub uszkodzenie budowli\npiętrzącej",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 162 warstwy",
-      "params": "{\"service\": \"wody-mzp8\"}"
+      "params": "{\"service\": \"wody-mzp8\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-mzp7",
       "label": "MZP-zniszczenie wału przeciwpowodziowego",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 8 warstw",
-      "params": "{\"service\": \"wody-mzp7\"}"
+      "params": "{\"service\": \"wody-mzp7\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-pgwwp",
       "label": "PGWWP",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 3 warstwy",
-      "params": "{\"service\": \"wody-pgwwp\"}"
+      "params": "{\"service\": \"wody-pgwwp\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-ppss",
       "label": "PPSS",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 8 warstw",
-      "params": "{\"service\": \"wody-ppss\"}"
+      "params": "{\"service\": \"wody-ppss\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-pzrp",
       "label": "PZRP",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 26 warstw",
-      "params": "{\"service\": \"wody-pzrp\"}"
+      "params": "{\"service\": \"wody-pzrp\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-worp-onnp-od-morza",
       "label": "WORP-ONNP od morza",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 1 warstwa",
-      "params": "{\"service\": \"wody-worp-onnp-od-morza\"}"
+      "params": "{\"service\": \"wody-worp-onnp-od-morza\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-worp-onnp-zniszczenie-budowli-pietrzacych",
       "label": "WORP-ONNP zniszczenie budowli piętrzących",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 1 warstwa",
-      "params": "{\"service\": \"wody-worp-onnp-zniszczenie-budowli-pietrzacych\"}"
+      "params": "{\"service\": \"wody-worp-onnp-zniszczenie-budowli-pietrzacych\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "wody-worp4",
       "label": "WORP-powodzie historyczne, prawdopodobne",
       "icon": "polygon_layer",
       "help": "PGW Wody Polskie (ISOK) · 8 warstw",
-      "params": "{\"service\": \"wody-worp4\"}"
+      "params": "{\"service\": \"wody-worp4\", \"warstwa\": \"layer id or title (optional, all layers when left out)\"}"
     },
     {
       "id": "carto-administrativ-karte-von-den-konigreichen-galizien-und",
@@ -2845,7 +2859,11 @@
       "EGiB:\nPoznań": "EGiB:\nPoznań",
       "EGiB:\nWrocław": "EGiB:\nWrocław",
       "EGiB:\nWarszawa": "EGiB:\nWarszawa",
-      "Polish national geodetic data in one tab: GUGiK orthophoto, BDOT10k, parcels, addresses, PRG boundaries, place names and hillshade; the national WFS catalogue and GDOŚ protected areas through background downloads with progress and Cancel; a 1 m elevation model from the area you point at; the EZiUDP register of 3 296 WMS and WFS addresses; and ULDK, UUG and NMT lookups.": "Polskie dane geodezyjne w jednej zakładce: ortofoto, BDOT10k, działki, adresy, granice PRG, nazwy geograficzne i cieniowanie GUGiK; katalog krajowych usług WFS oraz ochrona przyrody GDOŚ przez pobierania w tle z postępem i przerwaniem; model wysokości 1 m z obszaru, który wskażesz; rejestr EZiUDP z 3 296 adresami WMS i WFS; oraz wyszukiwania ULDK, UUG i NMT."
+      "Polish national geodetic data in one tab: GUGiK orthophoto, BDOT10k, parcels, addresses, PRG boundaries, place names and hillshade; the national WFS catalogue and GDOŚ protected areas through background downloads with progress and Cancel; a 1 m elevation model from the area you point at; the EZiUDP register of 3 296 WMS and WFS addresses; and ULDK, UUG and NMT lookups.": "Polskie dane geodezyjne w jednej zakładce: ortofoto, BDOT10k, działki, adresy, granice PRG, nazwy geograficzne i cieniowanie GUGiK; katalog krajowych usług WFS oraz ochrona przyrody GDOŚ przez pobierania w tle z postępem i przerwaniem; model wysokości 1 m z obszaru, który wskażesz; rejestr EZiUDP z 3 296 adresami WMS i WFS; oraz wyszukiwania ULDK, UUG i NMT.",
+      "Area from a\nbox": "Obszar z\nprostokąta",
+      "Sets the area from a box or a GeoJSON shape a script hands in, so no drawing is needed.": "Ustawia obszar z prostokąta albo kształtu GeoJSON podanego przez skrypt, więc rysowanie nie jest potrzebne.",
+      "Wody\nlayers": "Wody:\nwarstwy",
+      "Lists the layers of one Wody Polskie service: the id to pass as warstwa, and its title. Without usluga it lists the services with their layer counts.": "Wypisuje warstwy jednej usługi Wody Polskie: identyfikator do parametru warstwa i tytuł. Bez uslugi wypisuje usługi z liczbą warstw."
     }
   },
   "panel": {

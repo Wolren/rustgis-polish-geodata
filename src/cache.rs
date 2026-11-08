@@ -45,6 +45,32 @@ pub fn area_mode_file() -> PathBuf {
     root().join("area.mode")
 }
 
+/// The elevation box a first press measured and left waiting for its confirmation.
+pub fn dem_confirm_file() -> PathBuf {
+    root().join("dem.confirm")
+}
+
+/// How long a measured box waits for the second press.
+pub const CONFIRM_SECONDS: u64 = 120;
+
+/// The box a first press measured, when it is still fresh enough to confirm.
+pub fn dem_confirm(now: SystemTime) -> Option<String> {
+    let text = fs::read_to_string(dem_confirm_file()).ok()?;
+    let (key, at) = text.trim().split_once(' ')?;
+    let at: u64 = at.parse().ok()?;
+    let seconds = now.duration_since(SystemTime::UNIX_EPOCH).ok()?.as_secs();
+    (seconds >= at && seconds - at <= CONFIRM_SECONDS).then(|| key.to_string())
+}
+
+pub fn remember_dem_confirm(key: &str, now: SystemTime) {
+    let seconds = now.duration_since(SystemTime::UNIX_EPOCH).unwrap_or_default().as_secs();
+    let _ = fs::write(dem_confirm_file(), format!("{key} {seconds}"));
+}
+
+pub fn forget_dem_confirm() {
+    let _ = fs::remove_file(dem_confirm_file());
+}
+
 /// The register the update tool wrote, if it wrote one; the plugin falls back to its own copy.
 pub fn register_file() -> PathBuf {
     root().join("eziudp.json")
