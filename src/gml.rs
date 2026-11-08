@@ -389,8 +389,7 @@ pub fn parse_features_stream<R: std::io::BufRead>(
             }
             Ok(Event::End(_)) => {
                 if let Some(node) = stack.pop() {
-                    // A finished member becomes features and leaves memory; the rest waits for
-                    // an exception check at the end.
+                    // A finished member becomes features and leaves memory.
                     if is_member(&node) {
                         collect_members(&node, swap, &mut features);
                     } else {
