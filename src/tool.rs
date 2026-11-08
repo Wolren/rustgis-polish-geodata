@@ -29,6 +29,7 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     match request.get("id").and_then(Value::as_str) {
         Some("pobierz-arkusze") => return sheets::run(request, lang),
         Some("geokoduj-csv") => return crate::uug::geocode_csv(request, lang),
+        Some("dzialki-csv") => return crate::uldk::parcels_csv(request, lang),
         Some("aktualizuj-rejestr") => {
             let params = request.get("params").cloned().unwrap_or_else(|| json!({}));
             return crate::zrodla::update(&params, lang);

@@ -89,6 +89,37 @@ pub fn area(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String
     }))
 }
 
+/// Lists the obręby a unit publishes, so a script can pick one by name instead of a number.
+pub fn obreby(params: &Value, lang: Lang) -> Result<Value, String> {
+    let teryt = params
+        .get("teryt")
+        .or_else(|| params.get("jednostka"))
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|code| !code.is_empty())
+        .ok_or_else(|| text::prg_needs_teryt(lang))?;
+    let filter = format!(
+        "<Filter><PropertyIsLike wildCard=\"*\" singleChar=\".\" escape=\"!\"><PropertyName>JPT_KOD_JE</PropertyName><Literal>{}</Literal></PropertyIsLike></Filter>",
+        escape(&format!("{teryt}*"))
+    );
+    let url = format!(
+        "{URL}?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=A06_Granice_obrebow_ewidencyjnych&SRSNAME=EPSG:4326&COUNT=500&FILTER={}",
+        encode(&filter)
+    );
+    let body = http::fetch(&url, 90, lang)?;
+    let features = gml::parse_features(&body, false, lang)?;
+    let obreby: Vec<Value> = features
+        .iter()
+        .map(|feature| {
+            json!({
+                "code": feature.pointer("/properties/JPT_KOD_JE").cloned().unwrap_or(Value::Null),
+                "name": feature.pointer("/properties/JPT_NAZWA_").cloned().unwrap_or(Value::Null),
+            })
+        })
+        .collect();
+    Ok(json!({ "teryt": teryt, "count": obreby.len(), "obreby": obreby }))
+}
+
 /// The WFS type a level names: the Polish word, `gm`, `pow` or `woj`, and the type itself.
 fn level_type(level: &str) -> Option<&'static str> {
     let level = plain(level);

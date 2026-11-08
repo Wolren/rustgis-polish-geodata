@@ -1316,6 +1316,43 @@ pub fn nmt_added(
     )
 }
 
+/// The parcel CSV run is partway through the file.
+pub fn uldk_progress(lang: Lang, done: usize, total: usize) -> String {
+    pick!(
+        lang,
+        format!("checking parcels: {done} of {total}"),
+        format!("sprawdzanie działek: {done} z {total}")
+    )
+}
+
+/// ULDK found none of the identifiers in the CSV.
+pub fn uldk_none_found(lang: Lang, total: usize) -> String {
+    pick!(
+        lang,
+        format!("ULDK found none of the {total} parcels"),
+        format!("ULDK nie znalazło żadnej z {total} działek")
+    )
+}
+
+/// The layer the parcel CSV builds.
+pub fn uldk_csv_layer(lang: Lang) -> String {
+    pick!(lang, "Parcels from the CSV", "Działki z CSV").to_string()
+}
+
+/// How the parcel CSV run went.
+pub fn uldk_csv_done(lang: Lang, found: usize, missing: usize) -> String {
+    pick!(
+        lang,
+        format!("{found} parcels found, {missing} not found"),
+        format!("znaleziono {found} działek, nie znaleziono {missing}")
+    )
+}
+
+/// The temporary layer a selected boundary is copied into.
+pub fn clip_boundary_layer(lang: Lang) -> String {
+    pick!(lang, "Clip boundary", "Granica cięcia").to_string()
+}
+
 /// The 3D scene no longer stands on a model.
 pub fn nmt_terrain_off(lang: Lang) -> String {
     pick!(
@@ -1368,6 +1405,16 @@ pub fn wody_no_layer(lang: Lang, service: &str, count: usize) -> String {
             "{service} nie ma takiej warstwy: publikuje {count}; uruchom wody-warstwy z \"usluga\": \"{service}\", żeby je wypisać"
         )
     )
+}
+
+/// The obręb listing got no unit code.
+pub fn prg_needs_teryt(lang: Lang) -> String {
+    pick!(
+        lang,
+        "give the unit: {\"teryt\": \"306401_1\"}",
+        "podaj jednostkę: {\"teryt\": \"306401_1\"}"
+    )
+    .to_string()
 }
 
 /// The unit command got no name, so it says which levels it knows.

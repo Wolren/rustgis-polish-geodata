@@ -470,18 +470,6 @@
     "institutionMenu": "gugik-mapy"
   },
   {
-    "id": "panstwowy-rejestr-granic-adresy",
-    "name": "Państwowy Rejestr Granic - Adresy",
-    "source": "GUGiK · geoportal.gov.pl",
-    "url": "https://mapy.geoportal.gov.pl/wss/service/PZGiK/PRG/WMS/Addresses?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=Miejscowosci,PunktyAdresowe,UlicePow,UliceL&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&TRANSPARENT=TRUE",
-    "layer": "Miejscowosci,PunktyAdresowe,UlicePow,UliceL",
-    "zoom": 18,
-    "cmd": "usluga-panstwowy-rejestr-granic-adresy",
-    "label": "PRG adresy",
-    "institution": "gugik",
-    "institutionMenu": "gugik-kataster"
-  },
-  {
     "id": "podstawowa-osnowa-geodezyjna-pozioma",
     "name": "Podstawowa osnowa geodezyjna pozioma",
     "source": "GUGiK · geoportal.gov.pl",

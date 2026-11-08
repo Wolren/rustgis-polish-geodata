@@ -127,6 +127,7 @@ warstwę zamiast wszystkich. Tytuły pochodzą z `GetCapabilities` i leżą w `d
 | --- | --- | --- |
 | `geokoduj` | UUG | punkt, ulica, numer i kod dla adresu |
 | **Geocode a CSV** (narzędzie) | UUG | warstwa punktowa z pliku CSV, z liczbą adresów, których nie znalazł |
+| **Check parcels from a CSV** (narzędzie) | ULDK | warstwa działek z pliku CSV, z liczbą identyfikatorów, których nie znalazł |
 | `adres-odwrotnie` | UUG | adres pod środkiem mapy albo pod `lon`, `lat` |
 | `wysokosc` | NMT | wysokość w PL-KRON86-NH w punkcie |
 | `dzialka-id` | ULDK | granica działki dla identyfikatora |

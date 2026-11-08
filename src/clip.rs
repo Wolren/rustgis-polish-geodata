@@ -96,6 +96,67 @@ fn added(answer: &Value) -> Option<Value> {
         .or_else(|| answer.get("layers")?.as_array()?.first().cloned())
 }
 
+/// The boundary a clip cuts with, and whether it is a temporary copy of a selection.
+pub struct Boundary {
+    pub layer: String,
+    /// True when the boundary is a copy of the selected shapes, so it goes after the cut.
+    pub temporary: bool,
+    pub from_view: bool,
+}
+
+/// Resolves the boundary: the named layer, else the area layer.
+///
+/// A polygon layer with a selection is copied into a temporary layer first, so the cut follows
+/// the shapes the user picked rather than everything the layer holds.
+pub fn boundary(host: &mut Host, named: Option<&str>, lang: Lang) -> Result<Boundary, String> {
+    let layer = match named.map(str::trim).filter(|name| !name.is_empty()) {
+        Some(name) => name.to_string(),
+        None => {
+            let list = layers(host, lang)?;
+            area_in(&list).ok_or_else(|| text::clip_no_boundary(lang))?
+        }
+    };
+    let list = layers(host, lang)?;
+    let found = list
+        .iter()
+        .find(|entry| entry.get("name").and_then(Value::as_str) == Some(layer.as_str()))
+        .ok_or_else(|| text::no_area_layer(lang, &layer))?;
+    let from_view = crate::text::AREA_LAYERS.contains(&layer.as_str())
+        && crate::obszar::Mode::stored() == crate::obszar::Mode::View;
+    let selected = found.get("selected").and_then(Value::as_i64).unwrap_or(0);
+    if selected > 0 {
+        if let Ok(answer) = host.call("host.features", json!({ "layer": layer, "selected": true })) {
+            if let Some(features) = answer.get("features") {
+                let collection = json!({ "type": "FeatureCollection", "features": features });
+                let temporary = text::clip_boundary_layer(lang);
+                host.add_layer(&temporary, collection)?;
+                return Ok(Boundary { layer: temporary, temporary: true, from_view });
+            }
+        }
+    }
+    Ok(Boundary { layer, temporary: false, from_view })
+}
+
+/// Cuts a layer to the boundary the request names, following a selection when there is one.
+pub fn cut(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, String> {
+    let list = layers(host, lang)?;
+    let (layer, named) = plan(&list, request);
+    let boundary = boundary(host, named.as_deref(), lang)?;
+    let layer = layer.ok_or_else(|| text::nothing_to_clip(lang))?;
+    if layer == boundary.layer {
+        return Err(text::clip_same(lang, &layer));
+    }
+    let answer = to_area(host, &layer, &boundary.layer, lang);
+    if boundary.temporary {
+        host.call("layer.remove", json!({ "layer": [boundary.layer] })).ok();
+    }
+    let mut answer = answer?;
+    if let Some(object) = answer.as_object_mut() {
+        object.insert("from_view".into(), json!(boundary.from_view));
+    }
+    Ok(answer)
+}
+
 /// Clips `layer` to `area`, replacing the layer in place.
 pub fn to_area(host: &mut Host, layer: &str, area: &str, lang: Lang) -> Result<Value, String> {
     let list = layers(host, lang)?;

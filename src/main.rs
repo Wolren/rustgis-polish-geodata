@@ -109,6 +109,7 @@ fn run(
         "obszar-widok" => obszar::rectangle_from_view(host, lang),
         "obszar-json" => obszar::from_json(host, request, lang),
         "obszar-jednostka" => prg::area(host, params, lang),
+        "obreby" => prg::obreby(params, lang),
         "dzialki-powiat" => egib::from_area(host, params, lang),
         "rejestr-pobierz" => egib::from_register(host, params, lang),
         "obszar-anuluj" => obszar::abort(host, lang),
@@ -133,7 +134,7 @@ fn run(
         "dem-terrain-off" => nmt::terrain_off(host, lang),
         "zoom-polska" => zoom_poland(host, lang),
         "wyczysc-cache" => clear_cache(host, lang),
-        "przytnij" => cut(host, request, lang),
+        "przytnij" => clip::cut(host, request, lang),
         "parcel" => uldk::parcel(host, params, lang),
         other => match zrodla::ribbon_target(other) {
             Some(entry) => zrodla::add_service(host, entry, lang),
@@ -172,21 +173,6 @@ fn redraws_panel(id: &str) -> bool {
 }
 
 /// Cuts a layer to a boundary layer: the one the request names, else the area layer.
-fn cut(host: &mut host::Host, request: &Value, lang: Lang) -> Result<Value, String> {
-    let list = clip::layers(host, lang)?;
-    let (layer, boundary) = clip::plan(&list, request);
-    let Some(boundary) = boundary else {
-        return Err(match clip::asked(request) {
-            Some(name) => text::boundary_gone(lang, &name),
-            None => text::clip_no_boundary(lang),
-        });
-    };
-    let layer = layer.ok_or_else(|| text::nothing_to_clip(lang))?;
-    if layer == boundary {
-        return Err(text::clip_same(lang, &layer));
-    }
-    clip::to_area(host, &layer, &boundary, lang)
-}
 
 /// Brings the map to Poland, the only area GUGiK serves.
 fn zoom_poland(host: &mut host::Host, lang: Lang) -> Result<Value, String> {

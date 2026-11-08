@@ -5,7 +5,7 @@
 //! fields, pipe-separated, the last one the geometry.
 
 use crate::gml;
-use crate::host::Host;
+use crate::host::{self, Host};
 use crate::http;
 use crate::text::{self, Lang};
 use crate::tm;
@@ -67,6 +67,72 @@ fn identifier(params: &Value, lang: Lang) -> Result<String, String> {
     let arkusz = field("arkusz").unwrap_or_else(|| "1".to_string());
     let rodzaj = field("rodzaj").unwrap_or_else(|| "1".to_string());
     Ok(format!("{teryt}_{rodzaj}.{obreb}.{numer}/{arkusz}"))
+}
+
+/// Checks a CSV of parcel identifiers: one layer with what ULDK found, and a count of what it did not.
+pub fn parcels_csv(request: &Value, lang: Lang) -> Result<Value, String> {
+    let params = request.get("params").cloned().unwrap_or(Value::Null);
+    let body = crate::uug::file_text(request, &params, lang)?;
+    let column = params
+        .get("kolumna")
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|name| !name.is_empty());
+    let limit = params
+        .get("limit")
+        .and_then(Value::as_u64)
+        .unwrap_or(200)
+        .clamp(1, 2000) as usize;
+    let rows = crate::uug::read_csv(&body, column);
+    if rows.is_empty() {
+        return Err(text::csv_empty(lang, "CSV"));
+    }
+    let total = rows.len().min(limit);
+    let mut features = Vec::new();
+    let mut missing = Vec::new();
+    for (index, (id, extra)) in rows.iter().take(total).enumerate() {
+        let url = format!("{ULDK}?request=GetParcelById&id={id}&srid=2180&result={FIELDS}");
+        match http::fetch(&url, 20, lang) {
+            Ok(answer) if answer.starts_with('0') => match answer_body(&answer, lang) {
+                Ok((_fields, wkt)) => {
+                    let Some(geometry) = gml::wkt_to_geojson(&wkt, tm::to_wgs84) else {
+                        missing.push(json!(id));
+                        continue;
+                    };
+                    let mut properties = Map::new();
+                    properties.insert("id".into(), json!(id));
+                    for (key, value) in extra {
+                        properties.insert(key.clone(), value.clone());
+                    }
+                    features.push(json!({
+                        "type": "Feature",
+                        "geometry": geometry,
+                        "properties": Value::Object(properties),
+                    }));
+                }
+                Err(_) => missing.push(json!(id)),
+            },
+            _ => missing.push(json!(id)),
+        }
+        if index % 20 == 19 {
+            host::progress_line(&text::uldk_progress(lang, index + 1, total));
+        }
+    }
+    if features.is_empty() {
+        return Err(text::uldk_none_found(lang, total));
+    }
+    let name = text::uldk_csv_layer(lang);
+    let collection = json!({ "type": "FeatureCollection", "features": features });
+    let note = text::uldk_csv_done(lang, features.len(), missing.len());
+    Ok(json!({
+        "layers": [{ "name": name, "geojson": collection }],
+        "messages": [note],
+    }))
+}
+
+/// ULDK's answer as its fields and its WKT, without building a layer.
+fn answer_body(body: &str, lang: Lang) -> Result<(Vec<String>, String), String> {
+    parse(body, lang)
 }
 
 /// Turns ULDK's answer into a layer, with the point that was asked about beside it.

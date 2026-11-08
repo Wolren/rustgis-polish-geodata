@@ -219,6 +219,13 @@
       "params": "{\"adres\": \"Poznań, Głogowska 10\", \"x\": \"PL-1992 easting (optional)\", \"y\": \"northing (optional)\"}"
     },
     {
+      "id": "obreby",
+      "label": "Obreby of\na unit",
+      "icon": "table",
+      "help": "Lists the cadastral obreby a unit publishes in PRG, with the code each parcel identifier uses.",
+      "params": "{\"teryt\": \"306401_1\"}"
+    },
+    {
       "id": "dzialka-id",
       "label": "Parcel by\nnumber",
       "icon": "bookmark",
@@ -672,6 +679,36 @@
           "kind": "number",
           "default": 500,
           "help": "500 by default, 5000 at most."
+        }
+      ]
+    },
+    {
+      "id": "dzialki-csv",
+      "name": "Check parcels from a CSV",
+      "summary": "Looks every parcel identifier of a CSV up in ULDK and adds what it finds as one layer, with a count of the identifiers it did not find.",
+      "toolbox": "Polish Geodata",
+      "params": [
+        {
+          "name": "file",
+          "label": "CSV file",
+          "kind": "file",
+          "extensions": [
+            "csv"
+          ],
+          "help": "One ULDK identifier per row, such as 306401_1.0001.14/4."
+        },
+        {
+          "name": "kolumna",
+          "label": "Identifier column",
+          "kind": "text",
+          "help": "Header name of the identifier column; the first column when left out."
+        },
+        {
+          "name": "limit",
+          "label": "Rows to check",
+          "kind": "number",
+          "default": 200,
+          "help": "200 by default, 2000 at most."
         }
       ]
     }
@@ -1130,7 +1167,16 @@
       "Download\nfrom the register": "Pobierz\nz rejestru",
       "Reads a WFS the register lists: one bounded, paged GetFeature per feature type, as one layer. Name the register id and optionally the types.": "Czyta WFS z rejestru: jedno ograniczone, stronicowane GetFeature na typ, jako jedna warstwa. Podaj identyfikator z rejestru i opcjonalnie typy.",
       "Register for\nthe view": "Rejestr dla\nwidoku",
-      "Lists the register services of the county under the map view, so a lookup starts where the map is.": "Wypisuje usługi rejestru dla powiatu pod widokiem mapy, więc szukanie zaczyna się tam, gdzie jest mapa."
+      "Lists the register services of the county under the map view, so a lookup starts where the map is.": "Wypisuje usługi rejestru dla powiatu pod widokiem mapy, więc szukanie zaczyna się tam, gdzie jest mapa.",
+      "Obreby of\na unit": "Obręby\njednostki",
+      "Lists the cadastral obreby a unit publishes in PRG, with the code each parcel identifier uses.": "Wypisuje obręby ewidencyjne, które jednostka publikuje w PRG, z kodem, którego używa identyfikator działki.",
+      "Check parcels from a CSV": "Sprawdź działki z CSV",
+      "Looks every parcel identifier of a CSV up in ULDK and adds what it finds as one layer, with a count of the identifiers it did not find.": "Sprawdza każdy identyfikator działki z pliku CSV w ULDK i dodaje znalezione jako jedną warstwę, z liczbą identyfikatorów, których nie znalazł.",
+      "One ULDK identifier per row, such as 306401_1.0001.14/4.": "Jeden identyfikator ULDK w wierszu, np. 306401_1.0001.14/4.",
+      "Identifier column": "Kolumna identyfikatora",
+      "Header name of the identifier column; the first column when left out.": "Nazwa nagłówka kolumny z identyfikatorem; bez niej pierwsza kolumna.",
+      "Rows to check": "Wiersze do sprawdzenia",
+      "200 by default, 2000 at most.": "Domyślnie 200, najwyżej 2000."
     }
   },
   "moreMaps": {

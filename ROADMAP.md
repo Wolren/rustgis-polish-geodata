@@ -102,8 +102,10 @@ potem według tematu, i którą całą da się sterować przez MCP.
 
 ### Wyszukiwanie i ULDK
 
-- **ULDK po obrębie**: kaskada województwo → powiat → gmina → obręb → numer, import z CSV i kontrola
-  całej warstwy działek.
+- **ULDK po obrębie**: zrobione przez `obreby` (lista obrębów jednostki z PRG, z kodem) i narzędzie
+  **Sprawdź działki z CSV** (`dzialki-csv`), które dla każdego identyfikatora pyta ULDK i zwraca
+  warstwę znalezionych działek z liczbą braków. Kaskada list czeka na formularz pola zależnego
+  (#1547).
 
 ### Host (RustGIS)
 
@@ -142,8 +144,8 @@ wartości:
 `src/egib.rs` jest przeniesiony: mamy własne polecenie `dzialki-powiat` z pagingiem, więc z tej
 listy zostaje pięć rzeczy.
 
-1. **`src/clip.rs`: granica z zaznaczenia**, kopiowana do warstwy tymczasowej, plus znacznik
-   `from_view`.
+1. **`src/clip.rs`: granica z zaznaczenia** zrobione: zaznaczone obiekty idą do warstwy tymczasowej
+   „Granica cięcia”, cięcie idzie po nich, a warstwa znika po cięciu. Odpowiedź niesie `from_view`.
 2. **`src/nmt.rs`: teren 3D i wygląd modelu** (`set_terrain`, `height_range`, `Look`,
    `exaggeration`, `dem-terrain-off`).
 3. **`src/eziudp.rs`: `rejestr-widok`** zrobione: ULDK nazywa powiat pod środkiem widoku, a

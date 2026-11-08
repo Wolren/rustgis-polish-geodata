@@ -125,7 +125,7 @@ pub fn geocode_csv(request: &Value, lang: Lang) -> Result<Value, String> {
 }
 
 /// The CSV text the run carries: the host puts the file's bytes in `files`, a path still reads.
-fn file_text(request: &Value, params: &Value, lang: Lang) -> Result<String, String> {
+pub(crate) fn file_text(request: &Value, params: &Value, lang: Lang) -> Result<String, String> {
     let name = params.get("file").and_then(Value::as_str).unwrap_or_default();
     let carried = request
         .get("files")
@@ -178,7 +178,7 @@ fn base64_decode(text: &str) -> Option<Vec<u8>> {
 }
 
 /// The addresses of a CSV: the column the caller names, else the first one that looks like an address.
-fn read_csv(body: &str, column: Option<&str>) -> Vec<(String, Map<String, Value>)> {
+pub(crate) fn read_csv(body: &str, column: Option<&str>) -> Vec<(String, Map<String, Value>)> {
     let mut lines = body.lines().filter(|line| !line.trim().is_empty());
     let Some(header) = lines.next() else {
         return Vec::new();

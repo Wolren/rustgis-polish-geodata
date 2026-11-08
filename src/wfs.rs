@@ -23,6 +23,10 @@ use std::time::Instant;
 const PAGE: usize = 500;
 /// Pages requested at once. Four parallel pages beat sequential by 2.57x, measured.
 const PAGES_IN_FLIGHT: usize = 4;
+/// A feature heavier than this switches the run to small pages.
+const HEAVY_BYTES: u64 = 30_000;
+/// The page size once features are heavy.
+const LIGHT_PAGE: usize = 50;
 const BUDGET_SECS: u64 = 240;
 /// One download stops at 6000 features; the tool gate reads this same number.
 pub const MAX_TOTAL: usize = 6000;
@@ -238,6 +242,12 @@ fn fetch_cell(
         }
         // The first page goes alone: a page of heavy geometries is measured before more follow.
         let in_flight = if cell.answered == 0 { 1 } else { PAGES_IN_FLIGHT };
+        // GUGiK answers nothing past a light first page, so the first page keeps the full size.
+        let count = match cell.features.len() {
+            0 => PAGE,
+            seen if cell.bytes / seen as u64 > HEAVY_BYTES => LIGHT_PAGE,
+            _ => PAGE,
+        };
         let starts: Vec<usize> = if layer.pages {
             (0..in_flight).map(|i| start + i * PAGE).collect()
         } else {
@@ -245,13 +255,13 @@ fn fetch_cell(
             vec![0]
         };
         let mut read = 0usize;
-        for (_, page_bytes, page) in fetch_pages(layer, bbox, filter, &starts, lang, srs) {
+        for (_, page_bytes, page) in fetch_pages(layer, bbox, filter, &starts, lang, srs, count) {
             cell.bytes += page_bytes;
             match page {
                 Ok(page) => {
                     cell.answered += 1;
                     // A short page ends the sequence; the pages after it are past the end.
-                    if page.len() < PAGE {
+                    if page.len() < count {
                         exhausted = true;
                     }
                     read += page.len();
@@ -275,7 +285,7 @@ fn fetch_cell(
         }
         if !layer.pages {
             // One page is all the service gives: a full page means more features were left out.
-            cell.truncated |= read >= PAGE;
+            cell.truncated |= read >= count;
             break;
         }
         if read == 0 {
@@ -294,13 +304,14 @@ fn fetch_pages(
     starts: &[usize],
     lang: Lang,
     srs: Srs,
+    count: usize,
 ) -> Vec<(usize, u64, Result<Vec<Value>, String>)> {
     let (sender, receiver) = std::sync::mpsc::channel();
     std::thread::scope(|scope| {
         for &offset in starts {
             let sender = sender.clone();
             scope.spawn(move || {
-                let url = page_url(layer, bbox, offset, filter, srs);
+                let url = page_url(layer, bbox, offset, filter, srs, count);
                 let swap = matches!(srs, Srs::LonLat);
                 let answered = http::get_unstored(&url, 120, lang).map(|body| {
                     let size = body.len() as u64;
@@ -384,6 +395,7 @@ fn page_url(
     start: usize,
     filter: Option<&str>,
     srs: Srs,
+    count: usize,
 ) -> String {
     let mut url = format!(
         "{}?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME={}&SRSNAME={}",
@@ -412,7 +424,7 @@ fn page_url(
             ));
         }
     }
-    url.push_str(&format!("&MAXFEATURES={PAGE}"));
+    url.push_str(&format!("&MAXFEATURES={count}"));
     // The first page needs no offset, and a service without paging refuses one.
     if start > 0 {
         url.push_str(&format!("&STARTINDEX={start}"));
@@ -428,7 +440,7 @@ mod tests {
     #[test]
     fn the_first_page_asks_for_no_offset() {
         let layer = catalog::wfs_by_label("dzialki").unwrap();
-        let url = page_url(layer, [21.0, 52.2, 21.01, 52.21], 0, None, Srs::LonLat);
+        let url = page_url(layer, [21.0, 52.2, 21.01, 52.21], 0, None, Srs::LonLat, PAGE);
         // GDOŚ reads a STARTINDEX as a request for a natural order it cannot do.
         assert!(!url.contains("STARTINDEX="), "{url}");
         assert!(url.contains("MAXFEATURES="), "{url}");
@@ -447,7 +459,7 @@ mod tests {
     #[test]
     fn builds_a_wfs_1_1_request() {
         let layer = catalog::wfs_by_label("dzialki").unwrap();
-        let url = page_url(layer, [21.0, 52.2, 21.01, 52.21], 500, None, Srs::LonLat);
+        let url = page_url(layer, [21.0, 52.2, 21.01, 52.21], 500, None, Srs::LonLat, PAGE);
         assert!(url.contains("VERSION=1.1.0"));
         assert!(url.contains("TYPENAME=dzialki"));
         assert!(url.contains("BBOX=21.00,52.20,21.01,52.21"));
@@ -464,6 +476,7 @@ mod tests {
             0,
             Some("%3CFilter%3E"),
             Srs::LonLat,
+            PAGE,
         );
         assert!(url.contains("&FILTER=%3CFilter%3E"));
         // GUGiK answers "BBOX and FILTER are mutually exclusive" if both are sent.
@@ -484,7 +497,7 @@ mod tests {
     #[test]
     fn keeps_the_polygon_in_the_grid_retry() {
         let layer = catalog::wfs_by_label("gminy").unwrap();
-        let url = page_url(layer, [21.0, 52.2, 21.01, 52.21], 0, Some("%3CFilter%3E"), Srs::Grid);
+        let url = page_url(layer, [21.0, 52.2, 21.01, 52.21], 0, Some("%3CFilter%3E"), Srs::Grid, PAGE);
         assert!(url.contains("SRSNAME=EPSG:2180"), "{url}");
         assert!(url.contains("&FILTER=%3CFilter%3E"), "{url}");
         assert!(!url.contains("BBOX="), "a retry never widens past the drawn shape: {url}");
