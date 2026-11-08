@@ -28,6 +28,12 @@
   ],
   "homepage": "https://github.com/Wolren/rustgis-polish-geodata",
   "repository": "https://github.com/Wolren/rustgis-polish-geodata",
+  "categories": [
+    "Data",
+    "Vector",
+    "Basemaps",
+    "Raster"
+  ],
   "commands": [
     {
       "id": "orto",

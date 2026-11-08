@@ -90,10 +90,21 @@ fn run() -> Result<(), String> {
             "https://github.com/{REPOSITORY}/releases/download/v{version}/{id}-{version}.rgplugin"
         )
     });
+    // The catalogue takes one to four categories from its own list; the manifest carries ours.
+    let categories: Vec<String> = manifest
+        .get("categories")
+        .and_then(|value| value.as_array())
+        .map(|list| {
+            list.iter()
+                .filter_map(|value| value.as_str().map(str::to_string))
+                .collect()
+        })
+        .filter(|list: &Vec<String>| !list.is_empty())
+        .unwrap_or_else(|| vec!["Data".to_string()]);
     let entry = json!({
         "id": id,
         "source": { "url": url, "sha256": digest },
-        "categories": ["Data"],
+        "categories": categories,
     });
     let entry_path = dist.join(format!("{id}.json"));
     fs::write(
