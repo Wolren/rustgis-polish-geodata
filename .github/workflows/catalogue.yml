@@ -1,0 +1,30 @@
+name: Catalogue
+
+# Every address in the catalogue answered a real tile when it was added. Publishers retire
+# services anyway: PZGIK/ORTO/WMS/StandardResolution answered for months and then returned 404
+# everywhere, and the catalogue kept offering it because tools/services.py never removes a row.
+# This run is what notices.
+
+on:
+  schedule:
+    - cron: "0 5 * * 1"
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install the CA bundle the probe trusts
+        run: python -m pip install --disable-pip-version-check certifi
+
+      - name: Every WMS template in data/services.json
+        run: python tools/probe.py
+
+      - name: Every built-in overlay in src/catalog.rs
+        run: python tools/probe.py --overlays
