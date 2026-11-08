@@ -26,6 +26,8 @@
   "skills": [
     "polish-geodata"
   ],
+  "homepage": "https://github.com/Wolren/rustgis-polish-geodata",
+  "repository": "https://github.com/Wolren/rustgis-polish-geodata",
   "commands": [
     {
       "id": "orto",
