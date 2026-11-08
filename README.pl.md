@@ -34,6 +34,8 @@ Pythona ani GDAL-a. Wymaga RustGIS 0.5.0 lub nowszego.
 
 ![Zakładka Polish Geodata](assets/ribbon-pl.png)
 
+![Menu Rejestr](assets/register-en.png)
+
 Zakładkę trzyma jedna zasada: **polecenie pokazuje coś od razu, narzędzie pobiera w tle**, z
 postępem i przyciskiem Anuluj. Wyjątkiem są trzy polecenia wysokości, bo narzędzie nie umie dodać
 warstwy rastrowej.
