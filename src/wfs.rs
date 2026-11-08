@@ -236,8 +236,10 @@ fn fetch_cell(
             cell.truncated = true;
             break;
         }
+        // The first page goes alone: a page of heavy geometries is measured before more follow.
+        let in_flight = if cell.answered == 0 { 1 } else { PAGES_IN_FLIGHT };
         let starts: Vec<usize> = if layer.pages {
-            (0..PAGES_IN_FLIGHT).map(|i| start + i * PAGE).collect()
+            (0..in_flight).map(|i| start + i * PAGE).collect()
         } else {
             // A service that refuses STARTINDEX answers one page, so a second page is a failure.
             vec![0]

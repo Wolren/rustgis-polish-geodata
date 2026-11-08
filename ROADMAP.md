@@ -126,11 +126,10 @@ Co wykrył i co z tego wynika:
 - **Naprawione: powiat z nie swoją usługą.** Rejestr podaje dla Poznania adres „EGiB”, który
   naprawdę serwuje EMUiA, więc polecenie odmawiało komunikatem o braku typów. Teraz próbuje
   wszystkich WFS-ów powiatu, zanim odmówi.
-- **Do poprawy: bramka rozmiaru mierzy po pobraniu.** Obszar 2° pobrał 32 MB w 15 s i dopiero wtedy
-  odmówił przy 25 MB. Liczba obiektów nie wystarcza jako prognoza: gminy ważą około 140 KB na
-  obiekt (92 obiekty to 13 MB), więc kontrola `RESULTTYPE=hits` przepuszcza obszar, który i tak
-  przekroczy limit. Usprawnienie: po pierwszej stronie zmierzyć bajty na obiekt i oszacować całość,
-  zanim pójdą kolejne strony.
+- **Częściowo naprawione: bramka rozmiaru.** Pierwsza strona schodzi samotnie, więc przebieg na
+  2° skrócił się z 15 s do 5,2 s. Zostaje nadwyżka: jedna strona gmin waży około 33 MB, bo obiekt
+  ma około 140 KB, a strona ma 500 obiektów. Usprawnienie: pierwsze żądanie o 20 obiektów, pomiar
+  bajtów na obiekt i prognoza całości przed resztą stron.
 - **Do poprawy: brak oceny gęstości w teście.** Fuzzer mierzy czas i werdykt, ale nie sprawdza, czy
   liczba obiektów zgadza się z zasięgiem. Usprawnienie: porównać obiekty na km² z prognozą.
 
