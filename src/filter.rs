@@ -12,6 +12,8 @@ use serde_json::Value;
 const MAX_FILTER_CHARS: usize = 6000;
 /// Fewer points than this and the polygon is too coarse to filter usefully.
 const MAX_POINTS: usize = 300;
+/// Rings one filter may carry; a unit cut into more pieces falls back to its box.
+const MAX_RINGS: usize = 4;
 
 /// Why the area's shape could not be sent as a filter, so the request used its bounding box.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -36,7 +38,11 @@ pub fn polygon_filter_grid(layer: &WfsLayer, collection: &Value) -> Result<Strin
     })
 }
 
-/// One ring, projected by `project`, as the `<Filter>` the `FILTER` parameter takes.
+/// One or more exterior rings, projected by `project`, as the `<Filter>` the `FILTER` takes.
+///
+/// A gmina is one ring and a powiat may be two, so every ring joins the filter as its own
+/// `<Intersects>` inside an `<Or>`. Each ring is decimated until the whole filter fits the budget,
+/// because a dense boundary would otherwise fall back to a box that reaches into its neighbours.
 fn polygon_filter_in(
     layer: &WfsLayer,
     collection: &Value,
@@ -46,27 +52,47 @@ fn polygon_filter_in(
     if rings.is_empty() {
         return Err(ShapeProblem::NoPolygon);
     }
-    if rings.len() > 1 {
+    if rings.len() > MAX_RINGS {
         return Err(ShapeProblem::SeveralPolygons);
     }
-    let ring = rings.remove(0);
-    if ring.len() < 4 {
+    rings.retain(|ring| ring.len() >= 4);
+    if rings.is_empty() {
         return Err(ShapeProblem::TooFewPoints);
     }
-    let ring = decimate(ring, MAX_POINTS);
-    let xml = format!(
-        "<Filter xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:gml=\"http://www.opengis.net/gml\">\
-<Intersects><PropertyName>{}</PropertyName><gml:Polygon><gml:exterior>\
+    // Each ring takes an equal share of the budget, then the whole filter is measured once.
+    let mut budget = MAX_POINTS;
+    loop {
+        let share = (budget / rings.len()).max(4);
+        let parts: Vec<String> = rings
+            .iter()
+            .map(|ring| {
+                let ring = decimate(ring.clone(), share);
+                format!(
+                    "<Intersects><PropertyName>{}</PropertyName><gml:Polygon><gml:exterior>\
 <gml:LinearRing><gml:posList>{}</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon>\
-</Intersects></Filter>",
-        layer.geom_field,
-        positions(&ring, project).trim_end()
-    );
-    let encoded = percent_encode(&xml);
-    if encoded.len() > MAX_FILTER_CHARS {
-        return Err(ShapeProblem::TooLong);
+</Intersects>",
+                    layer.geom_field,
+                    positions(&ring, &project).trim_end()
+                )
+            })
+            .collect();
+        let body = if parts.len() == 1 {
+            parts[0].clone()
+        } else {
+            format!("<Or>{}</Or>", parts.join(""))
+        };
+        let xml = format!(
+            "<Filter xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:gml=\"http://www.opengis.net/gml\">{body}</Filter>"
+        );
+        let encoded = percent_encode(&xml);
+        if encoded.len() <= MAX_FILTER_CHARS {
+            return Ok(encoded);
+        }
+        if budget <= 4 * rings.len() {
+            return Err(ShapeProblem::TooLong);
+        }
+        budget = (budget * 3 / 4).max(4 * rings.len());
     }
-    Ok(encoded)
 }
 
 /// The ring as `x y` pairs, each pair in the order the server's frame wants it.
@@ -200,15 +226,13 @@ mod tests {
     }
 
     #[test]
-    fn refuses_two_polygons() {
+    fn a_powiat_may_be_two_polygons() {
         let layer = catalog::wfs_by_label("gminy").unwrap();
         let mut area = square(0.01);
         let copy = area["features"][0].clone();
         area["features"].as_array_mut().unwrap().push(copy);
-        assert_eq!(
-            polygon_filter(layer, &area),
-            Err(ShapeProblem::SeveralPolygons)
-        );
+        let filter = polygon_filter(layer, &area).expect("two rings joined by Or");
+        assert!(filter.contains("%3COr%3E") || filter.contains("<Or>"), "{filter}");
     }
 
     #[test]

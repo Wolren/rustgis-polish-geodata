@@ -73,6 +73,11 @@ pub struct Download {
 /// `area` is the area layer's GeoJSON. A single polygon goes in as the service's filter instead
 /// of its bounding box, which cut 468 features to 189 on a measured strip. A request that fails
 /// costs only its own features, and the answer counts them.
+/// Whether the service refused the spatial filter itself, so the run can ask again with the box.
+fn is_shapes_refusal(error: &str) -> bool {
+    error.contains("FLTApplyFilterToLayer") || error.contains("OracleSpatial")
+}
+
 pub fn fetch(
     layer: &WfsLayer,
     bbox: [f64; 4],
@@ -95,7 +100,16 @@ pub fn fetch(
             None
         }
     });
-    let mut download = gather(layer, bbox, polygon.as_deref(), report, lang, Srs::LonLat, limit)?;
+    let mut download = match gather(layer, bbox, polygon.as_deref(), report, lang, Srs::LonLat, limit) {
+        Ok(download) => download,
+        // A decimated boundary can be self-intersecting, and the service then refuses the filter.
+        Err(error) if polygon.is_some() && is_shapes_refusal(&error) => {
+            report(&text::filter_fell_back(lang));
+            fallback = Some(filter::ShapeProblem::TooLong);
+            gather(layer, bbox, None, report, lang, Srs::LonLat, limit)?
+        }
+        Err(error) => return Err(error),
+    };
     if download.features.is_empty() && download.failed == 0 {
         // The address and street service answers an empty collection outside the national grid.
         let grid = area.and_then(|collection| filter::polygon_filter_grid(layer, collection).ok());

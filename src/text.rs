@@ -1372,6 +1372,15 @@ pub fn unit_not_chosen(lang: Lang) -> String {
     )
 }
 
+/// The service refused the boundary as a filter, so the run used the area's box.
+pub fn filter_fell_back(lang: Lang) -> String {
+    pick!(
+        lang,
+        "the service refused the boundary as a filter, so the run used its box: clip the layer for the exact set".to_string(),
+        "usługa odrzuciła granicę jako filtr, więc przebieg użył prostokąta: przytnij warstwę dla dokładnego zbioru".to_string()
+    )
+}
+
 /// A code the tree does not hold came in, so the area stays as it was.
 pub fn unit_unknown(lang: Lang, code: &str) -> String {
     pick!(
