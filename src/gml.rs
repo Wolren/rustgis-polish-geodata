@@ -736,3 +736,25 @@ mod serviced_points {
         assert!(parse_features_stream(std::io::Cursor::new(cut.as_bytes()), false, Lang::En).is_err());
     }
 }
+
+#[cfg(test)]
+mod bench {
+    use super::parse_features;
+    use crate::text::Lang;
+
+    /// Times a page the caller names, so a parser change is measured on real data.
+    #[test]
+    #[ignore]
+    fn parse_bench() {
+        let path = std::env::var("PAGE").expect("PAGE");
+        let body = std::fs::read_to_string(&path).expect("page");
+        let started = std::time::Instant::now();
+        let features = parse_features(&body, true, Lang::En).expect("parsed");
+        println!(
+            "bench: {} features, {} bytes, {:.3} s",
+            features.len(),
+            body.len(),
+            started.elapsed().as_secs_f64()
+        );
+    }
+}

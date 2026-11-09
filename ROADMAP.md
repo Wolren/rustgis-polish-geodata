@@ -1,9 +1,9 @@
 # Roadmap
 
-_Stan na 2026-11-08, wtyczka 0.1.0, repozytorium publiczne, CI zielone._
+_Stan na 2026-11-09, wtyczka 0.1.4, repozytorium publiczne._
 
 Cel: jedna wtyczka do RustGIS, która kondensuje polskie dane, dzieli je najpierw według instytucji,
-potem według tematu, i którą całą da się sterować przez MCP.
+potem według tematu, i którą całą da się sterować przez MCP albo przez panel.
 
 ## Zrobione
 
@@ -12,10 +12,25 @@ potem według tematu, i którą całą da się sterować przez MCP.
 - Jedna zasada trzyma wstęgę: polecenie pokazuje coś od razu, narzędzie pobiera w tle z postępem
   i przyciskiem Anuluj. Wyjątkiem są trzy polecenia modeli wysokości, bo narzędzie nie umie dodać
   warstwy rastrowej.
-- 236 poleceń i 13 narzędzi. Grupy w układzie `small`, katalog zwinięty według instytucji.
-  Zmierzone: treść kończy się na 1290 px w oknie 1366 px, bez przewijania w poziomie.
+- 239 poleceń i 13 narzędzi. Dziesięć menu WMS w dwóch rzędach po scaleniu: Wody Polskie w jednym
+  menu 32 usług, dziedzictwo i lasy w menu instytucji 17, dwa menu GUGiK w jednym 32.
 - Każde polecenie deklaruje argumenty w `params`. `katalog` wypisuje usługi, zbiory i identyfikatory
   dla agenta.
+
+### Wybór jednostki
+
+- **Drzewo w panelu**: 16 województw, 380 powiatów i 2 479 gmin z kodem TERYT, offline w paczce
+  (`data/jednostki.json`, 113 KB), z wyszukiwaniem. Wybór węzła ustawia obszar z PRG.
+- Buduje je `tools/jednostki.py` z PRG; test pilnuje, że każde piętro się rozwiązuje.
+- Dwa powiaty noszą nazwę „ostrowski”, więc obszar filtruje PRG po `JPT_KOD_JE`, gdy kod jest znany.
+
+### Jedno wywołanie, jeden typ
+
+- `pobierz-typ {"dane": "Punkty adresowe", "unit": "1464011"}`: kod na jednostkę, granica na obszar,
+  pobranie zbioru, cięcie do jednostki i warstwa nazwana typem. Zmierzone: 688 punktów adresowych dla
+  gminy Siedlce, 21 gmin dla powiatu ostrowskiego, 59 powiatów dla mazowieckiego.
+- Cięcie zostawia obiekt graniczny sąsiada, gdy usługa odpowiedziała prostokątem: liczba jest górną
+  granicą. Punkty i linie przechodzą nietknięte, wielokąty bez powierzchni są usuwane.
 
 ### Dane
 
@@ -24,13 +39,13 @@ potem według tematu, i którą całą da się sterować przez MCP.
   `tools/services.py` i `tools/probe.py`.
 - **WFS**: 106 zbiorów mapowych, 162 skorowidze, 15 typów obszarów chronionych GDOŚ. Pobieranie przez
   sześć narzędzi, narzędzie ochrony przyrody i cztery narzędzia paczek.
-- **Rejestr EZiUDP offline**: `data/eziudp.json`, 3 296 adresów, każdy dowiedziony żądaniem przy
-  budowie: 1 742 WMS od 570 instytucji i 1 554 WFS.
+- **Rejestr EZiUDP offline**: `data/eziudp.json`, każdy adres dowiedziony żądaniem przy budowie.
 - **Rejestr na żywo**: `eziudp` pyta `api.php` i odmawia bez filtra, bo cały rejestr to 9 MB.
 - **Menu Rejestr**: sześć usług dowiedzionych przez budowniczego: GIOŚ (hałas, powietrze, wody
   podziemne) i EGiB Poznania, Wrocławia i Warszawy.
-- **Aktualizacja rejestru w locie**: narzędzie `aktualizuj-rejestr` sprawdza tylko nowe adresy
-  i zapisuje plik obok paczki. Zapis przez plik tymczasowy.
+- **Aktualizacja rejestru w locie**: `aktualizuj-rejestr` sprawdza 12 nowych adresów domyślnie,
+  jednym podejściem i z twardym terminem 8 s na adres, i zapisuje plik obok paczki przez plik
+  tymczasowy. Przebieg domyślny: 7,2 s. Zostało 21 adresów na następny przebieg.
 - **Każdy WFS z rejestru**: `rejestr-pobierz` czyta `GetCapabilities`, bierze typy z żądania,
   ściąga strony po 1 000 i ponawia żądanie jako WFS 1.1.0, gdy 2.0.0 jest odrzucone.
 - **EGiB powiatu**: `dzialki-powiat` nazywa powiat przez ULDK, bierze jego WFS z rejestru i stronicuje
@@ -40,11 +55,14 @@ potem według tematu, i którą całą da się sterować przez MCP.
 
 - Obszar to zawsze warstwa: prostokąt z widoku, rysowanie, prostokąt z narzędzia aplikacji, usuwanie.
   `obszar-json` bierze `bbox` albo GeoJSON. `obszar-jednostka` bierze jednostkę, a `przytnij` tnie
-  warstwę do niej w tym samym przebiegu.
+  warstwę do niej w tym samym przebiegu. `obszar-drzewo` robi to samo z kodu drzewa.
+- `obszar-dodaj` kopiuje bieżący obszar do własnej warstwy (Obszar 1, Obszar 2) i nie ma przycisku:
+  woła je skrypt. `gp.batch` przebiega wtedy jednym narzędziem po kilku obszarach. Zmierzone: dwa
+  obszary, dwa przebiegi, dwie warstwy.
 - `obreby {"teryt": "306401_1"}` wypisuje obręby jednostki z PRG. Zmierzone: Poznań ma 40.
-- Filtr WFS zwraca całe obiekty, więc po pobraniu jest **Przytnij do warstwy**: wbudowany Clip
-  zastępuje warstwę wynikiem. Zaznaczenie na warstwie granicy idzie do warstwy tymczasowej
-  „Granica cięcia”, a ta znika po cięciu.
+- **Filtr granicy**: `<Intersects>` z jednym lub kilkoma pierścieniami w `<Or>`, skracany do budżetu
+  żądania. GUGiK odrzuca skróconą granicę PRG błędem Oracle, więc przebieg mówi o tym i ponawia
+  z prostokątem.
 - **Bramka rozmiaru**: pobranie powyżej limitu pyta najpierw. Limit ma domyślnie 25 MB, suwak pozwala
   5 do 500 MB, sufit to 256 MB. Pusty obszar kończy się przed pierwszą stroną.
 - Limit pobrania: 6 000 obiektów, zasięg 0,15° dla działek i budynków, 20° dla granic.
@@ -57,13 +75,15 @@ potem według tematu, i którą całą da się sterować przez MCP.
   Obszar 2°: 15 s przed zmianami, 5,2 s po nich, 1,6 s przy ciepłym cache.
 - Treść jest parsowana w trakcie czytania, po jednym członie: cztery strony adresów 0,71 s zimne
   i 0,27 s ciepłe, strona gmin 5 MB 1,11 s ciepła. Pamięć ograniczona do jednego członu.
+- **Czytanie par liczb bez listy tokenów sprawdzone i odrzucone**: 0,13 s wobec 0,11 s na stronie
+  15,9 MB, bo `split` i `parse` są już zoptymalizowane. Zostaje ścieżka z `split`.
 - Cache sparsowanych stron zmierzony jako brak zysku (1,29 s wobec 1,34 s) i nie wszedł do kodu.
 
 ### Wyszukiwania, CSV i asystent
 
 - `geokoduj`, `adres-odwrotnie`, `wysokosc`, `dzialka-id`, `parcel`.
 - Narzędzia **Geokoduj CSV** i **Sprawdź działki z CSV**: plik idzie w `files` jako base64, wynik to
-  jedna warstwa z liczbą braków.
+  jedna warstwa z liczbą braków. Plik jest wymagany, więc wołacz bez pliku dostaje odmowę od razu.
 - `skills/polish-geodata/SKILL.md` w paczce, więc asystent widzi ją jako
   `polish-geodata:polish-geodata` i zna całą powierzchnię wtyczki.
 
@@ -74,10 +94,14 @@ potem według tematu, i którą całą da się sterować przez MCP.
 
 ### Języki, build, wydanie
 
-- Angielski jest bazą, polski tłumaczeniem: 209 wpisów `i18n.pl`, zero braków i zero sierot.
+- Angielski jest bazą, polski tłumaczeniem: każdy wpis `i18n.pl` ma swoje miejsce, zero braków i zero
+  sierot.
 - Manifest generowany z `data/` i `tools/manifest.base.json`, z `--check` dla CI.
-- README po angielsku i `README.pl.md` po polsku, oba pilnowane przez `tools/readme_check.py`.
-- Wersja 0.1.0, repozytorium publiczne `Wolren/rustgis-polish-geodata`, CI zielone na Ubuntu, macOS
+- README po angielsku i `README.pl.md` po polsku, oba pilnowane przez `tools/readme_check.py`,
+  z ośmioma zrzutami ekranu z prawdziwej aplikacji.
+- `tools/manifest_check.py` powtarza reguły rejestru i limity hosta, także dla paczki z trzema
+  platformami.
+- 149 testów. Repozytorium publiczne `Wolren/rustgis-polish-geodata`, CI zielone na Ubuntu, macOS
   i Windows, wydanie buduje trzy platformy (macOS jako uniwersalny binarny przez `lipo`) i sprawdza
   determinizm paczki.
 - `tools/fuzz.py`, `tools/probe.py` i `tools/smoke.py` sprawdzają pobieranie, katalog i polecenia.
@@ -86,21 +110,22 @@ potem według tematu, i którą całą da się sterować przez MCP.
 
 ### Do poprawy w kodzie
 
-- **Liczby w `posList`**: największy koszt ciepłego przebiegu to budowa węzłów dla współrzędnych,
-  około 0,8 s na 5 MB strony. Usprawnienie: czytać pary liczb wprost z tekstu, bez węzłów.
+- **Cięcie do jednostki bez sąsiada**: obiekt, który tylko dotyka granicy, zostaje po cięciu hosta,
+  więc liczba dla zbioru granicznego jest górną granicą. Potrzebny test przecinania w samej wtyczce.
 - **Gęstość w fuzzerze**: mierzy czas i werdykt, ale nie porównuje obiektów na km² z prognozą.
-- **Zależne pola w formularzach**: kaskada województwo → powiat → gmina → obręb czeka na hosta.
 
 ### Dane
 
 - **GUNB i KOWR**: rejestr ich nie zna pod tą nazwą, więc nie ma czego dodać bez nowego źródła.
+- **BDOT10k jako typy**: usługa typowana GUGiK odpowiada 401, więc publiczna droga to paczki powiatowe
+  (`BDOT10k - powiaty do pobrania`), nie warstwy per typ.
 - **Więcej WFS**: rejestr ma 1 554 adresy WFS; `rejestr-pobierz` czyta każdy, ale nie ma dla nich
   katalogu z typami i limitami.
 
 ### Host (RustGIS)
 
 - **Okno parametrów polecenia** ([#1547](https://github.com/opengeos/RustGIS/issues/1547)): po nim
-  `geokoduj`, `dzialka-id`, `eziudp` i wiersz rejestru dostaną formularz ze wstęgi.
+  `geokoduj`, `dzialka-id`, `euziudp` i wiersz rejestru dostaną formularz ze wstęgi.
 - **Polecenie otwierające panel**: treść panelu czyta `panel-state`, samego okna agent nie otworzy.
 - **Menu kontekstowe dla wtyczek**: `commands[].contexts` plus wpisy w `mapmenu.rs`.
 - **`createRectangle` dla warstw edytowalnych**: prostokąt z narzędzia aplikacji rysuje grafikę,
@@ -110,5 +135,6 @@ potem według tematu, i którą całą da się sterować przez MCP.
 
 ### Wydanie
 
-- **Wpis w rejestrze**: PR do `opengeos/rustgis-plugins` z `dist/polish-geodata.json`.
-- **Tag `v0.1.0`**: uruchamia wydanie i publikuje paczkę razem z wpisem.
+- **Wpis w rejestrze**: PR do `opengeos/rustgis-plugins` z `dist/polish-geodata.json`, czeka na
+  przegląd opiekuna.
+- **Tag `v0.1.4`**: uruchamia wydanie i publikuje paczkę razem z wpisem.
