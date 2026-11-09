@@ -68,7 +68,10 @@ potem według tematu, i którą całą da się sterować przez MCP albo przez pa
   z prostokątem.
 - **Bramka rozmiaru**: pobranie powyżej limitu pyta najpierw. Limit ma domyślnie 25 MB, suwak pozwala
   5 do 500 MB, sufit to 256 MB. Pusty obszar kończy się przed pierwszą stroną.
-- Limit pobrania: 6 000 obiektów, zasięg 0,15° dla działek i budynków, 20° dla granic.
+- Limit pobrania: 6 000 obiektów; bramka liczy obiekty w obszarze i odmawia z tą liczbą. Zasięg
+  0,15° został tylko dla adresów, ulic, działek i budynków, a 71 warstw rzadkich dostało 20°:
+  turbiny wiatrowe nad 4° × 2° to 262 obiekty w jednym przebiegu, budynki nad 1° × 0,3° to 169 818
+  i odmowa z tą liczbą.
 
 ### Pobieranie: szybkość
 

@@ -118,8 +118,10 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     }))
 }
 
-/// The one gate before a download: the layer's span where the catalogue sets a real limit, the
-/// feature count of the area where it sets none.
+/// The one gate before a download: the layer's span, confirmed by the feature count of the area.
+///
+/// A wide box over a sparse layer is fine, so the degrees limit only refuses when the service says
+/// the area holds more features than one run takes, or gives no count at all.
 fn gate(
     layer: &catalog::WfsLayer,
     area: &str,
@@ -127,35 +129,44 @@ fn gate(
     bbox: [f64; 4],
     lang: Lang,
 ) -> Result<(), String> {
-    if layer.max_span < UNLIMITED_SPAN {
-        if wfs::too_large(layer, bbox) {
-            return Err(text::area_too_large(
+    let limited = layer.max_span < UNLIMITED_SPAN;
+    let over_span = limited && wfs::too_large(layer, bbox);
+    if limited && !over_span {
+        return Ok(());
+    }
+    let filter = filter::polygon_filter(layer, collection).ok();
+    host::progress_line(&text::counting(lang, layer.name, area));
+    let Some(wanted) = needed(layer, bbox, filter.as_deref(), lang) else {
+        // Without a count the span is the only guard there is.
+        return if over_span {
+            Err(text::area_too_large(
                 lang,
                 area,
                 bbox[2] - bbox[0],
                 bbox[3] - bbox[1],
                 layer.name,
                 layer.max_span,
-            ));
-        }
-        return Ok(());
+            ))
+        } else {
+            Ok(())
+        };
+    };
+    // A zero count ends the run before a page is asked for, which would cost a request.
+    if wanted == 0 {
+        return Err(text::area_empty(lang, layer.name, area));
     }
-    let filter = filter::polygon_filter(layer, collection).ok();
-    host::progress_line(&text::counting(lang, layer.name, area));
-    if let Some(wanted) = needed(layer, bbox, filter.as_deref(), lang) {
-        // A zero count ends the run before a page is asked for, which would cost a request.
-        if wanted == 0 {
-            return Err(text::area_empty(lang, layer.name, area));
-        }
-        if wanted > wfs::MAX_TOTAL {
-            return Err(text::area_over_budget(
-                lang,
-                area,
-                wanted,
-                wfs::MAX_TOTAL,
-                layer.name,
-            ));
-        }
+    if wanted > wfs::MAX_TOTAL {
+        return Err(text::area_over_budget(
+            lang,
+            area,
+            wanted,
+            wfs::MAX_TOTAL,
+            layer.name,
+        ));
+    }
+    if over_span {
+        // A tool has no host calls, so the note goes out as a progress line.
+        host::progress_line(&text::span_counted(lang, layer.name, wanted, layer.max_span));
     }
     Ok(())
 }

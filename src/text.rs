@@ -1495,6 +1495,15 @@ pub fn unit_chosen(lang: Lang, name: &str, level: &str) -> String {
     )
 }
 
+/// A box past the layer's span holds few enough features, so the run goes ahead.
+pub fn span_counted(lang: Lang, layer: &str, wanted: usize, span: f64) -> String {
+    pick!(
+        lang,
+        format!("{layer}: the box is wider than {span}\u{00b0}, but it holds {wanted} features, so the run goes ahead"),
+        format!("{layer}: prostokąt szerszy niż {span}\u{00b0}, ale ma {wanted} obiektów, więc przebieg idzie dalej")
+    )
+}
+
 /// A named area layer needs a name, since that is what a batch run points at.
 pub fn area_needs_name(lang: Lang) -> String {
     pick!(
