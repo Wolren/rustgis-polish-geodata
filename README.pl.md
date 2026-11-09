@@ -36,6 +36,8 @@ Pythona ani GDAL-a. Wymaga RustGIS 0.5.0 lub nowszego.
 
 ![Menu Rejestr](assets/register-en.png)
 
+![Działki powiatu z tabelą atrybutów](assets/attributes-en.png)
+
 Zakładkę trzyma jedna zasada: **polecenie pokazuje coś od razu, narzędzie pobiera w tle**, z
 postępem i przyciskiem Anuluj. Wyjątkiem są trzy polecenia wysokości, bo narzędzie nie umie dodać
 warstwy rastrowej.

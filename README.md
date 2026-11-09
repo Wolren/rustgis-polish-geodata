@@ -19,12 +19,41 @@ editable layers.
 
 ![The Polish Geodata tab](assets/ribbon-pl.png)
 
-The tab holds seven groups: basemaps, area, tools, WMS overlays, downloads, elevation and lookups.
+Seven groups hold the tab: basemaps, area, tools, WMS overlays, downloads, elevation and lookups.
+Data names stay as they are published, so the tab reads the same in either language.
+
+![The same tab in English](assets/tab-en.png)
+
+The same tab in English, zoomed to Poland: sixteen WMS menus, the downloads, the elevation models and
+the lookups sit in one row.
+
+![The Orthophoto and DEM menu](assets/wms-en.png)
+
+One menu holds nineteen overlays: hillshade, difference models, the orthophoto series, POLSA land
+cover for seven years, hipsometry and NDVI. One click adds a layer, a second click removes it.
+
+![The Datasets menu](assets/downloads-en.png)
+
+Every download entry opens a background run with progress and a Cancel button.
+
+![The Model menu](assets/elevation-en.png)
+
+The elevation models come from the area you point at: three 1 m models, a look switch and a 3D
+terrain with a vertical scale.
+
+![The Lookup menu](assets/lookups-en.png)
+
+Parcel, address, height and the register's service search sit in the lookups.
 
 ![The Register menu](assets/register-en.png)
 
-The Register menu carries six services the catalogue does not hold: GIOŚ noise, air and groundwater,
-and the EGiB of Poznań, Wrocław and Warsaw.
+The register menu carries six proved services: GIOŚ noise, air and groundwater, and the EGiB of
+Poznań, Wrocław and Warsaw.
+
+![Parcels from a county with the attribute table](assets/attributes-en.png)
+
+The county EGiB arrives as a vector layer: 4 000 parcels of Częstochowa with their identifiers,
+names and obręb codes, ready to select, clip and export.
 
 ## Install
 
