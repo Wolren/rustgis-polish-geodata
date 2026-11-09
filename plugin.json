@@ -1,7 +1,7 @@
 {
   "id": "polish-geodata",
   "name": "Polish Geodata",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Polish national geodata in one tab: 112 raster overlays, 106 WFS datasets and 162 sheet indexes downloaded as editable layers with progress and Cancel, 15 GDOŚ protected-area types, the county EGiB as parcels, a 3 296-address service register with an update tool, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.",
   "author": "Wolren",
   "license": "MIT",
@@ -2241,8 +2241,8 @@
           "name": "limit",
           "label": "Addresses to check",
           "kind": "number",
-          "default": 0,
-          "help": "0 checks every new address; a small number makes a quick trial."
+          "default": 25,
+          "help": "25 by default; 0 checks every new address, which takes hours."
         }
       ]
     },
@@ -2348,7 +2348,8 @@
           "extensions": [
             "csv"
           ],
-          "help": "One address per row, with a header naming the column."
+          "help": "One address per row, with a header naming the column.",
+          "required": true
         },
         {
           "name": "kolumna",
@@ -2378,7 +2379,8 @@
           "extensions": [
             "csv"
           ],
-          "help": "One ULDK identifier per row, such as 306401_1.0001.14/4."
+          "help": "One ULDK identifier per row, such as 306401_1.0001.14/4.",
+          "required": true
         },
         {
           "name": "kolumna",
@@ -2981,7 +2983,6 @@
       "Check every address": "Sprawdź wszystkie adresy",
       "Checks the whole register again instead of only the new addresses: slower, and it keeps what already answers.": "Sprawdza cały rejestr od nowa, nie tylko nowe adresy: wolniej, a to, co już odpowiada, zostaje.",
       "Addresses to check": "Adresy do sprawdzenia",
-      "0 checks every new address; a small number makes a quick trial.": "0 sprawdza wszystkie nowe adresy; mała liczba robi szybką próbę.",
       "Searches the offline EZiUDP register: every Polish WMS and WFS that answered a real request. Pass dodaj with an id to add the WMS as an overlay.": "Przeszukuje offline rejestr EZiUDP: każdy polski WMS i WFS, który odpowiedział na prawdziwe żądanie. Parametr dodaj z identyfikatorem dodaje WMS jako nakładkę.",
       "Stores the panel's download size limit and its standing Download even if large tick, so the tools use them without the form.": "Zapisuje limit rozmiaru pobrania z panelu i stałe zaznaczenie Pobierz mimo rozmiaru, żeby narzędzia brały je bez formularza.",
       "A run stops at this size unless Download even if large is on. A confirmed run stops at 256 MB.": "Pobranie zatrzymuje się na tym rozmiarze, chyba że włączone jest Pobierz mimo rozmiaru. Potwierdzone pobranie kończy się na 256 MB.",
@@ -3028,7 +3029,8 @@
       "Header name of the identifier column; the first column when left out.": "Nazwa nagłówka kolumny z identyfikatorem; bez niej pierwsza kolumna.",
       "Rows to check": "Wiersze do sprawdzenia",
       "200 by default, 2000 at most.": "Domyślnie 200, najwyżej 2000.",
-      "Polish national geodata in one tab: 112 raster overlays, 106 WFS datasets and 162 sheet indexes downloaded as editable layers with progress and Cancel, 15 GDOŚ protected-area types, the county EGiB as parcels, a 3 296-address service register with an update tool, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.": "Polskie dane narodowe w jednej zakładce: 112 nakładek rastrowych, 106 zbiorów WFS i 162 skorowidze pobierane jako warstwy edytowalne z postępem i Anuluj, 15 typów obszarów chronionych GDOŚ, EGiB powiatu jako działki, rejestr 3 296 adresów usług z narzędziem aktualizacji, model wysokości 1 m z terenem 3D oraz wyszukiwania ULDK, UUG i NMT."
+      "Polish national geodata in one tab: 112 raster overlays, 106 WFS datasets and 162 sheet indexes downloaded as editable layers with progress and Cancel, 15 GDOŚ protected-area types, the county EGiB as parcels, a 3 296-address service register with an update tool, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.": "Polskie dane narodowe w jednej zakładce: 112 nakładek rastrowych, 106 zbiorów WFS i 162 skorowidze pobierane jako warstwy edytowalne z postępem i Anuluj, 15 typów obszarów chronionych GDOŚ, EGiB powiatu jako działki, rejestr 3 296 adresów usług z narzędziem aktualizacji, model wysokości 1 m z terenem 3D oraz wyszukiwania ULDK, UUG i NMT.",
+      "25 by default; 0 checks every new address, which takes hours.": "Domyślnie 25; 0 sprawdza każdy nowy adres, co trwa godzinami."
     }
   },
   "panel": {

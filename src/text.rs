@@ -1212,6 +1212,15 @@ pub fn register_updated(lang: Lang, kept: usize, answered: usize, missed: usize)
     )
 }
 
+/// How many addresses the run's budget left for the next run.
+pub fn register_left(lang: Lang, left: usize) -> String {
+    pick!(
+        lang,
+        format!("{left} addresses left for the next run: the register changed, the file did not"),
+        format!("{left} adresów zostało na następny przebieg: rejestr się zmienił, plik nie")
+    )
+}
+
 /// A script named no usable box, so the area command says what it wants.
 pub fn area_needs_box(lang: Lang) -> String {
     pick!(

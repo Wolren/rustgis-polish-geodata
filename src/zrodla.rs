@@ -268,10 +268,13 @@ fn first_layer(caps: &str) -> Option<String> {
     None
 }
 
+/// How long one update run may spend proving addresses, so a smoke run finishes too.
+const BUDGET_SECONDS: u64 = 240;
+
 /// The update tool: reads the register, proves the addresses the file lacks, and keeps the result.
 pub fn update(params: &Value, lang: Lang) -> Result<Value, String> {
     let full = params.get("pelna").and_then(Value::as_bool).unwrap_or(false);
-    let limit = params.get("limit").and_then(Value::as_u64).unwrap_or(0) as usize;
+    let limit = params.get("limit").and_then(Value::as_u64).unwrap_or(25) as usize;
     host::progress_line(&text::register_reading(lang));
 
     let body = http::fetch("https://integracja.gugik.gov.pl/eziudp/api.php?format=json", 120, lang)?;
@@ -301,12 +304,17 @@ pub fn update(params: &Value, lang: Lang) -> Result<Value, String> {
 
     let done = AtomicUsize::new(0);
     let proven = AtomicUsize::new(0);
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(BUDGET_SECONDS);
     let queue = std::sync::Mutex::new(fresh);
     std::thread::scope(|scope| {
         for _ in 0..6 {
             scope.spawn(|| loop {
+                // A run that hits the budget keeps what it proved and leaves the rest for the next run.
                 let entry = {
                     let mut queue = queue.lock().unwrap_or_else(|e| e.into_inner());
+                    if std::time::Instant::now() >= deadline {
+                        break;
+                    }
                     match queue.pop() {
                         Some(entry) => entry,
                         None => break,
@@ -349,8 +357,18 @@ pub fn update(params: &Value, lang: Lang) -> Result<Value, String> {
     fs::rename(&temp, &path).map_err(|e| e.to_string())?;
 
     let answered = proven.load(Ordering::Relaxed);
-    let note = text::register_updated(lang, kept.len(), answered, total.saturating_sub(answered));
-    Ok(json!({ "messages": [note] }))
+    let checked = done.load(Ordering::Relaxed);
+    let mut messages = vec![text::register_updated(
+        lang,
+        kept.len(),
+        answered,
+        checked.saturating_sub(answered),
+    )];
+    // A run that stopped at the budget says so, so the next run is not a surprise.
+    if checked < total {
+        messages.push(text::register_left(lang, total - checked));
+    }
+    Ok(json!({ "messages": messages }))
 }
 
 /// The register as the panel's map list shows it: institution branches with their WMS leaves.
