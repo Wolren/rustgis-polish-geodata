@@ -57,7 +57,7 @@ names and obręb codes, ready to select, clip and export.
 
 ## Install
 
-- **From a package:** install `polish-geodata-0.1.2.rgplugin` through **Plugins › Plugin Manager ›
+- **From a package:** install `polish-geodata-0.1.3.rgplugin` through **Plugins › Plugin Manager ›
   Install from file**.
 - **From a folder:** point at `dist\polish-geodata` through **Plugins › Plugin Manager › Settings ›
   Add Plugin Folder…**.
@@ -106,6 +106,7 @@ Every download needs an area layer. Five buttons make one, and three commands se
 | `obszar-json` | `{"bbox": [west, south, east, north]}` or `{"geojson": <Feature>}` |
 | `obszar-jednostka` | `{"nazwa": "Poznań", "poziom": "gmina"}` and optional `przytnij` |
 | `obreby` | `{"teryt": "306401_1"}`, the obręby a unit publishes |
+| `obszar-dodaj` | `{"nazwa": "Gmina A", "bbox": [w, s, e, n]}`, a named area layer of its own |
 
 `poziom` accepts `gmina`, `powiat`, `wojewodztwo`, `obreb` or `miasto`. A city that PRG lists only
 as a gmina falls back to its gmina boundary. `przytnij` cuts a named layer to that unit in the same
@@ -134,6 +135,11 @@ stops before the first page.
 
 The WFS filter returns whole features that touch the area. **Clip to layer** cuts them with the
 built-in Clip and replaces the layer with the result.
+
+**Batch over several areas.** `obszar-dodaj` fills a named area layer, so one download runs over many
+of them: `gp.batch {"tool": "plugin:polish-geodata/pobierz-granice", "inputs": ["Gmina A", "Gmina B"],
+"params": {"dane": "A03_Granice_gmin"}}` adds one layer per area, in one background run with progress
+and Cancel.
 
 `rejestr-pobierz` reads any WFS the register lists: name the register id and optionally the types,
 and one bounded, paged request per type comes back as a layer. `dzialki-powiat` is the same idea for
@@ -238,7 +244,7 @@ python tools/fuzz.py --cases 12 --seed 1 --report D:/Scratch/fuzz.json
 ```
 
 The packager writes `dist\polish-geodata\` (the folder for the plugin manager),
-`dist\polish-geodata-0.1.2.rgplugin` and `dist\polish-geodata.json` (the registry entry). The
+`dist\polish-geodata-0.1.3.rgplugin` and `dist\polish-geodata.json` (the registry entry). The
 archive is deterministic: two runs on the same binaries give the same SHA-256.
 
 `tools/fuzz.py` runs real downloads with a seed and a timeout, so the same run gives the same cases.

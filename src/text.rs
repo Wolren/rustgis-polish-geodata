@@ -1363,6 +1363,24 @@ pub fn area_empty(lang: Lang, layer: &str, area: &str) -> String {
     )
 }
 
+/// A named area layer needs a name, since that is what a batch run points at.
+pub fn area_needs_name(lang: Lang) -> String {
+    pick!(
+        lang,
+        "give the layer a name: {\"nazwa\": \"Gmina A\", \"bbox\": [w, s, e, n]}".to_string(),
+        "podaj nazwę warstwy: {\"nazwa\": \"Gmina A\", \"bbox\": [w, s, e, n]}".to_string()
+    )
+}
+
+/// A named area layer is on the map, ready for a download.
+pub fn area_added(lang: Lang, name: &str, size: (f64, f64)) -> String {
+    pick!(
+        lang,
+        format!("{}: area {:.0} by {:.0} km, ready for a download or a batch", name, size.0, size.1),
+        format!("{}: obszar {:.0} na {:.0} km, gotowy do pobrania lub serii", name, size.0, size.1)
+    )
+}
+
 /// The 3D scene no longer stands on a model.
 pub fn nmt_terrain_off(lang: Lang) -> String {
     pick!(

@@ -2,7 +2,7 @@
   "manifest": {
     "id": "polish-geodata",
     "name": "Polish Geodata",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "description": "Polish national geodata in one tab: 112 raster overlays, 106 WFS datasets and 162 sheet indexes downloaded as editable layers with progress and Cancel, 15 GDOŚ protected-area types, the county EGiB as parcels, a 3 296-address service register with an update tool, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.",
     "author": "Wolren",
     "license": "MIT",
@@ -134,6 +134,13 @@
       "icon": "g_rect",
       "help": "Sets the area from a box or a GeoJSON shape a script hands in, so no drawing is needed.",
       "params": "{\"bbox\": [16.85, 52.35, 16.95, 52.45]} or {\"geojson\": <Feature or FeatureCollection>}"
+    },
+    {
+      "id": "obszar-dodaj",
+      "label": "Name an\narea",
+      "icon": "polygon_tool",
+      "help": "Fills a named area layer from a box, so gp.batch can run one download over several areas.",
+      "params": "{\"nazwa\": \"Gmina A\", \"bbox\": [16.85, 52.35, 16.95, 52.45]} or {\"nazwa\": \"…\", \"geojson\": <Feature>}"
     },
     {
       "id": "obszar-jednostka",
@@ -762,7 +769,8 @@
           "obszar-prostokat",
           "obszar-przejmij",
           "obszar-anuluj",
-          "obszar-wyczysc"
+          "obszar-wyczysc",
+          "obszar-dodaj"
         ]
       },
       {
@@ -1182,7 +1190,9 @@
       "Rows to check": "Wiersze do sprawdzenia",
       "200 by default, 2000 at most.": "Domyślnie 200, najwyżej 2000.",
       "Polish national geodata in one tab: 112 raster overlays, 106 WFS datasets and 162 sheet indexes downloaded as editable layers with progress and Cancel, 15 GDOŚ protected-area types, the county EGiB as parcels, a 3 296-address service register with an update tool, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.": "Polskie dane narodowe w jednej zakładce: 112 nakładek rastrowych, 106 zbiorów WFS i 162 skorowidze pobierane jako warstwy edytowalne z postępem i Anuluj, 15 typów obszarów chronionych GDOŚ, EGiB powiatu jako działki, rejestr 3 296 adresów usług z narzędziem aktualizacji, model wysokości 1 m z terenem 3D oraz wyszukiwania ULDK, UUG i NMT.",
-      "12 by default; 0 checks every new address, which takes hours.": "Domyślnie 12; 0 sprawdza każdy nowy adres, co trwa godzinami."
+      "12 by default; 0 checks every new address, which takes hours.": "Domyślnie 12; 0 sprawdza każdy nowy adres, co trwa godzinami.",
+      "Fills a named area layer from a box, so gp.batch can run one download over several areas.": "Wypełnia nazwaną warstwę obszaru z prostokąta, więc gp.batch pobiera jednym przebiegiem kilka obszarów.",
+      "Name an\narea": "Nazwij\nobszar"
     }
   },
   "moreMaps": {

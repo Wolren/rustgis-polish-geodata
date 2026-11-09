@@ -108,6 +108,7 @@ fn run(
             .ok_or_else(|| text::area_nothing_drawn(lang)),
         "obszar-widok" => obszar::rectangle_from_view(host, lang),
         "obszar-json" => obszar::from_json(host, request, lang),
+        "obszar-dodaj" => obszar::add_named(host, request, lang),
         "obszar-jednostka" => prg::area(host, params, lang),
         "obreby" => prg::obreby(params, lang),
         "dzialki-powiat" => egib::from_area(host, params, lang),

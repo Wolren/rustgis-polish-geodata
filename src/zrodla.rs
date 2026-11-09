@@ -221,7 +221,7 @@ pub fn add_service(host: &mut Host, entry: &Registered, lang: Lang) -> Result<Va
 }
 
 /// What one address needs to be kept: a WMS layer that draws a tile, or a WFS capabilities document.
-fn prove(url: &str, kind: &str, lang: Lang) -> Result<String, String> {
+fn prove(url: &str, kind: &str) -> Result<String, String> {
     let joined = |extra: &str| {
         let separator = if url.contains('?') { '&' } else { '?' };
         format!("{url}{separator}{extra}")
@@ -328,7 +328,7 @@ pub fn update(params: &Value, lang: Lang) -> Result<Value, String> {
                 };
                 let kind = entry.kind.clone();
                 let url = entry.url.clone();
-                if let Ok(layer) = prove(&url, &kind, lang) {
+                if let Ok(layer) = prove(&url, &kind) {
                     entry.layer = layer;
                     entry.proven = true;
                     proven.fetch_add(1, Ordering::Relaxed);

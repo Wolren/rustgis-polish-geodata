@@ -218,6 +218,22 @@ pub fn from_json(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, 
     Ok(json!({ "layer": name, "mode": Mode::View.key(), "box": box_lon }))
 }
 
+/// Fills a named polygon layer from a box, so `gp.batch` can run a download over several areas.
+pub fn add_named(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, String> {
+    let params = request.get("params").cloned().unwrap_or(Value::Null);
+    let name = params
+        .get("nazwa")
+        .or_else(|| params.get("name"))
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .ok_or_else(|| text::area_needs_name(lang))?;
+    let box_lon = read_box(&params).ok_or_else(|| text::area_needs_box(lang))?;
+    refill(host, name, &ring(box_lon), lang)?;
+    host.notify(&text::area_added(lang, name, size_km(box_lon)));
+    Ok(json!({ "layer": name, "box": box_lon }))
+}
+
 /// The box a request names, from `bbox` numbers or from a GeoJSON shape's bounds.
 fn read_box(params: &Value) -> Option<[f64; 4]> {
     if let Some(values) = params.get("bbox").and_then(Value::as_array) {
