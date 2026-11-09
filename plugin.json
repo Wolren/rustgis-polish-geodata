@@ -2488,17 +2488,24 @@
             ]
           },
           {
-            "menu": "Maps",
+            "menu": "GUGiK maps and more",
             "icon": "basemap",
-            "help": "Topographic, landscape, archival and thematic maps.",
+            "help": "Topographic and thematic GUGiK maps, statistics and ASG-EUPOS.",
             "items": [
+              "usluga-dane-hydrologiczne-polski-w-ukladzie-1992-zgeneralizowane",
               "usluga-inspire-tn-sieci-transportowe-bdot",
+              "usluga-krajowy-osrodek-wsparcia-rolnictwa-dzialki",
               "usluga-mapy-sozologiczne-do-przegladania",
               "usluga-nowe-budynki-w-bdot10k",
+              "usluga-obiekty-uzytecznosci-publicznej-defibrylatory",
+              "usluga-obiekty-uzytecznosci-publicznej-zdrowie",
               "usluga-paczki-powiatowe-z-archiwalnymi-danymi-bdot10k",
               "usluga-rastrowa-krajobrazowa-mapa-polski-do-przegladania",
               "usluga-rastrowa-mapa-administracyjna-polski-do-przegladania",
               "usluga-rastrowa-ogolnogeograficzna-mapa-polski-do-przegladania",
+              "usluga-rejestr-wnioskow-decyzji-i-zgloszen",
+              "usluga-schrony",
+              "usluga-siec-drogowa-z-bazy-projektu-openstreetmap",
               "usluga-skorowidz-map-baza-danych-obiektow-topograficznych-bdot",
               "usluga-skorowidz-map-mapa-sozologiczna",
               "usluga-skorowidz-map-zdjecia-lotnicze",
@@ -2507,12 +2514,16 @@
               "usluga-statystyki-obiektow-innych-w-bdot10k",
               "usluga-statystyki-sieci-komunikacyjnej-w-bdot10k",
               "usluga-statystyki-sieci-wodnej-w-bdot10k",
+              "usluga-tereny-zamkniete-ministerstwo-infrastruktury",
               "usluga-usluga-przegladania-danych-bazy-danych-obiektow-topografi",
               "usluga-usluga-przegladania-danych-inspire-tematu-nazwy-geografic",
               "usluga-usluga-przegladania-danych-topograficznych-dla-polski",
               "usluga-usluga-przegladania-tresci-bazy-danych-ogolnogeograficzny",
               "usluga-usluga-przegladania-wms-rastrowych-map-topograficznych-dl",
-              "usluga-usluga-wms-publikujaca-statystyki-budynkow-i-budowli-w-bd"
+              "usluga-usluga-wms-publikujaca-statystyki-budynkow-i-budowli-w-bd",
+              "usluga-usluga-wms-publikujca-wykaz-portali-mapowych",
+              "usluga-wykaz-szkol-i-placowek-oswiatowych",
+              "usluga-zasiegi-i-placowki-zus"
             ]
           },
           {
@@ -2543,24 +2554,6 @@
               "usluga-usluga-przegladania-danych-inspire-tematu-adresy-dla-obsz",
               "usluga-usluga-przegladania-danych-inspire-tematu-dzialki-katastr",
               "usluga-wms-krajowej-integracji-numeracji-adresowej-do-przegladan"
-            ]
-          },
-          {
-            "menu": "Other GUGiK data",
-            "icon": "globe_view",
-            "help": "Statistics, ASG-EUPOS, archiving, elections and the rest.",
-            "items": [
-              "usluga-dane-hydrologiczne-polski-w-ukladzie-1992-zgeneralizowane",
-              "usluga-krajowy-osrodek-wsparcia-rolnictwa-dzialki",
-              "usluga-obiekty-uzytecznosci-publicznej-defibrylatory",
-              "usluga-obiekty-uzytecznosci-publicznej-zdrowie",
-              "usluga-rejestr-wnioskow-decyzji-i-zgloszen",
-              "usluga-schrony",
-              "usluga-siec-drogowa-z-bazy-projektu-openstreetmap",
-              "usluga-tereny-zamkniete-ministerstwo-infrastruktury",
-              "usluga-usluga-wms-publikujca-wykaz-portali-mapowych",
-              "usluga-wykaz-szkol-i-placowek-oswiatowych",
-              "usluga-zasiegi-i-placowki-zus"
             ]
           },
           {
@@ -2600,31 +2593,9 @@
             ]
           },
           {
-            "menu": "Heritage (NID)",
-            "icon": "bookmark",
-            "help": "Monuments, archaeological records and UNESCO sites.",
-            "items": [
-              "usluga-pomniki-historii-inspire",
-              "usluga-rejestr-zabytkow-archeologicznych-inspire",
-              "usluga-rejestr-zabytkow-nieruchomych-inspire",
-              "usluga-zasieg-zabytkow-nieruchomych"
-            ]
-          },
-          {
-            "menu": "Forests (BDL)",
-            "icon": "label",
-            "help": "Forest data of the State Forests' Bank of Forest Data.",
-            "items": [
-              "usluga-usluga-przegladania-wms-danych-banku-danych-o-lasach",
-              "usluga-usluga-przegladania-wms-danych-banku-danych-o-lasach-wg-k",
-              "usluga-zagrozenie-pozarowe-w-lasach",
-              "usluga-zakazy-wstepu-do-lasu"
-            ]
-          },
-          {
-            "menu": "Other institutions",
+            "menu": "Institutions and heritage",
             "icon": "globe_view",
-            "help": "GDOŚ, PKP PLK, GUS, PGW Wody Polskie and IMGW-PIB.",
+            "help": "GUS, IMGW, NID heritage, BDL forests and the rest of the institutions.",
             "items": [
               "usluga-formy-ochrony-przyrody",
               "usluga-infrastruktura-kolejowa",
@@ -2633,64 +2604,54 @@
               "usluga-obserwacje-hydrologiczne-imgw",
               "usluga-obserwacje-meteorologiczne-imgw",
               "usluga-obwody-spisowe-gus",
+              "usluga-pomniki-historii-inspire",
+              "usluga-rejestr-zabytkow-archeologicznych-inspire",
+              "usluga-rejestr-zabytkow-nieruchomych-inspire",
               "usluga-siec-pomiarowa-imgw",
-              "usluga-strefy-zagrozenia-naturalnego-zjawiska-meteorologiczne-w"
+              "usluga-strefy-zagrozenia-naturalnego-zjawiska-meteorologiczne-w",
+              "usluga-usluga-przegladania-wms-danych-banku-danych-o-lasach",
+              "usluga-usluga-przegladania-wms-danych-banku-danych-o-lasach-wg-k",
+              "usluga-zagrozenie-pozarowe-w-lasach",
+              "usluga-zakazy-wstepu-do-lasu",
+              "usluga-zasieg-zabytkow-nieruchomych"
             ]
           },
           {
-            "menu": "Wody: PGW",
+            "menu": "Wody Polskie",
             "icon": "map",
             "items": [
-              "wody-apgw"
-            ]
-          },
-          {
-            "menu": "Wody: powódź",
-            "icon": "map",
-            "items": [
+              "wody-apgw",
+              "wody-iiapgw-2023",
+              "wody-mrp-ludzie-02",
+              "wody-mrp-ludzie-1",
+              "wody-mrp-ludzie-10",
+              "wody-mrp-ludzie-budowla",
+              "wody-mrp-ludzie-wal",
+              "wody-mrp-ludzie-wal-sztormowy",
+              "wody-mrp-srodowisko-02",
+              "wody-mrp-srodowisko-1",
+              "wody-mrp-srodowisko-10",
+              "wody-mrp-srodowisko-budowla",
+              "wody-mrp-srodowisko-wal",
+              "wody-mrp-srodowisko-wal-sztormowy",
               "wody-mzp-glebokosc-02",
               "wody-mzp-glebokosc-1",
               "wody-mzp-glebokosc-10",
-              "wody-mzp-zniszczenie-budowli",
-              "wody-mzp-zniszczenie-walu",
-              "wody-mzp-zniszczenie-walu-sztormowego",
               "wody-mzp-orientacyjna",
               "wody-mzp-oszp",
               "wody-mzp-predkosc-02",
               "wody-mzp-predkosc-1",
               "wody-mzp-predkosc-10",
+              "wody-mzp-zniszczenie-budowli",
+              "wody-mzp-zniszczenie-walu",
+              "wody-mzp-zniszczenie-walu-sztormowego",
+              "wody-pgw-struktura",
+              "wody-ppss",
+              "wody-pzrp",
               "wody-worp-budowle",
               "wody-worp-morze",
               "wody-worp-rzeki",
               "wody-worp-v2"
-            ]
-          },
-          {
-            "menu": "Wody: ryzyko",
-            "icon": "map",
-            "items": [
-              "wody-mrp-ludzie-02",
-              "wody-mrp-ludzie-1",
-              "wody-mrp-ludzie-10",
-              "wody-mrp-ludzie-wal-sztormowy",
-              "wody-mrp-ludzie-budowla",
-              "wody-mrp-ludzie-wal",
-              "wody-mrp-srodowisko-02",
-              "wody-mrp-srodowisko-1",
-              "wody-mrp-srodowisko-10",
-              "wody-mrp-srodowisko-wal-sztormowy",
-              "wody-mrp-srodowisko-budowla",
-              "wody-mrp-srodowisko-wal",
-              "wody-ppss",
-              "wody-pzrp"
-            ]
-          },
-          {
-            "menu": "Wody: inne",
-            "icon": "map",
-            "items": [
-              "wody-iiapgw-2023",
-              "wody-pgw-struktura"
             ]
           },
           {
@@ -2875,9 +2836,6 @@
       "Filled in when the panel opens.": "Wypełniane przy otwarciu panelu.",
       "Finds an address with GUGiK's UUG service and adds it as a point: city, street, number, postcode and the PL-1992 position.": "Znajduje adres w usłudze UUG GUGiK i dodaje go jako punkt: miejscowość, ulica, numer, kod pocztowy i pozycja w układzie PL-1992.",
       "Finds the parcel under the map centre and adds its boundary with its attributes.": "Znajduje działkę pod środkiem mapy i dodaje jej granice wraz z atrybutami.",
-      "Forest data of the State Forests' Bank of Forest Data.": "Dane leśne Banku Danych o Lasach.",
-      "Forests (BDL)": "Lasy (BDL)",
-      "GDOŚ, PKP PLK, GUS, PGW Wody Polskie and IMGW-PIB.": "GDOŚ, PKP PLK, GUS, PGW Wody Polskie i IMGW-PIB.",
       "GUGiK orthophoto (WMTS, EPSG:3857). Click again to remove it.": "Ortofotomapa GUGiK (WMTS, EPSG:3857). Kliknij ponownie, aby usunąć.",
       "GUGiK types for addresses, buildings and their statistics.": "Typy GUGiK dla adresów, budynków i ich statystyk.",
       "Geocode\naddress": "Geokoduj\nadres",
@@ -2885,27 +2843,22 @@
       "Geological, hydrogeological and environmental maps of the Polish Geological Institute.": "Mapy geologiczne, hydrogeologiczne i środowiskowe Państwowego Instytutu Geologicznego.",
       "Geology (PIG)": "Geologia (PIG)",
       "Height\nat point": "Wysokość\nw punkcie",
-      "Heritage (NID)": "Zabytki (NID)",
       "Hillshade of the digital terrain model.": "Cieniowanie numerycznego modelu terenu.",
       "Historical maps": "Mapy historyczne",
       "Lists every service and every dataset, with the ids a script or an agent runs, optionally narrowed by institution or by a word of the name.": "Wypisuje wszystkie usługi i zbiory danych wraz z identyfikatorami, których używa skrypt albo agent; można zawęzić do instytucji albo do słowa z nazwy.",
       "Lookups": "Wyszukiwanie",
       "Map view": "Widok mapy",
       "Map": "Mapa",
-      "Maps": "Mapy",
       "Maritime zones, road and rail statistics, historic monuments and the rest.": "Strefy morskie, statystyki dróg i kolei, zabytki oraz pozostałe dane.",
       "Measured when the panel opens.": "Mierzone przy otwarciu panelu.",
       "Model": "Model",
-      "Monuments, archaeological records and UNESCO sites.": "Zabytki, rejestr archeologiczny i obiekty UNESCO.",
       "Moves the rectangle drawn on the map into the area layer and removes the layer it was drawn in. A download and the elevation model use it.": "Przenosi prostokąt narysowany na mapie do warstwy obszaru i usuwa warstwę, w której go narysowano. Używa go pobieranie i model wysokości.",
       "Offices and courts": "Urzędy i sądy",
       "Open the panel to read the view.": "Otwórz panel, aby odczytać widok.",
       "Orthophoto and DEM": "Ortofoto i NMT",
       "Orthophoto, elevation, vegetation and archive imagery.": "Ortofoto, wysokości, wegetacja i zdjęcia archiwalne.",
       "Orthophoto, hillshade and the topographic overlay.": "Ortofoto, cieniowanie i nakładka topograficzna.",
-      "Other GUGiK data": "Pozostałe dane GUGiK",
       "Other data": "Pozostałe dane",
-      "Other institutions": "Pozostałe instytucje",
       "PRG\nboundaries": "Granice\nPRG",
       "PRG boundaries, place names and the administrative units around them.": "Granice PRG, nazwy geograficzne i jednostki administracyjne.",
       "Parcel\nfrom ULDK": "Działka\nz ULDK",
@@ -2928,7 +2881,6 @@
       "Removes the area layer, so the next rectangle or drawn shape starts empty.": "Usuwa warstwę obszaru, żeby następny prostokąt albo rysowany kształt zaczynał od zera.",
       "Searches the national register of spatial data sets and services: which body holds what, and the address of its WMS, WFS and CSW. Narrows the register, never dumps it.": "Przeszukuje krajową ewidencję zbiorów i usług danych przestrzennych: kto co ma i pod jakim adresem są jego WMS, WFS i CSW. Zawęża ewidencję, nigdy nie zwraca jej w całości.",
       "Shades the newest elevation model again. Pass colours to band the heights instead.": "Ponownie cieniuje najnowszy model wysokości. Podaj parametr colours, aby pokazać wysokości w barwach.",
-      "Statistics, ASG-EUPOS, archiving, elections and the rest.": "Statystyki, ASG-EUPOS, archiwizacja, wybory i pozostałe dane.",
       "Stored answers": "Zapisane odpowiedzi",
       "Set the model's style": "Ustaw styl modelu",
       "Surface\nNMPT": "Pokrycie\nNMPT",
@@ -2943,7 +2895,6 @@
       "The terrain model in PL-EVRF2007-NH. GUGiK serves it as an ASCII grid, so one click covers less ground than the GeoTIFF.": "Model wysokości w PL-EVRF2007-NH. GUGiK udostępnia go jako siatkę ASCII, więc jedno kliknięcie obejmuje mniejszy obszar niż GeoTIFF.",
       "Tools": "Narzędzia",
       "Topographic object database as an overlay (visible from city scale).": "Baza Danych Obiektów Topograficznych jako warstwa nakładkowa (widoczna od skali miasta).",
-      "Topographic, landscape, archival and thematic maps.": "Mapy topograficzne, krajobrazowe, archiwalne i tematyczne.",
       "Updates the panel: the view, the area layer, the catalogue and the stored answers.": "Odświeża panel: widok, warstwę obszaru, katalog i zapisane odpowiedzi.",
       "Vector": "Wektory",
       "WIG and German survey maps of the 19th and 20th centuries, as scans.": "Arkusze WIG i mapy niemieckie z XIX i XX wieku, jako skany.",
@@ -3040,7 +2991,11 @@
       "Polish national geodata in one tab: 112 raster overlays, 106 WFS datasets and 162 sheet indexes downloaded as editable layers with progress and Cancel, 15 GDOŚ protected-area types, the county EGiB as parcels, a 3 296-address service register with an update tool, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.": "Polskie dane narodowe w jednej zakładce: 112 nakładek rastrowych, 106 zbiorów WFS i 162 skorowidze pobierane jako warstwy edytowalne z postępem i Anuluj, 15 typów obszarów chronionych GDOŚ, EGiB powiatu jako działki, rejestr 3 296 adresów usług z narzędziem aktualizacji, model wysokości 1 m z terenem 3D oraz wyszukiwania ULDK, UUG i NMT.",
       "12 by default; 0 checks every new address, which takes hours.": "Domyślnie 12; 0 sprawdza każdy nowy adres, co trwa godzinami.",
       "Fills a named area layer from a box, so gp.batch can run one download over several areas.": "Wypełnia nazwaną warstwę obszaru z prostokąta, więc gp.batch pobiera jednym przebiegiem kilka obszarów.",
-      "Name an\narea": "Nazwij\nobszar"
+      "Name an\narea": "Nazwij\nobszar",
+      "GUGiK maps and more": "GUGiK: mapy i inne",
+      "Institutions and heritage": "Instytucje i dziedzictwo",
+      "Topographic and thematic GUGiK maps, statistics and ASG-EUPOS.": "Topograficzne i tematyczne mapy GUGiK, statystyki i ASG-EUPOS.",
+      "GUS, IMGW, NID heritage, BDL forests and the rest of the institutions.": "GUS, IMGW, dziedzictwo NID, lasy BDL i pozostałe instytucje."
     }
   },
   "panel": {

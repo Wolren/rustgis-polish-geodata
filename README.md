@@ -24,8 +24,8 @@ Data names stay as they are published, so the tab reads the same in either langu
 
 ![The same tab in English](assets/tab-en.png)
 
-The same tab in English, zoomed to Poland: sixteen WMS menus, the downloads, the elevation models and
-the lookups sit in one row.
+The same tab in English, zoomed to Poland: ten WMS menus, the downloads, the elevation models and the
+lookups sit in two rows.
 
 ![The Orthophoto and DEM menu](assets/wms-en.png)
 
@@ -77,7 +77,7 @@ RustGIS 0.5.0 or newer.
 | **Basemaps** | 4 raster maps and 4 vector overlays: orthophoto, BDOT10k, parcels, addresses, boundaries |
 | **Area** | area from the view, draw, rectangle, adopt, cancel, remove |
 | **Tools** | the panel and the clip to a boundary |
-| **WMS overlays** | GUGiK (76), historical maps (11), PIG geology (11), NID (4), BDL (4), other institutions (IMGW 4, GUS 2), **More maps** (Wody Polskie 32, Cartomatic 45), **Register** (6) |
+| **WMS overlays** | ten menus: GUGiK (76 through three menus), historical maps (11), PIG geology (11), institutions and heritage (17), Wody Polskie (32), Cartomatic (45 through two menus), Register (6) |
 | **Downloads** | six WFS tools, four package tools, protected areas (GDOŚ), the county EGiB, any register WFS |
 | **Elevation** | three elevation models, a look switch, 3D terrain and its switch off |
 | **Lookups** | parcel, address, height, find a service, update the register, obręby, the view's register |

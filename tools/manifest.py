@@ -179,6 +179,11 @@ def wrapped(label, width=LABEL_WIDTH):
 
 def wody_folders(meta, wody, literal):
     """The Wody Polskie folders of 'More maps': PGW, flood, risk, then a bucket for a new family."""
+    # One menu holds all of them when they fit, so the ribbon keeps its rows.
+    if len(wody) <= MAX_MENU_ITEMS:
+        label = meta["wody"]
+        literal.add(label)
+        return [{"menu": label, "icon": "map", "items": sorted(command["id"] for command in wody)}]
     buckets = {}
     for command in wody:
         buckets.setdefault(wody_folder(command["id"]), []).append(command["id"])
@@ -487,8 +492,10 @@ def build():
 
     # The institution lives on each catalogue entry, so no list here can drift from the catalogue.
     by_institution = {}
+    merge = base.get("menuMerge", {})
     for service in services:
         key = service.get("institutionMenu") or service.get("institution")
+        key = merge.get(key, key)
         if not key:
             raise Bad(f"data/services.json: {service['id']} names no institution")
         by_institution.setdefault(key, []).append(service["cmd"])
@@ -506,7 +513,7 @@ def build():
         menus[key] = {**meta, "items": sorted(cmds)}
     # A `children` menu is a folder on the ribbon: GUGiK holds four themes, one trigger not four.
     folders = {key: meta for key, meta in base["institutionMenus"].items() if "children" in meta}
-    stale = [key for key in base["institutionMenus"] if key not in menus and key not in folders]
+    stale = [key for key in base["institutionMenus"] if key not in menus and key not in folders and key not in merge]
     if stale:
         raise Bad(f"menu '{stale[0]}' has no service in the catalogue")
     for key, meta in folders.items():
