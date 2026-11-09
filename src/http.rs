@@ -116,11 +116,18 @@ fn request_with(url: &str, timeout_secs: u64, error_body: bool) -> Result<String
     String::from_utf8(bytes).map_err(|_| Failure::NotUtf8)
 }
 
-/// One attempt with no retry: a register probe treats a slow service as a dead one.
+/// One attempt with a hard deadline: a register probe treats a slow service as a dead one.
 ///
-/// An error body is not read, because a server that stalls mid-body would hold the probe open.
+/// A socket timeout does not cover name resolution, and one host name took 32 s on Windows, so the
+/// request runs on its own thread and the caller stops waiting at the deadline.
 pub fn probe(url: &str, timeout_secs: u64) -> Option<String> {
-    request_with(url, timeout_secs, false).ok()
+    let (sender, receiver) = std::sync::mpsc::channel();
+    let address = url.to_string();
+    std::thread::spawn(move || {
+        let _ = sender.send(request_with(&address, timeout_secs, false).ok());
+    });
+    let deadline = Duration::from_secs(timeout_secs + 2);
+    receiver.recv_timeout(deadline).ok().flatten()
 }
 
 /// Streams a body into `sink`, from the cache when fresh, and keeps it for the next run.
