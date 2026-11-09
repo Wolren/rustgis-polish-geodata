@@ -55,6 +55,11 @@ pub fn area(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String
     if rings.is_empty() {
         return Err(text::prg_no_unit(lang, name, &level));
     }
+    // A caller that only needs the boundary, not the area layer, gets the rings back.
+    if params.get("ring_only").and_then(Value::as_bool).unwrap_or(false) {
+        let box_lon = obszar::bounds_of(&rings);
+        return Ok(json!({ "rings": rings.len(), "box": box_lon, "unit": name, "level": level }));
+    }
     obszar::drop_drawing(host);
     let layer = obszar::area_layer_name(host, lang)?;
     obszar::fill_polygons(host, &layer, &rings, lang)?;

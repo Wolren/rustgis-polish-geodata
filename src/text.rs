@@ -1372,6 +1372,78 @@ pub fn unit_not_chosen(lang: Lang) -> String {
     )
 }
 
+/// The one-step download needs the dataset label it should fetch.
+pub fn typed_needs_dataset(lang: Lang) -> String {
+    pick!(
+        lang,
+        "name the dataset: {\"dane\": \"Punkty adresowe\", \"unit\": \"1464011\"}".to_string(),
+        "podaj zbiór: {\"dane\": \"Punkty adresowe\", \"unit\": \"1464011\"}".to_string()
+    )
+}
+
+/// A unit has no feature of the dataset within its boundary.
+pub fn typed_empty(lang: Lang, dataset: &str, unit: &str) -> String {
+    pick!(
+        lang,
+        format!("{dataset} has no feature in {unit}"),
+        format!("{dataset} nie ma obiektu w {unit}")
+    )
+}
+
+/// The download reached the run's cap, so the layer holds only the first features.
+pub fn typed_capped(lang: Lang, features: usize) -> String {
+    pick!(
+        lang,
+        format!("{features} features took the whole budget: pick a smaller unit for the rest"),
+        format!("{features} obiektów zajęło cały budżet: wybierz mniejszą jednostkę dla reszty")
+    )
+}
+
+/// The layer a typed download lands in: the type, then the unit it covers.
+pub fn typed_layer(lang: Lang, dataset: &str, unit: &str, level: &str) -> String {
+    let level = match (lang, level) {
+        (Lang::Pl, "wojewodztwo") => "województwo",
+        (Lang::Pl, "powiat") => "powiat",
+        (Lang::Pl, "gmina") => "gmina",
+        (_, other) => other,
+    };
+    let _ = level;
+    format!("{dataset} - {unit}")
+}
+
+/// The clip refused, so the layer holds the box result and says so.
+pub fn typed_clip_failed(lang: Lang, error: &str) -> String {
+    pick!(
+        lang,
+        format!("the clip did not run ({error}): the layer holds the box result"),
+        format!("cięcie nie ruszyło ({error}): warstwa ma wynik z prostokąta")
+    )
+}
+
+/// Features the clip left as lines along the boundary went away.
+pub fn typed_shavings(lang: Lang, dropped: u64) -> String {
+    pick!(
+        lang,
+        format!("{dropped} features only touched the boundary and had no area: dropped"),
+        format!("{dropped} obiektów tylko dotykało granicy i nie miało powierzchni: usunięte")
+    )
+}
+
+/// The typed download is on the map, already cut to the unit.
+pub fn typed_added(lang: Lang, layer: &str, features: u64, unit: &str, level: &str) -> String {
+    let level = match (lang, level) {
+        (Lang::Pl, "wojewodztwo") => "województwo",
+        (Lang::Pl, "powiat") => "powiat",
+        (Lang::Pl, "gmina") => "gmina",
+        (_, other) => other,
+    };
+    pick!(
+        lang,
+        format!("{layer}: {features} features cut to {level} {unit}"),
+        format!("{layer}: {features} obiektów przycięte do {level} {unit}")
+    )
+}
+
 /// The service refused the boundary as a filter, so the run used the area's box.
 pub fn filter_fell_back(lang: Lang) -> String {
     pick!(

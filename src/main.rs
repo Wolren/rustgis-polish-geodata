@@ -113,6 +113,7 @@ fn run(
         "obszar-drzewo" => obszar::from_unit_tree(host, request, lang),
         "obszar-jednostka" => prg::area(host, params, lang),
         "obreby" => prg::obreby(params, lang),
+        "pobierz-typ" => egib::typed_for_unit(host, params, lang),
         "dzialki-powiat" => egib::from_area(host, params, lang),
         "rejestr-pobierz" => egib::from_register(host, params, lang),
         "obszar-anuluj" => obszar::abort(host, lang),

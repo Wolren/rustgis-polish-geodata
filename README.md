@@ -111,6 +111,7 @@ node sets the area from PRG, and a script passes `przytnij` to cut a layer in th
 | `obszar-jednostka` | `{"nazwa": "Poznań", "poziom": "gmina"}` and optional `przytnij` |
 | `obreby` | `{"teryt": "306401_1"}`, the obręby a unit publishes |
 | `obszar-drzewo` | `{"unit": "1416"}`: the code the panel's tree gives, for a script |
+| `pobierz-typ` | `{"dane": "Punkty adresowe", "unit": "1464011"}`: one call, the unit sets the area, the type downloads and the layer comes cut to the unit |
 | `obszar-dodaj` | a script only: keeps the current area as Area 1, Area 2, or takes `{"nazwa": "Gmina A", "bbox": […]}` |
 
 `poziom` accepts `gmina`, `powiat`, `wojewodztwo`, `obreb` or `miasto`. A city that PRG lists only
@@ -140,6 +141,12 @@ stops before the first page.
 
 The WFS filter returns whole features that touch the area. **Clip to layer** cuts them with the
 built-in Clip and replaces the layer with the result.
+
+**One call, one typed layer.** `pobierz-typ {"dane": "Punkty adresowe", "unit": "1464011"}` reads the
+unit boundary from PRG, sets it as the area, downloads that dataset and cuts the layer to the unit.
+Measured: 688 address points for gmina Siedlce, 21 gminy for powiat ostrowski. The cut keeps a
+neighbour that touches the boundary when the service had to answer from the box, so treat the count
+of a boundary dataset as an upper bound and clip again when it matters.
 
 **Batch over several areas.** The command `obszar-dodaj` keeps the current area as Area 1, then Area 2,
 and one download runs over all of them: `gp.batch {"tool": "plugin:polish-geodata/pobierz-granice", "inputs": ["Gmina A", "Gmina B"],

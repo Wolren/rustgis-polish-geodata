@@ -5,10 +5,12 @@
 //! box. The chain: ULDK names the county under the area, the register gives its WFS address, the
 //! capabilities name the types, and one bounded `GetFeature` per type becomes a layer.
 
+use crate::catalog;
 use crate::gml;
 use crate::host::{self, Host};
 use crate::http;
 use crate::text::{self, Lang};
+use crate::wfs;
 use crate::zrodla;
 use serde_json::{json, Value};
 
@@ -18,6 +20,8 @@ const ULDK: &str = "https://uldk.gugik.gov.pl/";
 const MAX_FEATURES: usize = 20_000;
 /// How many features one page asks for.
 const PAGE: usize = 1000;
+/// A clipped feature smaller than this in square degrees is a line on the boundary, not a shape.
+const MIN_AREA: f64 = 1e-12;
 
 /// Adds the county's parcels and buildings for the area the request names.
 pub fn from_area(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String> {
@@ -100,6 +104,164 @@ pub fn from_area(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, S
         "capped": capped,
         "service": service.url,
     }))
+}
+
+/// Downloads one typed dataset for a unit named by its code, then cuts it to the unit.
+///
+/// This is the one-call query: a gmina and a dataset label answer a layer of that type, clipped to
+/// the unit's boundary, with no area layer and no second command.
+pub fn typed_for_unit(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String> {
+    let label = params
+        .get("dane")
+        .or_else(|| params.get("dataset"))
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .ok_or_else(|| text::typed_needs_dataset(lang))?;
+    let code = params
+        .get("unit")
+        .or_else(|| params.get("jednostka"))
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .ok_or_else(|| text::unit_not_chosen(lang))?;
+    let (unit, level) = crate::jednostki::resolve(code)
+        .ok_or_else(|| text::unit_unknown(lang, code))?;
+    let layer = catalog::wfs_by_label(label).ok_or_else(|| text::unknown_dataset(lang, label))?;
+
+    // The unit becomes the area, so the clip and the next download both have it.
+    let area = crate::prg::area(host, &json!({ "nazwa": unit, "poziom": level, "kod": code }), lang)?;
+    let boundary = area
+        .get("layer")
+        .and_then(Value::as_str)
+        .unwrap_or_default()
+        .to_string();
+    let box_lon = area
+        .get("box")
+        .and_then(Value::as_array)
+        .map(|values| values.iter().filter_map(Value::as_f64).collect::<Vec<f64>>())
+        .filter(|values| values.len() == 4)
+        .ok_or_else(|| text::area_no_geometry(lang, &unit))?;
+    let bbox = [box_lon[0], box_lon[1], box_lon[2], box_lon[3]];
+
+    let mut notes = Vec::new();
+    let mut report = |line: &str| notes.push(line.to_string());
+    // The fetch budget counts bytes, as the download tools count it: the saved limit in megabytes.
+    let limit = (crate::cache::settings().limit_mb.max(1) * 1_000_000) as u64;
+    let download = wfs::fetch(layer, bbox, None, &mut report, lang, limit)?;
+    if download.features.is_empty() {
+        return Err(text::typed_empty(lang, label, &unit));
+    }
+    if download.truncated {
+        host.notify(&text::typed_capped(lang, download.features.len()));
+    }
+
+    // The unit's ring cuts the box result: a neighbour's feature only stays when it reaches inside.
+    let name = text::typed_layer(lang, label, &unit, &level);
+    let geojson = json!({ "type": "FeatureCollection", "features": download.features });
+    host.add_layer(&name, geojson)?;
+    let kept = match crate::clip::to_area(host, &name, &boundary, lang) {
+        Ok(answer) => answer
+            .get("features")
+            .and_then(Value::as_u64)
+            .unwrap_or_default(),
+        Err(error) => {
+            host.notify(&text::typed_clip_failed(lang, &error));
+            download.features.len() as u64
+        }
+    };
+    // A feature that only touches the boundary comes out of the clip with no area, so it goes.
+    let solid = drop_shavings(host, &name, lang).unwrap_or(kept);
+    if solid < kept {
+        host.notify(&text::typed_shavings(lang, kept - solid));
+    }
+    host.notify(&text::typed_added(lang, &name, solid, &unit, &level));
+    let kept = solid;
+    Ok(json!({
+        "layer": name,
+        "unit": unit,
+        "level": level,
+        "dataset": label,
+        "features": kept,
+    }))
+}
+
+/// Rewrites the layer without features whose clipped geometry has no area, and answers the count.
+fn drop_shavings(host: &mut Host, layer: &str, lang: Lang) -> Result<u64, String> {
+    let answer = host.call("host.features", json!({ "layer": layer }))?;
+    let features = answer
+        .get("features")
+        .and_then(Value::as_array)
+        .cloned()
+        .unwrap_or_default();
+    let total = features.len() as u64;
+    let solid: Vec<Value> = features
+        .into_iter()
+        .filter(|feature| match feature.get("geometry") {
+            // A point or a line has no area and always stays: only a cut polygon can become a sliver.
+            Some(geometry) => match geometry.get("type").and_then(Value::as_str) {
+                Some("Polygon") | Some("MultiPolygon") => ring_area(geometry) > MIN_AREA,
+                _ => true,
+            },
+            None => true,
+        })
+        .collect();
+    if solid.len() as u64 == total {
+        return Ok(total);
+    }
+    host.call("layer.remove", json!({ "layer": [layer] }))?;
+    let collection = json!({ "type": "FeatureCollection", "features": solid });
+    host.add_layer(layer, collection)?;
+    let _ = lang;
+    Ok(solid_count(&solid))
+}
+
+/// The count of the features that stayed, for the message.
+fn solid_count(features: &[Value]) -> u64 {
+    features.len() as u64
+}
+
+/// A geometry's area in square degrees, from the shoelace over its exterior rings.
+fn ring_area(geometry: &Value) -> f64 {
+    let kind = geometry.get("type").and_then(Value::as_str).unwrap_or_default();
+    let coordinates = geometry.get("coordinates").cloned().unwrap_or(Value::Null);
+    let polygons: Vec<&Value> = match kind {
+        "Polygon" => vec![&coordinates],
+        "MultiPolygon" => coordinates
+            .as_array()
+            .map(|list| list.iter().collect())
+            .unwrap_or_default(),
+        _ => Vec::new(),
+    };
+    let mut area = 0.0;
+    for polygon in polygons {
+        let Some(ring) = polygon.get(0).and_then(Value::as_array) else {
+            continue;
+        };
+        let mut points: Vec<[f64; 2]> = Vec::with_capacity(ring.len());
+        for point in ring {
+            let Some(pair) = point.as_array() else { continue };
+            if let (Some(x), Some(y)) = (pair.first().and_then(Value::as_f64), pair.get(1).and_then(Value::as_f64)) {
+                points.push([x, y]);
+            }
+        }
+        area += shoelace(&points).abs();
+    }
+    area
+}
+
+/// The signed area of a ring, halved, which is zero for a line that ran along the boundary.
+fn shoelace(points: &[[f64; 2]]) -> f64 {
+    if points.len() < 3 {
+        return 0.0;
+    }
+    let mut sum = 0.0;
+    for index in 0..points.len() {
+        let [x0, y0] = points[index];
+        let [x1, y1] = points[(index + 1) % points.len()];
+        sum += x0 * y1 - x1 * y0;
+    }
+    sum / 2.0
 }
 
 /// Downloads features from any WFS the register lists, by type, for the area.
@@ -434,4 +596,18 @@ impl Lcg {
         }
     }
 
+}
+
+#[cfg(test)]
+mod typed_tests {
+    use super::{ring_area, shoelace};
+
+    #[test]
+    fn a_touching_polygon_has_no_area() {
+        let line = serde_json::json!({"type": "Polygon", "coordinates": [[[0.0, 0.0], [1.0, 0.0], [2.0, 0.0], [0.0, 0.0]]]});
+        assert!(ring_area(&line) < 1e-12);
+        let square = serde_json::json!({"type": "Polygon", "coordinates": [[[0.0, 0.0], [1.0, 0.0], [1.0, 1.0], [0.0, 1.0], [0.0, 0.0]]]});
+        assert!((ring_area(&square) - 1.0).abs() < 1e-9);
+        assert!(shoelace(&[]).abs() < 1e-12);
+    }
 }

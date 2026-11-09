@@ -323,6 +323,13 @@
       "icon": "polygon_tool",
       "help": "Sets the area from the unit chosen in the panel's tree, which the panel runs for you.",
       "params": "{\"przytnij\": \"layer name (optional)\"} and the chosen unit in panel.values.unit"
+    },
+    {
+      "id": "pobierz-typ",
+      "label": "Typed\ndownload",
+      "icon": "table",
+      "help": "Downloads one typed dataset for a unit in one call: it reads the unit boundary, fetches the type and cuts the layer to the unit.",
+      "params": "{\"dane\": \"Punkty adresowe\", \"unit\": \"1464011\"} (2 digits a voivodeship, 4 a powiat, 7 a gmina)"
     }
   ],
   "tools": [
@@ -1202,7 +1209,9 @@
       "Administrative unit": "Jednostka administracyjna",
       "Pick a voivodeship, a powiat or a gmina, and its boundary becomes the area.": "Wybierz województwo, powiat albo gminę, a jej granica stanie się obszarem.",
       "Area from the\ntree": "Obszar\ndrzewa",
-      "Sets the area from the unit chosen in the panel's tree, which the panel runs for you.": "Ustawia obszar z jednostki wybranej w drzewie panelu; panel uruchamia je za Ciebie."
+      "Sets the area from the unit chosen in the panel's tree, which the panel runs for you.": "Ustawia obszar z jednostki wybranej w drzewie panelu; panel uruchamia je za Ciebie.",
+      "Typed\ndownload": "Pobierz\ntyp",
+      "Downloads one typed dataset for a unit in one call: it reads the unit boundary, fetches the type and cuts the layer to the unit.": "Pobiera jeden typowany zbiór dla jednostki w jednym wywołaniu: czyta granicę jednostki, pobiera typ i przycina warstwę do jednostki."
     }
   },
   "moreMaps": {
