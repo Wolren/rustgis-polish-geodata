@@ -227,20 +227,22 @@ fn prove(url: &str, kind: &str, lang: Lang) -> Result<String, String> {
         format!("{url}{separator}{extra}")
     };
     if kind == "wfs" {
-        let caps = http::fetch(&joined("SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities"), 30, lang)?;
+        let caps = http::probe(&joined("SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities"), TIMEOUT)
+            .ok_or_else(|| "no capabilities".to_string())?;
         if caps.contains("WFS_Capabilities") {
             return Ok(String::new());
         }
         return Err("not a WFS".into());
     }
-    let caps = http::fetch(&joined("SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities"), 30, lang)?;
+    let caps = http::probe(&joined("SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities"), TIMEOUT)
+        .ok_or_else(|| "no capabilities".to_string())?;
     let layer = first_layer(&caps).ok_or("no layer")?;
     for area in ["1883782,6873571,1884382,6874171", "2075809,7236423,2076409,7237023"] {
         let tile = joined(&format!(
             "SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS={layer}&STYLES=&CRS=EPSG:3857\
              &BBOX={area}&WIDTH=256&HEIGHT=256&FORMAT=image/png&TRANSPARENT=TRUE"
         ));
-        if http::fetch(&tile, 30, lang).is_ok() {
+        if http::probe(&tile, TIMEOUT).is_some() {
             return Ok(layer);
         }
     }
@@ -270,11 +272,15 @@ fn first_layer(caps: &str) -> Option<String> {
 
 /// How long one update run may spend proving addresses, so a smoke run finishes too.
 const BUDGET_SECONDS: u64 = 240;
+/// Addresses proved at once; a dead one waits for its timeout, so this sets the run's length.
+const THREADS: usize = 16;
+/// Seconds one address may take; a service that answers needs a small part of it.
+const TIMEOUT: u64 = 6;
 
 /// The update tool: reads the register, proves the addresses the file lacks, and keeps the result.
 pub fn update(params: &Value, lang: Lang) -> Result<Value, String> {
     let full = params.get("pelna").and_then(Value::as_bool).unwrap_or(false);
-    let limit = params.get("limit").and_then(Value::as_u64).unwrap_or(25) as usize;
+    let limit = params.get("limit").and_then(Value::as_u64).unwrap_or(12) as usize;
     host::progress_line(&text::register_reading(lang));
 
     let body = http::fetch("https://integracja.gugik.gov.pl/eziudp/api.php?format=json", 120, lang)?;
@@ -307,7 +313,7 @@ pub fn update(params: &Value, lang: Lang) -> Result<Value, String> {
     let deadline = std::time::Instant::now() + std::time::Duration::from_secs(BUDGET_SECONDS);
     let queue = std::sync::Mutex::new(fresh);
     std::thread::scope(|scope| {
-        for _ in 0..6 {
+        for _ in 0..THREADS {
             scope.spawn(|| loop {
                 // A run that hits the budget keeps what it proved and leaves the rest for the next run.
                 let entry = {

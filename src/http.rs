@@ -79,11 +79,17 @@ fn agent() -> &'static ureq::Agent {
         ureq::AgentBuilder::new()
             .max_idle_connections(16)
             .max_idle_connections_per_host(8)
+            // A host that never accepts a connection would hang for the system's own timeout.
+            .timeout_connect(Duration::from_secs(5))
             .build()
     })
 }
 
 fn request(url: &str, timeout_secs: u64) -> Result<String, Failure> {
+    request_with(url, timeout_secs, true)
+}
+
+fn request_with(url: &str, timeout_secs: u64, error_body: bool) -> Result<String, Failure> {
     let response = agent()
         .get(url)
         .timeout(Duration::from_secs(timeout_secs))
@@ -92,7 +98,10 @@ fn request(url: &str, timeout_secs: u64) -> Result<String, Failure> {
         .set("Accept-Encoding", "gzip")
         .call()
         .map_err(|e| match e {
-            ureq::Error::Status(code, response) => Failure::Status(code, error_detail(response)),
+            ureq::Error::Status(code, response) => {
+                let detail = if error_body { error_detail(response) } else { String::new() };
+                Failure::Status(code, detail)
+            }
             ureq::Error::Transport(t) => Failure::Transport(t.to_string()),
         })?;
     let mut bytes = Vec::new();
@@ -105,6 +114,13 @@ fn request(url: &str, timeout_secs: u64) -> Result<String, Failure> {
         return Err(Failure::TooBig);
     }
     String::from_utf8(bytes).map_err(|_| Failure::NotUtf8)
+}
+
+/// One attempt with no retry: a register probe treats a slow service as a dead one.
+///
+/// An error body is not read, because a server that stalls mid-body would hold the probe open.
+pub fn probe(url: &str, timeout_secs: u64) -> Option<String> {
+    request_with(url, timeout_secs, false).ok()
 }
 
 /// Streams a body into `sink`, from the cache when fresh, and keeps it for the next run.
