@@ -155,6 +155,25 @@ built-in Clip and replaces the layer with the result.
 The panel's **Clip the download to the unit boundary** checkbox is on by default: a typed download
 follows the unit's shape. Turn it off to keep the whole bounding box, and the run says so.
 
+**Administrative boundaries, the guided way.** The Downloads group carries **Administrative boundaries**.
+A click with no parameters brings the whole country's voivodeships. The panel's **Boundaries** tree carries
+every other option: pick a unit in **Administrative unit**, then a level of it. A script names the level and
+the scope directly, and a filter keeps the rows it matches.
+
+| Level | Scope | Call | Rows |
+| --- | --- | --- | --- |
+| Voivodeships | whole country | `{"poziom": "wojewodztwa", "zakres": "kraj"}` | 16 |
+| One voivodeship | a code | `{"poziom": "wojewodztwa", "zakres": "1464011"}` | 1 |
+| Powiaty | whole country | `{"poziom": "powiaty", "zakres": "kraj"}` | 380 |
+| Powiaty of a voivodeship | a code | `{"poziom": "powiaty", "zakres": "14"}` | 42 |
+| One powiat | a code | `{"poziom": "powiaty", "zakres": "1416"}` | 1 |
+| Gminy of a voivodeship | a code | `{"poziom": "gminy", "zakres": "14"}` | 314 |
+| Gminy of a powiat | a code | `{"poziom": "gminy", "zakres": "1416"}` | 11 |
+| One gmina | a code | `{"poziom": "gminy", "zakres": "1464011"}` | 1 |
+
+`filtr` keeps the names it matches, accents aside, and a scope keeps the rows whose TERYT code nests under
+it: `{"poziom": "gminy", "zakres": "kraj", "filtr": "ostr", "limit_mb": 0}` gives 18 gminy.
+
 **One call, one typed layer.** `pobierz-typ {"dane": "Punkty adresowe", "unit": "1464011"}` reads the
 unit boundary from PRG, sets it as the area, downloads that dataset and cuts the layer to the unit.
 Measured: 688 address points for gmina Siedlce, 21 gminy for powiat ostrowski. The cut keeps a

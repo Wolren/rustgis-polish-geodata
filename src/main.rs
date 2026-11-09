@@ -18,6 +18,7 @@ mod eziudp;
 mod jednostki;
 mod gk92;
 mod gml;
+mod granice;
 mod host;
 mod http;
 mod katalog;
@@ -113,6 +114,7 @@ fn run(
         "obszar-drzewo" => obszar::from_unit_tree(host, request, lang),
         "obszar-jednostka" => prg::area(host, params, lang),
         "obreby" => prg::obreby(params, lang),
+        "granice" => granice::levels(host, request, lang),
         "pobierz-typ" => egib::typed_for_unit(host, params, lang),
         "dzialki-powiat" => egib::from_area(host, params, lang),
         "rejestr-pobierz" => egib::from_register(host, params, lang),

@@ -323,6 +323,13 @@
       "params": "{\"przytnij\": \"layer name (optional)\"} and the chosen unit in panel.values.unit"
     },
     {
+      "id": "granice",
+      "label": "Administrative\nboundaries",
+      "icon": "boundaries",
+      "help": "Downloads one level of state boundaries for the country, a voivodeship, a powiat or a gmina, and keeps the names a filter matches.",
+      "params": "{\"poziom\": \"gminy\", \"zakres\": \"1464\"|\"kraj\", \"filtr\": \"ostr\"} (poziom: wojewodztwa, powiaty, gminy; zakres: a TERYT code of any level or kraj)"
+    },
+    {
       "id": "pobierz-typ",
       "label": "Typed\ndownload",
       "icon": "table",
@@ -2813,6 +2820,7 @@
         "label": "Downloads",
         "layout": "small",
         "items": [
+          "granice",
           {
             "menu": "Datasets",
             "icon": "package",
@@ -3087,7 +3095,11 @@
       "A typed download follows the unit's boundary; turn this off to keep the whole bounding box.": "Pobranie typowane idzie za granicą jednostki; wyłącz, aby zachować cały prostokąt.",
       "Size limit (MB)": "Limit rozmiaru (MB)",
       "Fetch a run larger than the size limit. It raises the stop to 256 MB, or to the limit typed above.": "Pobierz przebieg większy niż limit rozmiaru. Podnosi limit do 256 MB albo do liczby wpisanej wyżej.",
-      "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default.": "Przebieg zatrzymuje się na tylu megabajtach. 0 znaczy brak limitu bajtów; suwak w panelu ustawia domyślną wartość."
+      "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default.": "Przebieg zatrzymuje się na tylu megabajtach. 0 znaczy brak limitu bajtów; suwak w panelu ustawia domyślną wartość.",
+      "Administrative\nboundaries": "Granice\nadministracyjne",
+      "Downloads one level of state boundaries for the country, a voivodeship, a powiat or a gmina, and keeps the names a filter matches.": "Pobiera jeden poziom granic państwowych dla kraju, województwa, powiatu albo gminy i zostawia nazwy pasujące do filtra.",
+      "Boundaries": "Granice",
+      "A level for the whole country, or a level of the unit chosen above.": "Poziom dla całego kraju albo poziom wybranej jednostki."
     }
   },
   "panel": {
@@ -3129,6 +3141,13 @@
         "help": "Pick a voivodeship, a powiat or a gmina, and its boundary becomes the area.",
         "search": true,
         "command": "obszar-drzewo"
+      },
+      {
+        "kind": "tree",
+        "id": "granice",
+        "label": "Boundaries",
+        "help": "A level for the whole country, or a level of the unit chosen above.",
+        "command": "granice"
       },
       {
         "kind": "tree",

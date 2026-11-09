@@ -144,6 +144,7 @@ pub fn state(host: &mut Host, lang: Lang, request: &Value) -> Result<Value, Stri
     );
     items.insert("mapa".into(), json!({ "nodes": map_nodes(lang) }));
     items.insert("unit".into(), json!({ "nodes": crate::jednostki::nodes(lang) }));
+    items.insert("granice".into(), json!({ "nodes": crate::granice::nodes(lang) }));
     items.insert(
         "cache".into(),
         json!({ "text": text::cache_text(lang, files, bytes) }),

@@ -32,6 +32,17 @@ potem według tematu, i którą całą da się sterować przez MCP albo przez pa
 - Cięcie zostawia obiekt graniczny sąsiada, gdy usługa odpowiedziała prostokątem: liczba jest górną
   granicą. Punkty i linie przechodzą nietknięte, wielokąty bez powierzchni są usuwane.
 
+### Granice administracyjne jak w Pobieraczu
+
+- Polecenie `granice` z przyciskiem w grupie Pobieranie daje osiem opcji dawnego Pobieracza: poziom
+  (wojewodztwa, powiaty, gminy) razy zakres (kraj albo kod TERYT dowolnego pietra), plus `filtr` po
+  nazwie bez ogonkow. Zmierzone: 16 wojewodztw, 42 powiaty mazowieckiego, 314 gmin mazowieckiego,
+  11 gmin powiatu ostrowskiego, 2479 gmin kraju i 18 gmin z filtrem `ostr`.
+- Zakres i poziom lacza sie przez kody TERYT: wiersz zostaje, gdy jego kod jest prefiksem kodu
+  zakresu albo odwrotnie. Ciecie hosta tylko docina geometrie.
+- Prostokat idzie do uslugi jako wielokat, bo czysty BBOX czyta sie w kolejnosci osi uslugi
+  i gubi czesc zbioru: kraj dawal 2168 gmin zamiast 2479.
+
 ### Dane
 
 - **Katalog WMS**: 112 usług, w tym GUGiK (76), mapy historyczne (11), geologia PIG (11), NID (4),

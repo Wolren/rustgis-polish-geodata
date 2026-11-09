@@ -360,14 +360,6 @@ pub fn settings_saved(lang: Lang, limit_mb: i64, confirm: bool) -> String {
     )
 }
 
-/// A confirmed run stopped at the hard size cap.
-pub fn download_stopped(lang: Lang, name: &str, megabytes: f64) -> String {
-    pick!(
-        lang,
-        format!("{name}: stopped at {}", size(lang, megabytes)),
-        format!("{name}: przerwano na {}", size(lang, megabytes))
-    )
-}
 
 /// The layer the download takes as its area, named in the interface language.
 pub fn area_layer(lang: Lang) -> &'static str {
@@ -1425,6 +1417,91 @@ pub fn unit_not_chosen(lang: Lang) -> String {
     )
 }
 
+
+/// A country node of the boundaries tree, named by the level it downloads.
+pub fn levels_node_country(lang: Lang, level: &str) -> String {
+    let level = match (lang, level) {
+        (Lang::Pl, "voivodeships") => "Województwa",
+        (Lang::Pl, "powiaty") => "Powiaty",
+        (Lang::Pl, "gminy") => "Gminy",
+        (_, other) => other,
+    };
+    pick!(
+        lang,
+        format!("{level}, whole country"),
+        format!("{level}, cały kraj")
+    )
+}
+
+/// A node that uses the unit chosen in the panel's unit tree.
+pub fn levels_node_unit(lang: Lang, level: &str) -> String {
+    let level = match (lang, level) {
+        (Lang::Pl, "voivodeships") => "Województwo",
+        (Lang::Pl, "powiaty") => "Powiaty",
+        (Lang::Pl, "gminy") => "Gminy",
+        (_, other) => other,
+    };
+    pick!(
+        lang,
+        format!("{level} of the chosen unit"),
+        format!("{level} wybranej jednostki")
+    )
+}
+
+/// A click with no parameters gets the whole country's voivodeships, and the panel offers the rest.
+pub fn levels_clicked(lang: Lang) -> String {
+    pick!(
+        lang,
+        "no level given, so the whole country's voivodeships arrive: the panel's Boundaries tree offers every other level".to_string(),
+        "bez poziomu pobieram województwa całego kraju: drzewo Granice w panelu daje pozostałe poziomy".to_string()
+    )
+}
+
+/// A tree node asks for the unit chosen in the panel, and nothing is chosen yet.
+pub fn levels_need_unit(lang: Lang) -> String {
+    pick!(
+        lang,
+        "pick a unit in the panel's Administrative unit tree first".to_string(),
+        "wybierz najpierw jednostkę w drzewie Jednostka administracyjna".to_string()
+    )
+}
+
+/// A level that is not a boundary layer of the register.
+pub fn levels_unknown_level(lang: Lang, level: &str) -> String {
+    pick!(
+        lang,
+        format!("{level} is not a level: use wojewodztwa, powiaty or gminy"),
+        format!("{level} to nie poziom: użyj wojewodztwa, powiaty albo gminy")
+    )
+}
+
+/// Nothing matched the name filter, so the layer stays empty on purpose.
+pub fn levels_no_match(lang: Lang, scope: &str) -> String {
+    pick!(
+        lang,
+        format!("no boundary in {scope} matches the name filter"),
+        format!("żadna granica w {scope} nie pasuje do filtra nazwy")
+    )
+}
+
+/// The boundaries are on their way from the register.
+pub fn levels_reading(lang: Lang, layer: &str) -> String {
+    pick!(
+        lang,
+        format!("{layer}: reading the register's boundaries"),
+        format!("{layer}: czytam granice z rejestru")
+    )
+}
+
+/// The boundary layer is on the map.
+pub fn levels_added(lang: Lang, name: &str, features: usize, dataset: &str) -> String {
+    pick!(
+        lang,
+        format!("{name}: {features} rows from {dataset}"),
+        format!("{name}: {features} wierszy z {dataset}")
+    )
+}
+
 /// The one-step download needs the dataset label it should fetch.
 pub fn typed_needs_dataset(lang: Lang) -> String {
     pick!(
@@ -1482,14 +1559,6 @@ pub fn typed_uncut(lang: Lang) -> String {
     )
 }
 
-/// The panel's checkbox label, the setting that decides whether a typed download is cut.
-pub fn clip_unit_label(lang: Lang) -> String {
-    pick!(
-        lang,
-        "Clip the download to the unit boundary".to_string(),
-        "Przytnij pobranie do granicy jednostki".to_string()
-    )
-}
 
 /// Features the clip left as lines along the boundary went away.
 pub fn typed_shavings(lang: Lang, dropped: u64) -> String {
@@ -1557,14 +1626,6 @@ pub fn span_counted(lang: Lang, layer: &str, wanted: usize, span: f64) -> String
     )
 }
 
-/// A named area layer needs a name, since that is what a batch run points at.
-pub fn area_needs_name(lang: Lang) -> String {
-    pick!(
-        lang,
-        "give the layer a name: {\"nazwa\": \"Gmina A\", \"bbox\": [w, s, e, n]}".to_string(),
-        "podaj nazwę warstwy: {\"nazwa\": \"Gmina A\", \"bbox\": [w, s, e, n]}".to_string()
-    )
-}
 
 /// A named area layer is on the map, ready for a download.
 pub fn area_added(lang: Lang, name: &str, size: (f64, f64)) -> String {
