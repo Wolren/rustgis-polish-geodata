@@ -1,7 +1,7 @@
 {
   "id": "polish-geodata",
   "name": "Polish Geodata",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Polish national geodata in one tab: 112 raster overlays, 106 WFS datasets and 162 sheet indexes downloaded as editable layers with progress and Cancel, 15 GDOŚ protected-area types, the county EGiB as parcels, a 3 296-address service register with an update tool, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.",
   "author": "Wolren",
   "license": "MIT",
@@ -314,6 +314,13 @@
       "icon": "relief",
       "help": "Turns the 3D terrain off, so the map is flat again after a model goes.",
       "params": "{}"
+    },
+    {
+      "id": "obszar-drzewo",
+      "label": "Area from the\ntree",
+      "icon": "polygon_tool",
+      "help": "Sets the area from the unit chosen in the panel's tree, which the panel runs for you.",
+      "params": "{\"przytnij\": \"layer name (optional)\"} and the chosen unit in panel.values.unit"
     },
     {
       "id": "rejestr-gios-halas",
@@ -2994,7 +3001,11 @@
       "Topographic and thematic GUGiK maps, statistics and ASG-EUPOS.": "Topograficzne i tematyczne mapy GUGiK, statystyki i ASG-EUPOS.",
       "GUS, IMGW, NID heritage, BDL forests and the rest of the institutions.": "GUS, IMGW, dziedzictwo NID, lasy BDL i pozostałe instytucje.",
       "Keep the\narea": "Zachowaj\nobszar",
-      "Keeps the current area as its own layer, Area 1, Area 2, so gp.batch can run one download over several areas. A script may name the layer and hand a box instead.": "Zapisuje bieżący obszar jako osobną warstwę, Obszar 1, Obszar 2, więc gp.batch pobiera jednym przebiegiem kilka obszarów. Skrypt może nadać nazwę i podać prostokąt."
+      "Keeps the current area as its own layer, Area 1, Area 2, so gp.batch can run one download over several areas. A script may name the layer and hand a box instead.": "Zapisuje bieżący obszar jako osobną warstwę, Obszar 1, Obszar 2, więc gp.batch pobiera jednym przebiegiem kilka obszarów. Skrypt może nadać nazwę i podać prostokąt.",
+      "Administrative unit": "Jednostka administracyjna",
+      "Pick a voivodeship, a powiat or a gmina, and its boundary becomes the area.": "Wybierz województwo, powiat albo gminę, a jej granica stanie się obszarem.",
+      "Area from the\ntree": "Obszar\ndrzewa",
+      "Sets the area from the unit chosen in the panel's tree, which the panel runs for you.": "Ustawia obszar z jednostki wybranej w drzewie panelu; panel uruchamia je za Ciebie."
     }
   },
   "panel": {
@@ -3028,6 +3039,14 @@
         "help": "Choose the layer whose outline cuts the features. The area layer is the default.",
         "command": "panel-state",
         "search": true
+      },
+      {
+        "kind": "tree",
+        "id": "unit",
+        "label": "Administrative unit",
+        "help": "Pick a voivodeship, a powiat or a gmina, and its boundary becomes the area.",
+        "search": true,
+        "command": "obszar-drzewo"
       },
       {
         "kind": "tree",

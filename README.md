@@ -57,7 +57,7 @@ names and obręb codes, ready to select, clip and export.
 
 ## Install
 
-- **From a package:** install `polish-geodata-0.1.3.rgplugin` through **Plugins › Plugin Manager ›
+- **From a package:** install `polish-geodata-0.1.4.rgplugin` through **Plugins › Plugin Manager ›
   Install from file**.
 - **From a folder:** point at `dist\polish-geodata` through **Plugins › Plugin Manager › Settings ›
   Add Plugin Folder…**.
@@ -101,11 +101,16 @@ Every download needs an area layer. Five buttons make one, and three commands se
 | **Rectangle to area** | moves that graphic into the area layer |
 | **Remove area** | starts from an empty layer |
 
+A person picks a unit in the panel: **Tools › Polish Geodata** opens the pane, and its
+**Administrative unit** tree holds 16 voivodeships, 380 powiaty and 2 479 gminy with search. Choosing a
+node sets the area from PRG, and a script passes `przytnij` to cut a layer in the same run.
+
 | Command | What it takes |
 | --- | --- |
 | `obszar-json` | `{"bbox": [west, south, east, north]}` or `{"geojson": <Feature>}` |
 | `obszar-jednostka` | `{"nazwa": "Poznań", "poziom": "gmina"}` and optional `przytnij` |
 | `obreby` | `{"teryt": "306401_1"}`, the obręby a unit publishes |
+| `obszar-drzewo` | `{"unit": "1416"}`: the code the panel's tree gives, for a script |
 | `obszar-dodaj` | a script only: keeps the current area as Area 1, Area 2, or takes `{"nazwa": "Gmina A", "bbox": […]}` |
 
 `poziom` accepts `gmina`, `powiat`, `wojewodztwo`, `obreb` or `miasto`. A city that PRG lists only
@@ -244,7 +249,7 @@ python tools/fuzz.py --cases 12 --seed 1 --report D:/Scratch/fuzz.json
 ```
 
 The packager writes `dist\polish-geodata\` (the folder for the plugin manager),
-`dist\polish-geodata-0.1.3.rgplugin` and `dist\polish-geodata.json` (the registry entry). The
+`dist\polish-geodata-0.1.4.rgplugin` and `dist\polish-geodata.json` (the registry entry). The
 archive is deterministic: two runs on the same binaries give the same SHA-256.
 
 `tools/fuzz.py` runs real downloads with a seed and a timeout, so the same run gives the same cases.

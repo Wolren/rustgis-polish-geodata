@@ -26,6 +26,7 @@ Every download takes an area layer, a polygon layer on the map. The layer is "Ar
 | `obszar-json` | `{"bbox": [west, south, east, north]}` or `{"geojson": <Feature>}` |
 | `obszar-jednostka` | `{"nazwa": "Poznań", "poziom": "gmina"}`; levels are `gmina`, `powiat`, `wojewodztwo`, `obreb`, `miasto` |
 | `obszar-jednostka` + `przytnij` | the same, and a named layer is cut to that unit in the same run |
+| `obszar-drzewo` | `{"unit": "1416"}`, a TERYT code from the panel's tree: 2 digits a voivodeship, 4 a powiat, 7 a gmina |
 | `obszar-rysuj` | arms the polygon tool; a drawn shape lands in the area |
 | `obszar-prostokat` | arms the app's rectangle tool, which draws a graphic |
 | `obszar-przejmij` | moves that graphic into the area layer |

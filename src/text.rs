@@ -1363,6 +1363,39 @@ pub fn area_empty(lang: Lang, layer: &str, area: &str) -> String {
     )
 }
 
+/// The panel's tree has nothing chosen yet, so no unit sets the area.
+pub fn unit_not_chosen(lang: Lang) -> String {
+    pick!(
+        lang,
+        "pick a voivodeship, a powiat or a gmina in the tree first".to_string(),
+        "wybierz najpierw województwo, powiat albo gminę w drzewie".to_string()
+    )
+}
+
+/// A code the tree does not hold came in, so the area stays as it was.
+pub fn unit_unknown(lang: Lang, code: &str) -> String {
+    pick!(
+        lang,
+        format!("the tree holds no unit with the code {code}"),
+        format!("drzewo nie ma jednostki o kodzie {code}")
+    )
+}
+
+/// The unit chosen in the tree, before PRG answers with its boundary.
+pub fn unit_chosen(lang: Lang, name: &str, level: &str) -> String {
+    let level = match (lang, level) {
+        (Lang::Pl, "wojewodztwo") => "województwo",
+        (Lang::Pl, "powiat") => "powiat",
+        (Lang::Pl, "gmina") => "gmina",
+        (_, other) => other,
+    };
+    pick!(
+        lang,
+        format!("{level} {name}: reading its boundary from PRG"),
+        format!("{level} {name}: czytam granicę z PRG")
+    )
+}
+
 /// A named area layer needs a name, since that is what a batch run points at.
 pub fn area_needs_name(lang: Lang) -> String {
     pick!(

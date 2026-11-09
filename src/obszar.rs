@@ -218,6 +218,33 @@ pub fn from_json(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, 
     Ok(json!({ "layer": name, "mode": Mode::View.key(), "box": box_lon }))
 }
 
+/// Sets the area from the unit chosen in the panel's tree, by its TERYT code.
+pub fn from_unit_tree(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, String> {
+    // The panel sends the chosen node in `panel.values`; a script may name the code in `params`.
+    let params = request.get("params").cloned().unwrap_or(Value::Null);
+    let chosen = request
+        .get("panel")
+        .and_then(|panel| panel.get("values"))
+        .and_then(|values| values.get("unit"))
+        .and_then(Value::as_str);
+    let code = chosen
+        .or_else(|| params.get("unit").and_then(Value::as_str))
+        .map(str::trim)
+        .filter(|value| !value.is_empty());
+    let Some(code) = code else {
+        host.notify(&text::unit_not_chosen(lang));
+        return Ok(json!({ "chosen": false }));
+    };
+    let (name, level) = crate::jednostki::resolve(code)
+        .ok_or_else(|| text::unit_unknown(lang, code))?;
+    let mut area = json!({ "nazwa": name, "poziom": level });
+    if let Some(clip) = params.get("przytnij").cloned() {
+        area["przytnij"] = clip;
+    }
+    host.notify(&text::unit_chosen(lang, &name, level));
+    crate::prg::area(host, &area, lang)
+}
+
 /// Keeps the current area as a named layer, so `gp.batch` can run a download over several areas.
 ///
 /// A script names the layer and hands a box; a ribbon click copies the area already on the map and
