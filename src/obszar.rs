@@ -425,7 +425,9 @@ pub fn clear(host: &mut Host, lang: Lang) -> Result<Value, String> {
         .find(|name| text::AREA_LAYERS.contains(name))
         .map(str::to_string);
     let Some(name) = found else {
-        return Err(text::area_none(lang));
+        // A second press removes nothing, which is the answer it wanted, not an error.
+        host.notify(&text::area_already_gone(lang));
+        return Ok(json!({ "removed": Value::Null }));
     };
     host.call("layer.remove", json!({ "layer": [name.clone()] }))?;
     // The mode goes with the layer, so no later model reads a stale one.

@@ -84,7 +84,8 @@ def catalogue():
         if entry["id"] in by_id:
             raise Bad(f"data/wfs.json: two entries share the id {entry['id']}")
         by_id[entry["id"]] = entry
-        if not entry.get("index", False):
+        # `hidden` keeps an entry for a command that names it, out of the tool's dataset list.
+        if not entry.get("index", False) and not entry.get("hidden", False):
             offered.append(entry["id"])
     return by_id, offered
 
@@ -239,6 +240,13 @@ def flatten_folders(items):
     return out
 
 
+def first_choice(param, choices):
+    """A choice that starts on its first entry, so a form runs without a second click."""
+    if param.get("default") == "__first__" and choices:
+        param["default"] = choices[0]
+    return param
+
+
 def menu_decl(key, menus, folders, depth=1):
     """A menu of the tab: a leaf of services, or a folder of leaves one level down."""
     if key in folders:
@@ -365,6 +373,8 @@ def build():
                 else f"{entry['title']} ({entry['id']})"
                 for entry in here
             ]
+            if param.get("default") == "__first__":
+                param["default"] = param["choices"][0]
             if len(set(param["choices"])) != len(param["choices"]):
                 raise Bad(f"tool {tool['id']}: two sheet indexes share a title")
             for entry in here:
@@ -379,6 +389,9 @@ def build():
             continue
         labels = []
         for entry in here:
+            if entry.get("hidden"):
+                # A hidden entry belongs to a command, so it is not a choice of this tool.
+                continue
             if entry["id"] not in offered:
                 raise Bad(f"{entry['id']} is a sheet index, not offered")
             labels.append(entry["label"])
@@ -391,6 +404,9 @@ def build():
         if len(set(labels)) != len(labels):
             raise Bad(f"tool {tool['id']}: two datasets share a title")
         param["choices"] = labels
+        # A fresh form runs on its first dataset instead of refusing for a missing choice.
+        if param.get("default") == "__first__":
+            param["default"] = labels[0]
         group_of_tool[tool["id"]] = [entry["id"] for entry in here]
 
     # Every offered dataset belongs to exactly one tool, or the pickers cannot reach it.

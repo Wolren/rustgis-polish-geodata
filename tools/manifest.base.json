@@ -356,7 +356,8 @@
             "Powiaty",
             "Wojewodztwa"
           ],
-          "help": "Which boundaries to download."
+          "help": "Which boundaries to download.",
+          "default": "Gminy"
         },
         {
           "name": "wojewodztwo",
@@ -381,7 +382,8 @@
             "wielkopolskie",
             "zachodniopomorskie"
           ],
-          "help": "The voivodeship whose boundaries you want, or cały kraj for the country."
+          "help": "The voivodeship whose boundaries you want, or cały kraj for the country.",
+          "default": "cały kraj"
         },
         {
           "name": "zakres",
@@ -416,7 +418,8 @@
           "kind": "choice",
           "required": true,
           "choicesGroup": "addresses",
-          "help": "The GUGiK feature type to download."
+          "help": "The GUGiK feature type to download.",
+          "default": "__first__"
         },
         {
           "name": "obszar",
@@ -460,7 +463,8 @@
           "kind": "choice",
           "required": true,
           "choicesGroup": "boundaries",
-          "help": "The GUGiK feature type to download."
+          "help": "The GUGiK feature type to download.",
+          "default": "__first__"
         },
         {
           "name": "obszar",
@@ -504,7 +508,8 @@
           "kind": "choice",
           "required": true,
           "choicesGroup": "control",
-          "help": "The GUGiK feature type to download."
+          "help": "The GUGiK feature type to download.",
+          "default": "__first__"
         },
         {
           "name": "obszar",
@@ -548,7 +553,8 @@
           "kind": "choice",
           "required": true,
           "choicesGroup": "offices",
-          "help": "The GUGiK feature type to download."
+          "help": "The GUGiK feature type to download.",
+          "default": "__first__"
         },
         {
           "name": "obszar",
@@ -592,7 +598,8 @@
           "kind": "choice",
           "required": true,
           "choicesGroup": "other",
-          "help": "The GUGiK feature type to download."
+          "help": "The GUGiK feature type to download.",
+          "default": "__first__"
         },
         {
           "name": "obszar",
@@ -636,7 +643,8 @@
           "label": "Dataset",
           "kind": "choice",
           "required": true,
-          "help": "The sheet index to add as a layer, so its sheets can be picked."
+          "help": "The sheet index to add as a layer, so its sheets can be picked.",
+          "default": "__first__"
         },
         {
           "name": "obszar",
@@ -666,7 +674,8 @@
           "label": "Dataset",
           "kind": "choice",
           "required": true,
-          "help": "The sheet index to add as a layer, so its sheets can be picked."
+          "help": "The sheet index to add as a layer, so its sheets can be picked.",
+          "default": "__first__"
         },
         {
           "name": "obszar",
@@ -696,7 +705,8 @@
           "label": "Dataset",
           "kind": "choice",
           "required": true,
-          "help": "The sheet index to add as a layer, so its sheets can be picked."
+          "help": "The sheet index to add as a layer, so its sheets can be picked.",
+          "default": "__first__"
         },
         {
           "name": "obszar",
@@ -747,7 +757,8 @@
           "label": "Dataset",
           "kind": "choice",
           "required": true,
-          "help": "The GDOŚ feature type to download."
+          "help": "The GDOŚ feature type to download.",
+          "default": "__first__"
         },
         {
           "name": "obszar",

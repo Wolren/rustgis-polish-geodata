@@ -14,6 +14,7 @@ use serde_json::{json, Map, Value};
 const ULDK: &str = "https://uldk.gugik.gov.pl/";
 
 /// The fields asked of ULDK, for a parcel found by a point or by its identifier.
+const PARCEL_NAME: &str = "Parcel from ULDK";
 const FIELDS: &str = "parcel,voivodeship,county,commune,teryt,geom_wkt";
 
 /// The parcel under a point: `x`/`y` in PL-1992, or the map centre.
@@ -26,6 +27,9 @@ pub fn parcel(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, Stri
         (Some(x), Some(y)) => (x, y, tm::to_wgs84(x, y)),
         _ => {
             let (lon, lat) = host.centre()?;
+            if !(13.0..=25.0).contains(&lon) || !(48.0..=55.5).contains(&lat) {
+                return Err(text::point_outside_poland(lang, PARCEL_NAME));
+            }
             let (easting, northing) = tm::to_2180(lon, lat);
             (easting, northing, [lon, lat])
         }

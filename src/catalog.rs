@@ -130,6 +130,8 @@ CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/p
 /// A feature type downloaded from a GUGiK WFS and added as a vector layer.
 #[derive(Clone)]
 pub struct WfsLayer {
+    /// Whether the entry belongs to a command that names it, so no tool offers it.
+    pub hidden: bool,
     pub id: &'static str,
     /// GUGiK's short name for the type, the same in both interface languages: a dataset's name is a
     /// proper name, not a word to translate.
@@ -162,6 +164,8 @@ pub fn overlay(id: &str) -> Option<&'static Overlay> {
 /// One entry of `data/wfs.json`, as the file stores it.
 #[derive(serde::Deserialize)]
 struct Raw {
+    #[serde(default)]
+    hidden: bool,
     id: String,
     label: String,
     title: String,
@@ -219,6 +223,7 @@ pub fn wfs_layers() -> &'static [WfsLayer] {
                 max_span: entry.max_span,
                 geom_field: leaked(&entry.geom),
                 index: entry.index,
+                hidden: entry.hidden,
                 tool: leaked(&entry.tool),
                 pages: entry.pages,
                 xy: entry.xy,
@@ -631,6 +636,7 @@ mod tests {
     /// tools offer the index entries by title, and `pobierz-arkusze` takes no dataset at all.
     #[test]
     fn the_download_tools_offer_every_dataset_exactly_once() {
+        // A hidden entry belongs to a command that names it, so it is not a tool choice.
         let manifest: serde_json::Value =
             serde_json::from_str(include_str!("../plugin.json")).expect("plugin.json is not JSON");
         let mut layer_choices: Vec<String> = Vec::new();
@@ -655,8 +661,10 @@ mod tests {
                 }
             }
         }
-        let mut offered_names: Vec<String> =
-            offered().map(|layer| layer.name.to_string()).collect();
+        let mut offered_names: Vec<String> = offered()
+            .filter(|layer| !layer.hidden)
+            .map(|layer| layer.name.to_string())
+            .collect();
         layer_choices.sort();
         offered_names.sort();
         assert_eq!(

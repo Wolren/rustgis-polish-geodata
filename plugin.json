@@ -1733,7 +1733,8 @@
             "Powiaty",
             "Wojewodztwa"
           ],
-          "help": "Which boundaries to download."
+          "help": "Which boundaries to download.",
+          "default": "Gminy"
         },
         {
           "name": "wojewodztwo",
@@ -1758,7 +1759,8 @@
             "wielkopolskie",
             "zachodniopomorskie"
           ],
-          "help": "The voivodeship whose boundaries you want, or cały kraj for the country."
+          "help": "The voivodeship whose boundaries you want, or cały kraj for the country.",
+          "default": "cały kraj"
         },
         {
           "name": "zakres",
@@ -1794,6 +1796,7 @@
           "required": true,
           "choicesGroup": "addresses",
           "help": "The GUGiK feature type to download.",
+          "default": "Punkty adresowe",
           "choices": [
             "Punkty adresowe",
             "Ulice",
@@ -1859,6 +1862,7 @@
           "required": true,
           "choicesGroup": "boundaries",
           "help": "The GUGiK feature type to download.",
+          "default": "BDOT10k - powiaty do pobrania",
           "choices": [
             "BDOT10k - powiaty do pobrania",
             "Obiekty inne w powiatach",
@@ -1880,9 +1884,6 @@
             "Granice obrębów ewidencyjnych",
             "Granice jednostek ewidencyjnych",
             "Granice miast",
-            "Granice gmin",
-            "Granice powiatów",
-            "Granice województw",
             "Granice państwa"
           ]
         },
@@ -1929,6 +1930,7 @@
           "required": true,
           "choicesGroup": "control",
           "help": "The GUGiK feature type to download.",
+          "default": "Strefy wyłączone wokół masztów",
           "choices": [
             "Strefy wyłączone wokół masztów",
             "Turbiny wiatrowe",
@@ -1996,6 +1998,7 @@
           "required": true,
           "choicesGroup": "offices",
           "help": "The GUGiK feature type to download.",
+          "default": "Urząd żeglugi śródlądowej",
           "choices": [
             "Urząd żeglugi śródlądowej",
             "Zarząd zlewni PGWWP",
@@ -2063,6 +2066,7 @@
           "required": true,
           "choicesGroup": "other",
           "help": "The GUGiK feature type to download.",
+          "default": "Aktualność danych BDOT10k",
           "choices": [
             "Aktualność danych BDOT10k",
             "Sieć komunikacyjna w województwach",
@@ -2129,6 +2133,7 @@
           "kind": "choice",
           "required": true,
           "help": "The sheet index to add as a layer, so its sheets can be picked.",
+          "default": "Skorowidz prawdziwej ortofotomapy",
           "choices": [
             "Skorowidz prawdziwej ortofotomapy",
             "Skorowidz ortofotomapy 1957",
@@ -2214,6 +2219,7 @@
           "kind": "choice",
           "required": true,
           "help": "The sheet index to add as a layer, so its sheets can be picked.",
+          "default": "Skorowidz Numerycznego Modelu Pokrycia Terenu 2019 (EVRF2007)",
           "choices": [
             "Skorowidz Numerycznego Modelu Pokrycia Terenu 2019 (EVRF2007)",
             "Skorowidz Numerycznego Modelu Pokrycia Terenu 2020",
@@ -2289,6 +2295,7 @@
           "kind": "choice",
           "required": true,
           "help": "The sheet index to add as a layer, so its sheets can be picked.",
+          "default": "Skorowidz danych pomiarowych LIDAR 2018 (EVRF2007)",
           "choices": [
             "Skorowidz danych pomiarowych LIDAR 2018 (EVRF2007)",
             "Skorowidz danych pomiarowych LIDAR 2019 (EVRF2007)",
@@ -2406,6 +2413,7 @@
           "kind": "choice",
           "required": true,
           "help": "The GDOŚ feature type to download.",
+          "default": "Natura 2000 ptasie (OSO)",
           "choices": [
             "Natura 2000 ptasie (OSO)",
             "Natura 2000 siedliskowe (SOO)",

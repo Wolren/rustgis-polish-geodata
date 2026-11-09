@@ -225,10 +225,12 @@ pub fn tool(request: &Value, lang: Lang) -> Result<Value, String> {
     let layer = catalog::wfs_by_label(label).ok_or_else(|| text::unknown_dataset(lang, label))?;
 
     // The dropdown picks a voivodeship; the code field narrows it to a powiat or a gmina.
-    let voivodeship = params
-        .get("wojewodztwo")
-        .and_then(Value::as_str)
-        .map(str::trim)
+    let picked_voivodeship = params.get("wojewodztwo").and_then(Value::as_str).map(str::trim);
+    // "cały kraj" is a choice, so it means the country: only a missing field repeats the last run.
+    let country_chosen = picked_voivodeship
+        .map(|value| value.starts_with("cały") || value.starts_with("whole"))
+        .unwrap_or(false);
+    let voivodeship = picked_voivodeship
         .filter(|value| !value.is_empty() && !value.starts_with("cały") && !value.starts_with("whole"))
         .map(str::to_string);
     // The field wins; empty falls back to the unit chosen in the panel's tree.
@@ -248,12 +250,21 @@ pub fn tool(request: &Value, lang: Lang) -> Result<Value, String> {
                 .filter(|value| !value.is_empty())
                 .map(str::to_string)
         });
+    let remembered = crate::cache::last_scope();
     let scope = narrower
         .clone()
         .or_else(|| {
             voivodeship
                 .as_deref()
                 .and_then(crate::jednostki::code_of_name)
+        })
+        .or_else(|| {
+            // An untouched form repeats the last run; a chosen voivodeship or the country overrides it.
+            if country_chosen || picked_voivodeship.is_some() {
+                None
+            } else {
+                remembered.as_ref().map(|(_, scope, _)| scope.clone())
+            }
         })
         .unwrap_or_else(|| "kraj".to_string());
     let whole_country = matches!(scope.to_lowercase().as_str(), "kraj" | "country" | "pl" | "");
@@ -316,7 +327,19 @@ pub fn tool(request: &Value, lang: Lang) -> Result<Value, String> {
         .and_then(Value::as_str)
         .map(str::trim)
         .filter(|value| !value.is_empty())
-        .map(fold);
+        .map(str::to_string)
+        .or_else(|| {
+            // The filter repeats too, unless this form carried its own (even an empty one).
+            if params.get("filtr").is_some() {
+                None
+            } else {
+                remembered
+                    .as_ref()
+                    .map(|(_, _, filter)| filter.clone())
+                    .filter(|filter| !filter.trim().is_empty())
+            }
+        })
+        .map(|filter| fold(&filter));
     let kept: Vec<Value> = download
         .features
         .into_iter()
@@ -336,10 +359,15 @@ pub fn tool(request: &Value, lang: Lang) -> Result<Value, String> {
     if kept.is_empty() {
         return Err(text::levels_no_match(lang, &scope));
     }
+    let (unit_name, _) = match crate::jednostki::resolve(&scope) {
+        Some((unit, level)) => (unit, level),
+        None => (text::levels_country(lang).to_string(), "kraj"),
+    };
     let name = match &filter {
         Some(pattern) => text::typed_layer(lang, label, pattern, "poziom"),
-        None => text::typed_layer(lang, label, &scope, "poziom"),
+        None => text::typed_layer(lang, label, &unit_name, "poziom"),
     };
+    crate::cache::remember_scope(&level, &scope, &filter.clone().unwrap_or_default());
     let mut messages = vec![text::count_size(lang, &name, kept.len(), download.bytes)];
     if download.truncated {
         messages.push(text::truncated_at(lang, &name, cap, settings.confirm_large));

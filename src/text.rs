@@ -1418,6 +1418,26 @@ pub fn unit_not_chosen(lang: Lang) -> String {
 }
 
 
+/// The country as a scope name, so a whole-country layer does not read "kraj".
+pub fn levels_country(lang: Lang) -> &'static str {
+    pick!(lang, "Poland", "Polska")
+}
+
+/// The boundaries tree's label, which names the unit its unit nodes would use.
+pub fn boundaries_of(lang: Lang, name: &str, level: &str) -> String {
+    let level = match (lang, level) {
+        (Lang::Pl, "wojewodztwo") => "województwo",
+        (Lang::Pl, "powiat") => "powiat",
+        (Lang::Pl, "gmina") => "gmina",
+        (_, other) => other,
+    };
+    pick!(
+        lang,
+        format!("Boundaries of {level} {name}"),
+        format!("Granice: {level} {name}")
+    )
+}
+
 /// A country node of the boundaries tree, named by the level it downloads.
 pub fn levels_node_country(lang: Lang, level: &str) -> String {
     let level = match (lang, level) {
@@ -1596,6 +1616,24 @@ pub fn typed_added(lang: Lang, layer: &str, features: u64, unit: &str, level: &s
         lang,
         format!("{layer}: {features} features cut to {level} {unit}"),
         format!("{layer}: {features} obiektów przycięte do {level} {unit}")
+    )
+}
+
+/// A point command fell back to the map centre, which is outside Poland.
+pub fn point_outside_poland(lang: Lang, what: &str) -> String {
+    pick!(
+        lang,
+        format!("{what}: the map centre is outside Poland, so the service has nothing there. Move the view over Poland, or give x and y."),
+        format!("{what}: środek mapy jest poza Polską, więc usługa nic tam nie ma. Przesuń widok nad Polskę albo podaj x i y.")
+    )
+}
+
+/// The area layer is already gone, so removing it again changes nothing.
+pub fn area_already_gone(lang: Lang) -> String {
+    pick!(
+        lang,
+        "there is no area layer to remove: nothing to do".to_string(),
+        "nie ma warstwy obszaru do usunięcia: nic do zrobienia".to_string()
     )
 }
 

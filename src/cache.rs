@@ -127,6 +127,33 @@ pub fn remember_settings(settings: &Settings) {
     let _ = fs::write(settings_file(), body);
 }
 
+/// The scope the last boundaries run used, so an empty form repeats it.
+pub fn last_scope() -> Option<(String, String, String)> {
+    let text = fs::read_to_string(settings_file()).ok()?;
+    let value: serde_json::Value = serde_json::from_str(&text).ok()?;
+    let last = value.get("last_scope")?.as_object()?;
+    Some((
+        last.get("poziom")?.as_str()?.to_string(),
+        last.get("zakres")?.as_str()?.to_string(),
+        last.get("filtr")?.as_str()?.to_string(),
+    ))
+}
+
+/// Keeps the scope a finished run used, beside the download settings.
+pub fn remember_scope(poziom: &str, zakres: &str, filtr: &str) {
+    let mut value: serde_json::Value = fs::read_to_string(settings_file())
+        .ok()
+        .and_then(|text| serde_json::from_str(&text).ok())
+        .unwrap_or_else(|| serde_json::json!({}));
+    if !value.is_object() {
+        value = serde_json::json!({});
+    }
+    value["last_scope"] = serde_json::json!({
+        "poziom": poziom, "zakres": zakres, "filtr": filtr
+    });
+    let _ = fs::write(settings_file(), format!("{value}\n"));
+}
+
 pub fn dem_dir() -> PathBuf {
     root().join("dem")
 }

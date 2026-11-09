@@ -2442,7 +2442,8 @@
   "max_span": 20.0,
   "index": false,
   "label": "Granice gmin",
-  "tool": "pobierz-granice"
+  "tool": "pobierz-granice",
+  "hidden": true
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2454,7 +2455,8 @@
   "max_span": 20.0,
   "index": false,
   "label": "Granice powiatów",
-  "tool": "pobierz-granice"
+  "tool": "pobierz-granice",
+  "hidden": true
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2466,7 +2468,8 @@
   "max_span": 20.0,
   "index": false,
   "label": "Granice województw",
-  "tool": "pobierz-granice"
+  "tool": "pobierz-granice",
+  "hidden": true
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",

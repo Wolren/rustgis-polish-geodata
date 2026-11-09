@@ -144,7 +144,20 @@ pub fn state(host: &mut Host, lang: Lang, request: &Value) -> Result<Value, Stri
     );
     items.insert("mapa".into(), json!({ "nodes": map_nodes(lang) }));
     items.insert("unit".into(), json!({ "nodes": crate::jednostki::nodes(lang) }));
-    items.insert("granice".into(), json!({ "nodes": crate::granice::nodes(lang) }));
+    let chosen_unit = request
+        .get("panel")
+        .and_then(|panel| panel.get("values"))
+        .and_then(|values| values.get("unit"))
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .and_then(|code| crate::jednostki::resolve(code).map(|(name, level)| (name, level)));
+    let boundaries = crate::granice::nodes(lang);
+    let mut granice_item = json!({ "nodes": boundaries });
+    if let Some((name, level)) = chosen_unit {
+        granice_item["label"] = json!(text::boundaries_of(lang, &name, level));
+    }
+    items.insert("granice".into(), granice_item);
     items.insert(
         "cache".into(),
         json!({ "text": text::cache_text(lang, files, bytes) }),

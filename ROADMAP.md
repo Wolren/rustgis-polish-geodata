@@ -32,6 +32,20 @@ potem według tematu, i którą całą da się sterować przez MCP albo przez pa
 - Cięcie zostawia obiekt graniczny sąsiada, gdy usługa odpowiedziała prostokątem: liczba jest górną
   granicą. Punkty i linie przechodzą nietknięte, wielokąty bez powierzchni są usuwane.
 
+### Dojrzalosc interfejsu
+
+- Formularze maja domyslne wartosci: `poziom` to Gminy, `wojewodztwo` to caly kraj, a lista zbiorow
+  zaczyna sie na pierwszym wpisie, wiec pierwsze Run dziala bez dociagania pol.
+- Przesluchano 226 polecen uruchamianych jednym kliknieciem: 10 odmawia i kazda odmowa nazywa
+  brakujacy stan (brak prostokata, brak modelu, brak warstwy granicy, srodek mapy poza Polska).
+  `obszar-wyczysc` na pustej mapie jest teraz cichym sukcesem, a nie bledem.
+- Trzy surowe warstwy A01/A02/A03 zniknely z listy narzedzia Granice i jednostki, bo prowadzi je
+  polecenie granic; katalog trzyma je jako `hidden` dla polecenia, ktore je nazywa.
+- Ostatni przebieg granic jest zapamietywany: puste pole powtarza poprzedni zakres i filtr, a
+  wybrane wojewodztwo albo "caly kraj" ma pierwszenstwo nad pamiecia.
+- Warstwy nazywaja sie jednostka, nie kodem: `Granice gmin - ostrowski`, `Granice gmin - Poland`.
+- Drzewo Granice w panelu mowi, ktorej jednostki uzyje: `Granice: gmina Siedlce`.
+
 ### Granice administracyjne jak w Pobieraczu
 
 - Polecenie `granice` z przyciskiem w grupie Pobieranie daje osiem opcji dawnego Pobieracza: poziom
