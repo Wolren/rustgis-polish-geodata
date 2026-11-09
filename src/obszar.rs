@@ -218,20 +218,69 @@ pub fn from_json(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, 
     Ok(json!({ "layer": name, "mode": Mode::View.key(), "box": box_lon }))
 }
 
-/// Fills a named polygon layer from a box, so `gp.batch` can run a download over several areas.
+/// Keeps the current area as a named layer, so `gp.batch` can run a download over several areas.
+///
+/// A script names the layer and hands a box; a ribbon click copies the area already on the map and
+/// numbers the copy, since the plugin cannot ask for a name.
 pub fn add_named(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, String> {
     let params = request.get("params").cloned().unwrap_or(Value::Null);
-    let name = params
+    let asked = params
         .get("nazwa")
         .or_else(|| params.get("name"))
         .and_then(Value::as_str)
         .map(str::trim)
-        .filter(|value| !value.is_empty())
-        .ok_or_else(|| text::area_needs_name(lang))?;
-    let box_lon = read_box(&params).ok_or_else(|| text::area_needs_box(lang))?;
-    refill(host, name, &ring(box_lon), lang)?;
-    host.notify(&text::area_added(lang, name, size_km(box_lon)));
-    Ok(json!({ "layer": name, "box": box_lon }))
+        .filter(|value| !value.is_empty());
+    let box_lon = read_box(&params);
+    let (name, ring_points) = match (asked, box_lon) {
+        (Some(name), Some(extent)) => (name.to_string(), ring(extent)),
+        (name, None) => {
+            // A click with no parameters copies the area layer; a remembered name lands in order.
+            let source = area_layer(host, lang)?;
+            let points = area_ring(host, &source, lang)?;
+            let extent = bounds(&points);
+            (name.map(str::to_string).unwrap_or_else(|| next_area_name(host)), ring(extent))
+        }
+        (None, Some(extent)) => (next_area_name(host), ring(extent)),
+    };
+    refill(host, &name, &ring_points, lang)?;
+    host.notify(&text::area_added(lang, &name, size_km(bounds(&ring_points))));
+    Ok(json!({ "layer": name, "box": bounds(&ring_points) }))
+}
+
+/// The exterior ring of the area layer's first polygon, so a copy follows a drawn shape.
+fn area_ring(host: &mut Host, name: &str, lang: Lang) -> Result<Vec<[f64; 2]>, String> {
+    let answer = host.call("host.features", json!({ "layer": name }))?;
+    let features = answer
+        .get("features")
+        .and_then(Value::as_array)
+        .filter(|list| !list.is_empty())
+        .ok_or_else(|| text::area_missing(lang,))?;
+    let mut points: Vec<[f64; 2]> = Vec::new();
+    collect_points(&features[0], &mut points, 0);
+    if points.len() < 4 {
+        return Err(text::area_no_geometry(lang, name));
+    }
+    Ok(points)
+}
+
+/// The next free "Area N", so a copied area never replaces the last one.
+fn next_area_name(host: &mut Host) -> String {
+    let taken: Vec<String> = host
+        .call("host.layers", json!({}))
+        .ok()
+        .and_then(|answer| answer.as_array().cloned())
+        .unwrap_or_default()
+        .iter()
+        .filter_map(|layer| layer.get("name").and_then(Value::as_str).map(str::to_string))
+        .collect();
+    let mut number = 1;
+    loop {
+        let candidate = format!("Area {number}");
+        if !taken.contains(&candidate) {
+            return candidate;
+        }
+        number += 1;
+    }
 }
 
 /// The box a request names, from `bbox` numbers or from a GeoJSON shape's bounds.

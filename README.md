@@ -106,7 +106,7 @@ Every download needs an area layer. Five buttons make one, and three commands se
 | `obszar-json` | `{"bbox": [west, south, east, north]}` or `{"geojson": <Feature>}` |
 | `obszar-jednostka` | `{"nazwa": "Poznań", "poziom": "gmina"}` and optional `przytnij` |
 | `obreby` | `{"teryt": "306401_1"}`, the obręby a unit publishes |
-| `obszar-dodaj` | `{"nazwa": "Gmina A", "bbox": [w, s, e, n]}`, a named area layer of its own |
+| `obszar-dodaj` | keeps the current area as its own layer, Area 1, Area 2, or takes `{"nazwa": "Gmina A", "bbox": […]}` |
 
 `poziom` accepts `gmina`, `powiat`, `wojewodztwo`, `obreb` or `miasto`. A city that PRG lists only
 as a gmina falls back to its gmina boundary. `przytnij` cuts a named layer to that unit in the same
@@ -136,8 +136,8 @@ stops before the first page.
 The WFS filter returns whole features that touch the area. **Clip to layer** cuts them with the
 built-in Clip and replaces the layer with the result.
 
-**Batch over several areas.** `obszar-dodaj` fills a named area layer, so one download runs over many
-of them: `gp.batch {"tool": "plugin:polish-geodata/pobierz-granice", "inputs": ["Gmina A", "Gmina B"],
+**Batch over several areas.** Make an area with any button, press **Keep the area**, make the next one,
+press it again. Each press keeps a copy as Area 1, Area 2, and one download then runs over all of them: `gp.batch {"tool": "plugin:polish-geodata/pobierz-granice", "inputs": ["Gmina A", "Gmina B"],
 "params": {"dane": "A03_Granice_gmin"}}` adds one layer per area, in one background run with progress
 and Cancel.
 

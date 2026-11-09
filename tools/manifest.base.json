@@ -137,9 +137,9 @@
     },
     {
       "id": "obszar-dodaj",
-      "label": "Name an\narea",
+      "label": "Keep the\narea",
       "icon": "polygon_tool",
-      "help": "Fills a named area layer from a box, so gp.batch can run one download over several areas.",
+      "help": "Keeps the current area as its own layer, Area 1, Area 2, so gp.batch can run one download over several areas. A script may name the layer and hand a box instead.",
       "params": "{\"nazwa\": \"Gmina A\", \"bbox\": [16.85, 52.35, 16.95, 52.45]} or {\"nazwa\": \"…\", \"geojson\": <Feature>}"
     },
     {
@@ -1179,12 +1179,12 @@
       "200 by default, 2000 at most.": "Domyślnie 200, najwyżej 2000.",
       "Polish national geodata in one tab: 112 raster overlays, 106 WFS datasets and 162 sheet indexes downloaded as editable layers with progress and Cancel, 15 GDOŚ protected-area types, the county EGiB as parcels, a 3 296-address service register with an update tool, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.": "Polskie dane narodowe w jednej zakładce: 112 nakładek rastrowych, 106 zbiorów WFS i 162 skorowidze pobierane jako warstwy edytowalne z postępem i Anuluj, 15 typów obszarów chronionych GDOŚ, EGiB powiatu jako działki, rejestr 3 296 adresów usług z narzędziem aktualizacji, model wysokości 1 m z terenem 3D oraz wyszukiwania ULDK, UUG i NMT.",
       "12 by default; 0 checks every new address, which takes hours.": "Domyślnie 12; 0 sprawdza każdy nowy adres, co trwa godzinami.",
-      "Fills a named area layer from a box, so gp.batch can run one download over several areas.": "Wypełnia nazwaną warstwę obszaru z prostokąta, więc gp.batch pobiera jednym przebiegiem kilka obszarów.",
-      "Name an\narea": "Nazwij\nobszar",
       "GUGiK maps and more": "GUGiK: mapy i inne",
       "Institutions and heritage": "Instytucje i dziedzictwo",
       "Topographic and thematic GUGiK maps, statistics and ASG-EUPOS.": "Topograficzne i tematyczne mapy GUGiK, statystyki i ASG-EUPOS.",
-      "GUS, IMGW, NID heritage, BDL forests and the rest of the institutions.": "GUS, IMGW, dziedzictwo NID, lasy BDL i pozostałe instytucje."
+      "GUS, IMGW, NID heritage, BDL forests and the rest of the institutions.": "GUS, IMGW, dziedzictwo NID, lasy BDL i pozostałe instytucje.",
+      "Keep the\narea": "Zachowaj\nobszar",
+      "Keeps the current area as its own layer, Area 1, Area 2, so gp.batch can run one download over several areas. A script may name the layer and hand a box instead.": "Zapisuje bieżący obszar jako osobną warstwę, Obszar 1, Obszar 2, więc gp.batch pobiera jednym przebiegiem kilka obszarów. Skrypt może nadać nazwę i podać prostokąt."
     }
   },
   "moreMaps": {
