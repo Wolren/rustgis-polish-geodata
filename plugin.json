@@ -1762,9 +1762,9 @@
         },
         {
           "name": "zakres",
-          "label": "Powiat or gmina",
+          "label": "Powiat or gmina (empty uses the unit chosen in the panel)",
           "kind": "text",
-          "help": "Optional: a powiat or a gmina by name or TERYT code, such as 1416 or Ostrowski. It narrows the voivodeship above."
+          "help": "A name or a TERYT code such as 1416 or Ostrowski. Leave it empty to use the unit chosen in the panel tree."
         },
         {
           "name": "filtr",
@@ -3172,9 +3172,9 @@
       "Keeps the boundaries whose name holds this text, accents aside.": "Zostawia granice, których nazwa zawiera ten tekst, bez ogonków.",
       "0 means no byte limit.": "0 znaczy brak limitu bajtów.",
       "Voivodeship": "Województwo",
-      "Powiat or gmina": "Powiat albo gmina",
       "The voivodeship whose boundaries you want, or cały kraj for the country.": "Województwo, którego granice chcesz, albo cały kraj.",
-      "Optional: a powiat or a gmina by name or TERYT code, such as 1416 or Ostrowski. It narrows the voivodeship above.": "Opcjonalnie: powiat albo gmina po nazwie lub kodzie TERYT, np. 1416. Zawęża województwo powyżej."
+      "Powiat or gmina (empty uses the unit chosen in the panel)": "Powiat albo gmina (puste = jednostka z panelu)",
+      "A name or a TERYT code such as 1416 or Ostrowski. Leave it empty to use the unit chosen in the panel tree.": "Nazwa albo kod TERYT, np. 1416. Puste pole bierze jednostkę wybraną w drzewie panelu."
     }
   },
   "panel": {

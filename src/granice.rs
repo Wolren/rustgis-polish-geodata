@@ -231,12 +231,23 @@ pub fn tool(request: &Value, lang: Lang) -> Result<Value, String> {
         .map(str::trim)
         .filter(|value| !value.is_empty() && !value.starts_with("cały") && !value.starts_with("whole"))
         .map(str::to_string);
+    // The field wins; empty falls back to the unit chosen in the panel's tree.
     let narrower = params
         .get("zakres")
         .and_then(Value::as_str)
         .map(str::trim)
         .filter(|value| !value.is_empty())
-        .map(str::to_string);
+        .map(str::to_string)
+        .or_else(|| {
+            request
+                .get("panel")
+                .and_then(|panel| panel.get("values"))
+                .and_then(|values| values.get("unit"))
+                .and_then(Value::as_str)
+                .map(str::trim)
+                .filter(|value| !value.is_empty())
+                .map(str::to_string)
+        });
     let scope = narrower
         .clone()
         .or_else(|| {

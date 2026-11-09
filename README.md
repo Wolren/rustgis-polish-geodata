@@ -156,9 +156,10 @@ The panel's **Clip the download to the unit boundary** checkbox is on by default
 follows the unit's shape. Turn it off to keep the whole bounding box, and the run says so.
 
 **Administrative boundaries, the guided way.** The Downloads group carries **Administrative boundaries**, a
-tool form: **Level**, **Voivodeship** as a dropdown of 16, **Powiat or gmina** by name or TERYT code, a name
-filter and a size limit. The host allows 64 choices in a dropdown, so the 380 powiaty and 2 479 gminy take a
-name or a code; the panel's **Administrative unit** tree lists all of them with live search.
+tool form: **Level**, **Voivodeship** as a dropdown of 16, **Powiat or gmina**, a name filter and a size limit. The host
+allows 64 choices in a dropdown, so the 380 powiaty and 2 479 gminy cannot be a list there. Leave **Powiat or
+gmina** empty and the unit you picked in the panel's **Administrative unit** tree is used, where all 2 900 have
+live search; a name or a TERYT code also works.
 
 | Level | Scope | Call | Rows |
 | --- | --- | --- | --- |
