@@ -10,6 +10,8 @@ Run: python tools/fuzz.py --cases 12 --seed 1 --timeout 90 --report D:/Scratch/f
 
 import base64
 import json
+import math
+import re
 import os
 import random
 import subprocess
@@ -44,6 +46,41 @@ UNITS = [
 ]
 
 
+# Features per km2 for the whole country: far off the band means a wrong filter.
+FORECAST = {
+    "A01_Granice_wojewodztw": 0.00005,
+    "A02_Granice_powiatow": 0.0012,
+    "A03_Granice_gmin": 0.0079,
+    "Punkty adresowe": 21.7,
+    "Ulice": 0.3,
+    "Działki": 96.0,
+}
+# A band this wide still catches an empty answer and a whole-country answer.
+BAND = 10.0
+
+
+def km2(extent: list) -> float:
+    """The box in square kilometres, from its middle latitude."""
+    width = abs(extent[2] - extent[0]) * 111.32 * math.cos(math.radians((extent[1] + extent[3]) / 2))
+    height = abs(extent[3] - extent[1]) * 111.32
+    return max(width * height, 1e-6)
+
+
+def density(features: int, size_km2: float, dataset: str) -> dict:
+    """The observed density, the forecast and how far the case is from it."""
+    forecast = FORECAST.get(dataset)
+    observed = features / size_km2
+    if not forecast:
+        return {"observed": round(observed, 4), "forecast": None, "ratio": None}
+    return {
+        "observed": round(observed, 4),
+        "forecast": forecast,
+        "ratio": round(observed / forecast, 2),
+        # Below about twenty expected features a box is smaller than one feature: no comparison.
+        "small": forecast * size_km2 < 20,
+    }
+
+
 def box(lon: float, lat: float, span: float) -> list:
     return [round(lon - span / 2, 6), round(lat - span / 2, 6), round(lon + span / 2, 6), round(lat + span / 2, 6)]
 
@@ -71,7 +108,8 @@ def plan(rng: random.Random, count: int) -> list:
         if kind == "small":
             cases.append(("small area and municipalities", [
                 {"id": "obszar-json", "params": {"bbox": box(lon, lat, 0.02)}},
-                {"id": "pobierz-granice", "tool": True, "params": {"dane": "A03_Granice_gmin"}},
+                {"id": "pobierz-granice", "tool": True, "params": {"dane": "A03_Granice_gmin"},
+                 "extent": box(lon, lat, 0.02), "dataset": "A03_Granice_gmin"},
             ]))
         elif kind == "tiny":
             cases.append(("a 20 m box", [
@@ -82,7 +120,8 @@ def plan(rng: random.Random, count: int) -> list:
         elif kind == "big":
             cases.append(("a 2 degree box", [
                 {"id": "obszar-json", "params": {"bbox": box(lon, lat, 2.0)}},
-                {"id": "pobierz-granice", "tool": True, "params": {"dane": "A03_Granice_gmin"}},
+                {"id": "pobierz-granice", "tool": True, "params": {"dane": "A03_Granice_gmin"},
+                 "extent": box(lon, lat, 2.0), "dataset": "A03_Granice_gmin"},
             ]))
         elif kind == "outside":
             cases.append(("a box outside Poland", [
@@ -121,6 +160,8 @@ def plan(rng: random.Random, count: int) -> list:
 
 def run_case(commands: list, timeout: int) -> dict:
     args = [CLI, "run", "--plugin", PLUGIN, "--sample"]
+    extent = next((c["extent"] for c in commands if c.get("extent")), None)
+    dataset = next((c["dataset"] for c in commands if c.get("dataset")), None)
     for command in commands:
         params = dict(command.get("params", {}))
         if command.get("tool"):
@@ -142,11 +183,19 @@ def run_case(commands: list, timeout: int) -> dict:
             verdict = "REFUSED"
         else:
             verdict = "CRASH"
+        counts = re.findall(r": (\d+) features?\b", "\n".join(stderr))
+        found = int(counts[-1]) if counts else 0
+        density_row = None
+        # A refusal or a timeout says nothing about density: only a finished download is measured.
+        if extent and dataset is not None and verdict == "OK":
+            density_row = density(found, km2(extent), dataset)
+            density_row["features"] = found
         return {
             "verdict": verdict,
             "seconds": round(elapsed, 1),
             "status": status[:300],
             "code": done.returncode,
+            "density": density_row,
         }
     except subprocess.TimeoutExpired:
         return {"verdict": "TIMEOUT", "seconds": float(timeout), "status": "", "code": None}
@@ -167,6 +216,19 @@ def suggestions(results: list) -> list:
         out.append(f"{len(slow)} cases took over 20 s: a tool would keep the window free, a command does not")
     if any("limit" in r["status"].lower() for r in refusals):
         out.append("a refusal names a limit: the message should carry the measured size and the next step")
+    rows = [r for r in results if r.get("density")]
+    for row in rows:
+        ratio = row["density"].get("ratio")
+        if ratio is None or row["density"].get("small"):
+            continue
+        if row["density"]["features"] == 0:
+            out.append(f"{row['case']}: no feature came back where the forecast says {row['density']['forecast']}/km2")
+        elif ratio > BAND:
+            out.append(f"{row['case']}: {ratio}x the forecast {row['density']['forecast']}/km2: the filter let too much through")
+        elif ratio < 1 / BAND:
+            out.append(f"{row['case']}: {ratio}x the forecast {row['density']['forecast']}/km2: the filter lost data")
+    if rows:
+        out.append(f"{len(rows)} download(s) checked against a density forecast, band {BAND}x either way")
     if not crashes and not timeouts:
         out.append("no crash and no timeout in this run: the gates hold")
     return out

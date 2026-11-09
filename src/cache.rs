@@ -76,15 +76,17 @@ pub fn register_file() -> PathBuf {
     root().join("eziudp.json")
 }
 
-/// The panel's two download settings, kept beside the cache so they outlast a session.
+/// The panel's download settings, kept beside the cache so they outlast a session.
 pub struct Settings {
     pub confirm_large: bool,
     pub limit_mb: i64,
+    /// Whether a typed download is cut to the unit's boundary, on unless the user turns it off.
+    pub clip_unit: bool,
 }
 
 impl Default for Settings {
     fn default() -> Self {
-        Settings { confirm_large: false, limit_mb: 25 }
+        Settings { confirm_large: false, limit_mb: 25, clip_unit: true }
     }
 }
 
@@ -110,13 +112,17 @@ pub fn settings() -> Settings {
             .and_then(serde_json::Value::as_i64)
             .filter(|mb| (5..=500).contains(mb))
             .unwrap_or(25),
+        clip_unit: value
+            .get("clip_unit")
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(true),
     }
 }
 
 pub fn remember_settings(settings: &Settings) {
     let body = format!(
-        "{{\"confirm_large\": {}, \"limit_mb\": {}}}\n",
-        settings.confirm_large, settings.limit_mb
+        "{{\"confirm_large\": {}, \"limit_mb\": {}, \"clip_unit\": {}}}\n",
+        settings.confirm_large, settings.limit_mb, settings.clip_unit
     );
     let _ = fs::write(settings_file(), body);
 }

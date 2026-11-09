@@ -129,7 +129,8 @@ pub fn typed_for_unit(host: &mut Host, params: &Value, lang: Lang) -> Result<Val
         .ok_or_else(|| text::unit_unknown(lang, code))?;
     let layer = catalog::wfs_by_label(label).ok_or_else(|| text::unknown_dataset(lang, label))?;
 
-    // The unit becomes the area, so the clip and the next download both have it.
+    // The checkbox in the panel decides whether the layer is cut; it is on unless turned off.
+    let clip = crate::cache::settings().clip_unit;
     let area = crate::prg::area(host, &json!({ "nazwa": unit, "poziom": level, "kod": code }), lang)?;
     let boundary = area
         .get("layer")
@@ -156,33 +157,40 @@ pub fn typed_for_unit(host: &mut Host, params: &Value, lang: Lang) -> Result<Val
         host.notify(&text::typed_capped(lang, download.features.len()));
     }
 
-    // The unit's ring cuts the box result: a neighbour's feature only stays when it reaches inside.
+    // The unit's ring cuts the box result, unless the panel's checkbox was turned off.
     let name = text::typed_layer(lang, label, &unit, &level);
+    let fetched = download.features.len() as u64;
     let geojson = json!({ "type": "FeatureCollection", "features": download.features });
     host.add_layer(&name, geojson)?;
-    let kept = match crate::clip::to_area(host, &name, &boundary, lang) {
-        Ok(answer) => answer
-            .get("features")
-            .and_then(Value::as_u64)
-            .unwrap_or_default(),
-        Err(error) => {
-            host.notify(&text::typed_clip_failed(lang, &error));
-            download.features.len() as u64
+    let mut kept = fetched;
+    if clip {
+        kept = match crate::clip::to_area(host, &name, &boundary, lang) {
+            Ok(answer) => answer
+                .get("features")
+                .and_then(Value::as_u64)
+                .unwrap_or(fetched),
+            Err(error) => {
+                host.notify(&text::typed_clip_failed(lang, &error));
+                fetched
+            }
+        };
+        // A feature that only touches the boundary comes out of the clip with no area, so it goes.
+        let solid = drop_shavings(host, &name, lang).unwrap_or(kept);
+        if solid < kept {
+            host.notify(&text::typed_shavings(lang, kept - solid));
         }
-    };
-    // A feature that only touches the boundary comes out of the clip with no area, so it goes.
-    let solid = drop_shavings(host, &name, lang).unwrap_or(kept);
-    if solid < kept {
-        host.notify(&text::typed_shavings(lang, kept - solid));
+        kept = solid;
+    } else {
+        host.notify(&text::typed_uncut(lang));
     }
-    host.notify(&text::typed_added(lang, &name, solid, &unit, &level));
-    let kept = solid;
+    host.notify(&text::typed_added(lang, &name, kept, &unit, &level));
     Ok(json!({
         "layer": name,
         "unit": unit,
         "level": level,
         "dataset": label,
         "features": kept,
+        "clipped": clip,
     }))
 }
 
@@ -299,12 +307,23 @@ pub fn from_register(host: &mut Host, params: &Value, lang: Lang) -> Result<Valu
                 .collect::<Vec<_>>()
         })
         .unwrap_or_default();
-    let body = http::fetch(
-        &format!("{}?SERVICE=WFS&REQUEST=GetCapabilities", service.url),
-        90,
-        lang,
-    )?;
-    let mut types: Vec<String> = capability_types(&body);
+    // A stored type answers without capabilities, so the long tail of municipal services is cheap.
+    let stored = if wanted_types.is_empty() {
+        zrodla::stored_type(&service.url)
+    } else {
+        None
+    };
+    let mut types: Vec<String> = match stored {
+        Some(type_name) => vec![type_name],
+        None => {
+            let body = http::fetch(
+                &format!("{}?SERVICE=WFS&REQUEST=GetCapabilities", service.url),
+                90,
+                lang,
+            )?;
+            capability_types(&body)
+        }
+    };
     if !wanted_types.is_empty() {
         types.retain(|name| {
             let lower = name.to_lowercase();

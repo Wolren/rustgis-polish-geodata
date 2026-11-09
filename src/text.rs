@@ -1420,6 +1420,24 @@ pub fn typed_clip_failed(lang: Lang, error: &str) -> String {
     )
 }
 
+/// The panel's checkbox is off, so the layer holds the box result.
+pub fn typed_uncut(lang: Lang) -> String {
+    pick!(
+        lang,
+        "cut to the unit is off in the panel: the layer holds every feature in its box".to_string(),
+        "cięcie do jednostki jest wyłączone w panelu: warstwa ma wszystkie obiekty z prostokąta".to_string()
+    )
+}
+
+/// The panel's checkbox label, the setting that decides whether a typed download is cut.
+pub fn clip_unit_label(lang: Lang) -> String {
+    pick!(
+        lang,
+        "Clip the download to the unit boundary".to_string(),
+        "Przytnij pobranie do granicy jednostki".to_string()
+    )
+}
+
 /// Features the clip left as lines along the boundary went away.
 pub fn typed_shavings(lang: Lang, dropped: u64) -> String {
     pick!(

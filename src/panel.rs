@@ -34,6 +34,8 @@ pub fn attach(answer: &mut Value, state: Value) {
 /// The panel's two download settings, as the widgets name them.
 const CONFIRM_ID: &str = "potwierdz-duze";
 const LIMIT_ID: &str = "limit-mb";
+/// The checkbox that cuts a typed download to the unit boundary.
+const CLIP_ID: &str = "przytnij-jednostke";
 /// A slider's ends, and the limit a stored value must fall between.
 const LIMIT_MIN: i64 = 5;
 const LIMIT_MAX: i64 = 500;
@@ -51,6 +53,9 @@ pub fn preferences(host: &mut Host, request: &Value, lang: Lang) -> Result<Value
     }
     if let Some(limit) = values.get(LIMIT_ID).and_then(Value::as_i64) {
         settings.limit_mb = limit.clamp(LIMIT_MIN, LIMIT_MAX);
+    }
+    if let Some(clip) = values.get(CLIP_ID).and_then(Value::as_bool) {
+        settings.clip_unit = clip;
     }
     cache::remember_settings(&settings);
     let note = text::settings_saved(lang, settings.limit_mb, settings.confirm_large);
@@ -164,7 +169,7 @@ pub fn state(host: &mut Host, lang: Lang, request: &Value) -> Result<Value, Stri
     Ok(json!({
         "panel": {
             "items": items,
-            "values": { CONFIRM_ID: settings.confirm_large, LIMIT_ID: settings.limit_mb },
+            "values": { CONFIRM_ID: settings.confirm_large, LIMIT_ID: settings.limit_mb, CLIP_ID: settings.clip_unit },
         },
         "area": area.is_some(),
         "layers": others,

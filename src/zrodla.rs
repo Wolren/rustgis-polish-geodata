@@ -277,6 +277,19 @@ const THREADS: usize = 16;
 /// Seconds one address may take; a service that answers needs a small part of it.
 const TIMEOUT: u64 = 6;
 
+/// The feature type a register address is known to publish, so no capabilities round trip is needed.
+pub fn stored_type(url: &str) -> Option<String> {
+    static TYPES: std::sync::OnceLock<Value> = std::sync::OnceLock::new();
+    let table = TYPES.get_or_init(|| {
+        serde_json::from_str(include_str!("../data/eziudp-types.json")).unwrap_or_else(|_| Value::Null)
+    });
+    table
+        .get(url)
+        .and_then(|entry| entry.get("type"))
+        .and_then(Value::as_str)
+        .map(str::to_string)
+}
+
 /// The update tool: reads the register, proves the addresses the file lacks, and keeps the result.
 pub fn update(params: &Value, lang: Lang) -> Result<Value, String> {
     let full = params.get("pelna").and_then(Value::as_bool).unwrap_or(false);
@@ -571,5 +584,22 @@ mod tests {
         assert_eq!(entries.len(), 2);
         assert_eq!(entries[0].name, "A");
         assert_eq!(entries[1].kind, "wfs");
+    }
+}
+
+#[cfg(test)]
+mod store_tests {
+    use super::stored_type;
+
+    /// The table ships in the binary, so a rebuild that loses it breaks the long tail silently.
+    #[test]
+    fn the_store_names_a_type() {
+        let table: serde_json::Value =
+            serde_json::from_str(include_str!("../data/eziudp-types.json")).expect("a JSON table");
+        let entries = table.as_object().expect("an object");
+        assert!(entries.len() >= 100, "addresses: {}", entries.len());
+        let (address, _) = entries.iter().next().expect("an entry");
+        assert!(stored_type(address).is_some(), "{address}");
+        assert!(stored_type("https://example.invalid/wfs").is_none());
     }
 }

@@ -142,6 +142,9 @@ stops before the first page.
 The WFS filter returns whole features that touch the area. **Clip to layer** cuts them with the
 built-in Clip and replaces the layer with the result.
 
+The panel's **Clip the download to the unit boundary** checkbox is on by default: a typed download
+follows the unit's shape. Turn it off to keep the whole bounding box, and the run says so.
+
 **One call, one typed layer.** `pobierz-typ {"dane": "Punkty adresowe", "unit": "1464011"}` reads the
 unit boundary from PRG, sets it as the area, downloads that dataset and cuts the layer to the unit.
 Measured: 688 address points for gmina Siedlce, 21 gminy for powiat ostrowski. The cut keeps a

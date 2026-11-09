@@ -1,0 +1,986 @@
+{
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/augustowmiasto": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/baborow": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/baranowsandomierski": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/bardo": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/barwice": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.SUIKZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/bialobrzegibialobrzeski": {
+"type": "app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "1.1.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/bialogardmiasto": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/biecz": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/bielawa": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/bielskpodlaskimiasto": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/biezun": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/blachownia": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/bobolice": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/bodzentyn": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.SUIKZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/bornesulinowo": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/brzeg": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/brzegdolny": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/brzozow": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/bystrzycaklodzka": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/bytow": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/chelmek": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/chmielnikkielecki": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/chodziezmiasto": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/chojnowmiasto": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/chorzele": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/ciepielow": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/czarnydunajec": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/czechowicedziedzice": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/czerwinsknadwisla": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/czlopa": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/daleszyce": {
+"type": "app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "1.1.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/debicamiasto": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/dobiegniew": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/dobralobeski": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/dobrodzien": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/dobrzany": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/drezdenko": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.SUIKZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/drobin": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/drohiczyn": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/dubiecko": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/dusznikizdroj": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.SUIKZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/dynowmiasto": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/dziwnow": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/glinojeck": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/glogowek": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/gora": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/gorznobrodnicki": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/grabow": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/gryfowslaski": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/ilza": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/insko": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/jastrzab": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/jawornikpolski": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.SUIKZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/jaworzynaslaska": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/jelczlaskowice": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/kaliszpomorski": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/kamienieczabkowicki": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/karlino": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/karpacz": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/kazimierzawielka": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.SUIKZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/kietrz": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/kleczew": {
+"type": "app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "1.1.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/kolonowskie": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/koszyce": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/kozminek": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/kozminwielkopolski": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/krzanowice": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/krzeszowice": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/ksiazwielki": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/lesnica": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/libiaz": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/lidzbarkwarminskimiasto": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/lipsko": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/lubomierz": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/lubyczakrolewska": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/lwowek": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/miasteczkokrajenskie": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.SUIKZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/narol": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/nowadeba": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/nowebrzesko": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/nowemiasto": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/opatowiec": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/opatowopatowski": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/osiecznaleszczynski": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/osiekstaszowski": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/ostrzeszow": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/piensk": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/pierzchnica": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/pieszyce": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/pinczow": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/piszczac": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/pleszew": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/proszowice": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/przedecz": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/radoszyce": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/rudniknadsanem": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/sieniawa": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/siewierz": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/slomniki": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/sulkowice": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/tychowo": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/wegliniec": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/wolow": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/wyszogrod": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/zagorow": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/zukowo": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://administracja.gison.pl/zasiegi_mpzp_wfs_nazwa/zuromin": {
+"type": "ms:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://geo.universemapmaker.online/geoserver/BychawaSUIKZP/wfs": {
+"type": "BychawaSUIKZP:aktplanowaniaprzestrzennego_id_227847",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://geo.universemapmaker.online/geoserver/CzeladzMPZP/wfs": {
+"type": "CzeladzMPZP:aktplanowaniaprzestrzennego_id_e7cd293d32",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://geo.universemapmaker.online/geoserver/CzeladzPOG/wfs": {
+"type": "CzeladzPOG:aktplanowaniaprzestrzennego_id_935760",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla planu ogólnego gminy (POG)"
+},
+"https://geo.universemapmaker.online/geoserver/CzeladzSUIKZP/wfs": {
+"type": "CzeladzSUIKZP:aktplanowaniaprzestrzennego_id_685947",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://geo.universemapmaker.online/geoserver/ParzeczewMPZP/wfs": {
+"type": "ParzeczewMPZP:aktplanowaniaprzestrzennego_id_49844",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://geo.universemapmaker.online/geoserver/ParzeczewPOG/wfs": {
+"type": "ParzeczewPOG:aktplanowaniaprzestrzennego_id_220910",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla planu ogólnego gminy (POG)"
+},
+"https://geo.universemapmaker.online/geoserver/ParzeczewSUIKZP/wfs": {
+"type": "ParzeczewSUIKZP:aktplanowaniaprzestrzennego_id_84816",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://geo.universemapmaker.online/geoserver/PilicaMPZP/wfs": {
+"type": "PilicaMPZP:aktplanowaniaprzestrzennego_id_391288",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://geo.universemapmaker.online/geoserver/PilicaSUIKZP/wfs": {
+"type": "PilicaSUIKZP:aktplanowaniaprzestrzennego_id_795083",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://geo.universemapmaker.online/geoserver/SannikiMPZP/wfs": {
+"type": "SannikiMPZP:aktplanowaniaprzestrzennego_id_546823",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://geo.universemapmaker.online/geoserver/SannikiSUIKZP/wfs": {
+"type": "SannikiSUIKZP:aktplanowaniaprzestrzennego_id_52577",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://geodp.pl/geoserver/dobczyce/wfs": {
+"type": "Zbior_APP_Dobczyce_MPZP___AktPlanowaniaPrzestrzennego",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://geodp.pl/geoserver/kobylnica/wfs": {
+"type": "Zbior_APP_Studium_Kobylnica___AktPlanowaniaPrzestrzennego",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://geodp.pl/geoserver/kurow/wfs": {
+"type": "Zbior_APP_MPZP_Kurow___AktPlanowaniaPrzestrzennego",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://giap3.miastoceramiki.eu/wfs/723/group/lwowek_slaski_emuia_wms": {
+"type": "Miejscowosci",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Ewidencja Miejscowości, Ulic i Adresów (EMUiA)"
+},
+"https://giap3.miastoceramiki.eu/wfs/806/group/ladek_zdroj_mpzp_wms": {
+"type": "DODATKOWE_INFORMACJE_LINIOWE",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://giap3.miastoceramiki.eu/wfs/806/group/ladekzdroj_EMUiA_wms": {
+"type": "Miejscowosci",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Ewidencja Miejscowości, Ulic i Adresów (EMUiA)"
+},
+"https://mapa.akoportal.pl/backend/planowanie_przestrzenne_op/wfs": {
+"type": "planowanie_przestrzenne_op:v_mpzp_obowiazujace_mapa",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://mapa.jocgis.pl/serwer/app_bialaczow_mpzp/wfs": {
+"type": "app_bialaczow_mpzp:AktPlanowaniaPrzestrzennego",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://mapa.jocgis.pl/serwer/app_bialaczow_suikzp/wfs": {
+"type": "app_bialaczow_suikzp:AktPlanowaniaPrzestrzennego",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://mapa.jocgis.pl/serwer/app_nowasarzyna_mpzp/wfs": {
+"type": "app_nowasarzyna_mpzp:AktPlanowaniaPrzestrzennego",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://mapa.jocgis.pl/serwer/app_nowasarzyna_suikzp/wfs": {
+"type": "app_nowasarzyna_suikzp:AktPlanowaniaPrzestrzennego",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://mapa.jocgis.pl/serwer/bialaczow_emuia/wfs": {
+"type": "bialaczow_emuia:miejscowosci",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Ewidencja Miejscowości, Ulic i Adresów (EMUiA)"
+},
+"https://mpzp.gis-expert.pl/app/annopol/wfs": {
+"type": "annopol:zasiegi_mpzp",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://mpzp.gis-expert.pl/app/janow_lubelski/wfs": {
+"type": "janow_lubelski:janow_lubelski_zasieg_pog",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0202073/wfs": {
+"type": "voxly_app_0202073:app.AktPlanowaniaPrzestrzennego.POG",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0402011/wfs": {
+"type": "voxly_app_0402011:app.AktPlanowaniaPrzestrzennego.POG",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0402073/wfs": {
+"type": "voxly_app_0402073:app.AktPlanowaniaPrzestrzennego.MPZP.elaboration",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0403043/wfs": {
+"type": "voxly_app_0403043:app.AktPlanowaniaPrzestrzennego.POG",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0403083/wfs": {
+"type": "voxly_app_0403083:app.AktPlanowaniaPrzestrzennego.POG",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0403083_suikzp/wfs": {
+"type": "voxly_app_0403083_suikzp:app.AktPlanowaniaPrzestrzennego.SUIKZP.elaboration",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0405011/wfs": {
+"type": "voxly_app_0405011:app.AktPlanowaniaPrzestrzennego.MPZP.elaboration",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0405011_suikzp/wfs": {
+"type": "voxly_app_0405011_suikzp:app.AktPlanowaniaPrzestrzennego.SUIKZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0407053/wfs": {
+"type": "voxly_app_0407053:app.AktPlanowaniaPrzestrzennego.POG",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0408052/wfs": {
+"type": "voxly_app_0408052:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0410013/wfs": {
+"type": "voxly_app_0410013:app.AktPlanowaniaPrzestrzennego.MPZP.elaboration",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0410023/wfs": {
+"type": "voxly_app_0410023:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0410023_suikzp/wfs": {
+"type": "voxly_app_0410023_suikzp:app.AktPlanowaniaPrzestrzennego.SUIKZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0410033/wfs": {
+"type": "voxly_app_0410033:app.AktPlanowaniaPrzestrzennego.MPZP.elaboration",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0410033_suikzp/wfs": {
+"type": "voxly_app_0410033_suikzp:app.AktPlanowaniaPrzestrzennego.SUIKZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0413013/wfs": {
+"type": "voxly_app_0413013:app.AktPlanowaniaPrzestrzennego.MPZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0414082/wfs": {
+"type": "voxly_app_0414082:app.AktPlanowaniaPrzestrzennego.MPZP.elaboration",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0414082_suikzp/wfs": {
+"type": "voxly_app_0414082_suikzp:app.AktPlanowaniaPrzestrzennego.SUIKZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0415011/wfs": {
+"type": "voxly_app_0415011:app.AktPlanowaniaPrzestrzennego.POG",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0418113/wfs": {
+"type": "voxly_app_0418113:app.AktPlanowaniaPrzestrzennego.POG",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0419013/wfs": {
+"type": "voxly_app_0419013:app.AktPlanowaniaPrzestrzennego.POG",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_0811063/wfs": {
+"type": "voxly_app_0811063:app.AktPlanowaniaPrzestrzennego.POG",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_1405043/wfs": {
+"type": "voxly_app_1405043:app.AktPlanowaniaPrzestrzennego.MPZP.elaboration",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_1423063/wfs": {
+"type": "voxly_app_1423063:app.AktPlanowaniaPrzestrzennego.MPZP.elaboration",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_2202043/wfs": {
+"type": "voxly_app_2202043:app.AktPlanowaniaPrzestrzennego.POG",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_2404033/wfs": {
+"type": "voxly_app_2404033:app.AktPlanowaniaPrzestrzennego.MPZP.elaboration",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_2404063/wfs": {
+"type": "voxly_app_2404063:app.AktPlanowaniaPrzestrzennego.MPZP.elaboration",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_2404123/wfs": {
+"type": "voxly_app_2404123:app.AktPlanowaniaPrzestrzennego.MPZP.elaboration",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_2404123_suikzp/wfs": {
+"type": "voxly_app_2404123_suikzp:app.AktPlanowaniaPrzestrzennego.SUIKZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_2406023/wfs": {
+"type": "voxly_app_2406023:app.AktPlanowaniaPrzestrzennego.MPZP.elaboration",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_2406023_suikzp/wfs": {
+"type": "voxly_app_2406023_suikzp:app.AktPlanowaniaPrzestrzennego.SUIKZP",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla studium uwarunkowań i kierunków zagospodarowania przestrzennego (SUiKZP)"
+},
+"https://voxly.pl/geoserver/voxly_app_3204043/wfs": {
+"type": "voxly_app_3204043:app.AktPlanowaniaPrzestrzennego.MPZP.elaboration",
+"version": "2.0.0",
+"geom": "msGeometry",
+"name": "Zbiór danych przestrzennych dla miejscowych planów zagospodarowania przestrzennego (MPZP)"
+}
+}

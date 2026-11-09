@@ -48,6 +48,9 @@ potem według tematu, i którą całą da się sterować przez MCP albo przez pa
   tymczasowy. Przebieg domyślny: 7,2 s. Zostało 21 adresów na następny przebieg.
 - **Każdy WFS z rejestru**: `rejestr-pobierz` czyta `GetCapabilities`, bierze typy z żądania,
   ściąga strony po 1 000 i ponawia żądanie jako WFS 1.1.0, gdy 2.0.0 jest odrzucone.
+- **Typy długiego ogona**: `tools/wfs_more.py` przepytał 200 adresów WFS z rejestru i zapisał typ
+  każdego, który odpowiedział, do `data/eziudp-types.json` (164 wpisy, głównie MPZP i SUIKZP gmin).
+  `rejestr-pobierz` bierze typ z tego pliku i nie pyta o capabilities, gdy żądanie nie podaje typu.
 - **EGiB powiatu**: `dzialki-powiat` nazywa powiat przez ULDK, bierze jego WFS z rejestru i stronicuje
   do 20 000 obiektów. Próbuje każdego WFS-u powiatu, zanim odmówi.
 
@@ -111,16 +114,18 @@ potem według tematu, i którą całą da się sterować przez MCP albo przez pa
 ### Do poprawy w kodzie
 
 - **Cięcie do jednostki bez sąsiada**: obiekt, który tylko dotyka granicy, zostaje po cięciu hosta,
-  więc liczba dla zbioru granicznego jest górną granicą. Potrzebny test przecinania w samej wtyczce.
-- **Gęstość w fuzzerze**: mierzy czas i werdykt, ale nie porównuje obiektów na km² z prognozą.
+  więc liczba dla zbioru granicznego jest górną granicą. Przełącznik **Przytnij pobranie do granicy
+  jednostki** w panelu jest domyślnie włączony; wyłączenie zostawia cały prostokąt.
+- **Gęstość w fuzzerze**: zrobione. Każde pobranie porównuje obiekty na km² z prognozą
+  (`FORECAST`), pasmo 10× w obie strony; pudełko mniejsze niż obiekt jest pomijane.
 
 ### Dane
 
 - **GUNB i KOWR**: rejestr ich nie zna pod tą nazwą, więc nie ma czego dodać bez nowego źródła.
 - **BDOT10k jako typy**: usługa typowana GUGiK odpowiada 401, więc publiczna droga to paczki powiatowe
   (`BDOT10k - powiaty do pobrania`), nie warstwy per typ.
-- **Więcej WFS**: rejestr ma 1 554 adresy WFS; `rejestr-pobierz` czyta każdy, ale nie ma dla nich
-  katalogu z typami i limitami.
+- **Więcej typów z rejestru**: 164 z 1 554 adresów mają zapisany typ; przebieg na resztę to jedno
+  uruchomienie `tools/wfs_more.py`, około 40 minut.
 
 ### Host (RustGIS)
 

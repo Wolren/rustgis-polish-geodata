@@ -1000,6 +1000,14 @@
         "default": 25,
         "steps": true,
         "command": "ustawienia"
+      },
+      {
+        "kind": "checkbox",
+        "id": "przytnij-jednostke",
+        "label": "Clip the download to the unit boundary",
+        "help": "A typed download follows the unit's boundary; turn this off to keep the whole bounding box.",
+        "default": true,
+        "command": "ustawienia"
       }
     ]
   },
@@ -1211,7 +1219,9 @@
       "Area from the\ntree": "Obszar\ndrzewa",
       "Sets the area from the unit chosen in the panel's tree, which the panel runs for you.": "Ustawia obszar z jednostki wybranej w drzewie panelu; panel uruchamia je za Ciebie.",
       "Typed\ndownload": "Pobierz\ntyp",
-      "Downloads one typed dataset for a unit in one call: it reads the unit boundary, fetches the type and cuts the layer to the unit.": "Pobiera jeden typowany zbiór dla jednostki w jednym wywołaniu: czyta granicę jednostki, pobiera typ i przycina warstwę do jednostki."
+      "Downloads one typed dataset for a unit in one call: it reads the unit boundary, fetches the type and cuts the layer to the unit.": "Pobiera jeden typowany zbiór dla jednostki w jednym wywołaniu: czyta granicę jednostki, pobiera typ i przycina warstwę do jednostki.",
+      "Clip the download to the unit boundary": "Przytnij pobranie do granicy jednostki",
+      "A typed download follows the unit's boundary; turn this off to keep the whole bounding box.": "Pobranie typowane idzie za granicą jednostki; wyłącz, aby zachować cały prostokąt."
     }
   },
   "moreMaps": {
