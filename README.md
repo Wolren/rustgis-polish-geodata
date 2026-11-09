@@ -139,6 +139,9 @@ A city's parcels weigh about 9 MB, measured on Warsaw: 5 248 parcels. The gate a
 **Download even if large** tick answers for every later run. An area the service counts at zero
 stops before the first page.
 
+One run takes 10 000 features and 25 MB by default. **Download even if large** raises both: 50 000
+features, and the greater of 256 MB and the size slider, which ends at 500 MB.
+
 The gate counts before it refuses: a wide box over a sparse layer runs, and a dense one stops with
 the exact number, as in `needs 169818 features from "Budynki", more than one download takes (6000)`.
 Only addresses, streets, parcels and buildings keep a small box; every other layer downloads over a

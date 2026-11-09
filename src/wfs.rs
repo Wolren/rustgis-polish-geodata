@@ -27,8 +27,10 @@ const HEAVY_BYTES: u64 = 30_000;
 /// The page size once features are heavy.
 const LIGHT_PAGE: usize = 50;
 const BUDGET_SECS: u64 = 240;
-/// One download stops at 6000 features; the tool gate reads this same number.
-pub const MAX_TOTAL: usize = 6000;
+/// One download stops at this many features unless the user confirms a larger run.
+pub const MAX_TOTAL: usize = 10_000;
+/// The ceiling a confirmed run may reach, so one click cannot ask for a country-wide layer.
+pub const HARD_TOTAL: usize = 50_000;
 /// Above this width or height, an area is split into four cells fetched at once.
 const SPLIT_SPAN: f64 = 1.5;
 
@@ -85,6 +87,7 @@ pub fn fetch(
     report: &mut dyn FnMut(&str),
     lang: Lang,
     limit: u64,
+    cap: usize,
 ) -> Result<Download, String> {
     if ![bbox[0], bbox[1], bbox[2], bbox[3]]
         .iter()
@@ -100,20 +103,20 @@ pub fn fetch(
             None
         }
     });
-    let mut download = match gather(layer, bbox, polygon.as_deref(), report, lang, Srs::LonLat, limit) {
+    let mut download = match gather(layer, bbox, polygon.as_deref(), report, lang, Srs::LonLat, limit, cap) {
         Ok(download) => download,
         // A decimated boundary can be self-intersecting, and the service then refuses the filter.
         Err(error) if polygon.is_some() && is_shapes_refusal(&error) => {
             report(&text::filter_fell_back(lang));
             fallback = Some(filter::ShapeProblem::TooLong);
-            gather(layer, bbox, None, report, lang, Srs::LonLat, limit)?
+            gather(layer, bbox, None, report, lang, Srs::LonLat, limit, cap)?
         }
         Err(error) => return Err(error),
     };
     if download.features.is_empty() && download.failed == 0 {
         // The address and street service answers an empty collection outside the national grid.
         let grid = area.and_then(|collection| filter::polygon_filter_grid(layer, collection).ok());
-        if let Ok(retry) = gather(layer, bbox, grid.as_deref(), report, lang, Srs::Grid, limit) {
+        if let Ok(retry) = gather(layer, bbox, grid.as_deref(), report, lang, Srs::Grid, limit, cap) {
             if !retry.features.is_empty() {
                 download = retry;
             }
@@ -132,6 +135,7 @@ fn gather(
     lang: Lang,
     srs: Srs,
     limit: u64,
+    cap: usize,
 ) -> Result<Download, String> {
     let areas = split_cells(bbox);
     report(&text::split_areas(lang, layer.name, areas.len()));
@@ -140,7 +144,7 @@ fn gather(
     let budget = (limit / areas.len().max(1) as u64).max(1);
     let mut cells: Vec<Cell> = Vec::new();
     if areas.len() == 1 {
-        cells.push(fetch_cell(layer, areas[0], polygon, report, lang, srs, budget));
+        cells.push(fetch_cell(layer, areas[0], polygon, report, lang, srs, budget, cap));
     } else {
         let total = areas.len();
         let (sender, receiver) = std::sync::mpsc::channel();
@@ -149,7 +153,7 @@ fn gather(
                 let sender = sender.clone();
                 let area = *area;
                 scope.spawn(move || {
-                    let done = fetch_cell(layer, area, polygon, &mut |_: &str| {}, lang, srs, budget);
+                    let done = fetch_cell(layer, area, polygon, &mut |_: &str| {}, lang, srs, budget, cap);
                     let _ = sender.send((index, done));
                 });
             }
@@ -207,8 +211,8 @@ fn gather(
             return Err(error);
         }
     }
-    if features.len() > MAX_TOTAL {
-        features.truncate(MAX_TOTAL);
+    if features.len() > cap {
+        features.truncate(cap);
         truncated = true;
     }
     Ok(Download { features, truncated, bytes, limit_hit, failed, fallback: None })
@@ -239,6 +243,7 @@ fn fetch_cell(
     lang: Lang,
     srs: Srs,
     limit: u64,
+    cap: usize,
 ) -> Cell {
     let started = Instant::now();
     let mut cell = Cell::default();
@@ -249,7 +254,7 @@ fn fetch_cell(
             cell.truncated = true;
             break;
         }
-        if cell.features.len() >= MAX_TOTAL {
+        if cell.features.len() >= cap {
             cell.truncated = true;
             break;
         }

@@ -149,7 +149,13 @@ pub fn typed_for_unit(host: &mut Host, params: &Value, lang: Lang) -> Result<Val
     let mut report = |line: &str| notes.push(line.to_string());
     // The fetch budget counts bytes, as the download tools count it: the saved limit in megabytes.
     let limit = (crate::cache::settings().limit_mb.max(1) * 1_000_000) as u64;
-    let download = wfs::fetch(layer, bbox, None, &mut report, lang, limit)?;
+    // The typed download takes the panel's tick too, so a big unit is one decision, not a refusal.
+    let cap = if crate::cache::settings().confirm_large {
+        wfs::HARD_TOTAL
+    } else {
+        wfs::MAX_TOTAL
+    };
+    let download = wfs::fetch(layer, bbox, None, &mut report, lang, limit, cap)?;
     if download.features.is_empty() {
         return Err(text::typed_empty(lang, label, &unit));
     }

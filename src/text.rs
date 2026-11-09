@@ -618,11 +618,28 @@ pub fn area_too_large(
 }
 
 /// A layer the catalogue sets no span for is measured in features instead, before any fetch.
-pub fn area_over_budget(lang: Lang, area: &str, needed: usize, budget: usize, name: &str) -> String {
+pub fn area_over_budget(
+    lang: Lang,
+    area: &str,
+    needed: usize,
+    budget: usize,
+    ceiling: usize,
+    confirm: bool,
+    name: &str,
+) -> String {
+    let escape = if confirm {
+        String::new()
+    } else {
+        pick!(
+            lang,
+            format!(" Tick \"Download even if large\" to take up to {}.", features(lang, ceiling)),
+            format!(" Zaznacz \"Pobierz mimo rozmiaru\", aby wziąć do {}.", features(lang, ceiling))
+        )
+    };
     pick!(
         lang,
         format!(
-            "the layer \"{area}\" needs {} from \"{name}\", more than one download takes ({}). \
+            "the layer \"{area}\" needs {} from \"{name}\", more than one download takes ({}).{escape} \
              Select the features you want on the map and run the tool again (a selection narrows \
              the area), or pick a smaller layer.",
             features(lang, needed),

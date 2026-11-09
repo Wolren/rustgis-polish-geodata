@@ -76,14 +76,16 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     // The cache goes before the first request, so the click that asked for fresh data gets it.
     let cleared = if clear { cache::clear().ok() } else { None };
 
-    gate(layer, area, features_of_area, bbox, lang)?;
+    // The same tick that allows a large size allows a long run, up to the hard ceiling.
+    let cap = if confirm { wfs::HARD_TOTAL } else { wfs::MAX_TOTAL };
+    gate(layer, area, features_of_area, bbox, lang, cap, confirm)?;
 
     // Past the unconfirmed limit the run stops before anything is added, and names its size.
     let asked_mb = settings.limit_mb as f64;
     let limit = if confirm { (HARD_MB.max(asked_mb) * 1e6) as u64 } else { (asked_mb * 1e6) as u64 };
     let download = {
         let mut report = |text: &str| host::progress_line(text);
-        wfs::fetch(layer, bbox, Some(features_of_area), &mut report, lang, limit)?
+        wfs::fetch(layer, bbox, Some(features_of_area), &mut report, lang, limit, cap)?
     };
     let megabytes = download.bytes as f64 / 1e6;
     if download.limit_hit && !confirm {
@@ -128,6 +130,8 @@ fn gate(
     collection: &Value,
     bbox: [f64; 4],
     lang: Lang,
+    cap: usize,
+    confirm: bool,
 ) -> Result<(), String> {
     let limited = layer.max_span < UNLIMITED_SPAN;
     let over_span = limited && wfs::too_large(layer, bbox);
@@ -155,12 +159,14 @@ fn gate(
     if wanted == 0 {
         return Err(text::area_empty(lang, layer.name, area));
     }
-    if wanted > wfs::MAX_TOTAL {
+    if wanted > cap {
         return Err(text::area_over_budget(
             lang,
             area,
             wanted,
-            wfs::MAX_TOTAL,
+            cap,
+            wfs::HARD_TOTAL,
+            confirm,
             layer.name,
         ));
     }
@@ -321,12 +327,12 @@ mod tests {
     fn one_gate_refuses_a_wide_area_before_the_request() {
         let layer = catalog::wfs_by_label("Działki").unwrap();
         let area = json!({"type": "FeatureCollection", "features": []});
-        let error = gate(layer, "Area to download", &area, [14.0, 49.0, 24.2, 54.9], Lang::En)
+        let error = gate(layer, "Area to download", &area, [14.0, 49.0, 24.2, 54.9], Lang::En, wfs::MAX_TOTAL, false)
             .unwrap_err();
         assert!(error.contains("Area to download"), "{error}");
         assert!(error.contains("Działki"), "{error}");
         // The same gate lets a box inside the layer's own span through.
-        assert!(gate(layer, "Area to download", &area, [21.0, 52.2, 21.01, 52.21], Lang::En).is_ok());
+        assert!(gate(layer, "Area to download", &area, [21.0, 52.2, 21.01, 52.21], Lang::En, wfs::MAX_TOTAL, false).is_ok());
     }
 
     #[test]
