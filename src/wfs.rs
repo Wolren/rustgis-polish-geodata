@@ -266,8 +266,9 @@ fn fetch_cell(
             seen if cell.bytes / seen as u64 > HEAVY_BYTES => LIGHT_PAGE,
             _ => PAGE,
         };
+        // The offsets step by the page size in force, so a light page leaves no gap behind it.
         let starts: Vec<usize> = if layer.pages {
-            (0..in_flight).map(|i| start + i * PAGE).collect()
+            (0..in_flight).map(|i| start + i * count).collect()
         } else {
             // A service that refuses STARTINDEX answers one page, so a second page is a failure.
             vec![0]
@@ -450,6 +451,16 @@ fn page_url(
 mod tests {
     use super::*;
     use crate::catalog;
+
+    #[test]
+    fn a_light_page_steps_by_its_own_size() {
+        // Heavy features halve the page size, and the offsets have to follow it or a gap opens.
+        let page = LIGHT_PAGE;
+        assert!(page < PAGE, "the light page is smaller than the full one");
+        let starts: Vec<usize> = (0..4).map(|i| i * page).collect();
+        assert_eq!(starts, vec![0, page, 2 * page, 3 * page]);
+        assert_eq!(starts.last().copied().unwrap() + page, 4 * page);
+    }
 
     #[test]
     fn the_first_page_asks_for_no_offset() {

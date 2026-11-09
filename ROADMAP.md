@@ -78,6 +78,10 @@ potem według tematu, i którą całą da się sterować przez MCP albo przez pa
 
 - Jedna współdzielona sesja HTTP trzyma połączenie: cztery strony adresów spadły z 0,87 s do 0,63 s.
 - Gzip: strona gmin z 362 701 do 164 041 bajtów (45 %).
+- **Przeskok stron**: przy obiektach powyżej 30 KB strona zmniejsza się do 50, a offsety kroczą
+  teraz tą samą wielkością. Wcześniej kroczyły po 1 000, więc przebieg zbierał okna po 50 obiektów
+  z dziurami i kończył na 70-80 % zbioru. Sprawdzone licznikiem usługi: pudełko mazowieckie
+  629 obiektów w odpowiedzi `RESULTTYPE=hits` i 629 pobranych.
 - Pierwsza strona schodzi samotnie, a przy obiektach powyżej 30 KB strona zmniejsza się do 50.
   Obszar 2°: 15 s przed zmianami, 5,2 s po nich, 1,6 s przy ciepłym cache.
 - Treść jest parsowana w trakcie czytania, po jednym członie: cztery strony adresów 0,71 s zimne
