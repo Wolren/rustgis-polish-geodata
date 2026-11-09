@@ -23,6 +23,9 @@ use serde_json::{json, Value};
 const UNLIMITED_SPAN: f64 = 20.0;
 /// The cap any confirmed run stops at, whatever the panel's slider says.
 const HARD_MB: f64 = 256.0;
+/// The size limit the tool form offers, in megabytes.
+const MIN_MB: i64 = 5;
+const MAX_MB: i64 = 500;
 
 pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     // The sheet downloader and the register update name no dataset, so they run before `dane`.
@@ -80,8 +83,12 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     let cap = if confirm { wfs::HARD_TOTAL } else { wfs::MAX_TOTAL };
     gate(layer, area, features_of_area, bbox, lang, cap, confirm)?;
 
-    // Past the unconfirmed limit the run stops before anything is added, and names its size.
-    let asked_mb = settings.limit_mb as f64;
+    // The form's own number wins, then the panel's slider, so the pane that refuses can raise it.
+    let asked_mb = params
+        .get("limit_mb")
+        .and_then(Value::as_i64)
+        .map(|mb| mb.clamp(MIN_MB, MAX_MB) as f64)
+        .unwrap_or(settings.limit_mb as f64);
     let limit = if confirm { (HARD_MB.max(asked_mb) * 1e6) as u64 } else { (asked_mb * 1e6) as u64 };
     let download = {
         let mut report = |text: &str| host::progress_line(text);
@@ -89,7 +96,13 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     };
     let megabytes = download.bytes as f64 / 1e6;
     if download.limit_hit && !confirm {
-        return Err(text::download_too_big(lang, layer.name, megabytes, asked_mb));
+        return Err(text::download_too_big(
+            lang,
+            layer.name,
+            megabytes,
+            asked_mb,
+            HARD_MB.max(asked_mb),
+        ));
     }
     if download.features.is_empty() {
         return Err(text::no_features(lang, layer.name));
@@ -102,7 +115,13 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     }
     messages.push(text::count_size(lang, layer.name, total, download.bytes));
     if download.limit_hit {
-        messages.push(text::download_stopped(lang, layer.name, megabytes));
+        messages.push(text::download_stopped_at(
+            lang,
+            layer.name,
+            megabytes,
+            limit as f64 / 1e6,
+            HARD_MB.max(asked_mb),
+        ));
     }
     if download.truncated {
         messages.push(text::truncated(lang).to_string());

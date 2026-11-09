@@ -362,11 +362,18 @@
           "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         },
         {
+          "name": "limit_mb",
+          "label": "Size limit (MB)",
+          "kind": "number",
+          "default": 25,
+          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
+        },
+        {
           "name": "confirm",
           "label": "Download even if large",
           "kind": "bool",
           "default": false,
-          "help": "Downloads over 25 MB are refused until this is ticked, so a big run is a decision."
+          "help": "Fetch a run larger than the size limit. It raises the stop to 256 MB, or to the limit typed above."
         }
       ]
     },
@@ -399,11 +406,18 @@
           "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         },
         {
+          "name": "limit_mb",
+          "label": "Size limit (MB)",
+          "kind": "number",
+          "default": 25,
+          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
+        },
+        {
           "name": "confirm",
           "label": "Download even if large",
           "kind": "bool",
           "default": false,
-          "help": "Downloads over 25 MB are refused until this is ticked, so a big run is a decision."
+          "help": "Fetch a run larger than the size limit. It raises the stop to 256 MB, or to the limit typed above."
         }
       ]
     },
@@ -436,11 +450,18 @@
           "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         },
         {
+          "name": "limit_mb",
+          "label": "Size limit (MB)",
+          "kind": "number",
+          "default": 25,
+          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
+        },
+        {
           "name": "confirm",
           "label": "Download even if large",
           "kind": "bool",
           "default": false,
-          "help": "Downloads over 25 MB are refused until this is ticked, so a big run is a decision."
+          "help": "Fetch a run larger than the size limit. It raises the stop to 256 MB, or to the limit typed above."
         }
       ]
     },
@@ -473,11 +494,18 @@
           "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         },
         {
+          "name": "limit_mb",
+          "label": "Size limit (MB)",
+          "kind": "number",
+          "default": 25,
+          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
+        },
+        {
           "name": "confirm",
           "label": "Download even if large",
           "kind": "bool",
           "default": false,
-          "help": "Downloads over 25 MB are refused until this is ticked, so a big run is a decision."
+          "help": "Fetch a run larger than the size limit. It raises the stop to 256 MB, or to the limit typed above."
         }
       ]
     },
@@ -510,11 +538,18 @@
           "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         },
         {
+          "name": "limit_mb",
+          "label": "Size limit (MB)",
+          "kind": "number",
+          "default": 25,
+          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
+        },
+        {
           "name": "confirm",
           "label": "Download even if large",
           "kind": "bool",
           "default": false,
-          "help": "Downloads over 25 MB are refused until this is ticked, so a big run is a decision."
+          "help": "Fetch a run larger than the size limit. It raises the stop to 256 MB, or to the limit typed above."
         }
       ]
     },
@@ -538,6 +573,13 @@
           "kind": "polygonLayer",
           "required": true,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        },
+        {
+          "name": "limit_mb",
+          "label": "Size limit (MB)",
+          "kind": "number",
+          "default": 25,
+          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
         }
       ]
     },
@@ -561,6 +603,13 @@
           "kind": "polygonLayer",
           "required": true,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        },
+        {
+          "name": "limit_mb",
+          "label": "Size limit (MB)",
+          "kind": "number",
+          "default": 25,
+          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
         }
       ]
     },
@@ -584,6 +633,13 @@
           "kind": "polygonLayer",
           "required": true,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        },
+        {
+          "name": "limit_mb",
+          "label": "Size limit (MB)",
+          "kind": "number",
+          "default": 25,
+          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
         }
       ]
     },
@@ -637,11 +693,18 @@
           "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         },
         {
+          "name": "limit_mb",
+          "label": "Size limit (MB)",
+          "kind": "number",
+          "default": 25,
+          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
+        },
+        {
           "name": "confirm",
           "label": "Download even if large",
           "kind": "bool",
           "default": false,
-          "help": "Downloads over 25 MB are refused until this is ticked, so a big run is a decision."
+          "help": "Fetch a run larger than the size limit. It raises the stop to 256 MB, or to the limit typed above."
         }
       ]
     },
@@ -673,11 +736,18 @@
           "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
         },
         {
+          "name": "limit_mb",
+          "label": "Size limit (MB)",
+          "kind": "number",
+          "default": 25,
+          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
+        },
+        {
           "name": "confirm",
           "label": "Download even if large",
           "kind": "bool",
           "default": false,
-          "help": "Files over 0,5 GB are refused until this is ticked, so a big run is a decision."
+          "help": "Fetch a run larger than the size limit. It raises the stop to 256 MB, or to the limit typed above."
         }
       ]
     },
@@ -1147,8 +1217,6 @@
       "The address at the map centre, from GUGiK's UUG service: street, number, postcode and the distance in metres. Pass lon and lat to ask about another point.": "Adres pod środkiem mapy z usługi UUG GUGiK: ulica, numer, kod pocztowy i odległość w metrach. Parametry lon i lat wskazują inny punkt.",
       "Orthophoto": "Ortofoto",
       "Download even if large": "Pobierz mimo rozmiaru",
-      "Files over 0,5 GB are refused until this is ticked, so a big run is a decision.": "Powyżej 0,5 GB pobranie jest wstrzymane, dopóki tego nie zaznaczysz, żeby duży przebieg był decyzją.",
-      "Downloads over 25 MB are refused until this is ticked, so a big run is a decision.": "Pobrania powyżej 25 MB są wstrzymane, dopóki tego nie zaznaczysz, żeby duże pobranie było decyzją.",
       "The tool form's tick, for every run: downloads over the size limit proceed without asking.": "Zaznaczenie z formularza narzędzia, ale na stałe: pobrania powyżej limitu idą bez pytania.",
       "Download limit (MB)": "Limit pobrania (MB)",
       "Download\nsettings": "Ustawienia\npobierania",
@@ -1221,7 +1289,10 @@
       "Typed\ndownload": "Pobierz\ntyp",
       "Downloads one typed dataset for a unit in one call: it reads the unit boundary, fetches the type and cuts the layer to the unit.": "Pobiera jeden typowany zbiór dla jednostki w jednym wywołaniu: czyta granicę jednostki, pobiera typ i przycina warstwę do jednostki.",
       "Clip the download to the unit boundary": "Przytnij pobranie do granicy jednostki",
-      "A typed download follows the unit's boundary; turn this off to keep the whole bounding box.": "Pobranie typowane idzie za granicą jednostki; wyłącz, aby zachować cały prostokąt."
+      "A typed download follows the unit's boundary; turn this off to keep the whole bounding box.": "Pobranie typowane idzie za granicą jednostki; wyłącz, aby zachować cały prostokąt.",
+      "Size limit (MB)": "Limit rozmiaru (MB)",
+      "Fetch a run larger than the size limit. It raises the stop to 256 MB, or to the limit typed above.": "Pobierz przebieg większy niż limit rozmiaru. Podnosi limit do 256 MB albo do liczby wpisanej wyżej.",
+      "A run stops at this many megabytes. The panel's slider sets the same number.": "Przebieg zatrzymuje się na tylu megabajtach. Suwak w panelu ustawia tę samą liczbę."
     }
   },
   "moreMaps": {

@@ -68,6 +68,9 @@ potem według tematu, i którą całą da się sterować przez MCP albo przez pa
   z prostokątem.
 - **Bramka rozmiaru**: pobranie powyżej limitu pyta najpierw. Limit ma domyślnie 25 MB, suwak pozwala
   5 do 500 MB, sufit to 256 MB. Pusty obszar kończy się przed pierwszą stroną.
+- **Limit rozmiaru w formularzu**: narzędzie pobierające ma własne pole **Limit rozmiaru (MB)**
+  5-500, więc panel, który odmawia, sam podnosi limit. Zmierzone: 200 MB nad Mazowieckiem to
+  628 gmin w jednym przebiegu.
 - Limit pobrania: 10 000 obiektów (50 000 po zaznaczeniu **Pobierz mimo rozmiaru**) i 25 MB
   (256 MB albo suwak, do 500 MB po zaznaczeniu); bramka liczy obiekty w obszarze i odmawia z tą liczbą. Zasięg
   0,15° został tylko dla adresów, ulic, działek i budynków, a 71 warstw rzadkich dostało 20°:

@@ -305,20 +305,43 @@ pub fn count_size(lang: Lang, name: &str, n: usize, bytes: u64) -> String {
 }
 
 /// A download reached the size a run takes without asking.
-pub fn download_too_big(lang: Lang, name: &str, megabytes: f64, limit: f64) -> String {
+pub fn download_too_big(lang: Lang, name: &str, megabytes: f64, limit: f64, ceiling: f64) -> String {
     pick!(
         lang,
         format!(
-            "{name}: {} so far, more than the {} a run takes without asking. Tick \u{201e}Download even \
-             if large\u{201d} in the tool form to fetch it.",
+            "{name}: {} so far, more than the {} a run takes without asking. Raise Size limit (MB) \
+             in this form, or tick Download even if large for up to {}.",
             size(lang, megabytes),
-            size(lang, limit)
+            size(lang, limit),
+            size(lang, ceiling)
         ),
         format!(
-            "{name}: już {}, więcej niż {}, ile pobranie bierze bez pytania. Zaznacz \u{201e}Pobierz \
-             mimo rozmiaru\u{201d} w formularzu narzędzia, żeby je pobrać.",
+            "{name}: juz {} z limitu {}. Podnies Limit rozmiaru (MB) w tym formularzu albo \
+             zaznacz Pobierz mimo rozmiaru, co bierze do {}.",
             size(lang, megabytes),
-            size(lang, limit)
+            size(lang, limit),
+            size(lang, ceiling)
+        )
+    )
+}
+
+/// A confirmed run that stopped at the byte budget, with the number it hit.
+pub fn download_stopped_at(lang: Lang, name: &str, megabytes: f64, limit: f64, ceiling: f64) -> String {
+    pick!(
+        lang,
+        format!(
+            "{name}: stopped at {} of a {} limit. Raise Size limit (MB) in this form, or tick \
+             Download even if large, which takes up to {}.",
+            size(lang, megabytes),
+            size(lang, limit),
+            size(lang, ceiling)
+        ),
+        format!(
+            "{name}: przerwano na {} z limitu {}. Podnies Limit rozmiaru (MB) w tym formularzu \
+             albo zaznacz Pobierz mimo rozmiaru, co bierze do {}.",
+            size(lang, megabytes),
+            size(lang, limit),
+            size(lang, ceiling)
         )
     )
 }
