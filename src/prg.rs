@@ -40,10 +40,16 @@ pub fn area(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String
         .to_lowercase();
     let type_name = level_type(&level).ok_or_else(|| text::prg_levels(lang))?;
 
-    let mut features = fetch(name, type_name, &level, lang)?;
+    let code = params
+        .get("kod")
+        .or_else(|| params.get("code"))
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|value| !value.is_empty());
+    let mut features = fetch(name, code, type_name, &level, lang)?;
     // A city that PRG lists as a gmina only still has its boundary there, so it falls back.
     if features.is_empty() && level.starts_with("miasto") {
-        features = fetch(name, "A03_Granice_gmin", "gmina", lang)?;
+        features = fetch(name, code, "A03_Granice_gmin", "gmina", lang)?;
     }
     let rings = rings_of(&features);
     if rings.is_empty() {
@@ -150,10 +156,22 @@ fn plain(word: &str) -> String {
 ///
 /// PRG writes a powiat as "powiat ostrowski", so the spellings are tried in turn: the name as
 /// given, its capitalised form, and the prefixed one the register uses.
-fn fetch(name: &str, type_name: &str, level: &str, lang: Lang) -> Result<Vec<Value>, String> {
-    for literal in spellings(name, level) {
+fn fetch(
+    name: &str,
+    code: Option<&str>,
+    type_name: &str,
+    level: &str,
+    lang: Lang,
+) -> Result<Vec<Value>, String> {
+    // A code names one unit; two powiaty share the name "ostrowski", so a name needs spelling tries.
+    let wanted: Vec<String> = match code {
+        Some(code) => vec![code.to_string()],
+        None => spellings(name, level),
+    };
+    let field = if code.is_some() { "JPT_KOD_JE" } else { "JPT_NAZWA_" };
+    for literal in wanted {
         let filter = format!(
-            "<Filter><PropertyIsEqualTo><PropertyName>JPT_NAZWA_</PropertyName><Literal>{}</Literal></PropertyIsEqualTo></Filter>",
+            "<Filter><PropertyIsEqualTo><PropertyName>{field}</PropertyName><Literal>{}</Literal></PropertyIsEqualTo></Filter>",
             escape(&literal)
         );
         let url = format!(
@@ -162,7 +180,8 @@ fn fetch(name: &str, type_name: &str, level: &str, lang: Lang) -> Result<Vec<Val
         );
         // The answer is small and names one unit, so it is not worth keeping for a week.
         let body = http::fetch(&url, 90, lang)?;
-        let features = gml::parse_features(&body, false, lang)?;
+        // WFS 2.0 answers EPSG:4326 as latitude then longitude, so the pair is swapped.
+        let features = gml::parse_features(&body, true, lang)?;
         if !features.is_empty() {
             return Ok(features);
         }

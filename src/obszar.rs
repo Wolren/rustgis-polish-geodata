@@ -237,7 +237,7 @@ pub fn from_unit_tree(host: &mut Host, request: &Value, lang: Lang) -> Result<Va
     };
     let (name, level) = crate::jednostki::resolve(code)
         .ok_or_else(|| text::unit_unknown(lang, code))?;
-    let mut area = json!({ "nazwa": name, "poziom": level });
+    let mut area = json!({ "nazwa": name, "poziom": level, "kod": code });
     if let Some(clip) = params.get("przytnij").cloned() {
         area["przytnij"] = clip;
     }
