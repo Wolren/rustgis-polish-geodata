@@ -155,10 +155,10 @@ built-in Clip and replaces the layer with the result.
 The panel's **Clip the download to the unit boundary** checkbox is on by default: a typed download
 follows the unit's shape. Turn it off to keep the whole bounding box, and the run says so.
 
-**Administrative boundaries, the guided way.** The Downloads group carries **Administrative boundaries**.
-A click with no parameters brings the whole country's voivodeships. The panel's **Boundaries** tree carries
-every other option: pick a unit in **Administrative unit**, then a level of it. A script names the level and
-the scope directly, and a filter keeps the rows it matches.
+**Administrative boundaries, the guided way.** The Downloads group carries **Administrative boundaries**, a
+tool form: **Level**, **Voivodeship** as a dropdown of 16, **Powiat or gmina** by name or TERYT code, a name
+filter and a size limit. The host allows 64 choices in a dropdown, so the 380 powiaty and 2 479 gminy take a
+name or a code; the panel's **Administrative unit** tree lists all of them with live search.
 
 | Level | Scope | Call | Rows |
 | --- | --- | --- | --- |

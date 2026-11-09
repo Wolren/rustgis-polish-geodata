@@ -1736,10 +1736,35 @@
           "help": "Which boundaries to download."
         },
         {
+          "name": "wojewodztwo",
+          "label": "Voivodeship",
+          "kind": "choice",
+          "choices": [
+            "cały kraj",
+            "dolnośląskie",
+            "kujawsko-pomorskie",
+            "lubelskie",
+            "lubuskie",
+            "łódzkie",
+            "małopolskie",
+            "mazowieckie",
+            "opolskie",
+            "podkarpackie",
+            "podlaskie",
+            "pomorskie",
+            "śląskie",
+            "świętokrzyskie",
+            "warmińsko-mazurskie",
+            "wielkopolskie",
+            "zachodniopomorskie"
+          ],
+          "help": "The voivodeship whose boundaries you want, or cały kraj for the country."
+        },
+        {
           "name": "zakres",
-          "label": "Unit (empty means the whole country)",
+          "label": "Powiat or gmina",
           "kind": "text",
-          "help": "A voivodeship, a powiat or a gmina by name or TERYT code, such as 1416 or Ostrowski. Leave it empty for the whole country."
+          "help": "Optional: a powiat or a gmina by name or TERYT code, such as 1416 or Ostrowski. It narrows the voivodeship above."
         },
         {
           "name": "filtr",
@@ -3146,8 +3171,10 @@
       "Name filter": "Filtr nazwy",
       "Keeps the boundaries whose name holds this text, accents aside.": "Zostawia granice, których nazwa zawiera ten tekst, bez ogonków.",
       "0 means no byte limit.": "0 znaczy brak limitu bajtów.",
-      "Unit (empty means the whole country)": "Jednostka (puste = cały kraj)",
-      "A voivodeship, a powiat or a gmina by name or TERYT code, such as 1416 or Ostrowski. Leave it empty for the whole country.": "Województwo, powiat albo gmina po nazwie lub kodzie TERYT, np. 1416. Puste pole to cały kraj."
+      "Voivodeship": "Województwo",
+      "Powiat or gmina": "Powiat albo gmina",
+      "The voivodeship whose boundaries you want, or cały kraj for the country.": "Województwo, którego granice chcesz, albo cały kraj.",
+      "Optional: a powiat or a gmina by name or TERYT code, such as 1416 or Ostrowski. It narrows the voivodeship above.": "Opcjonalnie: powiat albo gmina po nazwie lub kodzie TERYT, np. 1416. Zawęża województwo powyżej."
     }
   },
   "panel": {

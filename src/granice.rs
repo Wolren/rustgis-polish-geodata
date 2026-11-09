@@ -224,12 +224,27 @@ pub fn tool(request: &Value, lang: Lang) -> Result<Value, String> {
     };
     let layer = catalog::wfs_by_label(label).ok_or_else(|| text::unknown_dataset(lang, label))?;
 
-    let scope = params
+    // The dropdown picks a voivodeship; the code field narrows it to a powiat or a gmina.
+    let voivodeship = params
+        .get("wojewodztwo")
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|value| !value.is_empty() && !value.starts_with("cały") && !value.starts_with("whole"))
+        .map(str::to_string);
+    let narrower = params
         .get("zakres")
         .and_then(Value::as_str)
         .map(str::trim)
-        .unwrap_or("kraj")
-        .to_string();
+        .filter(|value| !value.is_empty())
+        .map(str::to_string);
+    let scope = narrower
+        .clone()
+        .or_else(|| {
+            voivodeship
+                .as_deref()
+                .and_then(crate::jednostki::code_of_name)
+        })
+        .unwrap_or_else(|| "kraj".to_string());
     let whole_country = matches!(scope.to_lowercase().as_str(), "kraj" | "country" | "pl" | "");
     let bbox = POLAND;
     let scope_code = if whole_country {
@@ -238,6 +253,10 @@ pub fn tool(request: &Value, lang: Lang) -> Result<Value, String> {
         // A name or a code both work, and a name resolves through the shipped table.
         let code = match crate::jednostki::resolve(&scope) {
             Some(_) => scope.clone(),
+            None if narrower.is_none() => {
+                // A dropdown answer is an exact name, so it never reaches the fragment path.
+                return Err(text::unit_unknown(lang, &scope));
+            }
             None => {
                 // A fragment may name several units, so the form answers with the matches.
                 let matches = crate::jednostki::matching(&scope, 12);
@@ -266,8 +285,20 @@ pub fn tool(request: &Value, lang: Lang) -> Result<Value, String> {
         .map(str::trim)
         .filter(|value| !value.is_empty());
     let filter = register_filter(&level, scope_code.as_deref(), wanted_name);
+    let country = json!({
+        "type": "FeatureCollection",
+        "features": [{
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[[14.0, 49.0], [24.2, 49.0], [24.2, 54.9], [14.0, 54.9], [14.0, 49.0]]]
+            }
+        }]
+    });
+    let area = filter.is_none().then_some(&country);
     let mut report = |line: &str| host::progress_line(line);
-    let download = wfs::fetch(layer, bbox, None, filter.as_deref(), &mut report, lang, limit, cap)?;
+    let download = wfs::fetch(layer, bbox, area, filter.as_deref(), &mut report, lang, limit, cap)?;
 
     let filter = params
         .get("filtr")
