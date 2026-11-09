@@ -31,6 +31,7 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     // The sheet downloader and the register update name no dataset, so they run before `dane`.
     match request.get("id").and_then(Value::as_str) {
         Some("pobierz-arkusze") => return sheets::run(request, lang),
+        Some("granice") => return crate::granice::tool(request, lang),
         Some("geokoduj-csv") => return crate::uug::geocode_csv(request, lang),
         Some("dzialki-csv") => return crate::uldk::parcels_csv(request, lang),
         Some("aktualizuj-rejestr") => {
@@ -99,7 +100,7 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     };
     let download = {
         let mut report = |text: &str| host::progress_line(text);
-        wfs::fetch(layer, bbox, Some(features_of_area), &mut report, lang, limit, cap)?
+        wfs::fetch(layer, bbox, Some(features_of_area), None, &mut report, lang, limit, cap)?
     };
     let megabytes = download.bytes as f64 / 1e6;
     if download.limit_hit && !confirm {

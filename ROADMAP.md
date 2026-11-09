@@ -38,6 +38,9 @@ potem według tematu, i którą całą da się sterować przez MCP albo przez pa
   (wojewodztwa, powiaty, gminy) razy zakres (kraj albo kod TERYT dowolnego pietra), plus `filtr` po
   nazwie bez ogonkow. Zmierzone: 16 wojewodztw, 42 powiaty mazowieckiego, 314 gmin mazowieckiego,
   11 gmin powiatu ostrowskiego, 2479 gmin kraju i 18 gmin z filtrem `ostr`.
+- Filtr nazwy idzie do uslugi jednym `FILTER` z kilkoma pisowniami i wariantami liter: `między`,
+  `MIĘDZY` i `miedzy` daja te same 7 gmin z 1 MB. Fragment zakresu, ktory pasuje do kilku jednostek,
+  odpowiada lista z kodami.
 - Zakres i poziom lacza sie przez kody TERYT: wiersz zostaje, gdy jego kod jest prefiksem kodu
   zakresu albo odwrotnie. Ciecie hosta tylko docina geometrie.
 - Prostokat idzie do uslugi jako wielokat, bo czysty BBOX czyta sie w kolejnosci osi uslugi

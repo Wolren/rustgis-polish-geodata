@@ -155,7 +155,7 @@ pub fn typed_for_unit(host: &mut Host, params: &Value, lang: Lang) -> Result<Val
     } else {
         wfs::MAX_TOTAL
     };
-    let download = wfs::fetch(layer, bbox, None, &mut report, lang, limit, cap)?;
+    let download = wfs::fetch(layer, bbox, None, None, &mut report, lang, limit, cap)?;
     if download.features.is_empty() {
         return Err(text::typed_empty(lang, label, &unit));
     }

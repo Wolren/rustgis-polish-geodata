@@ -171,8 +171,11 @@ the scope directly, and a filter keeps the rows it matches.
 | Gminy of a powiat | a code | `{"poziom": "gminy", "zakres": "1416"}` | 11 |
 | One gmina | a code | `{"poziom": "gminy", "zakres": "1464011"}` | 1 |
 
-`filtr` keeps the names it matches, accents aside, and a scope keeps the rows whose TERYT code nests under
-it: `{"poziom": "gminy", "zakres": "kraj", "filtr": "ostr", "limit_mb": 0}` gives 18 gminy.
+The name filter runs **on the service**, not after the download, so it is complete however large the
+level is: `{"poziom": "gminy", "zakres": "kraj", "filtr": "między", "limit_mb": 0}` answers 7 gminy from
+1 MB instead of scanning the country. Polish letters work, and a plain `miedzy` reaches `między` because
+four case spellings and the accented readings are all tried. A scope fragment that fits several units
+answers with the matches and their codes instead of guessing.
 
 **One call, one typed layer.** `pobierz-typ {"dane": "Punkty adresowe", "unit": "1464011"}` reads the
 unit boundary from PRG, sets it as the area, downloads that dataset and cuts the layer to the unit.

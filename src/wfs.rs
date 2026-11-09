@@ -84,6 +84,7 @@ pub fn fetch(
     layer: &WfsLayer,
     bbox: [f64; 4],
     area: Option<&Value>,
+    raw_filter: Option<&str>,
     report: &mut dyn FnMut(&str),
     lang: Lang,
     limit: u64,
@@ -96,13 +97,20 @@ pub fn fetch(
         return Err(text::span_invalid(lang));
     }
     let mut fallback = None;
-    let polygon = area.and_then(|collection| match filter::polygon_filter(layer, collection) {
+    // A caller that built its own register filter replaces the polygon derived from the area.
+    let given = raw_filter.map(str::to_string);
+    let filtered = given.is_some();
+    let polygon = match &given {
+        Some(_) => None,
+        None => area.and_then(|collection| match filter::polygon_filter(layer, collection) {
         Ok(filter) => Some(filter),
-        Err(problem) => {
-            fallback = Some(problem);
-            None
-        }
-    });
+            Err(problem) => {
+                fallback = Some(problem);
+                None
+            }
+        }),
+    };
+    let polygon = given.or(polygon);
     let mut download = match gather(layer, bbox, polygon.as_deref(), report, lang, Srs::LonLat, limit, cap) {
         Ok(download) => download,
         // A decimated boundary can be self-intersecting, and the service then refuses the filter.
@@ -113,7 +121,8 @@ pub fn fetch(
         }
         Err(error) => return Err(error),
     };
-    if download.features.is_empty() && download.failed == 0 {
+    // A caller's own filter that matched nothing is an answer, not a reason to ask again unfiltered.
+    if download.features.is_empty() && download.failed == 0 && !filtered {
         // The address and street service answers an empty collection outside the national grid.
         let grid = area.and_then(|collection| filter::polygon_filter_grid(layer, collection).ok());
         if let Ok(retry) = gather(layer, bbox, grid.as_deref(), report, lang, Srs::Grid, limit, cap) {

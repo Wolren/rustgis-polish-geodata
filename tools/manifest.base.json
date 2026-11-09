@@ -341,6 +341,45 @@
   ],
   "tools": [
     {
+      "id": "granice",
+      "name": "Administrative boundaries",
+      "summary": "Every level of the state boundaries: the country, a voivodeship, a powiat or a gmina.",
+      "toolbox": "Boundaries and units",
+      "params": [
+        {
+          "name": "poziom",
+          "label": "Level",
+          "kind": "choice",
+          "required": true,
+          "choices": [
+            "Gminy",
+            "Powiaty",
+            "Wojewodztwa"
+          ],
+          "help": "Which boundaries to download."
+        },
+        {
+          "name": "zakres",
+          "label": "Scope",
+          "kind": "text",
+          "help": "kraj for the whole country, or a unit by name or TERYT code, such as 1416 or Ostrowski."
+        },
+        {
+          "name": "filtr",
+          "label": "Name filter",
+          "kind": "text",
+          "help": "Keeps the boundaries whose name holds this text, accents aside."
+        },
+        {
+          "name": "limit_mb",
+          "label": "Size limit (MB)",
+          "kind": "number",
+          "default": 0,
+          "help": "0 means no byte limit."
+        }
+      ]
+    },
+    {
       "id": "pobierz-adresy",
       "name": "Addresses and buildings",
       "summary": "GUGiK types for addresses, buildings and their statistics.",
@@ -901,7 +940,7 @@
         "label": "Downloads",
         "layout": "small",
         "items": [
-          "granice",
+          "tool:granice",
           {
             "menu": "Datasets",
             "icon": "package",
@@ -1311,7 +1350,16 @@
       "Administrative\nboundaries": "Granice\nadministracyjne",
       "Downloads one level of state boundaries for the country, a voivodeship, a powiat or a gmina, and keeps the names a filter matches.": "Pobiera jeden poziom granic państwowych dla kraju, województwa, powiatu albo gminy i zostawia nazwy pasujące do filtra.",
       "Boundaries": "Granice",
-      "A level for the whole country, or a level of the unit chosen above.": "Poziom dla całego kraju albo poziom wybranej jednostki."
+      "A level for the whole country, or a level of the unit chosen above.": "Poziom dla całego kraju albo poziom wybranej jednostki.",
+      "Administrative boundaries": "Granice administracyjne",
+      "Every level of the state boundaries: the country, a voivodeship, a powiat or a gmina.": "Każdy poziom granic państwowych: kraj, województwo, powiat albo gmina.",
+      "Level": "Poziom",
+      "Which boundaries to download.": "Które granice pobrać.",
+      "Scope": "Zakres",
+      "kraj for the whole country, or a unit by name or TERYT code, such as 1416 or Ostrowski.": "kraj dla całego kraju albo jednostka po nazwie lub kodzie TERYT, np. 1416.",
+      "Name filter": "Filtr nazwy",
+      "Keeps the boundaries whose name holds this text, accents aside.": "Zostawia granice, których nazwa zawiera ten tekst, bez ogonków.",
+      "0 means no byte limit.": "0 znaczy brak limitu bajtów."
     }
   },
   "moreMaps": {

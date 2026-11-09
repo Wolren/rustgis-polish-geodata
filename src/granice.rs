@@ -109,22 +109,34 @@ pub fn levels(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, Str
     } else {
         (asked_mb * 1_000_000) as u64
     };
-    // The box goes as a polygon: a plain BBOX is read in the service's own axis order and misses.
-    let [west, south, east, north] = bbox;
-    let area_box = json!({
-        "type": "FeatureCollection",
-        "features": [{
-            "type": "Feature",
-            "properties": {},
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[west, south], [east, south], [east, north], [west, north], [west, south]]]
-            }
-        }]
-    });
+    // The scope and the name go to the service as one filter, so no page window cuts the answer.
+    let wanted_name = params
+        .get("filtr")
+        .or_else(|| params.get("filter"))
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|value| !value.is_empty());
+    let filter = register_filter(wanted_level.as_str(), (!whole_country).then_some(scope.as_str()), wanted_name);
     host::progress_line(&text::levels_reading(lang, label));
     let mut report = |line: &str| host::progress_line(line);
-    let download = wfs::fetch(layer, bbox, Some(&area_box), &mut report, lang, limit, cap)?;
+    let download = match filter {
+        Some(filter) => wfs::fetch(layer, bbox, None, Some(&filter), &mut report, lang, limit, cap)?,
+        None => {
+            let [west, south, east, north] = bbox;
+            let area_box = json!({
+                "type": "FeatureCollection",
+                "features": [{
+                    "type": "Feature",
+                    "properties": {},
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [[[west, south], [east, south], [east, north], [west, north], [west, south]]]
+                    }
+                }]
+            });
+            wfs::fetch(layer, bbox, Some(&area_box), None, &mut report, lang, limit, cap)?
+        }
+    };
     if download.features.is_empty() {
         return Err(text::typed_empty(lang, label, &scope));
     }
@@ -190,6 +202,268 @@ pub fn levels(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, Str
         "features": total,
         "clipped": !whole_country,
     }))
+}
+
+/// The tool behind the form: the same options, but a Tools pane dialog instead of a script.
+///
+/// A tool gets no host, so the unit's boundary comes from the register here and the layer returns as
+/// GeoJSON. The scope filter is the TERYT code, so no clip is needed for exactness.
+pub fn tool(request: &Value, lang: Lang) -> Result<Value, String> {
+    let params = request.get("params").cloned().unwrap_or_else(|| json!({}));
+    let level = params
+        .get("poziom")
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .unwrap_or_default()
+        .to_lowercase();
+    let (label, _) = match level.as_str() {
+        "wojewodztwa" | "voivodeships" => ("Granice województw", LEVELS.0),
+        "powiaty" | "counties" => ("Granice powiatów", LEVELS.1),
+        "gminy" | "municipalities" => ("Granice gmin", LEVELS.2),
+        other => return Err(text::levels_unknown_level(lang, other)),
+    };
+    let layer = catalog::wfs_by_label(label).ok_or_else(|| text::unknown_dataset(lang, label))?;
+
+    let scope = params
+        .get("zakres")
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .unwrap_or("kraj")
+        .to_string();
+    let whole_country = matches!(scope.to_lowercase().as_str(), "kraj" | "country" | "pl" | "");
+    let bbox = POLAND;
+    let scope_code = if whole_country {
+        None
+    } else {
+        // A name or a code both work, and a name resolves through the shipped table.
+        let code = match crate::jednostki::resolve(&scope) {
+            Some(_) => scope.clone(),
+            None => {
+                // A fragment may name several units, so the form answers with the matches.
+                let matches = crate::jednostki::matching(&scope, 12);
+                match matches.len() {
+                    0 => return Err(text::unit_unknown(lang, &scope)),
+                    1 => matches[0].0.clone(),
+                    _ => return Err(text::levels_choose(lang, &match_list(&matches))),
+                }
+            }
+        };
+        Some(code)
+    };
+
+    let settings = crate::cache::settings();
+    let cap = if settings.confirm_large { wfs::HARD_TOTAL } else { wfs::MAX_TOTAL };
+    let asked_mb = params.get("limit_mb").and_then(Value::as_i64).unwrap_or(settings.limit_mb);
+    let limit = if asked_mb <= 0 {
+        u64::MAX
+    } else {
+        (asked_mb * 1_000_000) as u64
+    };
+    // The scope code and the typed name go to the service as one filter, so the answer is complete.
+    let wanted_name = params
+        .get("filtr")
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|value| !value.is_empty());
+    let filter = register_filter(&level, scope_code.as_deref(), wanted_name);
+    let mut report = |line: &str| host::progress_line(line);
+    let download = wfs::fetch(layer, bbox, None, filter.as_deref(), &mut report, lang, limit, cap)?;
+
+    let filter = params
+        .get("filtr")
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(fold);
+    let kept: Vec<Value> = download
+        .features
+        .into_iter()
+        .filter(|feature| match &scope_code {
+            Some(code) => code_of(feature)
+                .map(|row| row.starts_with(code.as_str()) || code.starts_with(row.as_str()))
+                .unwrap_or(false),
+            None => true,
+        })
+        .filter(|feature| match &filter {
+            Some(pattern) => name_of(feature)
+                .map(|name| fold(&name).contains(pattern.as_str()))
+                .unwrap_or(false),
+            None => true,
+        })
+        .collect();
+    if kept.is_empty() {
+        return Err(text::levels_no_match(lang, &scope));
+    }
+    let name = match &filter {
+        Some(pattern) => text::typed_layer(lang, label, pattern, "poziom"),
+        None => text::typed_layer(lang, label, &scope, "poziom"),
+    };
+    let mut messages = vec![text::count_size(lang, &name, kept.len(), download.bytes)];
+    if download.truncated {
+        messages.push(text::truncated_at(lang, &name, cap, settings.confirm_large));
+    }
+    Ok(json!({
+        "layers": [{ "name": name, "geojson": json!({ "type": "FeatureCollection", "features": kept }) }],
+        "messages": messages
+    }))
+}
+
+/// A register filter for the level, the scope code and the name, so the service sends only matches.
+///
+/// The register compares names as written, so the typed word goes in three spellings; a code keeps its
+/// prefix, since a powiat's gminy all start with it.
+pub fn register_filter(level: &str, scope: Option<&str>, name: Option<&str>) -> Option<String> {
+    let length = match level {
+        "wojewodztwa" => 2,
+        "powiaty" => 4,
+        _ => 7,
+    };
+    let mut parts: Vec<String> = Vec::new();
+    if let Some(code) = scope {
+        let code = code.trim();
+        let literal = if code.chars().count() >= length {
+            code.chars().take(length).collect::<String>()
+        } else {
+            format!("{code}")
+        };
+        let literal = if code.chars().count() == length {
+            literal
+        } else {
+            format!("{literal}*")
+        };
+        parts.push(like("JPT_KOD_JE", &literal));
+    }
+    if let Some(word) = name {
+        let word = word.trim();
+        if !word.is_empty() {
+            let probes = name_probes(word);
+            let mut alternatives: Vec<String> = Vec::new();
+            for probe in probes {
+                alternatives.push(like("JPT_NAZWA_", &format!("*{}*", escape_xml(&probe))));
+            }
+            parts.push(if alternatives.len() == 1 {
+                alternatives.remove(0)
+            } else {
+                format!("<Or>{}</Or>", alternatives.join(""))
+            });
+        }
+    }
+    if parts.is_empty() {
+        return None;
+    }
+    let body = if parts.len() == 1 {
+        parts.remove(0)
+    } else {
+        format!("<And>{}</And>", parts.join(""))
+    };
+    let xml = format!("<Filter xmlns:ogc=\"http://www.opengis.net/ogc\">{body}</Filter>");
+    Some(percent_encode(&xml))
+}
+
+/// The spellings worth asking the register for: four cases, and the accented forms of plain letters.
+///
+/// The service compares names as written, so "miedzy" needs the ę and "MIĘDZY" needs Między.
+pub fn name_probes(word: &str) -> Vec<String> {
+    let cases = [
+        word.to_string(),
+        title_case(word),
+        word.to_lowercase(),
+        word.to_uppercase(),
+    ];
+    let mut out: Vec<String> = Vec::new();
+    for probe in cases {
+        if !probe.is_empty() && !out.contains(&probe) {
+            out.push(probe);
+        }
+    }
+    // Plain letters expand to the accented ones a store may carry; the cap keeps the address short.
+    for expanded in accents(word) {
+        for probe in [expanded.clone(), title_case(&expanded)] {
+            if !out.contains(&probe) && out.len() < 12 {
+                out.push(probe);
+            }
+        }
+    }
+    out
+}
+
+/// First letter upper, the rest lower, which is how the register writes a gmina.
+fn title_case(word: &str) -> String {
+    match word.chars().next() {
+        Some(first) => first.to_uppercase().collect::<String>() + &word[first.len_utf8()..].to_lowercase(),
+        None => String::new(),
+    }
+}
+
+/// The accented readings of a plain word, at most eight of them.
+fn accents(word: &str) -> Vec<String> {
+    const PAIRS: [(char, [char; 3]); 9] = [
+        ('a', ['a', 'ą', 'a']),
+        ('c', ['c', 'ć', 'c']),
+        ('e', ['e', 'ę', 'e']),
+        ('l', ['l', 'ł', 'l']),
+        ('n', ['n', 'ń', 'n']),
+        ('o', ['o', 'ó', 'o']),
+        ('s', ['s', 'ś', 's']),
+        ('z', ['z', 'ź', 'ż']),
+        ('x', ['x', 'x', 'x']),
+    ];
+    let mut out = vec![String::new()];
+    for letter in word.chars() {
+        let lower = letter.to_lowercase().next().unwrap_or(letter);
+        let options: Vec<char> = match PAIRS.iter().find(|(plain, _)| *plain == lower) {
+            Some((_, forms)) => forms.to_vec(),
+            None => vec![letter],
+        };
+        let mut next: Vec<String> = Vec::new();
+        for prefix in &out {
+            for option in &options {
+                if next.len() < 8 {
+                    let mut candidate = prefix.clone();
+                    candidate.push(*option);
+                    next.push(candidate);
+                }
+            }
+        }
+        out = next;
+    }
+    out.retain(|candidate| !candidate.is_empty());
+    out
+}
+
+/// One pattern test on a property, with the register's own wildcard and escape.
+fn like(property: &str, literal: &str) -> String {
+    format!(
+        "<PropertyIsLike wildCard=\"*\" singleChar=\"?\" escapeChar=\"!\">\
+<PropertyName>{property}</PropertyName><Literal>{literal}</Literal></PropertyIsLike>"
+    )
+}
+
+/// The characters a filter's literal cannot carry as they are.
+fn escape_xml(text: &str) -> String {
+    text.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;")
+}
+
+/// The filter travels in the address, so its XML is encoded here.
+fn percent_encode(text: &str) -> String {
+    let mut out = String::with_capacity(text.len() * 2);
+    for byte in text.bytes() {
+        match byte {
+            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'~' => out.push(byte as char),
+            _ => out.push_str(&format!("%{byte:02X}")),
+        }
+    }
+    out
+}
+
+/// The matches as "name (code)" lines, so a refusal is a list to choose from.
+fn match_list(matches: &[(String, String, &'static str)]) -> String {
+    matches
+        .iter()
+        .take(12)
+        .map(|(code, name, _)| format!("{name} ({code})"))
+        .collect::<Vec<String>>()
+        .join(", ")
 }
 
 /// The panel's tree: every option the guided downloader offers, the unit ones last.

@@ -1475,12 +1475,27 @@ pub fn levels_unknown_level(lang: Lang, level: &str) -> String {
     )
 }
 
+/// A scope fragment names several units, so the form answers with them.
+pub fn levels_choose(lang: Lang, matches: &str) -> String {
+    pick!(
+        lang,
+        format!("more than one unit fits: {matches}. Put a code, or the exact name, in Scope."),
+        format!("więcej niż jedna jednostka pasuje: {matches}. Wpisz kod albo dokładną nazwę w Zakresie.")
+    )
+}
+
 /// Nothing matched the name filter, so the layer stays empty on purpose.
 pub fn levels_no_match(lang: Lang, scope: &str) -> String {
     pick!(
         lang,
-        format!("no boundary in {scope} matches the name filter"),
-        format!("żadna granica w {scope} nie pasuje do filtra nazwy")
+        format!(
+            "no boundary in {scope} matches the name. The register compares names as written, so \
+             type the Polish letters: Międzyrzecz, not miedzyrzecz."
+        ),
+        format!(
+            "żadna granica w {scope} nie pasuje do nazwy. Rejestr porównuje nazwy dosłownie, więc \
+             wpisz polskie litery: Międzyrzecz, nie miedzyrzecz."
+        )
     )
 }
 

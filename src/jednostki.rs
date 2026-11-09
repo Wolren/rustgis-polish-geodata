@@ -97,6 +97,72 @@ pub fn resolve(code: &str) -> Option<(String, &'static str)> {
     None
 }
 
+/// The code a unit's name belongs to, so a form can take a name instead of a code.
+pub fn code_of_name(name: &str) -> Option<String> {
+    let wanted = crate::granice::fold(name.trim());
+    if wanted.is_empty() {
+        return None;
+    }
+    let empty: Vec<Value> = Vec::new();
+    for voivodeship in parsed().get("wojewodztwa")?.as_array().unwrap_or(&empty) {
+        let label = voivodeship.get("nazwa")?.as_str()?;
+        if crate::granice::fold(label) == wanted {
+            return voivodeship.get("kod")?.as_str().map(str::to_string);
+        }
+        for powiat in voivodeship.get("powiaty").and_then(Value::as_array).unwrap_or(&empty) {
+            let label = powiat.get("nazwa")?.as_str()?;
+            if crate::granice::fold(label) == wanted {
+                return powiat.get("kod")?.as_str().map(str::to_string);
+            }
+            for gmina in powiat.get("gminy").and_then(Value::as_array).unwrap_or(&empty) {
+                let label = gmina.get("nazwa")?.as_str()?;
+                if crate::granice::fold(label) == wanted {
+                    return gmina.get("kod")?.as_str().map(str::to_string);
+                }
+            }
+        }
+    }
+    None
+}
+
+/// The units whose name holds a fragment, so a form can offer the matches instead of guessing.
+pub fn matching(fragment: &str, limit: usize) -> Vec<(String, String, &'static str)> {
+    let wanted = crate::granice::fold(fragment.trim());
+    let mut out: Vec<(String, String, &'static str)> = Vec::new();
+    if wanted.is_empty() {
+        return out;
+    }
+    let empty: Vec<Value> = Vec::new();
+    let Some(voivodeships) = parsed().get("wojewodztwa").and_then(Value::as_array) else {
+        return out;
+    };
+    for voivodeship in voivodeships {
+        let Some(code) = voivodeship.get("kod").and_then(Value::as_str) else { continue };
+        let name = voivodeship.get("nazwa").and_then(Value::as_str).unwrap_or_default();
+        if crate::granice::fold(name).contains(&wanted) {
+            out.push((code.to_string(), name.to_string(), "wojewodztwo"));
+        }
+        for powiat in voivodeship.get("powiaty").and_then(Value::as_array).unwrap_or(&empty) {
+            let Some(code) = powiat.get("kod").and_then(Value::as_str) else { continue };
+            let name = powiat.get("nazwa").and_then(Value::as_str).unwrap_or_default();
+            if crate::granice::fold(name).contains(&wanted) {
+                out.push((code.to_string(), name.to_string(), "powiat"));
+            }
+            for gmina in powiat.get("gminy").and_then(Value::as_array).unwrap_or(&empty) {
+                let Some(code) = gmina.get("kod").and_then(Value::as_str) else { continue };
+                let name = gmina.get("nazwa").and_then(Value::as_str).unwrap_or_default();
+                if crate::granice::fold(name).contains(&wanted) {
+                    out.push((code.to_string(), name.to_string(), "gmina"));
+                }
+                if out.len() >= limit {
+                    return out;
+                }
+            }
+        }
+    }
+    out
+}
+
 #[cfg(test)]
 mod tests {
     use super::{nodes, resolve};
