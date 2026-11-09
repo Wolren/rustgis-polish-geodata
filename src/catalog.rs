@@ -131,6 +131,7 @@ CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH={width}&HEIGHT={height}&FORMAT=image/p
 #[derive(Clone)]
 pub struct WfsLayer {
     /// Whether the entry belongs to a command that names it, so no tool offers it.
+    #[allow(dead_code)]
     pub hidden: bool,
     pub id: &'static str,
     /// GUGiK's short name for the type, the same in both interface languages: a dataset's name is a

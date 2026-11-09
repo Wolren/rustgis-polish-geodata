@@ -159,6 +159,11 @@ pub fn state(host: &mut Host, lang: Lang, request: &Value) -> Result<Value, Stri
     }
     items.insert("granice".into(), granice_item);
     items.insert(
+        "elevacja-5m".into(),
+        json!({ "value": request.get("panel").and_then(|panel| panel.get("values"))
+            .and_then(|values| values.get("elevacja-5m")).and_then(Value::as_bool).unwrap_or(false) }),
+    );
+    items.insert(
         "cache".into(),
         json!({ "text": text::cache_text(lang, files, bytes) }),
     );

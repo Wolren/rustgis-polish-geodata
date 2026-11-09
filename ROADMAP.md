@@ -32,6 +32,14 @@ potem według tematu, i którą całą da się sterować przez MCP albo przez pa
 - Cięcie zostawia obiekt graniczny sąsiada, gdy usługa odpowiedziała prostokątem: liczba jest górną
   granicą. Punkty i linie przechodzą nietknięte, wielokąty bez powierzchni są usuwane.
 
+### Model wysokosci: 1 m albo 5 m
+
+- Panel ma przelacznik **Model wysokosci co 5 m**, a polecenia przyjmuja `rozdzielczosc`. Usluga WCS
+  wymaga `RESX`/`RESY`, wiec 5 m to jeden parametr: to samo pudelko w Poznaniu to 1393 x 1152 komorek
+  i 31,4 MB przy 1 m oraz 278 x 230 i 4,3 MB przy 5 m.
+- GeoTIFF (NMT PL-KRON86-NH) idzie przez hosta, wiec okno nie czeka; EVRF2007 i NMPT to ASCII, ktore
+  przechodzi przez wtyczke i trzyma okno na czas transferu. Przy 5 m te 16 s spada do 2 s.
+
 ### Dojrzalosc interfejsu
 
 - Formularze maja domyslne wartosci: `poziom` to Gminy, `wojewodztwo` to caly kraj, a lista zbiorow

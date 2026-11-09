@@ -98,6 +98,7 @@ impl Kind {
 
 /// Adds the elevation model of the area, or says what the area needs.
 pub fn add(host: &mut Host, lang: Lang, request: &Value, kind: Kind) -> Result<Value, String> {
+    let cell = cell_of(request);
     let (source, features) = area(host, lang, request, text::nmt_needs_area(lang))?;
     let boxes = envelopes(&features).ok_or_else(|| text::area_no_geometry(lang, &source))?;
     if !gk92::inside_poland(
@@ -108,12 +109,14 @@ pub fn add(host: &mut Host, lang: Lang, request: &Value, kind: Kind) -> Result<V
     }
 
     let (x0, y0, width, height) = snap(boxes.metres);
+    // A coarser cell divides the payload, and the wait, by twenty-five.
     let cells = f64::from(width) * f64::from(height);
-    let bytes = cells * kind.bytes_per_cell();
+    let grid_cells = cells / f64::from(cell * cell);
+    let bytes = grid_cells * kind.bytes_per_cell();
     let seconds = bytes / kind.bytes_per_second();
 
-    let wanted = text::nmt_layer_name(kind.surface(), kind.datum());
-    let address = url(kind, x0, y0, width, height);
+    let wanted = text::nmt_layer_name(kind.surface(), kind.datum(), cell);
+    let address = url_at(kind, x0, y0, width, height, cell);
     let mut megabytes = bytes / 1e6;
     let mut pending = false;
     let name = if kind.tiff() {
@@ -127,7 +130,7 @@ pub fn add(host: &mut Host, lang: Lang, request: &Value, kind: Kind) -> Result<V
         }
     } else {
         let file = cache::dem_file(&format!(
-            "{}_{x0}_{y0}_{width}x{height}.asc",
+            "{}_{x0}_{y0}_{width}x{height}_{cell}m.asc",
             kind.coverage()
         ));
         if file.exists() {
@@ -181,7 +184,7 @@ pub fn add(host: &mut Host, lang: Lang, request: &Value, kind: Kind) -> Result<V
             lang,
             &name,
             kind.datum(),
-            (width, height),
+            (width / cell, height / cell),
             megabytes,
             &source,
             look.name(),
@@ -536,6 +539,24 @@ fn walk(node: &Value, visit: &mut impl FnMut(f64, f64)) {
     }
 }
 
+/// The cell size the request asks for: five metres shrinks a payload twenty-five times.
+fn cell_of(request: &Value) -> u32 {
+    let asked = request
+        .get("params")
+        .and_then(|params| params.get("rozdzielczosc"))
+        .and_then(Value::as_u64);
+    let panel = request
+        .get("panel")
+        .and_then(|panel| panel.get("values"))
+        .and_then(|values| values.get("elevacja-5m"))
+        .and_then(Value::as_bool)
+        .unwrap_or(false);
+    match (asked, panel) {
+        (Some(5), _) | (Some(5_000), _) | (_, true) => 5,
+        _ => 1,
+    }
+}
+
 /// The whole-metre box a one-metre grid needs: floor the low edges, ceil the high ones.
 pub fn snap(metres: [f64; 4]) -> (i64, i64, u32, u32) {
     let x0 = metres[0].floor();
@@ -550,8 +571,9 @@ pub fn snap(metres: [f64; 4]) -> (i64, i64, u32, u32) {
     )
 }
 
-/// The coverage's address: a whole-metre PL-1992 box, one cell per metre.
-pub fn url(kind: Kind, x0: i64, y0: i64, width: u32, height: u32) -> String {
+
+/// The same address at a coarser cell: RESX and RESY, which this service requires.
+pub fn url_at(kind: Kind, x0: i64, y0: i64, width: u32, height: u32, cell: u32) -> String {
     let format = if kind.tiff() {
         "image/tiff"
     } else {
@@ -560,7 +582,7 @@ pub fn url(kind: Kind, x0: i64, y0: i64, width: u32, height: u32) -> String {
     let x1 = x0 + i64::from(width);
     let y1 = y0 + i64::from(height);
     format!(
-        "{}?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&FORMAT={format}&COVERAGE={}&BBOX={x0},{y0},{x1},{y1}&CRS=EPSG:2180&RESPONSE_CRS=EPSG:2180&WIDTH={width}&HEIGHT={height}",
+        "{}?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&FORMAT={format}&COVERAGE={}&BBOX={x0},{y0},{x1},{y1}&CRS=EPSG:2180&RESPONSE_CRS=EPSG:2180&WIDTH={width}&HEIGHT={height}&RESX={cell}&RESY={cell}",
         kind.endpoint(),
         kind.coverage()
     )
@@ -740,7 +762,7 @@ mod tests {
 
     #[test]
     fn the_address_asks_for_one_metre_cells() {
-        let address = url(Kind::TerrainKron, 348_129, 497_807, 2317, 2193);
+        let address = url_at(Kind::TerrainKron, 348_129, 497_807, 2317, 2193, 1);
         assert!(
             address.contains("COVERAGE=DTM_PL-KRON86-NH_TIFF"),
             "{address}"
@@ -755,7 +777,7 @@ mod tests {
             "{address}"
         );
         assert!(address.contains("WIDTH=2317&HEIGHT=2193"), "{address}");
-        let ascii = url(Kind::TerrainEvrf, 0, 0, 1000, 1000);
+        let ascii = url_at(Kind::TerrainEvrf, 0, 0, 1000, 1000, 1);
         assert!(ascii.contains("FORMAT=image/x-aaigrid"), "{ascii}");
         assert!(ascii.contains("COVERAGE=DTM_PL-EVRF2007-NH"), "{ascii}");
     }

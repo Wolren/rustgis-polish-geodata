@@ -1168,6 +1168,13 @@
         "help": "A typed download follows the unit's boundary; turn this off to keep the whole bounding box.",
         "default": true,
         "command": "ustawienia"
+      },
+      {
+        "kind": "checkbox",
+        "id": "elevacja-5m",
+        "label": "Elevation model at 5 m",
+        "help": "One cell per five metres: twenty-five times less data, and a slow click becomes short.",
+        "default": false
       }
     ]
   },
@@ -1397,7 +1404,9 @@
       "Voivodeship": "Województwo",
       "The voivodeship whose boundaries you want, or cały kraj for the country.": "Województwo, którego granice chcesz, albo cały kraj.",
       "Powiat or gmina (empty uses the unit chosen in the panel)": "Powiat albo gmina (puste = jednostka z panelu)",
-      "A name or a TERYT code such as 1416 or Ostrowski. Leave it empty to use the unit chosen in the panel tree.": "Nazwa albo kod TERYT, np. 1416. Puste pole bierze jednostkę wybraną w drzewie panelu."
+      "A name or a TERYT code such as 1416 or Ostrowski. Leave it empty to use the unit chosen in the panel tree.": "Nazwa albo kod TERYT, np. 1416. Puste pole bierze jednostkę wybraną w drzewie panelu.",
+      "Elevation model at 5 m": "Model wysokości co 5 m",
+      "One cell per five metres: twenty-five times less data, and a slow click becomes short.": "Jedna komórka na pięć metrów: dwadzieścia pięć razy mniej danych i krótsze oczekiwanie."
     }
   },
   "moreMaps": {

@@ -155,6 +155,13 @@ built-in Clip and replaces the layer with the result.
 The panel's **Clip the download to the unit boundary** checkbox is on by default: a typed download
 follows the unit's shape. Turn it off to keep the whole bounding box, and the run says so.
 
+**The elevation model at 1 m or 5 m.** The panel carries **Elevation model at 5 m**, and the model
+commands take `{"rozdzielczosc": 5}`. One cell per five metres shrinks the payload twenty-five times: the
+same Poznań box is 1 393 × 1 152 cells and 31.4 MB at 1 m, 278 × 230 cells and 4.3 MB at 5 m. The GeoTIFF
+product (NMT in PL-KRON86-NH) passes through the host's own download, so the window stays free; the ASCII
+products (PL-EVRF2007-NH and NMPT) come through the plugin and hold the window for the length of the
+transfer, which the 5 m switch shortens from about sixteen seconds to about two.
+
 **Administrative boundaries, the guided way.** The Downloads group carries **Administrative boundaries**, a
 tool form: **Level**, **Voivodeship** as a dropdown of 16, **Powiat or gmina**, a name filter and a size limit. The host
 allows 64 choices in a dropdown, so the 380 powiaty and 2 479 gminy cannot be a list there. Leave **Powiat or

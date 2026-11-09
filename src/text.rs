@@ -1062,15 +1062,6 @@ pub fn area_cleared(lang: Lang, name: &str) -> String {
     )
 }
 
-/// Nothing to clear: no area layer on the map.
-pub fn area_none(lang: Lang) -> String {
-    pick!(
-        lang,
-        "There is no area layer to remove. Press Area from view or Draw area to make one.",
-        "Nie ma warstwy obszaru do usunięcia. Naciśnij przycisk Obszar z widoku albo Narysuj obszar."
-    )
-    .to_string()
-}
 
 /// The model is a rectangle, and the area drawn was not one.
 pub fn nmt_box_note(lang: Lang, name: &str, box_lon: [f64; 4]) -> String {
@@ -1316,9 +1307,9 @@ pub fn map_folder(lang: Lang, label: &str) -> String {
 
 
 /// The raster's name: the product and its grid, the same in both languages.
-pub fn nmt_layer_name(surface: bool, datum: &str) -> String {
+pub fn nmt_layer_name(surface: bool, datum: &str, cell: u32) -> String {
     let product = if surface { "NMPT" } else { "NMT" };
-    format!("{product} 1 m {datum}")
+    format!("{product} {cell} m {datum}")
 }
 
 pub fn nmt_added(
