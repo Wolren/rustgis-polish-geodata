@@ -31,15 +31,15 @@ Every download takes an area layer, a polygon layer on the map. The layer is "Ar
 | `obszar-przejmij` | moves that graphic into the area layer |
 | `obszar-anuluj` | drops a pending drawing |
 | `obszar-wyczysc` | removes the area layer |
-| `obszar-dodaj` | copies the current area to Area 1, Area 2, or takes `{"nazwa": "Gmina A", "bbox": [w, s, e, n]}` |
+| `obszar-dodaj` | copies the current area to Area 1, Area 2, or takes `{"nazwa": "Gmina A", "bbox": [w, s, e, n]}`; no ribbon button |
 
 A city that PRG lists only as a gmina falls back to its gmina boundary. An inverted or short box is
 refused with the shape the command wants.
 
 ## Batch over several areas
 
-`obszar-dodaj` copies the current area to a layer of its own (Area 1, Area 2), so several areas stand
-side by side. `gp.batch` then runs one download tool over all of them:
+`obszar-dodaj` has no ribbon button; a script or the assistant calls it to copy the current area to a
+layer of its own (Area 1, Area 2). `gp.batch` then runs one download tool over all of them:
 
 ```text
 run_tool  gp.batch  {"tool": "plugin:polish-geodata/pobierz-granice", "inputs": ["Gmina A", "Gmina B"], "params": {"dane": "A03_Granice_gmin"}}
