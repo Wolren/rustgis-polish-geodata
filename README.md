@@ -140,8 +140,8 @@ A city's parcels weigh about 9 MB, measured on Warsaw: 5 248 parcels. The gate a
 stops before the first page.
 
 One run takes 10 000 features and 25 MB by default. The tool form carries **Size limit (MB)** and
-**Download even if large**, so the pane that refuses can raise its own limit: 200 MB over Mazowieckie
-brings 628 gminy in one run. **Download even if large** raises both: 50 000
+**Download even if large**. The field takes any number, and **0 removes the byte limit**: a whole-country
+run of `Granice gmin` at 0 brought all 2 479 gminy, 437 MB, in 37 seconds. **Download even if large** raises both: 50 000
 features, and the greater of 256 MB and the size slider, which ends at 500 MB.
 
 The gate counts before it refuses: a wide box over a sparse layer runs, and a dense one stops with

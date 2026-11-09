@@ -1764,7 +1764,7 @@
           "label": "Size limit (MB)",
           "kind": "number",
           "default": 25,
-          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
+          "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
         },
         {
           "name": "confirm",
@@ -1834,7 +1834,7 @@
           "label": "Size limit (MB)",
           "kind": "number",
           "default": 25,
-          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
+          "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
         },
         {
           "name": "confirm",
@@ -1901,7 +1901,7 @@
           "label": "Size limit (MB)",
           "kind": "number",
           "default": 25,
-          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
+          "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
         },
         {
           "name": "confirm",
@@ -1968,7 +1968,7 @@
           "label": "Size limit (MB)",
           "kind": "number",
           "default": 25,
-          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
+          "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
         },
         {
           "name": "confirm",
@@ -2035,7 +2035,7 @@
           "label": "Size limit (MB)",
           "kind": "number",
           "default": 25,
-          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
+          "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
         },
         {
           "name": "confirm",
@@ -2127,7 +2127,7 @@
           "label": "Size limit (MB)",
           "kind": "number",
           "default": 25,
-          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
+          "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
         }
       ]
     },
@@ -2202,7 +2202,7 @@
           "label": "Size limit (MB)",
           "kind": "number",
           "default": 25,
-          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
+          "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
         }
       ]
     },
@@ -2297,7 +2297,7 @@
           "label": "Size limit (MB)",
           "kind": "number",
           "default": 25,
-          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
+          "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
         }
       ]
     },
@@ -2372,7 +2372,7 @@
           "label": "Size limit (MB)",
           "kind": "number",
           "default": 25,
-          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
+          "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
         },
         {
           "name": "confirm",
@@ -2415,7 +2415,7 @@
           "label": "Size limit (MB)",
           "kind": "number",
           "default": 25,
-          "help": "A run stops at this many megabytes. The panel's slider sets the same number."
+          "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
         },
         {
           "name": "confirm",
@@ -3087,7 +3087,7 @@
       "A typed download follows the unit's boundary; turn this off to keep the whole bounding box.": "Pobranie typowane idzie za granicą jednostki; wyłącz, aby zachować cały prostokąt.",
       "Size limit (MB)": "Limit rozmiaru (MB)",
       "Fetch a run larger than the size limit. It raises the stop to 256 MB, or to the limit typed above.": "Pobierz przebieg większy niż limit rozmiaru. Podnosi limit do 256 MB albo do liczby wpisanej wyżej.",
-      "A run stops at this many megabytes. The panel's slider sets the same number.": "Przebieg zatrzymuje się na tylu megabajtach. Suwak w panelu ustawia tę samą liczbę."
+      "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default.": "Przebieg zatrzymuje się na tylu megabajtach. 0 znaczy brak limitu bajtów; suwak w panelu ustawia domyślną wartość."
     }
   },
   "panel": {

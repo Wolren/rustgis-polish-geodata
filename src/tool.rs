@@ -23,9 +23,9 @@ use serde_json::{json, Value};
 const UNLIMITED_SPAN: f64 = 20.0;
 /// The cap any confirmed run stops at, whatever the panel's slider says.
 const HARD_MB: f64 = 256.0;
-/// The size limit the tool form offers, in megabytes.
-const MIN_MB: i64 = 5;
-const MAX_MB: i64 = 500;
+/// The size limit the tool form offers, in megabytes; zero means no byte limit at all.
+const MIN_MB: i64 = 0;
+const MAX_MB: i64 = 1_000_000;
 
 pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     // The sheet downloader and the register update name no dataset, so they run before `dane`.
@@ -89,7 +89,14 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
         .and_then(Value::as_i64)
         .map(|mb| mb.clamp(MIN_MB, MAX_MB) as f64)
         .unwrap_or(settings.limit_mb as f64);
-    let limit = if confirm { (HARD_MB.max(asked_mb) * 1e6) as u64 } else { (asked_mb * 1e6) as u64 };
+    // A zero asks for no byte limit; the feature cap still guards the layer the tool returns.
+    let limit = if asked_mb == 0.0 {
+        u64::MAX
+    } else if confirm {
+        (HARD_MB.max(asked_mb) * 1e6) as u64
+    } else {
+        (asked_mb * 1e6) as u64
+    };
     let download = {
         let mut report = |text: &str| host::progress_line(text);
         wfs::fetch(layer, bbox, Some(features_of_area), &mut report, lang, limit, cap)?
@@ -124,7 +131,7 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
         ));
     }
     if download.truncated {
-        messages.push(text::truncated(lang).to_string());
+        messages.push(text::truncated_at(lang, layer.name, cap, confirm));
     }
     if download.failed > 0 {
         messages.push(text::shortfall(lang, download.failed));

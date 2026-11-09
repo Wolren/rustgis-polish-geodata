@@ -695,11 +695,24 @@ pub fn no_features(lang: Lang, name: &str) -> String {
     )
 }
 
-pub fn truncated(lang: Lang) -> &'static str {
+pub fn truncated_at(lang: Lang, name: &str, cap: usize, confirm: bool) -> String {
+    let next = if confirm {
+        pick!(
+            lang,
+            "This is the ceiling of a confirmed run: narrow the area for the rest.",
+            "To sufit potwierdzonego przebiegu: zawęź obszar dla reszty."
+        )
+    } else {
+        pick!(
+            lang,
+            "Tick Download even if large for up to 50000 features.",
+            "Zaznacz Pobierz mimo rozmiaru, aby wziąć do 50000 obiektów."
+        )
+    };
     pick!(
         lang,
-        "The download stopped at the limit, choose a smaller area.",
-        "Pobieranie przerwane limitem, wybierz mniejszy obszar."
+        format!("{name}: stopped at {cap} features. {next}"),
+        format!("{name}: przerwano na {cap} obiektach. {next}")
     )
 }
 
