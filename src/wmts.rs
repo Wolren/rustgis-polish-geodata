@@ -65,10 +65,18 @@ pub fn template_from_caps(xml: &str, base: &str) -> Option<String> {
         let Some(identifier) = child(layer, "Identifier").map(text_of).filter(|id| !id.is_empty()) else {
             continue;
         };
-        let Some(set) = child(layer, "TileMatrixSetLink")
-            .and_then(|link| child(link, "TileMatrixSet"))
-            .map(text_of)
-            .filter(|set| !set.is_empty())
+        let mut links: Vec<&str> = Vec::new();
+        for link in layer.children.iter().filter(|c| c.name == "TileMatrixSetLink") {
+            if let Some(set) = child(link, "TileMatrixSet").map(text_of).filter(|set| !set.is_empty()) {
+                links.push(set);
+            }
+        }
+        // The host draws Web Mercator tiles: a set without 3857 would land the wrong matrix.
+        let Some(set) = links
+            .iter()
+            .find(|set| set.contains("3857") || set.contains("900913"))
+            .copied()
+            .or_else(|| links.first().copied())
         else {
             continue;
         };
@@ -181,8 +189,13 @@ mod tests {
       <ows:Identifier>ORTOFOTOMAPA</ows:Identifier>
       <Style isDefault="true"><ows:Identifier>default</ows:Identifier></Style>
       <Format>image/png</Format>
+      <TileMatrixSetLink><TileMatrixSet>EPSG:2180</TileMatrixSet></TileMatrixSetLink>
       <TileMatrixSetLink><TileMatrixSet>EPSG:3857</TileMatrixSet></TileMatrixSetLink>
     </Layer>
+    <TileMatrixSet>
+      <ows:Identifier>EPSG:2180</ows:Identifier>
+      <TileMatrix><ows:Identifier>EPSG:2180:0</ows:Identifier></TileMatrix>
+    </TileMatrixSet>
     <TileMatrixSet>
       <ows:Identifier>EPSG:3857</ows:Identifier>
       <TileMatrix><ows:Identifier>EPSG:3857:0</ows:Identifier></TileMatrix>
