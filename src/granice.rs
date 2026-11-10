@@ -355,6 +355,7 @@ pub fn tool(request: &Value, lang: Lang) -> Result<Value, String> {
             }
         })
         .map(|filter| fold(&filter));
+    let arrived = download.features.len();
     let kept: Vec<Value> = download
         .features
         .into_iter()
@@ -384,7 +385,8 @@ pub fn tool(request: &Value, lang: Lang) -> Result<Value, String> {
     };
     crate::cache::remember_scope(&level, &scope, &filter.clone().unwrap_or_default());
     let mut messages = vec![text::count_size(lang, &name, kept.len(), download.bytes)];
-    if download.truncated {
+    // The cap message only when the cap cut the run; a slow or failed cell is not a cap stop.
+    if download.truncated && arrived >= cap {
         messages.push(text::truncated_at(lang, &name, cap, settings.confirm_large));
     }
     Ok(json!({

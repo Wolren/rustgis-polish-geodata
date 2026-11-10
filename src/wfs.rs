@@ -173,7 +173,13 @@ fn gather(
             }
             drop(sender);
             let mut done = 0;
-            for (_, cell) in receiver {
+            for (index, cell) in receiver {
+                // A cell the parallel burst dropped gets one more pass, alone on the wire.
+                let cell = if cell.answered == 0 && cell.first_error.is_some() {
+                    fetch_cell(layer, areas[index], polygon, report, lang, srs, budget, cap)
+                } else {
+                    cell
+                };
                 done += 1;
                 match cell.first_error.as_deref() {
                     Some(error) => {
@@ -291,7 +297,7 @@ fn fetch_cell(
             vec![0]
         };
         let mut read = 0usize;
-        for (_, page_bytes, page) in fetch_pages(layer, bbox, filter, &starts, lang, srs, count) {
+        for (offset, page_bytes, page) in fetch_pages(layer, bbox, filter, &starts, lang, srs, count) {
             cell.bytes += page_bytes;
             match page {
                 Ok(page) => {
@@ -304,8 +310,23 @@ fn fetch_cell(
                     cell.features.extend(page);
                 }
                 Err(error) => {
-                    cell.failed += 1;
-                    cell.first_error.get_or_insert(error);
+                    // A dropped page gets one more request: GUGiK sheds load under parallel cells.
+                    let retry = fetch_pages(layer, bbox, filter, &[offset], lang, srs, count);
+                    match retry.into_iter().next() {
+                        Some((_, bytes, Ok(again))) => {
+                            cell.bytes += bytes;
+                            cell.answered += 1;
+                            if again.len() < count {
+                                exhausted = true;
+                            }
+                            read += again.len();
+                            cell.features.extend(again);
+                        }
+                        _ => {
+                            cell.failed += 1;
+                            cell.first_error.get_or_insert(error);
+                        }
+                    }
                 }
             }
             if exhausted {
