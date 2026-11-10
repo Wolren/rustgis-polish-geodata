@@ -27,6 +27,7 @@ mod obszar;
 mod panel;
 mod powiat;
 mod prg;
+mod save;
 mod services;
 mod sheets;
 mod text;
@@ -120,6 +121,7 @@ fn run(
         "pobierz-typ" => egib::typed_for_unit(host, params, lang),
         "dzialki-powiat" => egib::from_area(host, params, lang),
         "rejestr-pobierz" => egib::from_register(host, params, lang),
+        "zapisz-gpkg" => save::run(host, request, lang),
         "obszar-anuluj" => obszar::abort(host, lang),
         "obszar-wyczysc" => obszar::clear(host, lang),
         other if other.starts_with("usluga-") => services::toggle(host, lang, request),

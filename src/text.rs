@@ -739,6 +739,38 @@ pub fn bbox_used(lang: Lang, problem: ShapeProblem) -> String {
     .to_string()
 }
 
+pub fn save_no_layer(lang: Lang) -> String {
+    pick!(
+        lang,
+        "no vector layer to save: pick one on the map".to_string(),
+        "nie ma warstwy wektorowej do zapisania: wskaż ją na mapie".to_string()
+    )
+}
+
+pub fn save_not_vector(lang: Lang, name: &str) -> String {
+    pick!(
+        lang,
+        format!("the layer \"{name}\" is not a vector layer"),
+        format!("warstwa „{name}” nie jest warstwą wektorową")
+    )
+}
+
+pub fn save_exists(lang: Lang, path: &str) -> String {
+    pick!(
+        lang,
+        format!("the file {path} exists: choose another name"),
+        format!("plik {path} już jest: wybierz inną nazwę")
+    )
+}
+
+pub fn saved_geopackage(lang: Lang, name: &str, path: &str, bytes: u64) -> String {
+    pick!(
+        lang,
+        format!("Saved {name} as {path} ({})", size(lang, bytes as f64 / 1e6)),
+        format!("Zapisano {name} jako {path} ({})", size(lang, bytes as f64 / 1e6))
+    )
+}
+
 /// A register service answered in a grid the plugin cannot place.
 pub fn register_grid_answer(lang: Lang, name: &str) -> String {
     pick!(

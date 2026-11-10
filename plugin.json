@@ -351,6 +351,13 @@
       "params": "{}"
     },
     {
+      "id": "zapisz-gpkg",
+      "label": "Save\nGeoPackage",
+      "icon": "export_layer",
+      "help": "Saves the active vector layer, or the one you name, as a GeoPackage file in Documents. Give `plik` for another place.",
+      "params": "{\"warstwa\": \"layer name (optional, the active layer or the newest one when left out)\", \"plik\": \"full path (optional, Documents\\\\<layer>.gpkg when left out)\"}"
+    },
+    {
       "id": "rejestr-gios-halas",
       "label": "GIOŚ:\nhałas",
       "icon": "layers",
@@ -2732,7 +2739,8 @@
         "layout": "small",
         "items": [
           "panel",
-          "przytnij"
+          "przytnij",
+          "zapisz-gpkg"
         ]
       },
       {
@@ -3351,7 +3359,9 @@
       "The gmina's or county's own GESUT service from the register, as one overlay.": "Usługa GESUT gminy albo powiatu z rejestru, jako jedna nakładka.",
       "Level crossings": "Przejazdy",
       "Level crossings of the railway operators, from PKP PLK to the terminal firms.": "Przejazdy kolejowe operatorów, od PKP PLK po firmy terminalowe.",
-      "The operator's level-crossing type to download.": "Typ przejazdów operatora do pobrania."
+      "The operator's level-crossing type to download.": "Typ przejazdów operatora do pobrania.",
+      "Save\nGeoPackage": "Zapisz\nGeoPackage",
+      "Saves the active vector layer, or the one you name, as a GeoPackage file in Documents. Give `plik` for another place.": "Zapisuje aktywną warstwę wektorową, albo wskazaną, jako plik GeoPackage w Dokumentach. Podaj `plik`, aby wybrać inne miejsce."
     }
   },
   "panel": {
