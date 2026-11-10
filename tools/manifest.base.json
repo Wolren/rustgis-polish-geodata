@@ -975,7 +975,7 @@
           "help": "The folder the files and the CSV report are written to."
         }
       ],
-      "help": "Downloads the sheet files the selected index features point at, into the folder you give. The host has no folder picker yet, so type the full path."
+      "help": "Downloads the files the selected index features name in url_do_pobrania into a folder, with a CSV report."
     },
     {
       "id": "geokoduj-csv",
@@ -1587,7 +1587,7 @@
       "Take up to 50 000 features; the size limit still applies.": "Bierze do 50 000 obiektów; limit rozmiaru nadal działa.",
       "Check every service instead of the sample.": "Sprawdź wszystkie usługi zamiast próbki.",
       "How many services to check; the full register holds 3306.": "Ile usług sprawdzić; cały rejestr ma 3306.",
-      "Downloads the sheet files the selected index features point at, into the folder you give. The host has no folder picker yet, so type the full path.": "Pobiera pliki arkuszy wskazane przez wybrane obiekty skorowidza do podanego folderu. Host nie ma jeszcze wyboru folderu, więc wpisz pełną ścieżkę."
+      "Downloads the files the selected index features name in url_do_pobrania into a folder, with a CSV report.": "Pobiera pliki wskazane w polu url_do_pobrania przez wybrane obiekty skorowidza do folderu, z raportem CSV."
     }
   },
   "moreMaps": {
