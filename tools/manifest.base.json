@@ -892,14 +892,14 @@
           "label": "Check every address",
           "kind": "bool",
           "default": false,
-          "help": "Checks the whole register again instead of only the new addresses: slower, and it keeps what already answers."
+          "help": "Check every service instead of the sample."
         },
         {
           "name": "limit",
           "label": "Addresses to check",
           "kind": "number",
           "default": 12,
-          "help": "12 by default; 0 checks every new address, which takes hours."
+          "help": "How many services to check; the full register holds 3306."
         }
       ]
     },
@@ -973,29 +973,9 @@
           "kind": "text",
           "required": true,
           "help": "The folder the files and the CSV report are written to."
-        },
-        {
-          "name": "clear",
-          "label": "Clear the stored answers first",
-          "kind": "bool",
-          "default": false,
-          "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
-        },
-        {
-          "name": "limit_mb",
-          "label": "Size limit (MB)",
-          "kind": "number",
-          "default": 25,
-          "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
-        },
-        {
-          "name": "confirm",
-          "label": "Download even if large",
-          "kind": "bool",
-          "default": false,
-          "help": "Fetch a run larger than the size limit. It raises the stop to 256 MB, or to the limit typed above."
         }
-      ]
+      ],
+      "help": "Downloads the sheet files the selected index features point at, into the folder you give. The host has no folder picker yet, so type the full path."
     },
     {
       "id": "geokoduj-csv",
@@ -1607,7 +1587,10 @@
       "Adds the national ortho WMTS on a click, or another service from a GetTile template or a capabilities URL.": "Dodaje krajową ortofoto WMTS po kliknięciu, a inną usługę z szablonu GetTile albo adresu capabilities.",
       "Downloads one level of state boundaries for the country, a voivodeship, a powiat or a gmina, and keeps the names a filter matches. A country run of gminy is about 109 MB.": "Pobiera jeden poziom granic państwowych dla kraju, województwa, powiatu albo gminy i zostawia nazwy pasujące do filtra. Krajowy przebieg gmin to około 109 MB.",
       "Saves the active vector layer, or the one you name, to the full path in `plik`. The host has no save dialog yet, so this command is for agents and scripts.": "Zapisuje aktywną warstwę wektorową, albo wskazaną, pod pełną ścieżką w `plik`. Host nie ma jeszcze okna zapisu, więc polecenie jest dla agentów i skryptów.",
-      "Take up to 50 000 features; the size limit still applies.": "Bierze do 50 000 obiektów; limit rozmiaru nadal działa."
+      "Take up to 50 000 features; the size limit still applies.": "Bierze do 50 000 obiektów; limit rozmiaru nadal działa.",
+      "Check every service instead of the sample.": "Sprawdź wszystkie usługi zamiast próbki.",
+      "How many services to check; the full register holds 3306.": "Ile usług sprawdzić; cały rejestr ma 3306.",
+      "Downloads the sheet files the selected index features point at, into the folder you give. The host has no folder picker yet, so type the full path.": "Pobiera pliki arkuszy wskazane przez wybrane obiekty skorowidza do podanego folderu. Host nie ma jeszcze wyboru folderu, więc wpisz pełną ścieżkę."
     }
   },
   "moreMaps": {
