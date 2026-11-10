@@ -73,7 +73,7 @@ limit.
 
 Limits the tools enforce:
 
-- 10 000 features per run by default, 50 000 with `confirm`; a bigger area gets the count and a refusal.
+- 10 000 features per run by default, 50 000 with `confirm`, every feature with `nolimit`.
 - A small `max_span` dataset refuses a wide area by name.
 - 25 MB per run unless the panel raises it; the slider sets 5 to 500 MB, the hard ceiling is 256 MB.
 - An area the service counts at zero stops before the first page. The Osnowa services ignore the area:
@@ -95,8 +95,8 @@ that touch the area, so **Clip to layer** (`przytnij`) is what cuts them to the 
 - `zrodla {"dodaj": "<id>"}` adds one service as a tile layer.
 - `rejestr-widok {"rodzaj": "wfs"}` narrows the register to the county under the map view.
 - `bdot500` and `gesut` take the gmina or county chosen in the panel or passed as `teryt`, else the
-  one under the view, add the most specific register WMS (gmina, county, then national K-GESUT), or
-  name the WFS for `rejestr-pobierz`.
+  one under the view, add the closest register service: a WMS as an overlay, or the unit's own WFS
+  read over its boundary, up to 20 000 features.
 - `zapisz-gpkg {"warstwa": "<layer>", "plik": "<path>"}` saves a vector layer as GeoPackage;
   a bare name goes to Documents, and the path is optional.
 - `eziudp {"instytucja": "GIOŚ"}` asks the live register, which needs a filter: the whole register is

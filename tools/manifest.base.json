@@ -424,6 +424,13 @@
           "kind": "number",
           "default": 0,
           "help": "0 means no byte limit."
+        },
+        {
+          "name": "nolimit",
+          "label": "No feature ceiling",
+          "kind": "bool",
+          "default": false,
+          "help": "Take every feature in the area, above the 50 000 feature ceiling."
         }
       ]
     },
@@ -462,6 +469,13 @@
           "kind": "number",
           "default": 25,
           "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
+        },
+        {
+          "name": "nolimit",
+          "label": "No feature ceiling",
+          "kind": "bool",
+          "default": false,
+          "help": "Take every feature in the area, above the 50 000 feature ceiling."
         },
         {
           "name": "confirm",
@@ -509,6 +523,13 @@
           "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
         },
         {
+          "name": "nolimit",
+          "label": "No feature ceiling",
+          "kind": "bool",
+          "default": false,
+          "help": "Take every feature in the area, above the 50 000 feature ceiling."
+        },
+        {
           "name": "confirm",
           "label": "Download even if large",
           "kind": "bool",
@@ -552,6 +573,13 @@
           "kind": "number",
           "default": 25,
           "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
+        },
+        {
+          "name": "nolimit",
+          "label": "No feature ceiling",
+          "kind": "bool",
+          "default": false,
+          "help": "Take every feature in the area, above the 50 000 feature ceiling."
         },
         {
           "name": "confirm",
@@ -599,6 +627,13 @@
           "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
         },
         {
+          "name": "nolimit",
+          "label": "No feature ceiling",
+          "kind": "bool",
+          "default": false,
+          "help": "Take every feature in the area, above the 50 000 feature ceiling."
+        },
+        {
           "name": "confirm",
           "label": "Download even if large",
           "kind": "bool",
@@ -642,6 +677,13 @@
           "kind": "number",
           "default": 25,
           "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
+        },
+        {
+          "name": "nolimit",
+          "label": "No feature ceiling",
+          "kind": "bool",
+          "default": false,
+          "help": "Take every feature in the area, above the 50 000 feature ceiling."
         },
         {
           "name": "confirm",
@@ -689,6 +731,13 @@
           "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
         },
         {
+          "name": "nolimit",
+          "label": "No feature ceiling",
+          "kind": "bool",
+          "default": false,
+          "help": "Take every feature in the area, above the 50 000 feature ceiling."
+        },
+        {
           "name": "confirm",
           "label": "Download even if large",
           "kind": "bool",
@@ -725,6 +774,13 @@
           "kind": "number",
           "default": 25,
           "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
+        },
+        {
+          "name": "nolimit",
+          "label": "No feature ceiling",
+          "kind": "bool",
+          "default": false,
+          "help": "Take every feature in the area, above the 50 000 feature ceiling."
         }
       ]
     },
@@ -756,6 +812,13 @@
           "kind": "number",
           "default": 25,
           "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
+        },
+        {
+          "name": "nolimit",
+          "label": "No feature ceiling",
+          "kind": "bool",
+          "default": false,
+          "help": "Take every feature in the area, above the 50 000 feature ceiling."
         }
       ]
     },
@@ -787,6 +850,13 @@
           "kind": "number",
           "default": 25,
           "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
+        },
+        {
+          "name": "nolimit",
+          "label": "No feature ceiling",
+          "kind": "bool",
+          "default": false,
+          "help": "Take every feature in the area, above the 50 000 feature ceiling."
         }
       ]
     },
@@ -846,6 +916,13 @@
           "kind": "number",
           "default": 25,
           "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
+        },
+        {
+          "name": "nolimit",
+          "label": "No feature ceiling",
+          "kind": "bool",
+          "default": false,
+          "help": "Take every feature in the area, above the 50 000 feature ceiling."
         },
         {
           "name": "confirm",
@@ -1502,7 +1579,9 @@
       "Save\nGeoPackage": "Zapisz\nGeoPackage",
       "Saves the active vector layer, or the one you name, as a GeoPackage file in Documents. Give `plik` for another place.": "Zapisuje aktywną warstwę wektorową, albo wskazaną, jako plik GeoPackage w Dokumentach. Podaj `plik`, aby wybrać inne miejsce.",
       "The gmina's or county's own BDOT500 service from the register: the unit chosen in the panel, a code you pass, or under the view.": "Usługa BDOT500 gminy albo powiatu z rejestru: jednostka wybrana w panelu, podany kod albo widok.",
-      "The gmina's or county's own GESUT service from the register: the unit chosen in the panel, a code you pass, or under the view.": "Usługa GESUT gminy albo powiatu z rejestru: jednostka wybrana w panelu, podany kod albo widok."
+      "The gmina's or county's own GESUT service from the register: the unit chosen in the panel, a code you pass, or under the view.": "Usługa GESUT gminy albo powiatu z rejestru: jednostka wybrana w panelu, podany kod albo widok.",
+      "No feature ceiling": "Bez limitu obiektów",
+      "Take every feature in the area, above the 50 000 feature ceiling.": "Bierze wszystkie obiekty w obszarze, ponad progiem 50 000."
     }
   },
   "moreMaps": {

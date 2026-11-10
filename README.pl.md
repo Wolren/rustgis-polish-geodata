@@ -82,7 +82,7 @@ które wskazują jego obiekty.
 
 | Limit | Wartość |
 | --- | --- |
-| Obiektów na pobranie | 6 000 |
+| Obiektów na pobranie | 10 000, 50 000 po potwierdzeniu, bez limitu z zaznaczeniem |
 | Zasięg dla działek i budynków | 0,15° |
 | Zasięg dla granic i jednostek | 20° |
 | Próg rozmiaru przed startem | 25 MB, w panelu suwak 5 do 500 MB |
@@ -161,7 +161,7 @@ granica”), drzewo warstw granicznych z wyszukiwarką, drzewo **Mapa** z trzema
   się tam, gdzie stoi mapa. Parametr `rodzaj` wybiera `wms` albo `wfs`.
 - **Polecenia `bdot500` i `gesut`:** gmina albo powiat wybrany w panelu, podany kod albo widok,
   jedno kliknięcie. Polecenie bierze najbliższą usługę z rejestru: gminy, potem powiatu, na końcu
-  krajową K-GESUT. Jednostka z samym WFS dostaje swój identyfikator dla `rejestr-pobierz`.
+  krajową K-GESUT. Jednostka z samym WFS jest czytana z własnej usługi, do 20 000 obiektów.
 - **Narzędzie Pobierz z rejestru > Przejazdy:** dziesięć usług przejazdów, z PKP PLK, w jednym
   wyborze.
 
@@ -200,10 +200,9 @@ narzędzia pobierania, dopóki wtyczka jest włączona.
 
 ## Ograniczenia
 
-- Pobranie kończy się na 6 000 obiektach. Większy obszar dostaje licznik i przerwanie.
+- Pobranie kończy się na 10 000 obiektów, na 50 000 po zaznaczeniu „Pobierz mimo rozmiaru”, a bez limitu po zaznaczeniu „Bez limitu obiektów”.
 - Pokrycie WCS w komórce drobniejszej, niż pozwala jego budżet 12 s, jest odrzucane; komunikat podaje komórkę, która się mieści.
-- Przycinanie tnie po zasięgu granicy, nie po jej poligonach.
-- Polecenia Wody Polskie pokazują wszystkie warstwy usługi. Nie ma wyboru jednej warstwy.
+- Przycinanie tnie po poligonach granicy.
 - WFS GUGiK odpowiada tylko GML-em. Wtyczka zamienia go lokalnie na GeoJSON.
 - Brak plików LAZ i geobaz z dane.gov.pl. Narzędzia paczek biorą to, co wskazuje pole
   `url_do_pobrania` w skorowidzu.
@@ -218,7 +217,7 @@ narzędzia pobierania, dopóki wtyczka jest włączona.
 | `packaging/` | pakowacz w Rust, który robi `.rgplugin` |
 | `plugin.json` | generowany z `data/` i `tools/manifest.base.json` |
 
-`plugin.json` niesie 251 poleceń, 15 narzędzi i 242 polskich tłumaczeń. Jest generowany, więc
+`plugin.json` niesie 251 poleceń, 15 narzędzi i 244 polskich tłumaczeń. Jest generowany, więc
 zmieniaj `tools/manifest.base.json`.
 
 ```powershell

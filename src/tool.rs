@@ -80,9 +80,12 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     // The cache goes before the first request, so the click that asked for fresh data gets it.
     let cleared = if clear { cache::clear().ok() } else { None };
 
-    // The same tick that allows a large size allows a long run, up to the hard ceiling.
-    let cap = if confirm { wfs::HARD_TOTAL } else { wfs::MAX_TOTAL };
-    gate(layer, area, features_of_area, bbox, lang, cap, confirm)?;
+    // The no-ceiling tick takes every feature; the cache and the byte limit still apply.
+    let no_limit = params.get("nolimit").and_then(Value::as_bool).unwrap_or(false);
+    let cap = feature_cap(no_limit, confirm);
+    if !no_limit {
+        gate(layer, area, features_of_area, bbox, lang, cap, confirm)?;
+    }
 
     // The form's own number wins, then the panel's slider, so the pane that refuses can raise it.
     let asked_mb = params
@@ -148,6 +151,17 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
         "layers": [{ "name": layer.name, "geojson": collection }],
         "messages": messages
     }))
+}
+
+/// The features one run may return: 10 000, 50 000 when confirmed, every one when asked.
+fn feature_cap(no_limit: bool, confirm: bool) -> usize {
+    if no_limit {
+        usize::MAX
+    } else if confirm {
+        wfs::HARD_TOTAL
+    } else {
+        wfs::MAX_TOTAL
+    }
 }
 
 /// The one gate before a download: the layer's span, confirmed by the feature count of the area.
@@ -385,6 +399,14 @@ mod tests {
         assert_eq!(hits_of(body), Some(54_267));
         assert_eq!(hits_of("<ServiceException/>"), None);
         assert_eq!(hits_of("numberOfFeatures=\"unknown\""), None);
+    }
+
+    #[test]
+    fn a_no_ceiling_run_takes_every_feature() {
+        assert_eq!(feature_cap(true, false), usize::MAX);
+        assert_eq!(feature_cap(true, true), usize::MAX);
+        assert_eq!(feature_cap(false, false), wfs::MAX_TOTAL);
+        assert_eq!(feature_cap(false, true), wfs::HARD_TOTAL);
     }
 
     #[test]

@@ -141,13 +141,14 @@ A city's parcels weigh about 9 MB, measured on Warsaw: 5 248 parcels. The gate a
 **Download even if large** tick answers for every later run. An area the service counts at zero
 stops before the first page.
 
-One run takes 10 000 features and 25 MB by default. The tool form carries **Size limit (MB)** and
-**Download even if large**. The field takes any number, and **0 removes the byte limit**: a whole-country
-run of `Granice gmin` at 0 brought all 2 479 gminy, 437 MB, in 37 seconds. **Download even if large** raises both: 50 000
-features, and the greater of 256 MB and the size slider, which ends at 500 MB.
+One run takes 10 000 features and 25 MB by default. The tool form carries **Size limit (MB)**,
+**Download even if large** and **No feature ceiling**. The field takes any number, and **0 removes the
+byte limit**: a whole-country run of `Granice gmin` at 0 brought all 2 479 gminy, 109 MB decompressed,
+in 34 seconds. **Download even if large** raises both: 50 000 features, and the greater of 256 MB and the
+size slider, which ends at 500 MB. **No feature ceiling** takes every feature in the area, with no cap.
 
 The gate counts before it refuses: a wide box over a sparse layer runs, and a dense one stops with
-the exact number, as in `needs 169818 features from "Budynki", more than one download takes (6000)`.
+the exact number, as in `needs 169818 features from "Budynki", more than one download takes (10 000)`.
 Only addresses, streets, parcels and buildings keep a small box; every other layer downloads over a
 whole voivodeship or wider.
 
@@ -264,7 +265,8 @@ built: 1 742 WMS from 570 institutions and 1 554 WFS. Three roads to them:
   starts where the map is.
 - **Commands `bdot500` and `gesut`:** the gmina or county chosen in the panel, a code you pass, or
   under the view, one click. The command takes the most specific register service: the gmina's, then
-  the county's, then the national K-GESUT. A WFS only unit gets its id named for `rejestr-pobierz`.
+  the county's, then the national K-GESUT. A unit with only a WFS is read from its own service, up to
+  20 000 features.
 - **Tool Download from the register > Level crossings:** the ten level-crossing services, PKP PLK
   included, under one picker.
 
@@ -306,7 +308,7 @@ commands, the limits and the download tools while the plugin is on.
 
 ## Limits
 
-- A download ends at 6 000 features. A bigger area gets a count and a refusal.
+- A download ends at 10 000 features, 50 000 with Download even if large, or no ceiling with No feature ceiling.
 - A WCS coverage at a cell finer than its 12 s budget allows is refused; the message names the cell that fits.
 - The clip cuts by the boundary's polygons. A download filter carries up to four of the area's
   rings; a shape with more narrows to its box and says so.
@@ -327,7 +329,7 @@ commands, the limits and the download tools while the plugin is on.
 | `packaging/` | the packager in Rust, which writes `.rgplugin` |
 | `plugin.json` | generated from `data/` and `tools/manifest.base.json` |
 
-`plugin.json` carries 251 commands, 15 tools and 242 Polish translations. It is generated, so change
+`plugin.json` carries 251 commands, 15 tools and 244 Polish translations. It is generated, so change
 `tools/manifest.base.json`.
 
 ```powershell

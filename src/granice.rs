@@ -98,7 +98,14 @@ pub fn levels(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, Str
 
     let settings = crate::cache::settings();
     let confirm = settings.confirm_large;
-    let cap = if confirm { wfs::HARD_TOTAL } else { wfs::MAX_TOTAL };
+    let no_limit = params.get("nolimit").and_then(Value::as_bool).unwrap_or(false);
+    let cap = if no_limit {
+        usize::MAX
+    } else if confirm {
+        wfs::HARD_TOTAL
+    } else {
+        wfs::MAX_TOTAL
+    };
     // The request's own number wins, then the saved limit; zero means no byte limit.
     let asked_mb = params
         .get("limit_mb")
