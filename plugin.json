@@ -326,7 +326,7 @@
       "id": "granice",
       "label": "Administrative\nboundaries",
       "icon": "boundaries",
-      "help": "Downloads one level of state boundaries for the country, a voivodeship, a powiat or a gmina, and keeps the names a filter matches.",
+      "help": "Downloads one level of state boundaries for the country, a voivodeship, a powiat or a gmina, and keeps the names a filter matches. A country run of gminy is about 109 MB.",
       "params": "{\"poziom\": \"gminy\", \"zakres\": \"1464\"|\"kraj\", \"filtr\": \"ostr\"} (poziom: wojewodztwa, powiaty, gminy; zakres: a TERYT code of any level or kraj)"
     },
     {
@@ -3423,7 +3423,6 @@
       "Fetch a run larger than the size limit. It raises the stop to 256 MB, or to the limit typed above.": "Pobierz przebieg większy niż limit rozmiaru. Podnosi limit do 256 MB albo do liczby wpisanej wyżej.",
       "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default.": "Przebieg zatrzymuje się na tylu megabajtach. 0 znaczy brak limitu bajtów; suwak w panelu ustawia domyślną wartość.",
       "Administrative\nboundaries": "Granice\nadministracyjne",
-      "Downloads one level of state boundaries for the country, a voivodeship, a powiat or a gmina, and keeps the names a filter matches.": "Pobiera jeden poziom granic państwowych dla kraju, województwa, powiatu albo gminy i zostawia nazwy pasujące do filtra.",
       "Boundaries": "Granice",
       "A level for the whole country, or a level of the unit chosen above.": "Poziom dla całego kraju albo poziom wybranej jednostki.",
       "Administrative boundaries": "Granice administracyjne",
@@ -3459,7 +3458,8 @@
       "Add WMTS": "Dodaj WMTS",
       "Add WCS": "Dodaj WCS",
       "Adds any WCS coverage from its GetCoverage URL.": "Dodaje dowolne pokrycie WCS z jego adresu GetCoverage.",
-      "Adds the national ortho WMTS on a click, or another service from a GetTile template or a capabilities URL.": "Dodaje krajową ortofoto WMTS po kliknięciu, a inną usługę z szablonu GetTile albo adresu capabilities."
+      "Adds the national ortho WMTS on a click, or another service from a GetTile template or a capabilities URL.": "Dodaje krajową ortofoto WMTS po kliknięciu, a inną usługę z szablonu GetTile albo adresu capabilities.",
+      "Downloads one level of state boundaries for the country, a voivodeship, a powiat or a gmina, and keeps the names a filter matches. A country run of gminy is about 109 MB.": "Pobiera jeden poziom granic państwowych dla kraju, województwa, powiatu albo gminy i zostawia nazwy pasujące do filtra. Krajowy przebieg gmin to około 109 MB."
     }
   },
   "panel": {
