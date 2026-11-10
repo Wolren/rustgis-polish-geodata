@@ -23,6 +23,7 @@ mod host;
 mod http;
 mod katalog;
 mod nmt;
+mod number;
 mod obszar;
 mod panel;
 mod powiat;

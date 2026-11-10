@@ -305,7 +305,10 @@ pub fn stored_type(url: &str) -> Option<String> {
 /// The update tool: reads the register, proves the addresses the file lacks, and keeps the result.
 pub fn update(params: &Value, lang: Lang) -> Result<Value, String> {
     let full = params.get("pelna").and_then(Value::as_bool).unwrap_or(false);
-    let limit = params.get("limit").and_then(Value::as_u64).unwrap_or(12) as usize;
+    let limit = crate::number::of(params, "limit")
+        .filter(|value| *value >= 0)
+        .map(|value| value as usize)
+        .unwrap_or(12);
     host::progress_line(&text::register_reading(lang));
 
     let body = http::fetch("https://integracja.gugik.gov.pl/eziudp/api.php?format=json", 120, lang)?;

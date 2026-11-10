@@ -89,9 +89,7 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     )?;
 
     // The form's own number wins, then the panel's slider, so the pane that refuses can raise it.
-    let asked_mb = params
-        .get("limit_mb")
-        .and_then(Value::as_i64)
+    let asked_mb = crate::number::of(&params, "limit_mb")
         .map(|mb| mb.clamp(MIN_MB, MAX_MB) as f64)
         .unwrap_or(settings.limit_mb as f64);
     // A zero asks for no byte limit; the feature cap still guards the layer the tool returns.
