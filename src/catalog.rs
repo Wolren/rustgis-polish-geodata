@@ -162,6 +162,8 @@ pub struct WfsLayer {
     pub grid_reply: bool,
     /// Whether the service ignores every spatial filter, so the whole set must come in.
     pub unfiltered: bool,
+    /// Whether a BBOX needs its CRS spelled out; the KINR service counts nothing without it.
+    pub bbox_crs: bool,
 }
 
 pub fn overlay(id: &str) -> Option<&'static Overlay> {
@@ -200,6 +202,9 @@ struct Raw {
     /// Whether the service ignores every spatial filter, so the whole set must come in.
     #[serde(default)]
     unfiltered: bool,
+    /// Whether a BBOX needs its CRS spelled out; the KINR service counts nothing without it.
+    #[serde(default)]
+    bbox_crs: bool,
 }
 
 fn paged() -> bool {
@@ -246,6 +251,7 @@ pub fn wfs_layers() -> &'static [WfsLayer] {
                 lonlat_first: entry.lonlat_first,
                 grid_reply: entry.grid_reply,
                 unfiltered: entry.unfiltered,
+                bbox_crs: entry.bbox_crs,
             })
             .collect()
     })

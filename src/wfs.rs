@@ -501,6 +501,9 @@ fn page_url(
                 "&BBOX={:.2},{:.2},{:.2},{:.2}",
                 box_lon[0], box_lon[1], box_lon[2], box_lon[3]
             ));
+            if layer.bbox_crs && matches!(srs, Srs::LonLat) {
+                url.push_str(",EPSG:4326");
+            }
         }
     }
     url.push_str(&format!("&MAXFEATURES={count}"));

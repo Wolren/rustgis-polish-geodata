@@ -289,6 +289,7 @@ def defaults(url, type_name, title):
     if "KrajowaIntegracjaNumeracjiAdresowej" in url:
         entry["xy"] = True
         entry["lonlat_first"] = True
+        entry["bbox_crs"] = True
     if "Osnowa" in url or "PodstawowaOsnowa" in url:
         entry["unfiltered"] = True
         if "Grawimetryczna" not in url:

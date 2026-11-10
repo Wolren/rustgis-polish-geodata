@@ -11,7 +11,8 @@
   "label": "Punkty adresowe",
   "tool": "pobierz-adresy",
   "xy": true,
-  "lonlat_first": true
+  "lonlat_first": true,
+  "bbox_crs": true
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/ext/wfs/KrajowaIntegracjaNumeracjiAdresowej",
@@ -25,7 +26,8 @@
   "label": "Ulice",
   "tool": "pobierz-adresy",
   "xy": true,
-  "lonlat_first": true
+  "lonlat_first": true,
+  "bbox_crs": true
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT/WFS/PobieranieBDOT10k",

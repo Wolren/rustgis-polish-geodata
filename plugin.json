@@ -1893,7 +1893,7 @@
           "name": "obszar",
           "label": "Area (layer)",
           "kind": "polygonLayer",
-          "required": true,
+          "required": false,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         },
         {
@@ -1961,7 +1961,7 @@
           "name": "obszar",
           "label": "Area (layer)",
           "kind": "polygonLayer",
-          "required": true,
+          "required": false,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         },
         {
@@ -2018,7 +2018,7 @@
           "name": "obszar",
           "label": "Area (layer)",
           "kind": "polygonLayer",
-          "required": true,
+          "required": false,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         },
         {
@@ -2086,7 +2086,7 @@
           "name": "obszar",
           "label": "Area (layer)",
           "kind": "polygonLayer",
-          "required": true,
+          "required": false,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         },
         {
@@ -2155,7 +2155,7 @@
           "name": "obszar",
           "label": "Area (layer)",
           "kind": "polygonLayer",
-          "required": true,
+          "required": false,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         },
         {
@@ -2212,7 +2212,7 @@
           "name": "obszar",
           "label": "Area (layer)",
           "kind": "polygonLayer",
-          "required": true,
+          "required": false,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         },
         {
@@ -2312,7 +2312,7 @@
           "name": "obszar",
           "label": "Area (layer)",
           "kind": "polygonLayer",
-          "required": true,
+          "required": false,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         },
         {
@@ -2388,7 +2388,7 @@
           "name": "obszar",
           "label": "Area (layer)",
           "kind": "polygonLayer",
-          "required": true,
+          "required": false,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         },
         {
@@ -2484,7 +2484,7 @@
           "name": "obszar",
           "label": "Area (layer)",
           "kind": "polygonLayer",
-          "required": true,
+          "required": false,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         },
         {
@@ -2553,7 +2553,7 @@
           "name": "obszar",
           "label": "Area (layer)",
           "kind": "polygonLayer",
-          "required": true,
+          "required": false,
           "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
         },
         {

@@ -164,7 +164,12 @@ fn gate(
     confirm: bool,
 ) -> Result<(), String> {
     gate_with(layer, area, bbox, lang, cap, confirm, || {
-        let filter = filter::polygon_filter(layer, collection).ok();
+        // The KINR service counts nothing for a 4326 filter, so its box carries the CRS instead.
+        let filter = if layer.bbox_crs {
+            None
+        } else {
+            filter::polygon_filter(layer, collection).ok()
+        };
         host::progress_line(&text::counting(lang, layer.name, area));
         needed(layer, bbox, filter.as_deref(), lang)
     })
@@ -244,10 +249,16 @@ fn hits_url(layer: &catalog::WfsLayer, bbox: [f64; 4], filter: Option<&str>) -> 
             url.push_str("&FILTER=");
             url.push_str(filter);
         }
-        None => url.push_str(&format!(
-            "&BBOX={:.6},{:.6},{:.6},{:.6}",
-            bbox[0], bbox[1], bbox[2], bbox[3]
-        )),
+        None => {
+            url.push_str(&format!(
+                "&BBOX={:.6},{:.6},{:.6},{:.6}",
+                bbox[0], bbox[1], bbox[2], bbox[3]
+            ));
+            // The KINR address service counts nothing without the CRS on the box.
+            if layer.bbox_crs {
+                url.push_str(",EPSG:4326");
+            }
+        }
     }
     url
 }
@@ -365,6 +376,10 @@ mod tests {
         let filtered = hits_url(layer, [16.8, 52.3, 16.9, 52.4], Some("%3CFilter%3E"));
         assert!(filtered.contains("&FILTER=%3CFilter%3E"), "{filtered}");
         assert!(!filtered.contains("BBOX="), "{filtered}");
+        // The KINR service counts nothing unless the box names its CRS.
+        let addresses = catalog::wfs_by_label("Punkty adresowe").unwrap();
+        let counted = hits_url(addresses, [16.8, 52.3, 16.9, 52.4], None);
+        assert!(counted.contains("BBOX=16.800000,52.300000,16.900000,52.400000,EPSG:4326"), "{counted}");
         // The count is what GUGiK's answer carries, beside the empty collection.
         let body = "<wfs:FeatureCollection numberOfFeatures=\"54267\"></wfs:FeatureCollection>";
         assert_eq!(hits_of(body), Some(54_267));
