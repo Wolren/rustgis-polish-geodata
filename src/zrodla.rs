@@ -193,15 +193,21 @@ fn wanted(params: &Value, key: &str) -> Option<String> {
 }
 
 /// Adds one registered WMS as an overlay; a WFS is reported as not addable this way.
-pub fn add_service(host: &mut Host, entry: &Registered, lang: Lang) -> Result<Value, String> {
-    if entry.kind != "wms" || entry.layer.is_empty() {
+/// Adds a register WMS as a tile overlay, with the service's own layer or the layers a command names.
+pub(crate) fn add_wms(
+    host: &mut Host,
+    entry: &Registered,
+    layers: &str,
+    lang: Lang,
+) -> Result<Value, String> {
+    if entry.kind != "wms" || layers.is_empty() {
         return Err(text::register_not_a_map(lang, &entry.name));
     }
     let separator = if entry.url.contains('?') { '&' } else { '?' };
     let url = format!(
-        "{}{separator}SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS={}&STYLES=&CRS=EPSG:3857&\
+        "{}{separator}SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS={layers}&STYLES=&CRS=EPSG:3857&\
          BBOX={{bbox-epsg-3857}}&WIDTH={{width}}&HEIGHT={{height}}&FORMAT=image/png&TRANSPARENT=TRUE",
-        entry.url, entry.layer
+        entry.url,
     );
     let name = entry.name.clone();
     host.call(
@@ -216,8 +222,14 @@ pub fn add_service(host: &mut Host, entry: &Registered, lang: Lang) -> Result<Va
             "maxZoom": 19,
         }),
     )?;
-    host.notify(&text::added(lang, &name));
     Ok(json!({ "added": name }))
+}
+
+/// Adds one register WMS the way a click does, with its one named layer.
+pub fn add_service(host: &mut Host, entry: &Registered, lang: Lang) -> Result<Value, String> {
+    let added = add_wms(host, entry, &entry.layer, lang)?;
+    host.notify(&text::added(lang, &entry.name));
+    Ok(added)
 }
 
 /// What one address needs to be kept: a WMS layer that draws a tile, or a WFS capabilities document.

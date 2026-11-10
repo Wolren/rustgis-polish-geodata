@@ -603,8 +603,8 @@ pub fn area_not_passed(lang: Lang, area: &str) -> String {
 pub fn area_no_geometry(lang: Lang, area: &str) -> String {
     pick!(
         lang,
-        format!("the layer \"{area}\" has no geometry to take an extent from"),
-        format!("warstwa „{area}” nie ma geometrii do wyznaczenia obszaru")
+        format!("the layer \"{area}\" has no polygon: an area download needs a polygon layer"),
+        format!("warstwa „{area}” nie ma poligonu: obszar pobierania musi być warstwą poligonową")
     )
 }
 
@@ -642,7 +642,7 @@ pub fn area_over_budget(
     confirm: bool,
     name: &str,
 ) -> String {
-    let escape = if confirm {
+    let escape = if confirm || needed > ceiling {
         String::new()
     } else {
         pick!(
@@ -651,10 +651,19 @@ pub fn area_over_budget(
             format!(" Zaznacz \"Pobierz mimo rozmiaru\", aby wziąć do {}.", features(lang, ceiling))
         )
     };
+    let ceiling_note = if needed > ceiling {
+        pick!(
+            lang,
+            format!(" Even a confirmed run stops at {}.", features(lang, ceiling)),
+            format!(" Nawet potwierdzony przebieg bierze najwyżej {}.", features(lang, ceiling))
+        )
+    } else {
+        String::new()
+    };
     pick!(
         lang,
         format!(
-            "the layer \"{area}\" needs {} from \"{name}\", more than one download takes ({}).{escape} \
+            "the layer \"{area}\" needs {} from \"{name}\", more than one download takes ({}).{escape}{ceiling_note} \
              Select the features you want on the map and run the tool again (a selection narrows \
              the area), or pick a smaller layer.",
             features(lang, needed),
@@ -662,8 +671,8 @@ pub fn area_over_budget(
         ),
         format!(
             "warstwa „{area}” potrzebuje {} z zestawu „{name}”, a jedno pobranie bierze najwyżej \
-             {}. Zaznacz na mapie interesujące obiekty i uruchom narzędzie ponownie (zaznaczenie \
-             zawęża obszar) albo wskaż mniejszą warstwę.",
+             {}.{escape}{ceiling_note} Zaznacz na mapie interesujące obiekty i uruchom narzędzie \
+             ponownie (zaznaczenie zawęża obszar) albo wskaż mniejszą warstwę.",
             features(lang, needed),
             features(lang, budget)
         )
@@ -728,6 +737,15 @@ pub fn bbox_used(lang: Lang, problem: ShapeProblem) -> String {
         ),
     }
     .to_string()
+}
+
+/// The service ignores the area, so the whole set arrived and was cut to the area's box.
+pub fn service_ignores_area(lang: Lang, name: &str) -> String {
+    pick!(
+        lang,
+        format!("{name} ignores the area: the whole set came in, cut to the area's box."),
+        format!("{name} ignoruje obszar: przyszła cała seria, przycięta do prostokąta obszaru.")
+    )
 }
 
 /// Requests that never answered, so the layer is short of the whole area.
@@ -1293,6 +1311,47 @@ pub fn register_county(lang: Lang, county: &str, teryt: &str, kind: &str, count:
         lang,
         format!("{count} {kind} services for {county} (TERYT {teryt})"),
         format!("{count} usług {kind} dla {county} (TERYT {teryt})")
+    )
+}
+
+pub fn layers(lang: Lang, n: usize) -> String {
+    let words = pick!(lang, ["layer", "layers", "layers"], ["warstwa", "warstwy", "warstw"]);
+    format!("{n} {}", words[form(lang, n)])
+}
+
+pub fn county_added(lang: Lang, dataset: &str, unit: &str, layers: &str) -> String {
+    pick!(
+        lang,
+        format!("{dataset} for {unit} on the map: {layers}."),
+        format!("{dataset} dla {unit} na mapie: {layers}.")
+    )
+}
+
+pub fn county_wfs(lang: Lang, dataset: &str, unit: &str, id: &str) -> String {
+    pick!(
+        lang,
+        format!(
+            "The register has {dataset} for {unit} only as a WFS: run rejestr-pobierz with {{\"usluga\": \"{id}\"}}."
+        ),
+        format!(
+            "Rejestr ma {dataset} dla {unit} tylko jako WFS: uruchom rejestr-pobierz z {{\"usluga\": \"{id}\"}}."
+        )
+    )
+}
+
+pub fn county_no_dataset(lang: Lang, dataset: &str, unit: &str) -> String {
+    pick!(
+        lang,
+        format!("The register has no {dataset} service for {unit}."),
+        format!("Rejestr nie ma usługi {dataset} dla {unit}.")
+    )
+}
+
+pub fn county_view_outside(lang: Lang) -> &'static str {
+    pick!(
+        lang,
+        "The register needs a view over a Polish gmina: ULDK named no gmina or county under this point.",
+        "Rejestr potrzebuje widoku nad polską gminą: ULDK nie wskazał gminy ani powiatu pod tym punktem."
     )
 }
 
@@ -2447,5 +2506,20 @@ mod tests {
         assert!(service_exception(Lang::Pl, "błąd serwera").contains("błąd serwera"));
         assert!(http_status(Lang::En, 400, "https://x", "no such type").contains("no such type"));
         assert_eq!(http_status(Lang::En, 400, "https://x", ""), "HTTP 400 from https://x");
+    }
+
+    #[test]
+    fn an_area_over_the_ceiling_gets_no_tick_that_cannot_help() {
+        let message = area_over_budget(Lang::En, "Area", 60_000, 50_000, 50_000, true, "Punkty adresowe");
+        assert!(message.contains("Even a confirmed run stops"), "{message}");
+        assert!(!message.contains("Tick"), "{message}");
+        let small = area_over_budget(Lang::En, "Area", 20_000, 10_000, 50_000, false, "Punkty adresowe");
+        assert!(small.contains("Tick"), "{small}");
+    }
+
+    #[test]
+    fn a_service_that_ignores_the_area_says_so() {
+        assert!(service_ignores_area(Lang::En, "Osnowa").contains("ignores the area"));
+        assert!(service_ignores_area(Lang::Pl, "Osnowa").contains("ignoruje"));
     }
 }

@@ -156,6 +156,12 @@ pub struct WfsLayer {
     pub pages: bool,
     /// Whether the reply lists easting before northing; GUGiK lists northing first.
     pub xy: bool,
+    /// Whether an EPSG:4326 reply lists x before y; GUGiK lists latitude first.
+    pub lonlat_first: bool,
+    /// Whether the reply is in EPSG:2180 whatever the request asks for.
+    pub grid_reply: bool,
+    /// Whether the service ignores every spatial filter, so the whole set must come in.
+    pub unfiltered: bool,
 }
 
 pub fn overlay(id: &str) -> Option<&'static Overlay> {
@@ -185,6 +191,15 @@ struct Raw {
     /// Whether the reply lists x (easting) before y (northing); GUGiK lists northing first.
     #[serde(default)]
     xy: bool,
+    /// Whether an EPSG:4326 reply lists x before y; GUGiK lists latitude first.
+    #[serde(default)]
+    lonlat_first: bool,
+    /// Whether the reply is in EPSG:2180 whatever the request asks for.
+    #[serde(default)]
+    grid_reply: bool,
+    /// Whether the service ignores every spatial filter, so the whole set must come in.
+    #[serde(default)]
+    unfiltered: bool,
 }
 
 fn paged() -> bool {
@@ -228,6 +243,9 @@ pub fn wfs_layers() -> &'static [WfsLayer] {
                 tool: leaked(&entry.tool),
                 pages: entry.pages,
                 xy: entry.xy,
+                lonlat_first: entry.lonlat_first,
+                grid_reply: entry.grid_reply,
+                unfiltered: entry.unfiltered,
             })
             .collect()
     })

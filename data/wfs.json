@@ -9,7 +9,9 @@
   "max_span": 0.15,
   "index": false,
   "label": "Punkty adresowe",
-  "tool": "pobierz-adresy"
+  "tool": "pobierz-adresy",
+  "xy": true,
+  "lonlat_first": true
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/ext/wfs/KrajowaIntegracjaNumeracjiAdresowej",
@@ -21,7 +23,9 @@
   "max_span": 0.15,
   "index": false,
   "label": "Ulice",
-  "tool": "pobierz-adresy"
+  "tool": "pobierz-adresy",
+  "xy": true,
+  "lonlat_first": true
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT/WFS/PobieranieBDOT10k",
@@ -45,7 +49,7 @@
   "max_span": 20.0,
   "index": false,
   "label": "Strefy wyłączone wokół masztów",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-pozostale"
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/MasztyStrefyWylaczone",
@@ -57,7 +61,7 @@
   "max_span": 20.0,
   "index": false,
   "label": "Turbiny wiatrowe",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-pozostale"
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT10k/WFS/NoweBudynki",
@@ -1794,7 +1798,8 @@
   "max_span": 20.0,
   "index": false,
   "label": "Fundamentalna grawimetryczna",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-osnowy",
+  "unfiltered": true
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/OsnowaGrawimetryczna",
@@ -1806,7 +1811,8 @@
   "max_span": 20.0,
   "index": false,
   "label": "Bazowa osnowa grawimetryczna",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-osnowy",
+  "unfiltered": true
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/OsnowaMagnetyczna",
@@ -1818,7 +1824,9 @@
   "max_span": 20.0,
   "index": false,
   "label": "Izogony - etykiety",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-osnowy",
+  "unfiltered": true,
+  "grid_reply": true
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/OsnowaMagnetyczna",
@@ -1830,7 +1838,9 @@
   "max_span": 20.0,
   "index": false,
   "label": "Izogony",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-osnowy",
+  "unfiltered": true,
+  "grid_reply": true
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/OsnowaMagnetyczna",
@@ -1842,7 +1852,9 @@
   "max_span": 20.0,
   "index": false,
   "label": "Fundamentalna magnetyczna",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-osnowy",
+  "unfiltered": true,
+  "grid_reply": true
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/OsnowaMagnetyczna",
@@ -1854,7 +1866,9 @@
   "max_span": 20.0,
   "index": false,
   "label": "Bazowa osnowa magnetyczna",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-osnowy",
+  "unfiltered": true,
+  "grid_reply": true
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries",
@@ -2493,7 +2507,9 @@
   "max_span": 20.0,
   "index": false,
   "label": "Osnowa fundamentalna pozioma",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-osnowy",
+  "unfiltered": true,
+  "grid_reply": true
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PodstawowaOsnowaGeodezyjnaPozioma",
@@ -2505,7 +2521,9 @@
   "max_span": 20.0,
   "index": false,
   "label": "Bazowa osnowa pozioma",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-osnowy",
+  "unfiltered": true,
+  "grid_reply": true
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PodstawowaOsnowaGeodezyjnaWysokosciowa",
@@ -2517,7 +2535,9 @@
   "max_span": 20.0,
   "index": false,
   "label": "Osnowa fundamentalna",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-osnowy",
+  "unfiltered": true,
+  "grid_reply": true
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PodstawowaOsnowaGeodezyjnaWysokosciowa",
@@ -2529,7 +2549,9 @@
   "max_span": 20.0,
   "index": false,
   "label": "Bazowa osnowa wysokościowa",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-osnowy",
+  "unfiltered": true,
+  "grid_reply": true
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ZDJ/WFS/Aerotriangulacja",
@@ -2910,7 +2932,7 @@
   "max_span": 20.0,
   "index": false,
   "label": "Przejazdy: PKP LHS",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-przejazdy"
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -2922,7 +2944,7 @@
   "max_span": 20.0,
   "index": false,
   "label": "Przejazdy: KPK-LK",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-przejazdy"
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -2934,7 +2956,7 @@
   "max_span": 20.0,
   "index": false,
   "label": "Przejazdy: MB Infrastruktura",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-przejazdy"
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -2958,7 +2980,7 @@
   "max_span": 20.0,
   "index": false,
   "label": "Przejazdy: PMT Linie Kolejowe",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-przejazdy"
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -2970,7 +2992,7 @@
   "max_span": 20.0,
   "index": false,
   "label": "Przejazdy: EUROTERMINAL SŁAWKÓW",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-przejazdy"
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -2982,7 +3004,7 @@
   "max_span": 20.0,
   "index": false,
   "label": "Przejazdy: Infra SILESIA",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-przejazdy"
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -3018,7 +3040,7 @@
   "max_span": 20.0,
   "index": false,
   "label": "Przejazdy: PGNiG TERMIKA",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-przejazdy"
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -3030,7 +3052,7 @@
   "max_span": 20.0,
   "index": false,
   "label": "Przejazdy: PKP SKM w Trójmieście",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-przejazdy"
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -3042,7 +3064,7 @@
   "max_span": 20.0,
   "index": false,
   "label": "Przejazdy: CARGOTOR",
-  "tool": "pobierz-osnowy"
+  "tool": "pobierz-przejazdy"
  },
  {
   "url": "https://mapy.geoportal.gov.pl/wss/service/wfs/sdi/Przejazdy",
@@ -3053,7 +3075,7 @@
   "id": "dane-pkp-plk",
   "max_span": 20.0,
   "index": false,
-  "label": "PKP PLK",
-  "tool": "pobierz-pozostale"
+  "label": "Przejazdy: PKP PLK",
+  "tool": "pobierz-przejazdy"
  }
 ]

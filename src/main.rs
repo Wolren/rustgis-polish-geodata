@@ -25,6 +25,7 @@ mod katalog;
 mod nmt;
 mod obszar;
 mod panel;
+mod powiat;
 mod prg;
 mod services;
 mod sheets;
@@ -129,6 +130,8 @@ fn run(
         "wody-warstwy" => tile::wody_layers(params, lang),
         "zrodla" => zrodla::search(host, params, lang),
         "rejestr-widok" => zrodla::for_view(host, params, lang),
+        "bdot500" => powiat::run(host, lang, powiat::BDOT500),
+        "gesut" => powiat::run(host, lang, powiat::GESUT),
         "geokoduj" => uug::geocode(host, params, lang),
         "adres-odwrotnie" => uug::reverse(host, params, lang),
         "wysokosc" => uug::height(host, params, lang),

@@ -64,6 +64,7 @@ limit.
 | `pobierz-adresy` | address points, streets, buildings |
 | `pobierz-granice` | PRG units, obręby, EGiB boundaries |
 | `pobierz-osnowy` | control networks |
+| `pobierz-przejazdy` | level crossings, PKP PLK and the other operators |
 | `pobierz-urzedy` | offices, courts, health facilities |
 | `pobierz-pozostale` | the rest, including monuments and maritime data |
 | `pobierz-gdos` | 15 protected-area types: parks, reserves, Natura 2000, landscape parks |
@@ -72,10 +73,11 @@ limit.
 
 Limits the tools enforce:
 
-- 6 000 features per run, and a bigger area gets a count and a refusal.
+- 10 000 features per run by default, 50 000 with `confirm`; a bigger area gets the count and a refusal.
 - A small `max_span` dataset refuses a wide area by name.
 - 25 MB per run unless the panel raises it; the slider sets 5 to 500 MB, the hard ceiling is 256 MB.
-- An area the service counts at zero stops before the first page.
+- An area the service counts at zero stops before the first page. The Osnowa services ignore the area:
+  the plugin fetches the whole set (under 7 000 points), cuts it to the area's box, and says so.
 
 The result is a layer named after the dataset, in one undo step. A WFS filter returns whole features
 that touch the area, so **Clip to layer** (`przytnij`) is what cuts them to the boundary.
@@ -92,6 +94,8 @@ that touch the area, so **Clip to layer** (`przytnij`) is what cuts them to the 
 - `zrodla {"szukaj": "geologia"}` searches 3 296 proved addresses by dataset, institution and TERYT.
 - `zrodla {"dodaj": "<id>"}` adds one service as a tile layer.
 - `rejestr-widok {"rodzaj": "wfs"}` narrows the register to the county under the map view.
+- `bdot500` and `gesut` take the gmina or county under the view, add the most specific register WMS
+  (gmina, county, then national K-GESUT), or name the WFS for `rejestr-pobierz`.
 - `eziudp {"instytucja": "GIOŚ"}` asks the live register, which needs a filter: the whole register is
   9 MB.
 - The panel's **Mapa** tree has a Register EZiUDP root: institution, then its WMS.

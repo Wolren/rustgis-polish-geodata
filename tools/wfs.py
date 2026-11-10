@@ -268,7 +268,7 @@ def _probe(url, version, type_name, srs, box):
     return True, geom, count
 
 
-def defaults(type_name, title):
+def defaults(url, type_name, title):
     """The fields a new type needs to be a catalogue entry, not just a proof.
 
     `data/wfs.json` carries the id a command and a script name, the label a picker shows, the
@@ -279,9 +279,21 @@ def defaults(type_name, title):
     The span default is the cautious one: the plugin refuses an area wider than it rather than
     asking GUGiK for a province. `index` stays false so a new type shows up in a picker (and, if
     its title clashes with another, `tools/manifest.py` fails the build) instead of vanishing.
+
+    Two service families get their measured quirks: the address service answers positions as
+    (easting, northing) and lists longitude first in 4326; the Osnowa services ignore every
+    spatial filter and answer the national grid (except the gravity one, which answers degrees).
     """
     slug = re.sub(r"[^a-z0-9]+", "-", type_name.split(":")[-1].lower()).strip("-")
-    return {"id": "dane-" + slug, "label": title, "max_span": 0.15, "index": False}
+    entry = {"id": "dane-" + slug, "label": title, "max_span": 0.15, "index": False}
+    if "KrajowaIntegracjaNumeracjiAdresowej" in url:
+        entry["xy"] = True
+        entry["lonlat_first"] = True
+    if "Osnowa" in url or "PodstawowaOsnowa" in url:
+        entry["unfiltered"] = True
+        if "Grawimetryczna" not in url:
+            entry["grid_reply"] = True
+    return entry
 
 
 def load_previous():
@@ -347,7 +359,7 @@ def main():
                     "geom": detail,
                     "title": title,
                     "version": version,
-                    **defaults(name, title),
+                    **defaults(url, name, title),
                 }
             )
         else:

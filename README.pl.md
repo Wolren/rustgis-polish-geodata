@@ -27,9 +27,9 @@ Pythona ani GDAL-a. Wymaga RustGIS 0.5.0 lub nowszego.
 | **Podkłady** | 4 mapy rastrowe i 4 nakładki wektorowe: ortofoto, BDOT10k, działki, adresy, granice |
 | **Obszar** | obszar z widoku, rysowanie, prostokąt, przejęcie, anulowanie, usuwanie |
 | **Narzędzia** | panel i przycinanie do granicy |
-| **WMS (podgląd)** | GUGiK (76), mapy historyczne (11), geologia PIG (11), NID (4), BDL (4), pozostałe instytucje (w tym IMGW 4 i GUS 2), **Więcej map** (Wody Polskie 30, Cartomatic 45), **Rejestr** (6) |
+| **WMS (podgląd)** | GUGiK (76), mapy historyczne (11), geologia PIG (11), NID (4), BDL (4), pozostałe instytucje (w tym IMGW 4 i GUS 2), **Więcej map** (Wody Polskie 30, Cartomatic 45), **Rejestr** (6), **Dane powiatowe** (BDOT500, GESUT) |
 | **WCS (pokrycia)** | osiem pokryć w dwóch menu: trzy serie ortofoto, pięć modeli terenu i pokrycia |
-| **Pobieranie** | sześć narzędzi WFS, cztery narzędzia paczek, ochrona przyrody (GDOŚ) |
+| **Pobieranie** | siedem narzędzi WFS, cztery narzędzia paczek, ochrona przyrody (GDOŚ) |
 | **Wysokości** | trzy modele wysokości, styl, teren 3D i jego wyłączenie |
 | **Wyszukiwanie** | działka, adres, wysokość, znajdź usługę, aktualizacja rejestru |
 
@@ -76,7 +76,7 @@ jako jedna warstwa. Sufit to 20 000 obiektów, a parametr `limit` obniża go.
 
 ## Pobieranie
 
-Sześć narzędzi bierze dane WFS po zbiorze: 106 zbiorów mapowych i 162 skorowidze. GDOŚ dokłada 15
+Siedem narzędzi bierze dane WFS po zbiorze: 106 zbiorów mapowych i 162 skorowidze. GDOŚ dokłada 15
 typów obszarów chronionych. Cztery narzędzia paczek kładą skorowidz jako warstwę i pobierają pliki,
 które wskazują jego obiekty.
 
@@ -159,6 +159,11 @@ granica”), drzewo warstw granicznych z wyszukiwarką, drzewo **Mapa** z trzema
   `{"dodaj": "<id>"}` dodaje jedną usługę.
 - **Polecenie `rejestr-widok`:** zawęża rejestr do powiatu pod widokiem mapy, więc szukanie zaczyna
   się tam, gdzie stoi mapa. Parametr `rodzaj` wybiera `wms` albo `wfs`.
+- **Polecenia `bdot500` i `gesut`:** gmina albo powiat pod widokiem, jedno kliknięcie. Polecenie
+  bierze najbliższą usługę z rejestru: gminy, potem powiatu, na końcu krajową K-GESUT. Jednostka z
+  samym WFS dostaje swój identyfikator dla `rejestr-pobierz`.
+- **Narzędzie Pobierz z rejestru > Przejazdy:** dziesięć usług przejazdów, z PKP PLK, w jednym
+  wyborze.
 
 Narzędzie **Aktualizuj rejestr** czyta rejestr EZiUDP na nowo. Sprawdza tylko adresy, których plik
 nie ma, i zapisuje wynik poza paczką. Polecenie `eziudp` pyta rejestr na żywo i prosi o zawężenie,
@@ -213,7 +218,7 @@ narzędzia pobierania, dopóki wtyczka jest włączona.
 | `packaging/` | pakowacz w Rust, który robi `.rgplugin` |
 | `plugin.json` | generowany z `data/` i `tools/manifest.base.json` |
 
-`plugin.json` niesie 248 poleceń, 14 narzędzi i 231 polskich tłumaczeń. Jest generowany, więc
+`plugin.json` niesie 250 poleceń, 15 narzędzi i 240 polskich tłumaczeń. Jest generowany, więc
 zmieniaj `tools/manifest.base.json`.
 
 ```powershell

@@ -16,7 +16,7 @@ downloaded as editable layers.
 | Clip | any layer to a boundary, in the panel or in the same run with `przytnij` |
 | Elevation | three 1 m models, three looks, 3D terrain with a vertical scale |
 | Lookups | parcel by identifier or point, address and reverse address, height, obręb lists, CSV runs |
-| Agent ready | 248 commands, 14 tools, every command declaring its arguments, a skill for the assistant |
+| Agent ready | 250 commands, 15 tools, every command declaring its arguments, a skill for the assistant |
 
 ![The Polish Geodata tab](assets/ribbon-pl.png)
 
@@ -78,9 +78,9 @@ RustGIS 0.5.0 or newer.
 | **Basemaps** | 4 raster maps and 4 vector overlays: orthophoto, BDOT10k, parcels, addresses, boundaries |
 | **Area** | area from the view, draw, rectangle, adopt, cancel, remove |
 | **Tools** | the panel and the clip to a boundary |
-| **WMS overlays** | ten menus: GUGiK (76 through three menus), historical maps (11), PIG geology (11), institutions and heritage (17), Wody Polskie (32), Cartomatic (45 through two menus), Register (6) |
+| **WMS overlays** | eleven menus: GUGiK (76 through three menus), historical maps (11), PIG geology (11), institutions and heritage (17), Wody Polskie (32), Cartomatic (45 through two menus), Register (6), County data (BDOT500, GESUT) |
 | **WCS (coverage)** | eight coverages through two menus: three orthophoto series, five terrain and surface models |
-| **Downloads** | six WFS tools, four package tools, protected areas (GDOŚ), the county EGiB, any register WFS |
+| **Downloads** | seven WFS tools, four package tools, protected areas (GDOŚ), the county EGiB, any register WFS |
 | **Elevation** | three elevation models, a look switch, 3D terrain and its switch off |
 | **Lookups** | parcel, address, height, find a service, update the register, obręby, the view's register |
 
@@ -262,6 +262,11 @@ built: 1 742 WMS from 570 institutions and 1 554 WFS. Three roads to them:
   `{"dodaj": "<id>"}` adds one service.
 - **Command `rejestr-widok`:** narrows the register to the county under the map view, so a search
   starts where the map is.
+- **Commands `bdot500` and `gesut`:** the gmina or county under the view, one click. The command takes
+  the most specific register service: the gmina's, then the county's, then the national K-GESUT. A WFS
+  only unit gets its id named for `rejestr-pobierz`.
+- **Tool Download from the register > Level crossings:** the ten level-crossing services, PKP PLK
+  included, under one picker.
 
 The tool **Update register** reads the EZiUDP register again. It checks only the addresses the file
 does not hold, and writes the result outside the package. The command `eziudp` asks the live register
@@ -303,7 +308,8 @@ commands, the limits and the download tools while the plugin is on.
 
 - A download ends at 6 000 features. A bigger area gets a count and a refusal.
 - A WCS coverage at a cell finer than its 12 s budget allows is refused; the message names the cell that fits.
-- The clip cuts by the boundary's box, not by its polygons.
+- The clip cuts by the boundary's polygons. A download filter carries up to four of the area's
+  rings; a shape with more narrows to its box and says so.
 - Wody Polskie commands put all of a service's layers on the map unless `warstwa` names one.
 - A county may publish several WFS addresses. The county EGiB command tries each before it refuses.
 - GUGiK's WFS answers GML only. The plugin converts it locally to GeoJSON, streamed.
@@ -321,7 +327,7 @@ commands, the limits and the download tools while the plugin is on.
 | `packaging/` | the packager in Rust, which writes `.rgplugin` |
 | `plugin.json` | generated from `data/` and `tools/manifest.base.json` |
 
-`plugin.json` carries 248 commands, 14 tools and 231 Polish translations. It is generated, so change
+`plugin.json` carries 250 commands, 15 tools and 240 Polish translations. It is generated, so change
 `tools/manifest.base.json`.
 
 ```powershell

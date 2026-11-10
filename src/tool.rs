@@ -140,6 +140,9 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     if let Some(problem) = download.fallback {
         messages.push(text::bbox_used(lang, problem));
     }
+    if download.unfiltered {
+        messages.push(text::service_ignores_area(lang, &layer.name));
+    }
     let collection = json!({ "type": "FeatureCollection", "features": download.features });
     Ok(json!({
         "layers": [{ "name": layer.name, "geojson": collection }],
@@ -160,6 +163,10 @@ fn gate(
     cap: usize,
     confirm: bool,
 ) -> Result<(), String> {
+    // A service that ignores the area has no count to trust: the fetch cuts the whole set here.
+    if layer.unfiltered {
+        return Ok(());
+    }
     let limited = layer.max_span < UNLIMITED_SPAN;
     let over_span = limited && wfs::too_large(layer, bbox);
     if limited && !over_span {

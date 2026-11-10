@@ -68,6 +68,8 @@ pub struct Download {
     pub failed: usize,
     /// `Some` when the shape could not filter, naming why the box went in instead.
     pub fallback: Option<filter::ShapeProblem>,
+    /// Whether the service ignored the area, so the whole set arrived and was cut here.
+    pub unfiltered: bool,
 }
 
 /// Downloads every feature for `bbox`, reporting progress through `report`.
@@ -95,6 +97,14 @@ pub fn fetch(
         .all(|v| v.is_finite())
     {
         return Err(text::span_invalid(lang));
+    }
+    // A service that ignores spatial filters answers the whole set: fetch it once, cut it here.
+    if layer.unfiltered {
+        let srs = if layer.grid_reply { Srs::Grid } else { Srs::LonLat };
+        let mut download = gather(layer, bbox, None, report, lang, srs, limit, cap)?;
+        download.fallback = None;
+        download.unfiltered = true;
+        return Ok(download);
     }
     let mut fallback = None;
     // A caller that built its own register filter replaces the polygon derived from the area.
@@ -146,7 +156,7 @@ fn gather(
     limit: u64,
     cap: usize,
 ) -> Result<Download, String> {
-    let areas = split_cells(bbox);
+    let areas = split_cells(layer, bbox);
     report(&text::split_areas(lang, layer.name, areas.len()));
 
     // The budget is shared out, so a run of many cells cannot pass the limit.
@@ -220,11 +230,14 @@ fn gather(
             return Err(error);
         }
     }
+    if layer.unfiltered {
+        features.retain(|feature| touches(feature, bbox));
+    }
     if features.len() > cap {
         features.truncate(cap);
         truncated = true;
     }
-    Ok(Download { features, truncated, bytes, limit_hit, failed, fallback: None })
+    Ok(Download { features, truncated, bytes, limit_hit, failed, fallback: None, unfiltered: false })
 }
 
 /// One cell's answer: the features that arrived, and the requests that did not.
@@ -340,13 +353,13 @@ fn fetch_pages(
             let sender = sender.clone();
             scope.spawn(move || {
                 let url = page_url(layer, bbox, offset, filter, srs, count);
-                let swap = matches!(srs, Srs::LonLat);
+                let swap = matches!(srs, Srs::LonLat) && !layer.lonlat_first && !layer.grid_reply;
                 // The body is parsed as it arrives, so a heavy page never becomes one string.
                 let answered = http::stream_body(&url, 120, lang, |reader| {
                     gml::parse_features_stream(reader, swap, lang)
                 })
                 .map(|(size, mut rows)| {
-                    if matches!(srs, Srs::Grid) {
+                    if matches!(srs, Srs::Grid) || layer.grid_reply {
                         to_lon_lat(&mut rows, layer.xy);
                     }
                     (size, Ok(rows))
@@ -396,10 +409,44 @@ fn convert(value: &mut Value, xy: bool) {
     }
 }
 
+/// Whether a feature's own box shares a point with the area box, in lon and lat.
+fn touches(feature: &Value, bbox: [f64; 4]) -> bool {
+    let mut bounds = [f64::MAX, f64::MAX, f64::MIN, f64::MIN];
+    let mut found = false;
+    if let Some(geometry) = feature.get("geometry") {
+        extend(geometry, &mut bounds, &mut found);
+    }
+    found && bounds[0] <= bbox[2] && bounds[2] >= bbox[0] && bounds[1] <= bbox[3] && bounds[3] >= bbox[1]
+}
+
+fn extend(value: &Value, bounds: &mut [f64; 4], found: &mut bool) {
+    if let Some(array) = value.as_array() {
+        if array.len() >= 2 && array[0].is_number() && array[1].is_number() {
+            if let (Some(lon), Some(lat)) = (array[0].as_f64(), array[1].as_f64()) {
+                bounds[0] = bounds[0].min(lon);
+                bounds[1] = bounds[1].min(lat);
+                bounds[2] = bounds[2].max(lon);
+                bounds[3] = bounds[3].max(lat);
+                *found = true;
+            }
+            return;
+        }
+        for item in array {
+            extend(item, bounds, found);
+        }
+    } else if let Some(object) = value.as_object() {
+        if let Some(coordinates) = object.get("coordinates") {
+            extend(coordinates, bounds, found);
+        }
+    }
+}
+
 /// The area itself, or four quadrants of it when it is wide.
-fn split_cells(bbox: [f64; 4]) -> Vec<[f64; 4]> {
+///
+/// A service that ignores the area gets one cell, so its whole set is fetched once.
+fn split_cells(layer: &WfsLayer, bbox: [f64; 4]) -> Vec<[f64; 4]> {
     let [w, s, e, n] = bbox;
-    if e - w <= SPLIT_SPAN && n - s <= SPLIT_SPAN {
+    if layer.unfiltered || (e - w <= SPLIT_SPAN && n - s <= SPLIT_SPAN) {
         return vec![bbox];
     }
     let (mx, my) = ((w + e) / 2.0, (s + n) / 2.0);
@@ -427,6 +474,14 @@ fn page_url(
         layer.type_name,
         srs.name()
     );
+    // A service that ignores spatial filters takes neither a box nor a filter.
+    if layer.unfiltered {
+        url.push_str(&format!("&MAXFEATURES={count}"));
+        if start > 0 {
+            url.push_str(&format!("&STARTINDEX={start}"));
+        }
+        return url;
+    }
     match filter {
         Some(filter) => {
             url.push_str("&FILTER=");
@@ -539,10 +594,11 @@ mod tests {
 
     #[test]
     fn splits_a_wide_area_into_four_cells() {
-        let cells = split_cells([14.0, 49.0, 24.0, 55.0]);
+        let layer = catalog::wfs_by_label("Granice gmin").unwrap();
+        let cells = split_cells(layer, [14.0, 49.0, 24.0, 55.0]);
         assert_eq!(cells.len(), 4);
         assert_eq!(cells[0], [14.0, 49.0, 19.0, 52.0]);
         assert_eq!(cells[3], [19.0, 52.0, 24.0, 55.0]);
-        assert_eq!(split_cells([21.0, 52.2, 21.01, 52.21]).len(), 1);
+        assert_eq!(split_cells(layer, [21.0, 52.2, 21.01, 52.21]).len(), 1);
     }
 }

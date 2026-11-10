@@ -19,6 +19,7 @@ const DOWNLOAD_TOOLS: &[(&str, &str, &str)] = &[
     ("pobierz-osnowy", "Control points", "Osnowy i pomiary"),
     ("pobierz-urzedy", "Offices and courts", "Urzędy i sądy"),
     ("pobierz-pozostale", "Other data", "Pozostałe dane"),
+    ("pobierz-przejazdy", "Level crossings", "Przejazdy"),
     ("pobierz-gdos", "Protected areas (GDOŚ)", "Ochrona przyrody (GDOŚ)"),
 ];
 

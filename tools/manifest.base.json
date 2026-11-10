@@ -337,6 +337,20 @@
       "icon": "table",
       "help": "Downloads one typed dataset for a unit in one call: it reads the unit boundary, fetches the type and cuts the layer to the unit.",
       "params": "{\"dane\": \"Punkty adresowe\", \"unit\": \"1464011\"} (2 digits a voivodeship, 4 a powiat, 7 a gmina)"
+    },
+    {
+      "id": "bdot500",
+      "label": "BDOT500",
+      "icon": "polygon_layer",
+      "help": "The gmina's or county's own BDOT500 service from the register, as one overlay.",
+      "params": "{}"
+    },
+    {
+      "id": "gesut",
+      "label": "GESUT",
+      "icon": "buffer",
+      "help": "The gmina's or county's own GESUT service from the register, as one overlay.",
+      "params": "{}"
     }
   ],
   "tools": [
@@ -599,6 +613,51 @@
           "required": true,
           "choicesGroup": "other",
           "help": "The GUGiK feature type to download.",
+          "default": "__first__"
+        },
+        {
+          "name": "obszar",
+          "label": "Area (layer)",
+          "kind": "polygonLayer",
+          "required": true,
+          "help": "The layer whose extent is downloaded. Make one with Area from view, or point at a layer of your own; a selection on it narrows the download."
+        },
+        {
+          "name": "clear",
+          "label": "Clear the stored answers first",
+          "kind": "bool",
+          "default": false,
+          "help": "The answers are kept for 7 days, so a repeat download costs nothing. Tick this to fetch fresh data next time."
+        },
+        {
+          "name": "limit_mb",
+          "label": "Size limit (MB)",
+          "kind": "number",
+          "default": 25,
+          "help": "A run stops at this many megabytes. 0 means no byte limit; the panel slider sets the default."
+        },
+        {
+          "name": "confirm",
+          "label": "Download even if large",
+          "kind": "bool",
+          "default": false,
+          "help": "Fetch a run larger than the size limit. It raises the stop to 256 MB, or to the limit typed above."
+        }
+      ]
+    },
+    {
+      "id": "pobierz-przejazdy",
+      "name": "Level crossings",
+      "summary": "Level crossings of the railway operators, from PKP PLK to the terminal firms.",
+      "toolbox": "Polish Geodata",
+      "params": [
+        {
+          "name": "dane",
+          "label": "Dataset",
+          "kind": "choice",
+          "required": true,
+          "choicesGroup": "crossings",
+          "help": "The operator's level-crossing type to download.",
           "default": "__first__"
         },
         {
@@ -968,6 +1027,15 @@
               "rejestr-egib-poznan",
               "rejestr-egib-wroclaw",
               "rejestr-egib-warszawa"
+            ]
+          },
+          {
+            "menu": "County data",
+            "icon": "polygon_layer",
+            "help": "BDOT500 and GESUT from the register, for the gmina or county under the view.",
+            "items": [
+              "bdot500",
+              "gesut"
             ]
           }
         ]
@@ -1415,7 +1483,16 @@
       "WCS (coverage)": "WCS (pokrycia)",
       "Height models": "Modele wysokości",
       "The orthophoto coverages of the area, as a raster the map keeps.": "Pokrycia ortofoto obszaru, jako raster, który zostaje na mapie.",
-      "The terrain and surface models of the area, at the cell the area needs.": "Modele terenu i pokrycia obszaru, w komórce, jakiej potrzebuje obszar."
+      "The terrain and surface models of the area, at the cell the area needs.": "Modele terenu i pokrycia obszaru, w komórce, jakiej potrzebuje obszar.",
+      "County data": "Dane powiatowe",
+      "BDOT500 and GESUT from the register, for the gmina or county under the view.": "BDOT500 i GESUT z rejestru, dla gminy albo powiatu pod widokiem.",
+      "BDOT500": "BDOT500",
+      "GESUT": "GESUT",
+      "The gmina's or county's own BDOT500 service from the register, as one overlay.": "Usługa BDOT500 gminy albo powiatu z rejestru, jako jedna nakładka.",
+      "The gmina's or county's own GESUT service from the register, as one overlay.": "Usługa GESUT gminy albo powiatu z rejestru, jako jedna nakładka.",
+      "Level crossings": "Przejazdy",
+      "Level crossings of the railway operators, from PKP PLK to the terminal firms.": "Przejazdy kolejowe operatorów, od PKP PLK po firmy terminalowe.",
+      "The operator's level-crossing type to download.": "Typ przejazdów operatora do pobrania."
     }
   },
   "moreMaps": {
