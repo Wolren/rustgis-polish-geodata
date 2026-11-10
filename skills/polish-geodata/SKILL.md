@@ -99,6 +99,8 @@ that touch the area, so **Clip to layer** (`przytnij`) is what cuts them to the 
   read over its boundary, up to 20 000 features.
 - `zapisz-gpkg {"warstwa": "<layer>", "plik": "<path>"}` saves a vector layer as GeoPackage;
   a bare name goes to Documents, and the path is optional.
+- `wmts {"url": "<GetTile template with {z}, {x}, {y}>", "nazwa": "<name>"}` adds a WMTS overlay.
+- `dodaj-wcs {"url": "<GetCoverage URL>", "nazwa": "<name>"}` adds any WCS coverage.
 - `eziudp {"instytucja": "GIOŚ"}` asks the live register, which needs a filter: the whole register is
   9 MB.
 - The panel's **Mapa** tree has a Register EZiUDP root: institution, then its WMS.

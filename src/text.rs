@@ -739,6 +739,46 @@ pub fn bbox_used(lang: Lang, problem: ShapeProblem) -> String {
     .to_string()
 }
 
+pub fn wmts_needs_url(lang: Lang) -> String {
+    pick!(
+        lang,
+        "A WMTS layer needs a GetTile URL template.".to_string(),
+        "Warstwa WMTS potrzebuje szablonu adresu GetTile.".to_string()
+    )
+}
+
+pub fn wmts_needs_placeholders(lang: Lang) -> String {
+    pick!(
+        lang,
+        "The WMTS template needs the {z}, {x} and {y} placeholders.".to_string(),
+        "Szablon WMTS potrzebuje znaczników {z}, {x} i {y}.".to_string()
+    )
+}
+
+pub fn wmts_added(lang: Lang, name: &str) -> String {
+    pick!(
+        lang,
+        format!("WMTS added: {name}"),
+        format!("Dodano WMTS: {name}")
+    )
+}
+
+pub fn wcs_url_needs_url(lang: Lang) -> String {
+    pick!(
+        lang,
+        "A WCS coverage needs its GetCoverage URL.".to_string(),
+        "Pokrycie WCS potrzebuje adresu GetCoverage.".to_string()
+    )
+}
+
+pub fn wcs_url_added(lang: Lang, name: &str) -> String {
+    pick!(
+        lang,
+        format!("WCS added: {name}"),
+        format!("Dodano WCS: {name}")
+    )
+}
+
 pub fn save_no_layer(lang: Lang) -> String {
     pick!(
         lang,

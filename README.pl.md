@@ -24,9 +24,9 @@ Pythona ani GDAL-a. Wymaga RustGIS 0.5.0 lub nowszego.
 
 | Grupa | Co zawiera |
 | --- | --- |
-| **Podkłady** | 4 mapy rastrowe i 4 nakładki wektorowe: ortofoto, BDOT10k, działki, adresy, granice |
+| **Podkłady** | 4 mapy rastrowe, 4 nakładki wektorowe i dowolny WMTS: ortofoto, BDOT10k, działki, adresy, granice |
 | **Obszar** | obszar z widoku, rysowanie, prostokąt, przejęcie, anulowanie, usuwanie |
-| **Narzędzia** | panel, przycinanie do granicy i zapis do GeoPackage |
+| **Narzędzia** | panel, przycinanie do granicy, zapis do GeoPackage i dodawanie WCS |
 | **WMS (podgląd)** | GUGiK (76), mapy historyczne (11), geologia PIG (11), NID (4), BDL (4), pozostałe instytucje (w tym IMGW 4 i GUS 2), **Więcej map** (Wody Polskie 30, Cartomatic 45), **Rejestr** (6), **Dane powiatowe** (BDOT500, GESUT) |
 | **WCS (pokrycia)** | osiem pokryć w dwóch menu: trzy serie ortofoto, pięć modeli terenu i pokrycia |
 | **Pobieranie** | siedem narzędzi WFS, cztery narzędzia paczek, ochrona przyrody (GDOŚ) |
@@ -217,7 +217,7 @@ narzędzia pobierania, dopóki wtyczka jest włączona.
 | `packaging/` | pakowacz w Rust, który robi `.rgplugin` |
 | `plugin.json` | generowany z `data/` i `tools/manifest.base.json` |
 
-`plugin.json` niesie 251 poleceń, 15 narzędzi i 244 polskich tłumaczeń. Jest generowany, więc
+`plugin.json` niesie 253 poleceń, 15 narzędzi i 248 polskich tłumaczeń. Jest generowany, więc
 zmieniaj `tools/manifest.base.json`.
 
 ```powershell

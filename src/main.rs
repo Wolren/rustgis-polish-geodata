@@ -37,6 +37,7 @@ mod tool;
 mod uug;
 mod uldk;
 mod wcs;
+mod wmts;
 mod wfs;
 mod zrodla;
 
@@ -122,6 +123,8 @@ fn run(
         "dzialki-powiat" => egib::from_area(host, params, lang),
         "rejestr-pobierz" => egib::from_register(host, params, lang),
         "zapisz-gpkg" => save::run(host, request, lang),
+        "wmts" => wmts::add(host, params, lang),
+        "dodaj-wcs" => wcs::add_url(host, params, lang),
         "obszar-anuluj" => obszar::abort(host, lang),
         "obszar-wyczysc" => obszar::clear(host, lang),
         other if other.starts_with("usluga-") => services::toggle(host, lang, request),

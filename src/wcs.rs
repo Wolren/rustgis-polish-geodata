@@ -129,6 +129,26 @@ fn slug(text: &str) -> String {
         .collect()
 }
 
+/// Adds any WCS coverage from a GetCoverage URL the caller names, GeoTIFF or whatever it returns.
+pub fn add_url(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String> {
+    let url = params
+        .get("url")
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|url| !url.is_empty())
+        .ok_or_else(|| text::wcs_url_needs_url(lang))?;
+    let name = params
+        .get("nazwa")
+        .or_else(|| params.get("name"))
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|name| !name.is_empty())
+        .unwrap_or("WCS");
+    host.call("layer.addUrl", json!({"url": url, "name": name, "coverage": true}))?;
+    host.notify(&text::wcs_url_added(lang, name));
+    Ok(json!({"name": name, "url": url}))
+}
+
 /// Adds one catalogued coverage over the area, or says what the request still needs.
 pub fn add(host: &mut Host, lang: Lang, request: &Value) -> Result<Value, String> {
     let entry = chosen(request).ok_or_else(|| {

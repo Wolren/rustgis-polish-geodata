@@ -16,7 +16,7 @@ downloaded as editable layers.
 | Clip | any layer to a boundary, in the panel or in the same run with `przytnij` |
 | Elevation | three 1 m models, three looks, 3D terrain with a vertical scale |
 | Lookups | parcel by identifier or point, address and reverse address, height, obręb lists, CSV runs |
-| Agent ready | 251 commands, 15 tools, every command declaring its arguments, a skill for the assistant |
+| Agent ready | 253 commands, 15 tools, every command declaring its arguments, a skill for the assistant |
 
 ![The Polish Geodata tab](assets/ribbon-pl.png)
 
@@ -75,9 +75,9 @@ RustGIS 0.5.0 or newer.
 
 | Group | What it holds |
 | --- | --- |
-| **Basemaps** | 4 raster maps and 4 vector overlays: orthophoto, BDOT10k, parcels, addresses, boundaries |
+| **Basemaps** | 4 raster maps, 4 vector overlays and any WMTS: orthophoto, BDOT10k, parcels, addresses, boundaries |
 | **Area** | area from the view, draw, rectangle, adopt, cancel, remove |
-| **Tools** | the panel, the clip to a boundary, and Save as GeoPackage |
+| **Tools** | the panel, the clip to a boundary, Save as GeoPackage and Add WCS |
 | **WMS overlays** | eleven menus: GUGiK (76 through three menus), historical maps (11), PIG geology (11), institutions and heritage (17), Wody Polskie (32), Cartomatic (45 through two menus), Register (6), County data (BDOT500, GESUT) |
 | **WCS (coverage)** | eight coverages through two menus: three orthophoto series, five terrain and surface models |
 | **Downloads** | seven WFS tools, four package tools, protected areas (GDOŚ), the county EGiB, any register WFS |
@@ -329,7 +329,7 @@ commands, the limits and the download tools while the plugin is on.
 | `packaging/` | the packager in Rust, which writes `.rgplugin` |
 | `plugin.json` | generated from `data/` and `tools/manifest.base.json` |
 
-`plugin.json` carries 251 commands, 15 tools and 244 Polish translations. It is generated, so change
+`plugin.json` carries 253 commands, 15 tools and 248 Polish translations. It is generated, so change
 `tools/manifest.base.json`.
 
 ```powershell
