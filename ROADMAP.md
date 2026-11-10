@@ -1,6 +1,6 @@
 # Roadmap
 
-_Stan na 2026-11-10, wtyczka 0.1.4._
+_Stan na 2026-11-10, wtyczka 0.2.0._
 
 Cel: jedna wtyczka do RustGIS, która kondensuje polskie dane, dzieli je najpierw według instytucji,
 potem według tematu, i którą całą da się sterować przez MCP albo przez panel.
@@ -39,7 +39,7 @@ potem według tematu, i którą całą da się sterować przez MCP albo przez pa
 
 - Panel z drzewem 16 województw, 380 powiatów, 2 479 gmin; obszar z PRG, rysowanie, zaznaczenie,
   przycinanie do granicy. Formularze mają domyślne wartości.
-- 192 testy (1 ignorowany), e2e na żywym RustGIS: 25/25 (WCS, obszar, cache, odmowy).
+- 193 testy (1 ignorowany), e2e na żywym RustGIS: 25/25 (WCS, obszar, cache, odmowy).
 - CI na Ubuntu, macOS i Windows: testy, manifest, README, pakowanie. Paczka zawiera binarkę Windows
   i Linux (cross-build zig); macOS czeka na SDK.
 

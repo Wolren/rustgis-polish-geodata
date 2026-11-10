@@ -1,7 +1,7 @@
 {
   "id": "polish-geodata",
   "name": "Polish Geodata",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Polish national geodata in one tab: 112 raster overlays, 8 WCS coverages, 106 WFS datasets and 162 sheet indexes downloaded as editable layers with progress and Cancel, 15 GDOŚ protected-area types, the county EGiB as parcels, a 3 296-address service register with an update tool, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.",
   "author": "Wolren",
   "license": "MIT",
