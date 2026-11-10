@@ -8,7 +8,9 @@
 //! cell (`rozdzielczosc`), never a finer one than the budget allows.
 //!
 //! A GeoTIFF passes through the app's own download, so the window keeps running. An ASCII grid
-//! comes through this program, which writes the `.prj` the grid needs to be placed.
+//! comes through this program, which converts it once into a float32 GeoTIFF with EPSG:2180
+//! embedded: the app then reads a raster, not the text. A grid this build cannot parse keeps its
+//! `.prj` and opens as text.
 
 use crate::cache;
 use crate::gk92;
@@ -173,24 +175,37 @@ pub fn add(host: &mut Host, lang: Lang, request: &Value) -> Result<Value, String
     let mut pending = false;
     let mut look = None;
     let name = if entry.ascii() {
-        let file = cache::dem_file(&cache_name(entry, bbox, &fit));
-        if file.exists() {
-            // The grid is already on disk: the click costs no download.
-            megabytes = file.metadata().map(|meta| meta.len()).unwrap_or(0) as f64 / 1e6;
+        let asc = cache::dem_file(&cache_name(entry, bbox, &fit));
+        // The grid is converted once: the host reads a GeoTIFF about nine times faster than its text.
+        let tif = asc.with_extension("tif");
+        if tif.exists() {
+            megabytes = size_of(&tif);
+            add_grid(host, &tif, &wanted)?;
         } else {
-            http::download(&address, &file, 110, lang)?;
+            if asc.exists() {
+                // A raw grid from an earlier run: no download, then convert it.
+                megabytes = size_of(&asc);
+            } else {
+                http::download(&address, &asc, 110, lang)?;
+            }
+            let head = head_of(&asc)?;
+            if !ascii_grid(&head) {
+                let _ = std::fs::remove_file(&asc);
+                return Err(text::wcs_bad_answer(lang, &entry.coverage, &head_text(&head)));
+            }
+            match write_grid(&asc, &tif) {
+                Ok(()) => {
+                    let _ = std::fs::remove_file(&asc);
+                    let _ = std::fs::remove_file(asc.with_extension("prj"));
+                    add_grid(host, &tif, &wanted)?;
+                }
+                Err(_) => {
+                    // A grid this build cannot parse still opens the old way, with its `.prj`.
+                    write_prj(&asc, lang)?;
+                    add_grid(host, &asc, &wanted)?;
+                }
+            }
         }
-        let head = head_of(&file)?;
-        if !ascii_grid(&head) {
-            let _ = std::fs::remove_file(&file);
-            return Err(text::wcs_bad_answer(lang, &entry.coverage, &head_text(&head)));
-        }
-        // An ASCII grid carries no CRS, so the sidecar places it.
-        let prj = file.with_extension("prj");
-        std::fs::write(&prj, gk92::WKT)
-            .map_err(|e| text::file_failed(lang, &path_text(&prj), &e.to_string()))?;
-        let path = path_text(&file);
-        nmt::attempts(|| host.call("layer.addData", json!({ "path": path, "name": wanted })))?;
         nmt::resolved_name(host, &wanted)
     } else {
         // The app downloads a GeoTIFF off the frame, so it may answer that the file is on its way.
@@ -457,6 +472,177 @@ fn cache_name(entry: &Entry, bbox: [f64; 4], fit: &Fit) -> String {
     )
 }
 
+/// Adds a cached raster: the GeoTIFF a grid was converted to, or the grid itself as a fallback.
+fn add_grid(host: &mut Host, path: &Path, name: &str) -> Result<Value, String> {
+    let path = path_text(path);
+    nmt::attempts(|| host.call("layer.addData", json!({ "path": path, "name": name })))
+}
+
+/// Writes the `.prj` an ASCII grid needs to be placed.
+fn write_prj(asc: &Path, lang: Lang) -> Result<(), String> {
+    let prj = asc.with_extension("prj");
+    std::fs::write(&prj, gk92::WKT)
+        .map_err(|e| text::file_failed(lang, &path_text(&prj), &e.to_string()))
+}
+
+fn size_of(path: &Path) -> f64 {
+    path.metadata().map(|meta| meta.len()).unwrap_or(0) as f64 / 1e6
+}
+
+/// An ASCII grid parsed into the values and placement a GeoTIFF needs.
+struct Grid {
+    width: u32,
+    height: u32,
+    /// The west edge and the north edge, in the grid's own CRS units.
+    x: f64,
+    y: f64,
+    cell_x: f64,
+    cell_y: f64,
+    values: Vec<f32>,
+}
+
+/// Parses an ASCII grid's header and every value. A no-data value is refused: a GeoTIFF written
+/// here would drop it.
+fn read_ascii(text: &str) -> Result<Grid, String> {
+    let mut tokens = text.split_ascii_whitespace().peekable();
+    let (mut ncols, mut nrows, mut cell) = (None, None, None);
+    let (mut x, mut y, mut dx, mut dy) = (None, None, None, None);
+    let (mut centre_x, mut centre_y) = (false, false);
+    let mut entries = 0;
+    while let Some(key) = tokens.peek().map(|token| token.to_ascii_lowercase()) {
+        if key.parse::<f64>().is_ok() {
+            break;
+        }
+        entries += 1;
+        if entries > 16 {
+            return Err("not an ASCII grid header".into());
+        }
+        tokens.next();
+        let raw = tokens.next().ok_or("a header key without a value")?;
+        let value: f64 = raw.parse().map_err(|_| format!("bad value for {key}"))?;
+        match key.as_str() {
+            "ncols" => ncols = Some(value),
+            "nrows" => nrows = Some(value),
+            "xllcorner" => x = Some(value),
+            "yllcorner" => y = Some(value),
+            "xllcenter" => {
+                x = Some(value);
+                centre_x = true;
+            }
+            "yllcenter" => {
+                y = Some(value);
+                centre_y = true;
+            }
+            "cellsize" => cell = Some(value),
+            "dx" => dx = Some(value),
+            "dy" => dy = Some(value),
+            "nodata_value" => return Err("the grid has a no-data value".into()),
+            _ => {}
+        }
+    }
+    let size = |value: Option<f64>, what: &str| -> Result<u32, String> {
+        let value = value.ok_or_else(|| format!("missing {what}"))?;
+        if value >= 1.0 && value <= f64::from(u32::MAX) && value.fract() == 0.0 {
+            Ok(value as u32)
+        } else {
+            Err(format!("bad {what}"))
+        }
+    };
+    let width = size(ncols, "ncols")?;
+    let height = size(nrows, "nrows")?;
+    let (cell_x, cell_y) = match cell {
+        Some(cell) => (cell, cell),
+        None => (
+            dx.filter(|c| c.is_finite() && *c > 0.0).ok_or("missing or invalid cell width")?,
+            dy.filter(|c| c.is_finite() && *c > 0.0).ok_or("missing or invalid cell height")?,
+        ),
+    };
+    let mut x = x.ok_or("missing xllcorner")?;
+    let mut y = y.ok_or("missing yllcorner")?;
+    if centre_x {
+        x -= cell_x / 2.0;
+    }
+    if centre_y {
+        y -= cell_y / 2.0;
+    }
+    let count = (width as usize)
+        .checked_mul(height as usize)
+        .ok_or("too large")?;
+    let mut values = Vec::with_capacity(count.min(text.len() / 2 + 1));
+    for token in tokens.take(count) {
+        values.push(token.parse::<f32>().map_err(|_| format!("'{token}' is not a number"))?);
+    }
+    if values.len() != count {
+        return Err(format!("{} values, {count} needed", values.len()));
+    }
+    Ok(Grid { width, height, x, y: y + cell_y * f64::from(height), cell_x, cell_y, values })
+}
+
+fn entry(out: &mut Vec<u8>, tag: u16, ty: u16, count: u32, value: u32) {
+    out.extend_from_slice(&tag.to_le_bytes());
+    out.extend_from_slice(&ty.to_le_bytes());
+    out.extend_from_slice(&count.to_le_bytes());
+    out.extend_from_slice(&value.to_le_bytes());
+}
+
+/// The GeoTIFF of a grid: one uncompressed float32 strip, the cell scale, the tie point and
+/// EPSG:2180 as its GeoKey.
+fn tiff_bytes(grid: &Grid) -> Vec<u8> {
+    const ENTRIES: usize = 14;
+    let ifd = 8usize;
+    let ifd_size = 2 + 12 * ENTRIES + 4;
+    let scale_at = ifd + ifd_size;
+    let tie_at = scale_at + 24;
+    let keys_at = tie_at + 48;
+    let strip_at = keys_at + 32;
+    let strip_len = grid.values.len() * 4;
+    let mut out = Vec::with_capacity(strip_at + strip_len);
+    out.extend_from_slice(b"II");
+    out.extend_from_slice(&42u16.to_le_bytes());
+    out.extend_from_slice(&(ifd as u32).to_le_bytes());
+    out.extend_from_slice(&(ENTRIES as u16).to_le_bytes());
+    entry(&mut out, 256, 4, 1, grid.width);
+    entry(&mut out, 257, 4, 1, grid.height);
+    entry(&mut out, 258, 3, 1, 32);
+    entry(&mut out, 259, 3, 1, 1);
+    entry(&mut out, 262, 3, 1, 1);
+    entry(&mut out, 273, 4, 1, strip_at as u32);
+    entry(&mut out, 277, 3, 1, 1);
+    entry(&mut out, 278, 4, 1, grid.height);
+    entry(&mut out, 279, 4, 1, strip_len as u32);
+    entry(&mut out, 284, 3, 1, 1);
+    entry(&mut out, 339, 3, 1, 3);
+    entry(&mut out, 33550, 12, 3, scale_at as u32);
+    entry(&mut out, 33922, 12, 6, tie_at as u32);
+    entry(&mut out, 34735, 3, 16, keys_at as u32);
+    out.extend_from_slice(&0u32.to_le_bytes());
+    for value in [grid.cell_x, grid.cell_y, 0.0] {
+        out.extend_from_slice(&value.to_le_bytes());
+    }
+    for value in [0.0, 0.0, 0.0, grid.x, grid.y, 0.0] {
+        out.extend_from_slice(&value.to_le_bytes());
+    }
+    for key in [1u16, 1, 0, 3, 1024, 0, 1, 1, 1025, 0, 1, 1, 3072, 0, 1, 2180] {
+        out.extend_from_slice(&key.to_le_bytes());
+    }
+    for value in &grid.values {
+        out.extend_from_slice(&value.to_le_bytes());
+    }
+    out
+}
+
+/// Converts an ASCII grid into the GeoTIFF beside it. The file lands whole or not at all, so a
+/// stopped run cannot leave a half-written raster for the next add.
+fn write_grid(asc: &Path, tif: &Path) -> Result<(), String> {
+    let grid = {
+        let text = std::fs::read_to_string(asc).map_err(|e| e.to_string())?;
+        read_ascii(&text)?
+    };
+    let part = tif.with_extension("tif.part");
+    std::fs::write(&part, tiff_bytes(&grid)).map_err(|e| e.to_string())?;
+    std::fs::rename(&part, tif).map_err(|e| e.to_string())
+}
+
 /// The first bytes of a file, enough to tell an ASCII grid from a service's exception.
 fn head_of(path: &Path) -> Result<Vec<u8>, String> {
     use std::io::Read;
@@ -628,5 +814,91 @@ mod tests {
             cache_name(entry("nmt-kron86"), [348_129.0, 497_807.0, 350_446.0, 500_000.0], &fit),
             "DTM_PL-KRON86-NH_348129_497807_100x50.asc"
         );
+    }
+
+    /// The bytes the host's GeoTIFF reader takes: header, strip, scale, tie point, EPSG:2180.
+    #[test]
+    fn an_ascii_grid_becomes_the_geotiff_the_host_reads() {
+        let grid = read_ascii("ncols 2\nnrows 2\nxllcorner 10\nyllcorner 20\ncellsize 5\n1.5 2.5\n3.5 4.5\n")
+            .expect("a 2 by 2 grid");
+        assert_eq!((grid.width, grid.height), (2, 2));
+        assert_eq!((grid.x, grid.y), (10.0, 30.0), "the tie point is the north-west corner");
+        assert_eq!(grid.values, vec![1.5, 2.5, 3.5, 4.5]);
+
+        let bytes = tiff_bytes(&grid);
+        assert_eq!(&bytes[0..2], b"II");
+        assert_eq!(u16::from_le_bytes([bytes[2], bytes[3]]), 42);
+        let ifd = u32::from_le_bytes([bytes[4], bytes[5], bytes[6], bytes[7]]) as usize;
+        let count = u16::from_le_bytes([bytes[ifd], bytes[ifd + 1]]) as usize;
+        assert_eq!(count, 14);
+        let mut tags = std::collections::BTreeMap::new();
+        for i in 0..count {
+            let at = ifd + 2 + i * 12;
+            let tag = u16::from_le_bytes([bytes[at], bytes[at + 1]]);
+            let ty = u16::from_le_bytes([bytes[at + 2], bytes[at + 3]]);
+            let n = u32::from_le_bytes([bytes[at + 4], bytes[at + 5], bytes[at + 6], bytes[at + 7]]);
+            let value = u32::from_le_bytes([bytes[at + 8], bytes[at + 9], bytes[at + 10], bytes[at + 11]]);
+            tags.insert(tag, (ty, n, value));
+        }
+        let tag = |wanted: u16| *tags.get(&wanted).expect("a tag");
+        assert_eq!(tag(256), (4, 1, 2), "ImageWidth");
+        assert_eq!(tag(257), (4, 1, 2), "ImageLength");
+        assert_eq!(tag(339), (3, 1, 3), "IEEE float samples");
+        let doubles = |at: usize, n: usize| -> Vec<f64> {
+            (0..n)
+                .map(|i| {
+                    let s = at + i * 8;
+                    f64::from_le_bytes(bytes[s..s + 8].try_into().expect("8 bytes"))
+                })
+                .collect()
+        };
+        assert_eq!(doubles(tag(33550).2 as usize, 3), vec![5.0, 5.0, 0.0], "ModelPixelScale");
+        assert_eq!(
+            doubles(tag(33922).2 as usize, 6),
+            vec![0.0, 0.0, 0.0, 10.0, 30.0, 0.0],
+            "ModelTiepoint"
+        );
+        let keys: Vec<u16> = (0..16)
+            .map(|i| {
+                let s = tag(34735).2 as usize + i * 2;
+                u16::from_le_bytes([bytes[s], bytes[s + 1]])
+            })
+            .collect();
+        assert_eq!(keys, vec![1, 1, 0, 3, 1024, 0, 1, 1, 1025, 0, 1, 1, 3072, 0, 1, 2180]);
+        let strip = tag(273).2 as usize;
+        assert_eq!(tag(279).2, 16, "four float32 values");
+        let values: Vec<f32> = (0..4)
+            .map(|i| f32::from_le_bytes(bytes[strip + i * 4..strip + i * 4 + 4].try_into().expect("4 bytes")))
+            .collect();
+        assert_eq!(values, vec![1.5, 2.5, 3.5, 4.5]);
+    }
+
+    #[test]
+    fn a_grid_with_a_no_data_value_keeps_the_ascii_path() {
+        let text = "ncols 1\nnrows 1\nxllcorner 0\nyllcorner 0\ncellsize 1\nnodata_value -9999\n1\n";
+        assert!(read_ascii(text).is_err());
+    }
+
+    #[test]
+    fn a_centre_header_moves_the_origin_half_a_cell() {
+        let grid = read_ascii("ncols 1\nnrows 1\nxllcenter 10\nyllcenter 20\ncellsize 2\n7\n")
+            .expect("a 1 by 1 grid");
+        assert_eq!((grid.x, grid.y), (9.0, 21.0));
+    }
+
+    /// The conversion lands whole: the temporary strip goes when the grid is written.
+    #[test]
+    fn a_grid_file_becomes_the_tiff_beside_it() {
+        let dir = std::env::temp_dir().join(format!("wcs-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let asc = dir.join("g.asc");
+        std::fs::write(&asc, "ncols 2\nnrows 2\nxllcorner 10\nyllcorner 20\ncellsize 5\n1.5 2.5\n3.5 4.5\n")
+            .unwrap();
+        let tif = dir.join("g.tif");
+        write_grid(&asc, &tif).unwrap();
+        assert!(tif.exists());
+        assert!(!dir.join("g.tif.part").exists(), "the temporary file stays");
+        assert_eq!(&std::fs::read(&tif).unwrap()[0..2], b"II");
+        let _ = std::fs::remove_dir_all(&dir);
     }
 }

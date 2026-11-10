@@ -129,12 +129,15 @@ zaczyna.
 
 Ortofoto kładzie się jak jest. Model wysokości dostaje wygląd: `colours` domyślnie, `classes` albo
 `shading` parametrem `look`. Pokrycia GeoTIFF idą przez pobieranie aplikacji, więc okno żyje. Siatka
-ASCII idzie przez wtyczkę, która pisze `.prj` umieszczający ją w układzie, więc duży model trzyma
-okno na czas transferu.
+ASCII idzie przez wtyczkę, która raz zamienia ją na GeoTIFF float32 z EPSG:2180 w środku, i dodaje
+ten plik. Aplikacja czyta raster około dziewięć razy szybciej niż tekst, a cache trzyma 4,9 MB
+zamiast 28. Siatka z wartością NODATA zostaje tekstem z plikiem `.prj`. Drugie dodanie tego samego
+obszaru czyta GeoTIFF i pomija pobieranie.
 
 Zmierzone 2026-11-10: prostokąt 1 km modelu terenu w GeoTIFF to 4096 × 4096 komórek, 67 MB i 11 s.
 Ten sam prostokąt jako siatka ASCII to 1 107 × 1 107 komórek, 24 MB i 12 s, bo tekst kosztuje 19,6
-bajta na komórkę, a nie cztery.
+bajta na komórkę, a nie cztery. Siatka 1,2 mln komórek parsuje się w 0,18 s; jej GeoTIFF 4,9 MB
+czyta się w 0,02 s.
 
 ## Panel
 

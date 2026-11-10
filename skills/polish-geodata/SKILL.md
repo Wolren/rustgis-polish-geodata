@@ -124,6 +124,9 @@ that touch the area, so **Clip to layer** (`przytnij`) is what cuts them to the 
   refused with the cell that fits.
 - A height model gets `look` (`colours` by default, `classes` or `shading`); an orthophoto lands as
   it is. A model layer is named `NMT <cell> m <datum>`, so `dem-style` finds it.
+- An ASCII coverage is converted once into a float32 GeoTIFF with EPSG:2180 in the plugin's cache
+  (4.9 MB instead of 28); later adds and project opens read that. A grid with a no-data value stays
+  text, with a `.prj`.
 - `katalog` lists the eight under `coverages`, with their coverage ids.
 
 ## Lookups
