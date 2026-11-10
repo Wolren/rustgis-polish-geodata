@@ -659,14 +659,6 @@ pub fn bbox_used(lang: Lang, problem: ShapeProblem) -> String {
     .to_string()
 }
 
-pub fn wmts_needs_url(lang: Lang) -> String {
-    pick!(
-        lang,
-        "A WMTS layer needs a GetTile URL template.".to_string(),
-        "Warstwa WMTS potrzebuje szablonu adresu GetTile.".to_string()
-    )
-}
-
 pub fn wmts_no_layer(lang: Lang) -> String {
     pick!(
         lang,

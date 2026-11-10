@@ -100,8 +100,12 @@ that touch the area, so **Clip to layer** (`przytnij`) is what cuts them to the 
   read over its boundary, up to 50 000 features.
 - `zapisz-gpkg {"warstwa": "<layer>", "plik": "<path>"}` saves a vector layer as GeoPackage;
   a bare name goes to Documents, and the path is optional.
-- `wmts {"url": "<GetTile template with {z}, {x}, {y}>", "nazwa": "<name>"}` adds a WMTS overlay.
-- `dodaj-wcs {"url": "<GetCoverage URL>", "nazwa": "<name>"}` adds any WCS coverage.
+- `wmts` with no params adds the national ortho WMTS; with a template or capabilities URL it adds that service.
+- `dodaj-wcs {"url": "<GetCoverage URL>", "nazwa": "<name>"}` adds any WCS coverage; it stays off the ribbon,
+  which sends no params.
+- Ribbon check: run every new command with no params on the sample project, and every tool form with its
+  defaults. A tool cannot add layers or tiles. A feature that needs input needs a panel field, a default, or
+  no ribbon entry.
 - `eziudp {"instytucja": "GIOŚ"}` asks the live register, which needs a filter: the whole register is
   9 MB.
 - The panel's **Mapa** tree has a Register EZiUDP root: institution, then its WMS.

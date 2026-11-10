@@ -6,7 +6,12 @@ use quick_xml::events::Event;
 use quick_xml::Reader;
 use serde_json::{json, Value};
 
-/// A capabilities URL without a request is fetched, and its first layer becomes the template.
+/// The template a ribbon click adds: the national ortho over Web Mercator.
+pub const NATIONAL_ORTHO: &str = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMTS/StandardResolution\
+?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ORTOFOTOMAPA&STYLE=default&TILEMATRIXSET=EPSG:3857\
+&TILEMATRIX=EPSG:3857:{z}&TILEROW={y}&TILECOL={x}&FORMAT=image/jpeg";
+
+/// A click adds the national ortho; a URL adds that service instead, template or capabilities.
 pub fn add(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String> {
     let (url, name) = checked(params, lang)?;
     let template = if has_placeholders(&url) {
@@ -26,20 +31,20 @@ pub fn add(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String>
     Ok(json!({"name": name, "url": template}))
 }
 
-fn checked(params: &Value, lang: Lang) -> Result<(String, String), String> {
+fn checked(params: &Value, _lang: Lang) -> Result<(String, String), String> {
     let url = params
         .get("url")
         .and_then(Value::as_str)
         .map(str::trim)
         .filter(|url| !url.is_empty())
-        .ok_or_else(|| text::wmts_needs_url(lang))?;
+        .unwrap_or(NATIONAL_ORTHO);
     let name = params
         .get("nazwa")
         .or_else(|| params.get("name"))
         .and_then(Value::as_str)
         .map(str::trim)
         .filter(|name| !name.is_empty())
-        .unwrap_or("WMTS");
+        .unwrap_or("Ortofoto WMTS");
     Ok((url.to_string(), name.to_string()))
 }
 
