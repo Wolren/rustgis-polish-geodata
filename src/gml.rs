@@ -163,18 +163,27 @@ fn find_descendant<'a>(node: &'a Node, name: &str) -> Option<&'a Node> {
 /// Returns true when every pair ended in degrees; a pair still in metres comes from a service
 /// that ignored the requested CRS, and the caller should say so.
 pub fn normalize_lon_lat(features: &mut [Value]) -> bool {
+    normalize(features, None)
+}
+
+/// The same, for a grid answer: the requested area's box tells the two axis orders apart.
+pub fn normalize_in_area(features: &mut [Value], area: [f64; 4]) -> bool {
+    normalize(features, Some(area))
+}
+
+fn normalize(features: &mut [Value], area: Option<[f64; 4]>) -> bool {
     let mut degrees = true;
     for feature in features {
         if let Some(geometry) = feature.get_mut("geometry") {
             let mut here = true;
-            normalize_geometry(geometry, 0, &mut here);
+            normalize_geometry(geometry, 0, &mut here, area);
             degrees &= here;
         }
     }
     degrees
 }
 
-fn normalize_geometry(value: &mut Value, depth: usize, degrees: &mut bool) {
+fn normalize_geometry(value: &mut Value, depth: usize, degrees: &mut bool, area: Option<[f64; 4]>) {
     if depth > 8 {
         return;
     }
@@ -182,30 +191,58 @@ fn normalize_geometry(value: &mut Value, depth: usize, degrees: &mut bool) {
         if items.len() >= 2 && items[0].is_number() && items[1].is_number() {
             let first = items[0].as_f64().unwrap_or(0.0);
             let second = items[1].as_f64().unwrap_or(0.0);
-            let [lon, lat] = place(first, second);
+            let [lon, lat] = place(first, second, area);
             *degrees &= lon.abs() <= 180.0 && lat.abs() <= 90.0;
             items[0] = json!(lon);
             items[1] = json!(lat);
             return;
         }
         for item in items {
-            normalize_geometry(item, depth + 1, degrees);
+            normalize_geometry(item, depth + 1, degrees, area);
         }
     } else if let Some(object) = value.as_object_mut() {
         if let Some(coordinates) = object.get_mut("coordinates") {
-            normalize_geometry(coordinates, depth + 1, degrees);
+            normalize_geometry(coordinates, depth + 1, degrees, area);
         }
     }
 }
 
-fn place(first: f64, second: f64) -> [f64; 2] {
+fn place(first: f64, second: f64, area: Option<[f64; 4]>) -> [f64; 2] {
     if inside(first, second) {
         return [first, second];
     }
     if inside(second, first) {
         return [second, first];
     }
+    if !(first.abs() <= 180.0 && second.abs() <= 180.0) {
+        // EPSG:2180 metres: the requested area's box often tells the pair order apart.
+        let (lon1, lat1) = crate::gk92::inverse(first, second);
+        let (lon2, lat2) = crate::gk92::inverse(second, first);
+        if let Some(area) = area {
+            match (inside_area(lon1, lat1, area), inside_area(lon2, lat2, area)) {
+                (true, false) => return [lon1, lat1],
+                (false, true) => return [lon2, lat2],
+                _ => {}
+            }
+        }
+        let (in1, in2) = (inside(lon1, lat1), inside(lon2, lat2));
+        if in1 && !in2 {
+            return [lon1, lat1];
+        }
+        if in2 && !in1 {
+            return [lon2, lat2];
+        }
+    }
     [first, second]
+}
+
+/// The area box with a margin, so a feature on the edge still counts as inside.
+fn inside_area(lon: f64, lat: f64, area: [f64; 4]) -> bool {
+    const MARGIN: f64 = 0.1;
+    lon >= area[0] - MARGIN
+        && lon <= area[2] + MARGIN
+        && lat >= area[1] - MARGIN
+        && lat <= area[3] + MARGIN
 }
 
 fn inside(lon: f64, lat: f64) -> bool {
@@ -757,6 +794,19 @@ mod tests {
         assert_eq!(features[0]["geometry"]["coordinates"][0], json!(16.9));
         assert_eq!(features[0]["geometry"]["coordinates"][1], json!(52.4));
         assert_eq!(features[1]["geometry"]["coordinates"][0], json!(16.9));
+    }
+
+    #[test]
+    fn the_area_box_places_a_grid_pair_the_other_way_round() {
+        let (easting, northing) = crate::gk92::forward(16.925, 52.405);
+        // The receiving server wrote easting first; the area is a small box around the point.
+        let mut features = vec![json!({"geometry": {"type": "Point", "coordinates": [easting, northing]}})];
+        let area = [16.90, 52.38, 16.95, 52.42];
+        assert!(normalize_in_area(&mut features, area));
+        let pair = features[0]["geometry"]["coordinates"].as_array().expect("a pair");
+        let lon = pair[0].as_f64().expect("lon");
+        let lat = pair[1].as_f64().expect("lat");
+        assert!((lon - 16.925).abs() < 1e-6 && (lat - 52.405).abs() < 1e-6, "{lon} {lat}");
     }
 
     #[test]

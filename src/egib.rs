@@ -78,7 +78,7 @@ pub fn from_area(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, S
                 lat_first = true;
                 continue;
             }
-            if !gml::normalize_lon_lat(&mut rows) && !grid_warned {
+            if !gml::normalize_in_area(&mut rows, box_lon) && !grid_warned {
                 grid_warned = true;
                 host.notify(&text::register_grid_answer(lang, &service.name));
             }
@@ -371,7 +371,7 @@ pub fn from_register(host: &mut Host, params: &Value, lang: Lang) -> Result<Valu
                 lat_first = true;
                 continue;
             }
-            if !gml::normalize_lon_lat(&mut rows) && !grid_warned {
+            if !gml::normalize_in_area(&mut rows, box_lon) && !grid_warned {
                 grid_warned = true;
                 host.notify(&text::register_grid_answer(lang, &service.name));
             }
