@@ -156,7 +156,7 @@ fn gather(
     limit: u64,
     cap: usize,
 ) -> Result<Download, String> {
-    let areas = split_cells(layer, bbox);
+    let areas = areas_of(layer, bbox, polygon.is_some());
     report(&text::split_areas(lang, layer.name, areas.len()));
 
     // The budget is shared out, so a run of many cells cannot pass the limit.
@@ -441,6 +441,15 @@ fn extend(value: &Value, bounds: &mut [f64; 4], found: &mut bool) {
     }
 }
 
+/// The cells one attempt asks for: a filter already bounds the whole area, so it takes one.
+fn areas_of(layer: &WfsLayer, bbox: [f64; 4], filtered: bool) -> Vec<[f64; 4]> {
+    if filtered {
+        vec![bbox]
+    } else {
+        split_cells(layer, bbox)
+    }
+}
+
 /// The area itself, or four quadrants of it when it is wide.
 ///
 /// A service that ignores the area gets one cell, so its whole set is fetched once.
@@ -593,6 +602,14 @@ mod tests {
         assert!(url.contains("SRSNAME=EPSG:2180"), "{url}");
         assert!(url.contains("&FILTER=%3CFilter%3E"), "{url}");
         assert!(!url.contains("BBOX="), "a retry never widens past the drawn shape: {url}");
+    }
+
+    #[test]
+    fn a_filtered_request_keeps_one_cell() {
+        // The filter carries the whole area, so four cells would download the same page four times.
+        let layer = catalog::wfs_by_label("Granice gmin").unwrap();
+        assert_eq!(areas_of(layer, [14.0, 49.0, 24.0, 55.0], true).len(), 1);
+        assert_eq!(areas_of(layer, [14.0, 49.0, 24.0, 55.0], false).len(), 4);
     }
 
     #[test]
