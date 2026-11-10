@@ -1,6 +1,6 @@
 ---
 name: polish-geodata
-description: Polish national geodata in RustGIS: raster overlays, vector WFS datasets downloaded as layers, the county EGiB, a 3 296-address service register, 1 m elevation models with 3D terrain, and ULDK, UUG and NMT lookups. Use for Polish parcels, addresses, boundaries, orthophoto, protected areas, geology, elevation, and anything "z Geoportalu" or "z GUGiK".
+description: Polish national geodata in RustGIS: raster overlays, WCS coverages, vector WFS datasets downloaded as layers, the county EGiB, a 3 296-address service register, 1 m elevation models with 3D terrain, and ULDK, UUG and NMT lookups. Use for Polish parcels, addresses, boundaries, orthophoto, protected areas, geology, elevation, and anything "z Geoportalu" or "z GUGiK".
 ---
 
 # Polish geodata
@@ -12,7 +12,7 @@ Based on the plugin's README. Commands are `plugin:polish-geodata/<id>`, tools
 ## Two halves
 
 A **command** shows something at once: it adds a tile layer or a layer from ULDK. A **tool** runs in
-the background with progress and Cancel, and returns layers. Three elevation commands are the
+the background with progress and Cancel, and returns layers. The elevation and WCS commands are the
 exception: they download inside the command, because a tool cannot add a raster layer.
 
 ## Area first
@@ -105,6 +105,27 @@ that touch the area, so **Clip to layer** (`przytnij`) is what cuts them to the 
 - `dem-style {"layer": "…", "look": "classes"}` restyles a model already on the map.
 - A big grid waits for a second press within 120 s; the first press counts cells, MB and seconds.
 
+## Coverages (WCS)
+
+`wcs-<id>` commands add one of eight GUGiK coverages over the area, as a raster layer:
+
+| Command | Coverage | Format |
+| --- | --- | --- |
+| `wcs-orto-standard`, `wcs-orto-hi-res`, `wcs-orto-true` | the orthophoto series | GeoTIFF |
+| `wcs-nmt-kron86`, `wcs-nmt-evrf2007` | the terrain model in PL-KRON86-NH or PL-EVRF2007-NH | ASCII grid |
+| `wcs-nmt-kron86-tiff` | the terrain model as the publisher's float32 GeoTIFF | GeoTIFF |
+| `wcs-nmpt-kron86`, `wcs-nmpt-evrf2007` | the surface model in either datum | ASCII grid |
+
+- The area comes from a selection on the active layer, the drawn area layer, or the active vector
+  layer, as the elevation model does. An area whose centre is outside the coverage's bounds is
+  refused, with the bounds named.
+- `{"service": "<command or label>", "rozdzielczosc": 1}`: the cell follows the area;
+  `rozdzielczosc` asks for a coarser cell in metres. A finer cell than the 12 s budget allows is
+  refused with the cell that fits.
+- A height model gets `look` (`colours` by default, `classes` or `shading`); an orthophoto lands as
+  it is. A model layer is named `NMT <cell> m <datum>`, so `dem-style` finds it.
+- `katalog` lists the eight under `coverages`, with their coverage ids.
+
 ## Lookups
 
 | Command | What it answers |
@@ -142,7 +163,8 @@ the name. A script may pass `{"name": "x.csv", "data": <base64>}` instead.
 
 `katalog` lists the overlays: 112 WMS, including GUGiK (76), historical maps, PIG geology, NID, BDL,
 IMGW, GUS, Wody Polskie (32 services) and Cartomatic (45 maps). Each is one command that adds a tile
-layer, and a second run of the same command removes it.
+layer, and a second run of the same command removes it. The same list holds the eight WCS coverages
+under `coverages`; those add a raster of the area instead.
 
 `wody-warstwy {"usluga": "wody-apgw"}` lists a service's layers with their titles, and
 `wody-apgw {"warstwa": "Główne rzeki"}` puts one layer on the map instead of all of them.

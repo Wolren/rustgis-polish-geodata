@@ -1,0 +1,162 @@
+[
+  {
+    "id": "orto-standard",
+    "cmd": "wcs-orto-standard",
+    "label": "Ortofoto standard (WCS)",
+    "source": "GUGiK · geoportal.gov.pl",
+    "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WCS/StandardResolution",
+    "coverage": "Orthoimagery_StandardResolution",
+    "box": [
+      13.704659,
+      48.644613,
+      24.8676,
+      55.031987
+    ],
+    "crs": "EPSG:2180",
+    "format": "GEOTIFF",
+    "kind": "imagery",
+    "theme": "ortho",
+    "datum": "",
+    "probe": "GEOTIFF 64 x 64 over Poznan"
+  },
+  {
+    "id": "orto-hi-res",
+    "cmd": "wcs-orto-hi-res",
+    "label": "Ortofoto hi-res (WCS)",
+    "source": "GUGiK · geoportal.gov.pl",
+    "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WCS/HighResolution",
+    "coverage": "Orthoimagery_High_Resolution",
+    "box": [
+      13.704659,
+      48.644613,
+      24.8676,
+      55.031987
+    ],
+    "crs": "EPSG:2180",
+    "format": "GEOTIFF",
+    "kind": "imagery",
+    "theme": "ortho",
+    "datum": "",
+    "probe": "GEOTIFF 64 x 64 over Poznan"
+  },
+  {
+    "id": "orto-true",
+    "cmd": "wcs-orto-true",
+    "label": "Ortofoto prawdziwe (WCS)",
+    "source": "GUGiK · geoportal.gov.pl",
+    "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WCS/TrueOrto",
+    "coverage": "True_Orthoimagery",
+    "box": [
+      13.704659,
+      48.644613,
+      24.8676,
+      55.031987
+    ],
+    "crs": "EPSG:2180",
+    "format": "GEOTIFF",
+    "kind": "imagery",
+    "theme": "ortho",
+    "datum": "",
+    "probe": "GEOTIFF 64 x 64 over Poznan"
+  },
+  {
+    "id": "nmt-kron86",
+    "cmd": "wcs-nmt-kron86",
+    "label": "NMT KRON86 (WCS)",
+    "source": "GUGiK · geoportal.gov.pl",
+    "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/NMT/GRID1/WCS/DigitalTerrainModel",
+    "coverage": "DTM_PL-KRON86-NH",
+    "box": [
+      13.704659,
+      48.644613,
+      24.8676,
+      55.031987
+    ],
+    "crs": "EPSG:2180",
+    "format": "image/x-aaigrid",
+    "kind": "terrain",
+    "theme": "models",
+    "datum": "PL-KRON86-NH",
+    "probe": "image/x-aaigrid 64 x 64 over Poznan"
+  },
+  {
+    "id": "nmt-evrf2007",
+    "cmd": "wcs-nmt-evrf2007",
+    "label": "NMT EVRF2007 (WCS)",
+    "source": "GUGiK · geoportal.gov.pl",
+    "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/NMT/GRID1/WCS/DigitalTerrainModel",
+    "coverage": "DTM_PL-EVRF2007-NH",
+    "box": [
+      13.704659,
+      48.644613,
+      24.8676,
+      55.031987
+    ],
+    "crs": "EPSG:2180",
+    "format": "image/x-aaigrid",
+    "kind": "terrain",
+    "theme": "models",
+    "datum": "PL-EVRF2007-NH",
+    "probe": "image/x-aaigrid 64 x 64 over Poznan"
+  },
+  {
+    "id": "nmt-kron86-tiff",
+    "cmd": "wcs-nmt-kron86-tiff",
+    "label": "NMT KRON86 TIFF (WCS)",
+    "source": "GUGiK · geoportal.gov.pl",
+    "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/NMT/GRID1/WCS/DigitalTerrainModelFormatTIFF",
+    "coverage": "DTM_PL-KRON86-NH_TIFF",
+    "box": [
+      13.704659,
+      48.644613,
+      24.8676,
+      55.031987
+    ],
+    "crs": "EPSG:2180",
+    "format": "image/tiff",
+    "kind": "terrain",
+    "theme": "models",
+    "datum": "PL-KRON86-NH",
+    "probe": "image/tiff 64 x 64 over Poznan"
+  },
+  {
+    "id": "nmpt-kron86",
+    "cmd": "wcs-nmpt-kron86",
+    "label": "NMPT KRON86 (WCS)",
+    "source": "GUGiK · geoportal.gov.pl",
+    "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/NMPT/GRID1/WCS/DigitalSurfaceModel",
+    "coverage": "DSM_PL-KRON86-NH",
+    "box": [
+      13.704659,
+      48.644613,
+      24.8676,
+      55.031987
+    ],
+    "crs": "EPSG:2180",
+    "format": "image/x-aaigrid",
+    "kind": "surface",
+    "theme": "models",
+    "datum": "PL-KRON86-NH",
+    "probe": "image/x-aaigrid 64 x 64 over Poznan"
+  },
+  {
+    "id": "nmpt-evrf2007",
+    "cmd": "wcs-nmpt-evrf2007",
+    "label": "NMPT EVRF2007 (WCS)",
+    "source": "GUGiK · geoportal.gov.pl",
+    "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/NMPT/GRID1/WCS/DigitalSurfaceModel",
+    "coverage": "DSM_PL-EVRF2007-NH",
+    "box": [
+      13.704659,
+      48.644613,
+      24.8676,
+      55.031987
+    ],
+    "crs": "EPSG:2180",
+    "format": "image/x-aaigrid",
+    "kind": "surface",
+    "theme": "models",
+    "datum": "PL-EVRF2007-NH",
+    "probe": "image/x-aaigrid 64 x 64 over Poznan"
+  }
+]

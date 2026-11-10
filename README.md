@@ -1,11 +1,12 @@
 # Polish Geodata for RustGIS
 
-One tab for Polish public geodata: 112 raster overlays, and the national vector data downloaded as
-editable layers.
+One tab for Polish public geodata: 112 raster overlays, 8 WCS coverages, and the national vector data
+downloaded as editable layers.
 
 | What it gives you | Detail |
 | --- | --- |
 | Raster overlays | 112 WMS: orthophoto, BDOT10k, parcels, addresses, boundaries, place names, historical maps, geology, protected areas, Wody Polskie, Cartomatic |
+| WCS coverages | 8 GUGiK coverages: three orthophoto series and five terrain or surface models, as a raster of the area |
 | Vector download | 106 WFS datasets and 162 sheet indexes, as layers with progress and Cancel |
 | Protected areas | 15 GDOŚ types: national parks, reserves, Natura 2000, landscape parks |
 | County parcels | `dzialki-powiat`: the county's own EGiB, paged to 20 000 features |
@@ -15,12 +16,12 @@ editable layers.
 | Clip | any layer to a boundary, in the panel or in the same run with `przytnij` |
 | Elevation | three 1 m models, three looks, 3D terrain with a vertical scale |
 | Lookups | parcel by identifier or point, address and reverse address, height, obręb lists, CSV runs |
-| Agent ready | 236 commands, 13 tools, every command declaring its arguments, a skill for the assistant |
+| Agent ready | 248 commands, 14 tools, every command declaring its arguments, a skill for the assistant |
 
 ![The Polish Geodata tab](assets/ribbon-pl.png)
 
-Seven groups hold the tab: basemaps, area, tools, WMS overlays, downloads, elevation and lookups.
-Data names stay as they are published, so the tab reads the same in either language.
+Eight groups hold the tab: basemaps, area, tools, WMS overlays, WCS coverages, downloads, elevation
+and lookups. Data names stay as they are published, so the tab reads the same in either language.
 
 ![The same tab in English](assets/tab-en.png)
 
@@ -78,12 +79,13 @@ RustGIS 0.5.0 or newer.
 | **Area** | area from the view, draw, rectangle, adopt, cancel, remove |
 | **Tools** | the panel and the clip to a boundary |
 | **WMS overlays** | ten menus: GUGiK (76 through three menus), historical maps (11), PIG geology (11), institutions and heritage (17), Wody Polskie (32), Cartomatic (45 through two menus), Register (6) |
+| **WCS (coverage)** | eight coverages through two menus: three orthophoto series, five terrain and surface models |
 | **Downloads** | six WFS tools, four package tools, protected areas (GDOŚ), the county EGiB, any register WFS |
 | **Elevation** | three elevation models, a look switch, 3D terrain and its switch off |
 | **Lookups** | parcel, address, height, find a service, update the register, obręby, the view's register |
 
 One rule holds the tab together: **a command shows something at once, a tool downloads in the
-background**, with progress and a Cancel button. The exception is the three elevation commands,
+background**, with progress and a Cancel button. The exception is the elevation and WCS commands,
 because a tool cannot add a raster layer.
 
 Every download lands as a layer you can select, clip, style and export. A WFS filter returns whole
@@ -211,6 +213,39 @@ A big grid waits for a second press. The first press counts cells, MB and second
 nothing. The second press, within 120 s, downloads. A small grid goes at once, and a grid already in
 the cache needs no press at all.
 
+## Coverages (WCS)
+
+Eight GUGiK coverages arrive as a raster of the area: three orthophoto series and five terrain or
+surface models. These are the service's own products, so the cell follows the area instead of a
+fixed 1 m. One click may hold the window for 12 s, and the plugin picks the finest cell whose
+transfer fits that budget at the measured speed.
+
+| Command | Coverage | Format |
+| --- | --- | --- |
+| `wcs-orto-standard` | `Orthoimagery_StandardResolution` | GeoTIFF |
+| `wcs-orto-hi-res` | `Orthoimagery_High_Resolution` | GeoTIFF |
+| `wcs-orto-true` | `True_Orthoimagery` | GeoTIFF |
+| `wcs-nmt-kron86` | `DTM_PL-KRON86-NH` | ASCII grid |
+| `wcs-nmt-evrf2007` | `DTM_PL-EVRF2007-NH` | ASCII grid |
+| `wcs-nmt-kron86-tiff` | `DTM_PL-KRON86-NH_TIFF` | GeoTIFF |
+| `wcs-nmpt-kron86` | `DSM_PL-KRON86-NH` | ASCII grid |
+| `wcs-nmpt-evrf2007` | `DSM_PL-EVRF2007-NH` | ASCII grid |
+
+Every coverage needs an area: a selection on the active layer, the drawn area layer, or the active
+vector layer, as the elevation model does. An area whose centre is outside the coverage's own bounds
+is refused, and the message names those bounds. `rozdzielczosc` asks for a coarser cell in metres,
+for example `{"service": "Ortofoto hi-res (WCS)", "rozdzielczosc": 0.5}`. A finer cell than the
+budget allows is refused with the cell that fits, so a whole-voivodeship 1 m model never starts.
+
+An orthophoto lands as it is. A height model gets a look: `colours` by default, `classes` or
+`shading` with `look`. The GeoTIFF coverages pass through the app's own download, so the window
+keeps running. An ASCII grid comes through the plugin, which writes the `.prj` that places it, so a
+big model holds the window for its transfer.
+
+Measured on 2026-11-10: a 1 km box of the GeoTIFF terrain model is 4096 × 4096 cells, 67 MB and
+11 s. The same box as an ASCII grid is 1 107 × 1 107 cells, 24 MB and 12 s, because the text costs
+19.6 bytes a cell against four.
+
 ## Register of services
 
 `data/eziudp.json` carries 3 296 addresses. Each one answered a real request when the register was
@@ -250,6 +285,7 @@ puts one layer on the map instead of all of them.
 run_command  plugin:polish-geodata/katalog   {}
 run_command  plugin:polish-geodata/zrodla    {"instytucja": "GIOŚ", "rodzaj": "wms"}
 run_command  plugin:polish-geodata/mapa      {"panel": {"mapa": "v:bdot"}}
+run_command  plugin:polish-geodata/wcs-orto-hi-res  {"service": "Ortofoto hi-res (WCS)", "rozdzielczosc": 1}
 run_tool     plugin:polish-geodata/pobierz-granice  {"dane": "A03_Granice_gmin", "obszar": "Obszar pobierania"}
 ```
 
@@ -263,6 +299,7 @@ commands, the limits and the download tools while the plugin is on.
 ## Limits
 
 - A download ends at 6 000 features. A bigger area gets a count and a refusal.
+- A WCS coverage at a cell finer than its 12 s budget allows is refused; the message names the cell that fits.
 - The clip cuts by the boundary's box, not by its polygons.
 - Wody Polskie commands put all of a service's layers on the map unless `warstwa` names one.
 - A county may publish several WFS addresses. The county EGiB command tries each before it refuses.
@@ -276,12 +313,12 @@ commands, the limits and the download tools while the plugin is on.
 | Path | What it is |
 | --- | --- |
 | `src/` | the plugin, one module per subject |
-| `data/` | the catalogues: services, WFS datasets, Wody, Cartomatic, GDOŚ, PIG, register, ribbon |
+| `data/` | the catalogues: services, WFS datasets, WCS coverages, Wody, Cartomatic, GDOŚ, PIG, register, ribbon |
 | `tools/` | the builders that prove every address written to `data/`, plus the fuzzer |
 | `packaging/` | the packager in Rust, which writes `.rgplugin` |
 | `plugin.json` | generated from `data/` and `tools/manifest.base.json` |
 
-`plugin.json` carries 236 commands, 13 tools and 209 Polish translations. It is generated, so change
+`plugin.json` carries 248 commands, 14 tools and 231 Polish translations. It is generated, so change
 `tools/manifest.base.json`.
 
 ```powershell

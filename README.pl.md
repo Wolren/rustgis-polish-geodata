@@ -2,9 +2,9 @@
 
 Wersja polska. Wersja angielska, wysyłana w paczce: [README.md](README.md).
 
-Jedna zakładka z polskimi danymi publicznymi: podkładami, działkami, adresami, granicami,
-obszarami chronionymi, geologią, modelami wysokości i przeszukiwalnym rejestrem 3 296 adresów
-WMS i WFS.
+Jedna zakładka z polskimi danymi publicznymi: podkładami, pokryciami WCS, działkami, adresami,
+granicami, obszarami chronionymi, geologią, modelami wysokości i przeszukiwalnym rejestrem 3 296
+adresów WMS i WFS.
 
 ## Instalacja
 
@@ -28,6 +28,7 @@ Pythona ani GDAL-a. Wymaga RustGIS 0.5.0 lub nowszego.
 | **Obszar** | obszar z widoku, rysowanie, prostokąt, przejęcie, anulowanie, usuwanie |
 | **Narzędzia** | panel i przycinanie do granicy |
 | **WMS (podgląd)** | GUGiK (76), mapy historyczne (11), geologia PIG (11), NID (4), BDL (4), pozostałe instytucje (w tym IMGW 4 i GUS 2), **Więcej map** (Wody Polskie 30, Cartomatic 45), **Rejestr** (6) |
+| **WCS (pokrycia)** | osiem pokryć w dwóch menu: trzy serie ortofoto, pięć modeli terenu i pokrycia |
 | **Pobieranie** | sześć narzędzi WFS, cztery narzędzia paczek, ochrona przyrody (GDOŚ) |
 | **Wysokości** | trzy modele wysokości, styl, teren 3D i jego wyłączenie |
 | **Wyszukiwanie** | działka, adres, wysokość, znajdź usługę, aktualizacja rejestru |
@@ -39,8 +40,8 @@ Pythona ani GDAL-a. Wymaga RustGIS 0.5.0 lub nowszego.
 ![Działki powiatu z tabelą atrybutów](assets/attributes-en.png)
 
 Zakładkę trzyma jedna zasada: **polecenie pokazuje coś od razu, narzędzie pobiera w tle**, z
-postępem i przyciskiem Anuluj. Wyjątkiem są trzy polecenia wysokości, bo narzędzie nie umie dodać
-warstwy rastrowej.
+postępem i przyciskiem Anuluj. Wyjątkiem są polecenia wysokości i pokryć WCS, bo narzędzie nie umie
+dodać warstwy rastrowej.
 
 ## Obszar
 
@@ -101,6 +102,40 @@ Duża siatka wysokości czeka na drugie naciśnięcie. Pierwsze liczy komórki, 
 pobiera. Drugie, w ciągu 120 s, pobiera. Mała siatka idzie od razu, a pobrana wcześniej liczy się z
 pliku w cache.
 
+## Pokrycia (WCS)
+
+Osiem pokryć GUGiK wraca jako raster obszaru: trzy serie ortofoto i pięć modeli terenu lub pokrycia.
+To surowe produkty usługi, więc komórka idzie za obszarem, a nie za stałym 1 m. Jedno kliknięcie może
+trzymać okno 12 s, a wtyczka wybiera najdrobniejszą komórkę, której transfer mieści się w tym
+budżecie przy zmierzonej prędkości.
+
+| Polecenie | Pokrycie | Format |
+| --- | --- | --- |
+| `wcs-orto-standard` | `Orthoimagery_StandardResolution` | GeoTIFF |
+| `wcs-orto-hi-res` | `Orthoimagery_High_Resolution` | GeoTIFF |
+| `wcs-orto-true` | `True_Orthoimagery` | GeoTIFF |
+| `wcs-nmt-kron86` | `DTM_PL-KRON86-NH` | siatka ASCII |
+| `wcs-nmt-evrf2007` | `DTM_PL-EVRF2007-NH` | siatka ASCII |
+| `wcs-nmt-kron86-tiff` | `DTM_PL-KRON86-NH_TIFF` | GeoTIFF |
+| `wcs-nmpt-kron86` | `DSM_PL-KRON86-NH` | siatka ASCII |
+| `wcs-nmpt-evrf2007` | `DSM_PL-EVRF2007-NH` | siatka ASCII |
+
+Każde pokrycie potrzebuje obszaru: zaznaczenia na aktywnej warstwie, warstwy obszaru albo aktywnej
+warstwy wektorowej, tak jak model wysokości. Obszar, którego środek leży poza zasięgiem pokrycia,
+jest odrzucany, a komunikat podaje ten zasięg. `rozdzielczosc` prosi o grubszą komórkę w metrach,
+np. `{"service": "Ortofoto hi-res (WCS)", "rozdzielczosc": 0.5}`. Komórka drobniejsza, niż pozwala
+budżet, jest odrzucana z podaniem tej, która się mieści, więc model 1 m dla całego województwa nie
+zaczyna.
+
+Ortofoto kładzie się jak jest. Model wysokości dostaje wygląd: `colours` domyślnie, `classes` albo
+`shading` parametrem `look`. Pokrycia GeoTIFF idą przez pobieranie aplikacji, więc okno żyje. Siatka
+ASCII idzie przez wtyczkę, która pisze `.prj` umieszczający ją w układzie, więc duży model trzyma
+okno na czas transferu.
+
+Zmierzone 2026-11-10: prostokąt 1 km modelu terenu w GeoTIFF to 4096 × 4096 komórek, 67 MB i 11 s.
+Ten sam prostokąt jako siatka ASCII to 1 107 × 1 107 komórek, 24 MB i 12 s, bo tekst kosztuje 19,6
+bajta na komórkę, a nie cztery.
+
 ## Panel
 
 Panel grupuje wszystko, czego potrzebuje jeden przebieg: statusy (widok, obszar, para „warstwa →
@@ -147,6 +182,7 @@ warstwę zamiast wszystkich. Tytuły pochodzą z `GetCapabilities` i leżą w `d
 run_command  plugin:polish-geodata/katalog   {}
 run_command  plugin:polish-geodata/zrodla    {"instytucja": "GIOŚ", "rodzaj": "wms"}
 run_command  plugin:polish-geodata/mapa      {"panel": {"mapa": "v:bdot"}}
+run_command  plugin:polish-geodata/wcs-orto-hi-res  {"service": "Ortofoto hi-res (WCS)", "rozdzielczosc": 1}
 run_tool     plugin:polish-geodata/pobierz-granice  {"dane": "A03_Granice_gmin", "obszar": "Obszar pobierania"}
 ```
 
@@ -157,6 +193,7 @@ narzędzia pobierania, dopóki wtyczka jest włączona.
 ## Ograniczenia
 
 - Pobranie kończy się na 6 000 obiektach. Większy obszar dostaje licznik i przerwanie.
+- Pokrycie WCS w komórce drobniejszej, niż pozwala jego budżet 12 s, jest odrzucane; komunikat podaje komórkę, która się mieści.
 - Przycinanie tnie po zasięgu granicy, nie po jej poligonach.
 - Polecenia Wody Polskie pokazują wszystkie warstwy usługi. Nie ma wyboru jednej warstwy.
 - WFS GUGiK odpowiada tylko GML-em. Wtyczka zamienia go lokalnie na GeoJSON.
@@ -168,12 +205,12 @@ narzędzia pobierania, dopóki wtyczka jest włączona.
 | Ścieżka | Co to |
 | --- | --- |
 | `src/` | wtyczka, jeden moduł na temat |
-| `data/` | katalogi: usługi, zbiory WFS, Wody, Cartomatic, GDOŚ, PIG, rejestr, wstęga |
+| `data/` | katalogi: usługi, zbiory WFS, pokrycia WCS, Wody, Cartomatic, GDOŚ, PIG, rejestr, wstęga |
 | `tools/` | budowniczowie, którzy dowodzą każdy adres zapisany do `data/`, i fuzzer pobierania |
 | `packaging/` | pakowacz w Rust, który robi `.rgplugin` |
 | `plugin.json` | generowany z `data/` i `tools/manifest.base.json` |
 
-`plugin.json` niesie 223 polecenia, 11 narzędzi i 178 polskich tłumaczeń. Jest generowany, więc
+`plugin.json` niesie 248 poleceń, 14 narzędzi i 231 polskich tłumaczeń. Jest generowany, więc
 zmieniaj `tools/manifest.base.json`.
 
 ```powershell

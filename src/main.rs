@@ -34,6 +34,7 @@ mod tm;
 mod tool;
 mod uug;
 mod uldk;
+mod wcs;
 mod wfs;
 mod zrodla;
 
@@ -121,6 +122,8 @@ fn run(
         "obszar-anuluj" => obszar::abort(host, lang),
         "obszar-wyczysc" => obszar::clear(host, lang),
         other if other.starts_with("usluga-") => services::toggle(host, lang, request),
+        // The WCS catalogue names its own commands, one per coverage.
+        other if other.starts_with("wcs-") => wcs::add(host, lang, request),
         "katalog" => katalog::run(params, lang),
         "eziudp" => eziudp::search(params, lang),
         "wody-warstwy" => tile::wody_layers(params, lang),

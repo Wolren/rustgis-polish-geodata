@@ -27,6 +27,7 @@ BASE = os.path.join(ROOT, "tools", "manifest.base.json")
 SERVICES = os.path.join(ROOT, "data", "services.json")
 PIG = os.path.join(ROOT, "data", "pig.json")
 WFS = os.path.join(ROOT, "data", "wfs.json")
+WCS = os.path.join(ROOT, "data", "wcs.json")
 WODY = os.path.join(ROOT, "data", "wody.json")
 CARTO = os.path.join(ROOT, "data", "cartomatic.json")
 GDOS = os.path.join(ROOT, "data", "gdos.json")
@@ -99,6 +100,38 @@ def family(path, name):
         if not file.get(key):
             raise Bad(f"data/{name}.json: no '{key}'")
     return file
+
+
+def wcs_catalogue():
+    """The WCS coverages, in the order the file lists them, one ribbon command each."""
+    if not os.path.exists(WCS):
+        raise Bad("data/wcs.json is missing: it holds the coverage catalogue")
+    entries = load(WCS)
+    if not entries:
+        raise Bad("data/wcs.json lists no coverage")
+    for entry in entries:
+        for key in ("id", "cmd", "label", "url", "coverage", "box", "crs", "format", "kind", "theme"):
+            if not entry.get(key):
+                raise Bad(f"data/wcs.json: {entry.get('id', '?')} has no '{key}'")
+        if not entry["cmd"].startswith("wcs-"):
+            raise Bad(f"data/wcs.json: {entry['id']} names the command {entry['cmd']}")
+    return entries
+
+
+def wcs_menus(entries, themes):
+    """One menu per coverage theme, in the order the manifest names the themes."""
+    menus = []
+    for theme, meta in themes.items():
+        leaves = [entry["cmd"] for entry in entries if entry["theme"] == theme]
+        if not leaves:
+            raise Bad(f"WCS theme '{theme}' has no coverage in data/wcs.json")
+        if len(leaves) > MAX_MENU_ITEMS:
+            raise Bad(f"WCS menu '{meta['menu']}': {len(leaves)} entries")
+        menus.append({"menu": meta["menu"], "icon": meta["icon"], "help": meta["help"], "items": leaves})
+    unknown = sorted({entry["theme"] for entry in entries} - set(themes))
+    if unknown:
+        raise Bad(f"data/wcs.json: theme '{unknown[0]}' has no menu in tools/manifest.base.json")
+    return menus
 
 
 def warstw(count):
@@ -316,6 +349,7 @@ def build():
         services = services + load(PIG)
     wody_file = family(WODY, "wody")
     carto_file = family(CARTO, "cartomatic")
+    wcs_file = wcs_catalogue()
     if not wody_file.get("services"):
         raise Bad("data/wody.json lists no service")
     if not carto_file.get("maps"):
@@ -493,6 +527,20 @@ def build():
     commands.extend(wody_commands + carto_commands)
     titles = {command["id"]: command["label"] for command in wody_commands + carto_commands}
 
+    # One command per WCS coverage. The label is the published product name, so it stays Polish.
+    wcs_commands = []
+    for entry in wcs_file:
+        wcs_commands.append(
+            {
+                "id": entry["cmd"],
+                "label": entry["label"],
+                "icon": "basemap" if entry["kind"] == "imagery" else "relief",
+                "help": f"{entry['label']} \u00b7 {entry['source']}",
+                "params": json.dumps({"service": entry["label"]}, ensure_ascii=False),
+            }
+        )
+    commands.extend(wcs_commands)
+
     ids = [c["id"] for c in commands]
     for command_id in ids:
         if not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", command_id):
@@ -557,6 +605,9 @@ def build():
             # The host's GroupDecl has no `menus`: expand them into items; inline items follow them.
             group["items"] = [menu_decl(key, menus, folders) for key in group.pop("menus")] + group.get("items", [])
             group["items"] = flatten_folders(group["items"])
+        if group.pop("wcs", False):
+            # The coverage catalogue fills its own group, one menu per theme.
+            group["items"] = wcs_menus(wcs_file, base["wcs"]["themes"])
         limit = MAX_GROUP_ITEMS[layout]
         if not 1 <= len(group["items"]) <= limit:
             raise Bad(
@@ -572,7 +623,7 @@ def build():
     unlisted = [s["cmd"] for s in services if s["cmd"] not in listed]
     if unlisted:
         raise Bad(f"service not in a menu: {', '.join(unlisted[:5])}")
-    for name, family_commands in (("wody", wody_commands), ("cartomatic", carto_commands)):
+    for name, family_commands in (("wody", wody_commands), ("cartomatic", carto_commands), ("WCS", wcs_commands)):
         unlisted = [c["id"] for c in family_commands if c["id"] not in listed]
         if unlisted:
             raise Bad(f"{name} command in no menu: {', '.join(unlisted[:5])}")
@@ -611,7 +662,7 @@ def interface_strings(manifest, literal):
         menu_strings(group["items"], strings)
     for command in manifest["commands"]:
         # A service's label is its official GUGiK name, the same in both languages.
-        if command["id"].startswith("usluga-"):
+        if command["id"].startswith(("usluga-", "wcs-")):
             continue
         strings.add(command["label"])
         if command.get("help"):

@@ -3,7 +3,7 @@
     "id": "polish-geodata",
     "name": "Polish Geodata",
     "version": "0.1.4",
-    "description": "Polish national geodata in one tab: 112 raster overlays, 106 WFS datasets and 162 sheet indexes downloaded as editable layers with progress and Cancel, 15 GDOŚ protected-area types, the county EGiB as parcels, a 3 296-address service register with an update tool, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.",
+    "description": "Polish national geodata in one tab: 112 raster overlays, 8 WCS coverages, 106 WFS datasets and 162 sheet indexes downloaded as editable layers with progress and Cancel, 15 GDOŚ protected-area types, the county EGiB as parcels, a 3 296-address service register with an update tool, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.",
     "author": "Wolren",
     "license": "MIT",
     "runtime": "process",
@@ -973,6 +973,11 @@
         ]
       },
       {
+        "label": "WCS (coverage)",
+        "layout": "small",
+        "wcs": true
+      },
+      {
         "label": "Downloads",
         "layout": "small",
         "items": [
@@ -1371,7 +1376,7 @@
       "Header name of the identifier column; the first column when left out.": "Nazwa nagłówka kolumny z identyfikatorem; bez niej pierwsza kolumna.",
       "Rows to check": "Wiersze do sprawdzenia",
       "200 by default, 2000 at most.": "Domyślnie 200, najwyżej 2000.",
-      "Polish national geodata in one tab: 112 raster overlays, 106 WFS datasets and 162 sheet indexes downloaded as editable layers with progress and Cancel, 15 GDOŚ protected-area types, the county EGiB as parcels, a 3 296-address service register with an update tool, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.": "Polskie dane narodowe w jednej zakładce: 112 nakładek rastrowych, 106 zbiorów WFS i 162 skorowidze pobierane jako warstwy edytowalne z postępem i Anuluj, 15 typów obszarów chronionych GDOŚ, EGiB powiatu jako działki, rejestr 3 296 adresów usług z narzędziem aktualizacji, model wysokości 1 m z terenem 3D oraz wyszukiwania ULDK, UUG i NMT.",
+      "Polish national geodata in one tab: 112 raster overlays, 8 WCS coverages, 106 WFS datasets and 162 sheet indexes downloaded as editable layers with progress and Cancel, 15 GDOŚ protected-area types, the county EGiB as parcels, a 3 296-address service register with an update tool, a 1 m elevation model with 3D terrain, and ULDK, UUG and NMT lookups.": "Polskie dane narodowe w jednej zakładce: 112 nakładek rastrowych, 8 pokryć WCS, 106 zbiorów WFS i 162 skorowidze pobierane jako warstwy edytowalne z postępem i Anuluj, 15 typów obszarów chronionych GDOŚ, EGiB powiatu jako działki, rejestr 3 296 adresów usług z narzędziem aktualizacji, model wysokości 1 m z terenem 3D oraz wyszukiwania ULDK, UUG i NMT.",
       "12 by default; 0 checks every new address, which takes hours.": "Domyślnie 12; 0 sprawdza każdy nowy adres, co trwa godzinami.",
       "GUGiK maps and more": "GUGiK: mapy i inne",
       "Institutions and heritage": "Instytucje i dziedzictwo",
@@ -1406,7 +1411,11 @@
       "Powiat or gmina (empty uses the unit chosen in the panel)": "Powiat albo gmina (puste = jednostka z panelu)",
       "A name or a TERYT code such as 1416 or Ostrowski. Leave it empty to use the unit chosen in the panel tree.": "Nazwa albo kod TERYT, np. 1416. Puste pole bierze jednostkę wybraną w drzewie panelu.",
       "Elevation model at 5 m": "Model wysokości co 5 m",
-      "One cell per five metres: twenty-five times less data, and a slow click becomes short.": "Jedna komórka na pięć metrów: dwadzieścia pięć razy mniej danych i krótsze oczekiwanie."
+      "One cell per five metres: twenty-five times less data, and a slow click becomes short.": "Jedna komórka na pięć metrów: dwadzieścia pięć razy mniej danych i krótsze oczekiwanie.",
+      "WCS (coverage)": "WCS (pokrycia)",
+      "Height models": "Modele wysokości",
+      "The orthophoto coverages of the area, as a raster the map keeps.": "Pokrycia ortofoto obszaru, jako raster, który zostaje na mapie.",
+      "The terrain and surface models of the area, at the cell the area needs.": "Modele terenu i pokrycia obszaru, w komórce, jakiej potrzebuje obszar."
     }
   },
   "moreMaps": {
@@ -1417,6 +1426,20 @@
     "series": {
       "plans": "City plans and atlases",
       "topo": "Topographic and survey maps"
+    }
+  },
+  "wcs": {
+    "themes": {
+      "ortho": {
+        "menu": "Orthophoto",
+        "icon": "basemap",
+        "help": "The orthophoto coverages of the area, as a raster the map keeps."
+      },
+      "models": {
+        "menu": "Height models",
+        "icon": "relief",
+        "help": "The terrain and surface models of the area, at the cell the area needs."
+      }
     }
   },
   "institutionMenus": {

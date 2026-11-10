@@ -216,7 +216,7 @@ pub fn add(host: &mut Host, lang: Lang, request: &Value, kind: Kind) -> Result<V
 }
 
 /// Leaves the map usable after a build: a drawn area becomes the box, and the tool returns to explore.
-fn tidy(
+pub(crate) fn tidy(
     host: &mut Host,
     source: &str,
     box_lon: [f64; 4],
@@ -275,7 +275,7 @@ impl Look {
 }
 
 /// The look a request asks for: `look` names it, `colours` keeps its old meaning.
-fn look_of(request: &Value) -> Look {
+pub(crate) fn look_of(request: &Value) -> Look {
     let params = request.get("params");
     if let Some(named) = params.and_then(|p| p.get("look")).and_then(Value::as_str) {
         return match named.to_ascii_lowercase().as_str() {
@@ -292,7 +292,7 @@ fn look_of(request: &Value) -> Look {
 }
 
 /// The raster look, as `raster.symbology` takes it.
-fn look_json(layer: &str, look: Look) -> Value {
+pub(crate) fn look_json(layer: &str, look: Look) -> Value {
     match look {
         Look::Colours => json!({ "layer": layer, "type": "stretch", "ramp": "terrain", "band": 1 }),
         Look::Classes => json!({
@@ -470,7 +470,7 @@ impl Boxes {
 
 /// Whether the shape drawn is already the box: four corners, and every one of them on the box's.
 /// A triangle, an L or a freehand ring is not, and the model will cover a rectangle around it.
-fn covers_its_box(features: &[Value], box_lon: [f64; 4]) -> bool {
+pub(crate) fn covers_its_box(features: &[Value], box_lon: [f64; 4]) -> bool {
     let [west, south, east, north] = box_lon;
     let corners = [[west, south], [east, south], [east, north], [west, north]];
     let mut points: Vec<[f64; 2]> = Vec::new();
@@ -590,7 +590,7 @@ pub fn url_at(kind: Kind, x0: i64, y0: i64, width: u32, height: u32, cell: u32) 
 
 /// Runs a host call until it answers. The app downloads the address itself, and a dropped TLS
 /// connection comes back as an error, so a second try usually lands.
-fn attempts(mut call: impl FnMut() -> Result<Value, String>) -> Result<Value, String> {
+pub(crate) fn attempts(mut call: impl FnMut() -> Result<Value, String>) -> Result<Value, String> {
     let mut last = String::new();
     for attempt in 0..ATTEMPTS {
         match call() {
@@ -606,7 +606,7 @@ fn attempts(mut call: impl FnMut() -> Result<Value, String>) -> Result<Value, St
 
 /// The name the layer ended up with: the app appends a counter when the name is taken, and the
 /// call answer does not carry it, so the newest layer under that name is the one just added.
-fn resolved_name(host: &mut Host, wanted: &str) -> String {
+pub(crate) fn resolved_name(host: &mut Host, wanted: &str) -> String {
     let Ok(layers) = host.call("host.layers", json!({})) else {
         return wanted.to_string();
     };

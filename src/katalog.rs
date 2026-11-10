@@ -7,6 +7,7 @@
 use crate::catalog;
 use crate::services;
 use crate::text::{self, Lang};
+use crate::wcs;
 use serde_json::{json, Value};
 
 /// The catalogue, optionally narrowed by institution and by a word of the name.
@@ -82,20 +83,45 @@ pub fn run(params: &Value, lang: Lang) -> Result<Value, String> {
         .map(|layer| json!({ "id": layer.id, "title": layer.name }))
         .collect();
 
+    // A coverage is a raster of the area, so its command takes an area like the elevation model.
+    let coverage_list: Vec<Value> = wcs::all()
+        .iter()
+        .filter(|_| institution.is_empty() || institution == "gugik")
+        .filter(|coverage| {
+            search.is_empty()
+                || coverage.label.to_lowercase().contains(&search)
+                || coverage.coverage.to_lowercase().contains(&search)
+                || coverage.cmd.contains(&search)
+        })
+        .map(|coverage| {
+            json!({
+                "command": coverage.cmd,
+                "coverage": coverage.coverage,
+                "title": coverage.label,
+                "kind": coverage.kind,
+                "crs": coverage.crs,
+                "format": coverage.format,
+            })
+        })
+        .collect();
+
     let counts = json!({
         "services": service_list.len(),
         "datasets": dataset_list.len(),
         "indexes": index_list.len(),
+        "coverages": coverage_list.len(),
     });
 
     Ok(json!({
         "services": service_list,
         "datasets": dataset_list,
         "indexes": index_list,
+        "coverages": coverage_list,
         "counts": counts,
         "how": {
             "service": "run_command  plugin:polish-geodata/<command>",
             "download": "gp.run  {\"tool\": \"plugin:polish-geodata/<tool>\", \"params\": {\"dane\": \"<title>\", \"obszar\": \"<area layer>\"}}",
+            "coverage": "run_command  plugin:polish-geodata/<command>  {\"service\": \"<title>\", \"rozdzielczosc\": 1}",
             "area": text::area_layer(lang),
         },
     }))
@@ -120,6 +146,10 @@ mod tests {
             answer["indexes"].as_array().unwrap().len(),
             catalog::wfs_layers().len() - catalog::offered().count()
         );
+        assert_eq!(
+            answer["coverages"].as_array().unwrap().len(),
+            wcs::all().len()
+        );
         counts_describe_the_lists(&answer);
     }
 
@@ -129,6 +159,7 @@ mod tests {
             ("services", "services"),
             ("datasets", "datasets"),
             ("indexes", "indexes"),
+            ("coverages", "coverages"),
         ] {
             assert_eq!(
                 answer["counts"][key].as_u64().unwrap() as usize,
@@ -146,8 +177,9 @@ mod tests {
         assert!(services
             .iter()
             .all(|s| s["institution"].as_str() == Some("pig")));
-        // The datasets are GUGiK's, so another institution's filter leaves them out.
+        // The datasets and the coverages are GUGiK's, so another institution's filter leaves them out.
         assert!(pig["datasets"].as_array().unwrap().is_empty());
+        assert!(pig["coverages"].as_array().unwrap().is_empty());
         counts_describe_the_lists(&pig);
 
         let search = run(&json!({"szukaj": "geolog"}), Lang::En).unwrap();

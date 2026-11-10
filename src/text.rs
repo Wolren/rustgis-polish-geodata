@@ -1680,6 +1680,159 @@ pub fn area_added(lang: Lang, name: &str, size: (f64, f64)) -> String {
     )
 }
 
+/// The WCS catalogue has no coverage under that name.
+pub fn wcs_unknown(lang: Lang, wanted: &str, count: usize) -> String {
+    pick!(
+        lang,
+        format!("No coverage '{wanted}' among the {count} coverages in the catalogue. Pick one from the WCS (coverage) group, or pass its name in the service parameter."),
+        format!("Nie ma pokrycia '{wanted}' wśród {count} pokryć w katalogu. Wskaż je w grupie WCS (pokrycia) albo podaj jego nazwę w parametrze service.")
+    )
+}
+
+/// A coverage is a raster of a rectangle, so it needs an area to cut from.
+pub fn wcs_needs_area(lang: Lang) -> String {
+    pick!(
+        lang,
+        "The coverage needs an area: select features on a layer, or draw a polygon and keep it active.",
+        "Pokrycie potrzebuje obszaru: zaznacz obiekty na warstwie albo narysuj poligon i zostaw go aktywnego."
+    )
+    .to_string()
+}
+
+/// The entry asks in a CRS this plugin cannot build a box for.
+pub fn wcs_crs_unknown(lang: Lang, crs: &str) -> String {
+    pick!(
+        lang,
+        format!("This plugin asks coverages in EPSG:2180, EPSG:4326 or EPSG:3857, and this entry is {crs}."),
+        format!("Ta wtyczka prosi o pokrycia w EPSG:2180, EPSG:4326 albo EPSG:3857, a ten wpis to {crs}.")
+    )
+}
+
+/// An ASCII grid carries no CRS of its own, so only the national grid can place it.
+pub fn wcs_ascii_needs_2180(lang: Lang, coverage: &str, crs: &str) -> String {
+    pick!(
+        lang,
+        format!("{coverage} comes as an ASCII grid, which this plugin places in EPSG:2180, and the entry asks in {crs}."),
+        format!("{coverage} przychodzi jako siatka ASCII, którą ta wtyczka umieszcza w EPSG:2180, a wpis prosi w {crs}.")
+    )
+}
+
+/// The output format is neither a GeoTIFF nor an ASCII grid.
+pub fn wcs_format_unknown(lang: Lang, format: &str) -> String {
+    pick!(
+        lang,
+        format!("The plugin reads a GeoTIFF or an ASCII grid, and this coverage offers {format}."),
+        format!("Wtyczka czyta GeoTIFF albo siatkę ASCII, a to pokrycie oferuje {format}.")
+    )
+}
+
+/// The area's centre is outside the part of the world the coverage covers.
+pub fn wcs_outside(lang: Lang, coverage: &str, bbox: [f64; 4]) -> String {
+    let [west, south, east, north] = bbox;
+    pick!(
+        lang,
+        format!(
+            "{coverage} covers {west:.4}°–{east:.4}° E, {south:.4}°–{north:.4}° N, and the centre of \
+             this area is outside it."
+        ),
+        format!(
+            "{coverage} obejmuje {west:.4}°–{east:.4}° E, {south:.4}°–{north:.4}° N, a środek tego \
+             obszaru jest poza nim."
+        )
+    )
+}
+
+/// A click may hold the window for twelve seconds, so a finer cell than that is refused.
+pub fn wcs_too_big(
+    lang: Lang,
+    coverage: &str,
+    cells: f64,
+    cell: f64,
+    megabytes: f64,
+    seconds: f64,
+    smallest: f64,
+) -> String {
+    let (cells, cell, megabytes, seconds, smallest) = (
+        num(lang, cells, 0),
+        num(lang, cell, 2),
+        num(lang, megabytes, 0),
+        num(lang, seconds, 0),
+        num(lang, smallest, 2),
+    );
+    pick!(
+        lang,
+        format!(
+            "{coverage} over this area at {cell} m cells: {cells} cells, {megabytes} MB, about {seconds} s. One click holds the window for 12 s. The finest cell here is {smallest} m. Pass rozdzielczosc {smallest}, or pick a smaller area."
+        ),
+        format!(
+            "{coverage} na tym obszarze w komórkach {cell} m: {cells} komórek, {megabytes} MB, około {seconds} s. Jedno kliknięcie trzyma okno 12 s. Najdrobniejsza komórka to {smallest} m. Podaj rozdzielczosc {smallest} albo mniejszy obszar."
+        )
+    )
+}
+
+/// An ASCII grid request answered with a service exception instead of a grid.
+pub fn wcs_bad_answer(lang: Lang, coverage: &str, head: &str) -> String {
+    pick!(
+        lang,
+        format!("{coverage} answered with an error: {head}"),
+        format!("{coverage} odpowiedziało błędem: {head}")
+    )
+}
+
+/// The GeoTIFF is left to the app, which fetches it off the frame: nothing is styled yet.
+pub fn wcs_pending(lang: Lang, name: &str, source: &str) -> String {
+    pick!(
+        lang,
+        format!("{name} is on its way from {source}: RustGIS downloads the GeoTIFF in the background."),
+        format!("{name} jest w drodze z warstwy {source}: RustGIS pobiera GeoTIFF w tle.")
+    )
+}
+
+/// The coverage is on the map, with the cell the area allowed.
+pub fn wcs_added(
+    lang: Lang,
+    name: &str,
+    coverage: &str,
+    cell: f64,
+    size: (u32, u32),
+    megabytes: f64,
+    source: &str,
+    look: Option<&str>,
+) -> String {
+    let (width, height) = size;
+    let (cell, megabytes) = (num(lang, cell, 2), num(lang, megabytes, 1));
+    let look = match (lang, look) {
+        (_, None) => String::new(),
+        (Lang::Pl, Some("shading")) => ", cieniowany".to_string(),
+        (Lang::Pl, Some("classes")) => ", w pasmach".to_string(),
+        (Lang::Pl, Some(_)) => ", w barwach wysokości".to_string(),
+        (Lang::En, Some("shading")) => ", shaded".to_string(),
+        (Lang::En, Some("classes")) => ", banded".to_string(),
+        (Lang::En, Some(_)) => ", in height colours".to_string(),
+    };
+    pick!(
+        lang,
+        format!("{name} added from {source}: {coverage}, {width} × {height} cells at {cell} m. {megabytes} MB{look}."),
+        format!("Dodano {name} z {source}: {coverage}, {width} × {height} komórek po {cell} m. {megabytes} MB{look}.")
+    )
+}
+
+/// A drawn shape becomes the rectangle a coverage covers.
+pub fn wcs_box_note(lang: Lang, name: &str, box_lon: [f64; 4]) -> String {
+    let [west, south, east, north] = box_lon;
+    pick!(
+        lang,
+        format!(
+            "A coverage is a rectangle. It covers {west:.4}°–{east:.4}° E, {south:.4}°–{north:.4}° N \
+             rather than the shape drawn. {name} now shows that rectangle."
+        ),
+        format!(
+            "Pokrycie jest prostokątem. Obejmuje {west:.4}°–{east:.4}° E, {south:.4}°–{north:.4}° N, \
+             a nie narysowany kształt. {name} pokazuje teraz ten prostokąt."
+        )
+    )
+}
+
 /// The 3D scene no longer stands on a model.
 pub fn nmt_terrain_off(lang: Lang) -> String {
     pick!(

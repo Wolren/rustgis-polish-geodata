@@ -6,6 +6,7 @@ use crate::clip;
 use crate::host::Host;
 use crate::services;
 use crate::text::{self, Lang};
+use crate::wcs;
 use serde_json::{json, Map, Value};
 
 /// The curated overlays the map list offers, in the order the ribbon shows them.
@@ -262,6 +263,7 @@ fn is_map(id: &str) -> bool {
         || services::all().iter().any(|service| service.cmd == id)
         || catalog::wody().iter().any(|service| service.id == id)
         || catalog::cartomatic().iter().any(|map| map.id == id)
+        || wcs::all().iter().any(|coverage| coverage.cmd == id)
 }
 
 /// Names the tool a `d:` row belongs to: a command cannot start a background run, so it points.
@@ -310,6 +312,11 @@ fn map_leaves(lang: Lang) -> Vec<Value> {
         catalog::cartomatic()
             .iter()
             .map(|map| leaf(&format!("v:{}", map.id), map.title)),
+    );
+    leaves.extend(
+        wcs::all()
+            .iter()
+            .map(|coverage| leaf(&format!("v:{}", coverage.cmd), &coverage.label)),
     );
     leaves
 }
@@ -368,7 +375,11 @@ mod tests {
         let folders = nodes[1]["children"].as_array().expect("download folders");
         assert_eq!(
             maps.len(),
-            CURATED.len() + services::all().len() + catalog::wody().len() + catalog::cartomatic().len()
+            CURATED.len()
+                + services::all().len()
+                + catalog::wody().len()
+                + catalog::cartomatic().len()
+                + wcs::all().len()
         );
         assert_eq!(folders.len(), DOWNLOAD_TOOLS.len());
         let total: usize = nodes.as_array().expect("nodes").iter().map(count_nodes).sum();
