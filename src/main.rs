@@ -55,6 +55,10 @@ fn main() {
         Ok(v) => v,
         Err(e) => return finish(&json!({ "error": format!("unreadable request: {e}") })),
     };
+    // The app's exact request, so a form the CLI cannot reproduce leaves a trace.
+    let trace = crate::cache::dir().join("last-request.json");
+    let _ = std::fs::create_dir_all(trace.parent().unwrap_or(&trace));
+    let _ = std::fs::write(&trace, &line);
     let kind = request
         .get("kind")
         .and_then(Value::as_str)
