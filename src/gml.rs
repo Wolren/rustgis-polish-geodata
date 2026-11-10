@@ -158,6 +158,60 @@ fn find_descendant<'a>(node: &'a Node, name: &str) -> Option<&'a Node> {
     node.children.iter().find_map(|c| find_descendant(c, name))
 }
 
+/// Puts a degree pair in longitude and latitude, whichever order the service wrote it in.
+///
+/// Returns true when every pair ended in degrees; a pair still in metres comes from a service
+/// that ignored the requested CRS, and the caller should say so.
+pub fn normalize_lon_lat(features: &mut [Value]) -> bool {
+    let mut degrees = true;
+    for feature in features {
+        if let Some(geometry) = feature.get_mut("geometry") {
+            let mut here = true;
+            normalize_geometry(geometry, 0, &mut here);
+            degrees &= here;
+        }
+    }
+    degrees
+}
+
+fn normalize_geometry(value: &mut Value, depth: usize, degrees: &mut bool) {
+    if depth > 8 {
+        return;
+    }
+    if let Some(items) = value.as_array_mut() {
+        if items.len() >= 2 && items[0].is_number() && items[1].is_number() {
+            let first = items[0].as_f64().unwrap_or(0.0);
+            let second = items[1].as_f64().unwrap_or(0.0);
+            let [lon, lat] = place(first, second);
+            *degrees &= lon.abs() <= 180.0 && lat.abs() <= 90.0;
+            items[0] = json!(lon);
+            items[1] = json!(lat);
+            return;
+        }
+        for item in items {
+            normalize_geometry(item, depth + 1, degrees);
+        }
+    } else if let Some(object) = value.as_object_mut() {
+        if let Some(coordinates) = object.get_mut("coordinates") {
+            normalize_geometry(coordinates, depth + 1, degrees);
+        }
+    }
+}
+
+fn place(first: f64, second: f64) -> [f64; 2] {
+    if inside(first, second) {
+        return [first, second];
+    }
+    if inside(second, first) {
+        return [second, first];
+    }
+    [first, second]
+}
+
+fn inside(lon: f64, lat: f64) -> bool {
+    (13.4..=25.0).contains(&lon) && (48.4..=55.3).contains(&lat)
+}
+
 /// Reads a coordinate list: GML 3's `posList`/`pos` (whitespace separated) or GML 2's
 /// `coordinates` (`x,y x,y`), inside `node` or below it.
 ///
@@ -601,6 +655,7 @@ fn collect(value: &Value, bbox: &mut [f64; 4], found: &mut bool) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use serde_json::json;
 
     const DZIALKA: &str = r#"<?xml version='1.0' encoding='UTF-8' ?>
 <wfs:FeatureCollection xmlns:ms="http://mapserver.gis.umn.edu/mapserver" xmlns:gml="http://www.opengis.net/gml" xmlns:wfs="http://www.opengis.net/wfs">
@@ -690,6 +745,26 @@ mod tests {
         let gj = wkt_to_geojson(wkt, |x, y| [x / 1000.0, y / 1000.0]).unwrap();
         assert_eq!(gj["type"], "Polygon");
         assert_eq!(gj["coordinates"][0].as_array().unwrap().len(), 4);
+    }
+
+    #[test]
+    fn a_degree_pair_reads_in_either_order() {
+        let mut features = vec![
+            json!({"geometry": {"type": "Point", "coordinates": [52.4, 16.9]}}),
+            json!({"geometry": {"type": "Point", "coordinates": [16.9, 52.4]}}),
+        ];
+        normalize_lon_lat(&mut features);
+        assert_eq!(features[0]["geometry"]["coordinates"][0], json!(16.9));
+        assert_eq!(features[0]["geometry"]["coordinates"][1], json!(52.4));
+        assert_eq!(features[1]["geometry"]["coordinates"][0], json!(16.9));
+    }
+
+    #[test]
+    fn a_pair_in_metres_is_left_and_reported() {
+        // 2180 metres: the axis order cannot be told apart by range, so the caller must say.
+        let mut features = vec![json!({"geometry": {"type": "Point", "coordinates": [507142.0, 216500.0]}})];
+        assert!(!normalize_lon_lat(&mut features));
+        assert_eq!(features[0]["geometry"]["coordinates"][0], json!(507142.0));
     }
 }
 

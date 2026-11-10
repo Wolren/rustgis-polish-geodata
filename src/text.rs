@@ -739,6 +739,15 @@ pub fn bbox_used(lang: Lang, problem: ShapeProblem) -> String {
     .to_string()
 }
 
+/// A register service answered in a grid the plugin cannot place.
+pub fn register_grid_answer(lang: Lang, name: &str) -> String {
+    pick!(
+        lang,
+        format!("{name} answered in its own grid, so the layer may sit wrong"),
+        format!("{name} odpowiedział we własnym układzie, więc warstwa może leżeć źle")
+    )
+}
+
 /// The service ignores the area, so the whole set arrived and was cut to the area's box.
 pub fn service_ignores_area(lang: Lang, name: &str) -> String {
     pick!(

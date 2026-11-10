@@ -65,12 +65,23 @@ pub fn from_area(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, S
         .map(|limit| (limit as usize).clamp(1, MAX_FEATURES))
         .unwrap_or(MAX_FEATURES);
     let mut collection: Vec<Value> = Vec::new();
+    let mut grid_warned = false;
     for type_name in &types {
         let mut start = 0usize;
+        let mut lat_first = false;
         loop {
-            let body = fetch_page(&service.url, type_name, box_lon, PAGE, start, lang)?;
+            let body = fetch_page(&service.url, type_name, box_lon, PAGE, start, lang, lat_first)?;
             let mut rows = gml::parse_features(&body, false, lang)?;
             let got = rows.len();
+            // A WFS-compliant server wants the box as latitude then longitude; ask again that way.
+            if got == 0 && start == 0 && !lat_first {
+                lat_first = true;
+                continue;
+            }
+            if !gml::normalize_lon_lat(&mut rows) && !grid_warned {
+                grid_warned = true;
+                host.notify(&text::register_grid_answer(lang, &service.name));
+            }
             rows.truncate(cap.saturating_sub(collection.len()));
             collection.extend(rows);
             if got < PAGE || collection.len() >= cap {
@@ -347,12 +358,23 @@ pub fn from_register(host: &mut Host, params: &Value, lang: Lang) -> Result<Valu
         .map(|limit| (limit as usize).clamp(1, MAX_FEATURES))
         .unwrap_or(MAX_FEATURES);
     let mut collection: Vec<Value> = Vec::new();
+    let mut grid_warned = false;
     for type_name in &types {
         let mut start = 0usize;
+        let mut lat_first = false;
         loop {
-            let body = fetch_page(&service.url, type_name, box_lon, PAGE, start, lang)?;
+            let body = fetch_page(&service.url, type_name, box_lon, PAGE, start, lang, lat_first)?;
             let mut rows = gml::parse_features(&body, false, lang)?;
             let got = rows.len();
+            // A WFS-compliant server wants the box as latitude then longitude; ask again that way.
+            if got == 0 && start == 0 && !lat_first {
+                lat_first = true;
+                continue;
+            }
+            if !gml::normalize_lon_lat(&mut rows) && !grid_warned {
+                grid_warned = true;
+                host.notify(&text::register_grid_answer(lang, &service.name));
+            }
             rows.truncate(cap.saturating_sub(collection.len()));
             collection.extend(rows);
             if got < PAGE || collection.len() >= cap {
@@ -509,11 +531,15 @@ pub(crate) fn capability_types(body: &str) -> Vec<String> {
 }
 
 /// The same page asked in WFS 1.1.0, for the servers that refuse 2.0.0.
-fn page_url_v1(url: &str, type_name: &str, box_lon: [f64; 4], count: usize, start: usize) -> String {
-    let box_text = format!(
-        "{:.6},{:.6},{:.6},{:.6},EPSG:4326",
-        box_lon[0], box_lon[1], box_lon[2], box_lon[3]
-    );
+fn page_url_v1(
+    url: &str,
+    type_name: &str,
+    box_lon: [f64; 4],
+    count: usize,
+    start: usize,
+    lat_first: bool,
+) -> String {
+    let box_text = box_text(box_lon, lat_first);
     format!(
         "{url}?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME={}&SRSNAME=EPSG:4326&MAXFEATURES={count}&STARTINDEX={start}&BBOX={box_text}",
         encode(type_name)
@@ -521,19 +547,41 @@ fn page_url_v1(url: &str, type_name: &str, box_lon: [f64; 4], count: usize, star
 }
 
 /// A page of one type: WFS 2.0.0 first, then 1.1.0, because register servers vary.
-fn fetch_page(url: &str, type_name: &str, box_lon: [f64; 4], count: usize, start: usize, lang: Lang) -> Result<String, String> {
-    match http::fetch(&page_url(url, type_name, box_lon, count, start), 110, lang) {
+fn fetch_page(
+    url: &str,
+    type_name: &str,
+    box_lon: [f64; 4],
+    count: usize,
+    start: usize,
+    lang: Lang,
+    lat_first: bool,
+) -> Result<String, String> {
+    match http::fetch(&page_url(url, type_name, box_lon, count, start, lat_first), 110, lang) {
         Ok(body) => Ok(body),
-        Err(_) => http::fetch(&page_url_v1(url, type_name, box_lon, count, start), 110, lang),
+        Err(_) => http::fetch(&page_url_v1(url, type_name, box_lon, count, start, lat_first), 110, lang),
+    }
+}
+
+/// A box in the order the request wants: longitude first, or latitude first for a WFS-compliant server.
+fn box_text(box_lon: [f64; 4], lat_first: bool) -> String {
+    let [west, south, east, north] = box_lon;
+    if lat_first {
+        format!("{south:.6},{west:.6},{north:.6},{east:.6},EPSG:4326")
+    } else {
+        format!("{west:.6},{south:.6},{east:.6},{north:.6},EPSG:4326")
     }
 }
 
 /// The `GetFeature` address for one type and page, bounded by the area.
-pub(crate) fn page_url(url: &str, type_name: &str, box_lon: [f64; 4], count: usize, start: usize) -> String {
-    let box_text = format!(
-        "{:.6},{:.6},{:.6},{:.6},EPSG:4326",
-        box_lon[0], box_lon[1], box_lon[2], box_lon[3]
-    );
+pub(crate) fn page_url(
+    url: &str,
+    type_name: &str,
+    box_lon: [f64; 4],
+    count: usize,
+    start: usize,
+    lat_first: bool,
+) -> String {
+    let box_text = box_text(box_lon, lat_first);
     format!(
         "{url}?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES={}&SRSNAME=EPSG:4326&COUNT={count}&STARTINDEX={start}&BBOX={box_text}",
         encode(type_name)
@@ -607,11 +655,13 @@ impl Lcg {
 
     #[test]
     fn a_bounded_url_names_the_box_and_the_type() {
-        let url = page_url("https://x/wfs", "gmgml:dzialki", [16.9, 52.4, 17.0, 52.5], 1000, 2000);
+        let url = page_url("https://x/wfs", "gmgml:dzialki", [16.9, 52.4, 17.0, 52.5], 1000, 2000, false);
         assert!(url.contains("TYPENAMES=gmgml:dzialki"), "{url}");
         assert!(url.contains("BBOX=16.900000,52.400000,17.000000,52.500000,EPSG:4326"));
         assert!(url.contains("COUNT=1000"));
         assert!(url.contains("STARTINDEX=2000"));
+        let swapped = page_url("https://x/wfs", "gmgml:dzialki", [16.9, 52.4, 17.0, 52.5], 1000, 2000, true);
+        assert!(swapped.contains("BBOX=52.400000,16.900000,52.500000,17.000000,EPSG:4326"), "{swapped}");
     }
     /// Capabilities as real servers send them: namespaces, nesting, empty names, stray text.
     #[test]
