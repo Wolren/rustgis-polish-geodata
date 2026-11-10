@@ -2042,7 +2042,7 @@
           "required": true,
           "choicesGroup": "control",
           "help": "The GUGiK feature type to download.",
-          "default": "Fundamentalna grawimetryczna",
+          "default": "Osnowa fundamentalna pozioma",
           "choices": [
             "Fundamentalna grawimetryczna",
             "Bazowa osnowa grawimetryczna",
@@ -2621,7 +2621,7 @@
           "kind": "choice",
           "required": true,
           "help": "The GDOŚ feature type to download.",
-          "default": "Natura 2000 ptasie (OSO)",
+          "default": "Pomniki przyrody (punktowe)",
           "choices": [
             "Natura 2000 ptasie (OSO)",
             "Natura 2000 siedliskowe (SOO)",

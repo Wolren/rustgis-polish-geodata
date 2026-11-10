@@ -565,7 +565,7 @@
           "required": true,
           "choicesGroup": "control",
           "help": "The GUGiK feature type to download.",
-          "default": "__first__"
+          "default": "Osnowa fundamentalna pozioma"
         },
         {
           "name": "obszar",
@@ -908,7 +908,7 @@
           "kind": "choice",
           "required": true,
           "help": "The GDOŚ feature type to download.",
-          "default": "__first__"
+          "default": "Pomniki przyrody (punktowe)"
         },
         {
           "name": "obszar",
