@@ -61,11 +61,12 @@ pub fn run(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, String
     Ok(json!({"layer": layer, "path": path.display().to_string(), "bytes": bytes}))
 }
 
-/// The folder a bare name lands in: Documents, the home folder, or the temp folder.
+/// The folder a bare name lands in: Documents on any OS, else the home folder.
 fn documents() -> PathBuf {
-    let home = std::env::var("USERPROFILE")
+    let home = std::env::var_os("USERPROFILE")
+        .or_else(|| std::env::var_os("HOME"))
         .map(PathBuf::from)
-        .unwrap_or_else(|_| std::env::temp_dir());
+        .unwrap_or_else(std::env::temp_dir);
     let documents = home.join("Documents");
     if documents.is_dir() {
         documents
