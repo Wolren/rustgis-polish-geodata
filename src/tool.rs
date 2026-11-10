@@ -163,6 +163,23 @@ fn gate(
     cap: usize,
     confirm: bool,
 ) -> Result<(), String> {
+    gate_with(layer, area, bbox, lang, cap, confirm, || {
+        let filter = filter::polygon_filter(layer, collection).ok();
+        host::progress_line(&text::counting(lang, layer.name, area));
+        needed(layer, bbox, filter.as_deref(), lang)
+    })
+}
+
+/// The gate with its count supplied, so a test needs no request.
+fn gate_with(
+    layer: &catalog::WfsLayer,
+    area: &str,
+    bbox: [f64; 4],
+    lang: Lang,
+    cap: usize,
+    confirm: bool,
+    counted: impl FnOnce() -> Option<usize>,
+) -> Result<(), String> {
     // A service that ignores the area has no count to trust: the fetch cuts the whole set here.
     if layer.unfiltered {
         return Ok(());
@@ -172,9 +189,7 @@ fn gate(
     if limited && !over_span {
         return Ok(());
     }
-    let filter = filter::polygon_filter(layer, collection).ok();
-    host::progress_line(&text::counting(lang, layer.name, area));
-    let Some(wanted) = needed(layer, bbox, filter.as_deref(), lang) else {
+    let Some(wanted) = counted() else {
         // Without a count the span is the only guard there is.
         return if over_span {
             Err(text::area_too_large(
@@ -358,14 +373,23 @@ mod tests {
     }
 
     #[test]
-    fn one_gate_refuses_a_wide_area_before_the_request() {
+    fn one_gate_refuses_a_counted_area_over_the_budget() {
         let layer = catalog::wfs_by_label("Działki").unwrap();
         let area = json!({"type": "FeatureCollection", "features": []});
-        let error = gate(layer, "Area to download", &area, [14.0, 49.0, 24.2, 54.9], Lang::En, wfs::MAX_TOTAL, false)
-            .unwrap_err();
+        let error = gate_with(
+            layer,
+            "Area to download",
+            [14.0, 49.0, 24.2, 54.9],
+            Lang::En,
+            wfs::MAX_TOTAL,
+            false,
+            || Some(60_000),
+        )
+        .unwrap_err();
         assert!(error.contains("Area to download"), "{error}");
         assert!(error.contains("Działki"), "{error}");
-        // The same gate lets a box inside the layer's own span through.
+        assert!(error.contains("Even a confirmed run stops"), "{error}");
+        // The same gate lets a box inside the layer's own span through without a count.
         assert!(gate(layer, "Area to download", &area, [21.0, 52.2, 21.01, 52.21], Lang::En, wfs::MAX_TOTAL, false).is_ok());
     }
 
