@@ -98,8 +98,8 @@ that touch the area, so **Clip to layer** (`przytnij`) is what cuts them to the 
 - `bdot500` and `gesut` take the gmina or county chosen in the panel or passed as `teryt`, else the
   one under the view, add the closest register service: a WMS as an overlay, or the unit's own WFS
   read over its boundary, up to 50 000 features.
-- `zapisz-gpkg {"warstwa": "<layer>", "plik": "<path>"}` saves a vector layer as GeoPackage;
-  a bare name goes to Documents, and the path is optional.
+- `zapisz-gpkg {"warstwa": "<layer>", "plik": "<full path>"}` saves a vector layer as GeoPackage;
+  the path is required and the host has no save dialog yet, so it stays off the ribbon.
 - `wmts` with no params adds the national ortho WMTS; with a template or capabilities URL it adds that service.
 - `dodaj-wcs {"url": "<GetCoverage URL>", "nazwa": "<name>"}` adds any WCS coverage; it stays off the ribbon,
   which sends no params.

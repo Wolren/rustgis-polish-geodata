@@ -354,8 +354,8 @@
       "id": "zapisz-gpkg",
       "label": "Save\nGeoPackage",
       "icon": "export_layer",
-      "help": "Saves the active vector layer, or the one you name, as a GeoPackage file in Documents. Give `plik` for another place.",
-      "params": "{\"warstwa\": \"layer name (optional, the active layer or the newest one when left out)\", \"plik\": \"full path (optional, Documents\\\\<layer>.gpkg when left out)\"}"
+      "help": "Saves the active vector layer, or the one you name, to the full path in `plik`. The host has no save dialog yet, so this command is for agents and scripts.",
+      "params": "{\"warstwa\": \"layer name (optional, the active layer or the newest one when left out)\", \"plik\": \"full path (required)\"}"
     },
     {
       "id": "wmts",
@@ -2831,8 +2831,7 @@
         "layout": "small",
         "items": [
           "panel",
-          "przytnij",
-          "zapisz-gpkg"
+          "przytnij"
         ]
       },
       {
@@ -3450,7 +3449,6 @@
       "Level crossings of the railway operators, from PKP PLK to the terminal firms.": "Przejazdy kolejowe operatorów, od PKP PLK po firmy terminalowe.",
       "The operator's level-crossing type to download.": "Typ przejazdów operatora do pobrania.",
       "Save\nGeoPackage": "Zapisz\nGeoPackage",
-      "Saves the active vector layer, or the one you name, as a GeoPackage file in Documents. Give `plik` for another place.": "Zapisuje aktywną warstwę wektorową, albo wskazaną, jako plik GeoPackage w Dokumentach. Podaj `plik`, aby wybrać inne miejsce.",
       "The gmina's or county's own BDOT500 service from the register: the unit chosen in the panel, a code you pass, or under the view.": "Usługa BDOT500 gminy albo powiatu z rejestru: jednostka wybrana w panelu, podany kod albo widok.",
       "The gmina's or county's own GESUT service from the register: the unit chosen in the panel, a code you pass, or under the view.": "Usługa GESUT gminy albo powiatu z rejestru: jednostka wybrana w panelu, podany kod albo widok.",
       "No feature ceiling": "Bez limitu obiektów",
@@ -3459,7 +3457,8 @@
       "Add WCS": "Dodaj WCS",
       "Adds any WCS coverage from its GetCoverage URL.": "Dodaje dowolne pokrycie WCS z jego adresu GetCoverage.",
       "Adds the national ortho WMTS on a click, or another service from a GetTile template or a capabilities URL.": "Dodaje krajową ortofoto WMTS po kliknięciu, a inną usługę z szablonu GetTile albo adresu capabilities.",
-      "Downloads one level of state boundaries for the country, a voivodeship, a powiat or a gmina, and keeps the names a filter matches. A country run of gminy is about 109 MB.": "Pobiera jeden poziom granic państwowych dla kraju, województwa, powiatu albo gminy i zostawia nazwy pasujące do filtra. Krajowy przebieg gmin to około 109 MB."
+      "Downloads one level of state boundaries for the country, a voivodeship, a powiat or a gmina, and keeps the names a filter matches. A country run of gminy is about 109 MB.": "Pobiera jeden poziom granic państwowych dla kraju, województwa, powiatu albo gminy i zostawia nazwy pasujące do filtra. Krajowy przebieg gmin to około 109 MB.",
+      "Saves the active vector layer, or the one you name, to the full path in `plik`. The host has no save dialog yet, so this command is for agents and scripts.": "Zapisuje aktywną warstwę wektorową, albo wskazaną, pod pełną ścieżką w `plik`. Host nie ma jeszcze okna zapisu, więc polecenie jest dla agentów i skryptów."
     }
   },
   "panel": {

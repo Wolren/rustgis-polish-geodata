@@ -77,7 +77,7 @@ RustGIS 0.5.0 or newer.
 | --- | --- |
 | **Basemaps** | 4 raster maps, 4 vector overlays and any WMTS: orthophoto, BDOT10k, parcels, addresses, boundaries |
 | **Area** | area from the view, draw, rectangle, adopt, cancel, remove |
-| **Tools** | the panel, the clip to a boundary and Save as GeoPackage |
+| **Tools** | the panel and the clip to a boundary |
 | **WMS overlays** | eleven menus: GUGiK (76 through three menus), historical maps (11), PIG geology (11), institutions and heritage (17), Wody Polskie (32), Cartomatic (45 through two menus), Register (6), County data (BDOT500, GESUT) |
 | **WCS (coverage)** | eight coverages through two menus: three orthophoto series, five terrain and surface models |
 | **Downloads** | seven WFS tools, four package tools, protected areas (GDOŚ), the county EGiB, any register WFS |

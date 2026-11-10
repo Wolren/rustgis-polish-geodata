@@ -728,6 +728,14 @@ pub fn save_not_vector(lang: Lang, name: &str) -> String {
     )
 }
 
+pub fn save_needs_path(lang: Lang) -> String {
+    pick!(
+        lang,
+        "Give the full file path in `plik`: the plugin has no save dialog yet.".to_string(),
+        "Podaj pełną ścieżkę w `plik`: wtyczka nie ma jeszcze okna zapisu.".to_string()
+    )
+}
+
 pub fn save_exists(lang: Lang, path: &str) -> String {
     pick!(
         lang,
