@@ -20,6 +20,9 @@ pub const GESUT: &str = "GESUT";
 /// Adds the unit's own dataset for the view: a WMS on the map, or the id of its WFS.
 pub fn run(host: &mut Host, lang: Lang, dataset: &str) -> Result<Value, String> {
     let (lon, lat) = host.centre()?;
+    if !in_poland(lon, lat) {
+        return Err(text::county_view_outside_at(lang, lon, lat));
+    }
     let unit = unit_at(lon, lat, lang)?;
     let found = matches(dataset, &unit);
     let entry = *found
@@ -81,19 +84,31 @@ struct Unit {
 }
 
 fn unit_at(lon: f64, lat: f64, lang: Lang) -> Result<Unit, String> {
+    let mut last: Option<String> = None;
     for (x, y) in [(lon, lat), (lat, lon)] {
-        if let Ok((code, name)) = egib::commune_at(x, y, lang) {
-            let gmina = stem(&code).to_string();
-            let county = gmina.chars().take(4).collect();
-            return Ok(Unit { gmina, county, teryt: code, name });
+        match egib::commune_at(x, y, lang) {
+            Ok((code, name)) => {
+                let gmina = stem(&code).to_string();
+                let county = gmina.chars().take(4).collect();
+                return Ok(Unit { gmina, county, teryt: code, name });
+            }
+            Err(error) => last = Some(error),
         }
     }
     for (x, y) in [(lon, lat), (lat, lon)] {
-        if let Ok((code, name)) = egib::county_at(x, y, lang) {
-            return Ok(Unit { gmina: String::new(), county: code.clone(), teryt: code, name });
+        match egib::county_at(x, y, lang) {
+            Ok((code, name)) => {
+                return Ok(Unit { gmina: String::new(), county: code.clone(), teryt: code, name })
+            }
+            Err(error) => last = Some(error),
         }
     }
-    Err(text::county_view_outside(lang).to_string())
+    Err(last.unwrap_or_else(|| text::county_view_outside(lang).to_string()))
+}
+
+/// The country's box with a small margin, so a view over the sea or abroad says so first.
+fn in_poland(lon: f64, lat: f64) -> bool {
+    (13.4..=25.0).contains(&lon) && (48.4..=55.3).contains(&lat)
 }
 
 /// The TERYT code without the gmina type suffix: `306401_1` becomes `306401`.
@@ -224,6 +239,13 @@ mod tests {
             teryt: String::new(),
             name: "Poznań (miasto)".into(),
         }
+    }
+
+    #[test]
+    fn a_view_outside_poland_is_caught_before_the_lookup() {
+        assert!(in_poland(16.9, 52.4));
+        assert!(!in_poland(0.0, 0.0));
+        assert!(!in_poland(19.0, 56.0));
     }
 
     #[test]

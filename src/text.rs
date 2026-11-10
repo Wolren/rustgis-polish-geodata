@@ -1388,6 +1388,18 @@ pub fn county_no_dataset(lang: Lang, dataset: &str, unit: &str) -> String {
     )
 }
 
+pub fn county_view_outside_at(lang: Lang, lon: f64, lat: f64) -> String {
+    pick!(
+        lang,
+        format!(
+            "The view centre {lon:.3}, {lat:.3} is not over Poland: zoom to a gmina or county, then run it again."
+        ),
+        format!(
+            "Środek widoku {lon:.3}, {lat:.3} nie leży nad Polską: przybliż gminę albo powiat i uruchom polecenie ponownie."
+        )
+    )
+}
+
 pub fn county_view_outside(lang: Lang) -> &'static str {
     pick!(
         lang,
