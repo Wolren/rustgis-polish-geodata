@@ -1873,6 +1873,13 @@
           "help": "0 means no byte limit."
         },
         {
+          "name": "confirm",
+          "label": "Download even if large",
+          "kind": "bool",
+          "default": false,
+          "help": "Take up to 50 000 features; the size limit still applies."
+        },
+        {
           "name": "nolimit",
           "label": "No feature ceiling",
           "kind": "bool",
@@ -3458,7 +3465,8 @@
       "Adds any WCS coverage from its GetCoverage URL.": "Dodaje dowolne pokrycie WCS z jego adresu GetCoverage.",
       "Adds the national ortho WMTS on a click, or another service from a GetTile template or a capabilities URL.": "Dodaje krajową ortofoto WMTS po kliknięciu, a inną usługę z szablonu GetTile albo adresu capabilities.",
       "Downloads one level of state boundaries for the country, a voivodeship, a powiat or a gmina, and keeps the names a filter matches. A country run of gminy is about 109 MB.": "Pobiera jeden poziom granic państwowych dla kraju, województwa, powiatu albo gminy i zostawia nazwy pasujące do filtra. Krajowy przebieg gmin to około 109 MB.",
-      "Saves the active vector layer, or the one you name, to the full path in `plik`. The host has no save dialog yet, so this command is for agents and scripts.": "Zapisuje aktywną warstwę wektorową, albo wskazaną, pod pełną ścieżką w `plik`. Host nie ma jeszcze okna zapisu, więc polecenie jest dla agentów i skryptów."
+      "Saves the active vector layer, or the one you name, to the full path in `plik`. The host has no save dialog yet, so this command is for agents and scripts.": "Zapisuje aktywną warstwę wektorową, albo wskazaną, pod pełną ścieżką w `plik`. Host nie ma jeszcze okna zapisu, więc polecenie jest dla agentów i skryptów.",
+      "Take up to 50 000 features; the size limit still applies.": "Bierze do 50 000 obiektów; limit rozmiaru nadal działa."
     }
   },
   "panel": {

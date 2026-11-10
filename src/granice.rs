@@ -97,7 +97,7 @@ pub fn levels(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, Str
     };
 
     let settings = crate::cache::settings();
-    let confirm = settings.confirm_large;
+    let confirm = params.get("confirm").and_then(Value::as_bool).unwrap_or(false) || settings.confirm_large;
     let no_limit = params.get("nolimit").and_then(Value::as_bool).unwrap_or(false);
     let cap = if no_limit {
         usize::MAX
