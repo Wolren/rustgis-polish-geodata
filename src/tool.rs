@@ -11,7 +11,9 @@
 
 use crate::cache;
 use crate::catalog;
+use crate::filter;
 use crate::host;
+use crate::http;
 use crate::sheets;
 use crate::text::{self, Lang};
 use crate::wfs;
@@ -79,6 +81,12 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     // The no-ceiling tick takes every feature; the cache and the byte limit still apply.
     let no_limit = params.get("nolimit").and_then(Value::as_bool).unwrap_or(false);
     let cap = feature_cap(no_limit, confirm);
+    // Warn before the first page when the area holds more than one run may take.
+    let has_confirm = params.get("confirm").is_some();
+    let has_nolimit = params.get("nolimit").is_some();
+    pre_check(
+        layer, area, features_of_area, bbox, lang, cap, confirm, no_limit, has_confirm, has_nolimit,
+    )?;
 
     // The form's own number wins, then the panel's slider, so the pane that refuses can raise it.
     let asked_mb = params
@@ -155,6 +163,79 @@ fn feature_cap(no_limit: bool, confirm: bool) -> usize {
     } else {
         wfs::MAX_TOTAL
     }
+}
+
+/// The count the service reports for the area, before the first page.
+pub(crate) fn counted(layer: &catalog::WfsLayer, bbox: [f64; 4], filter: Option<&str>, lang: Lang) -> Option<usize> {
+    let body = http::fetch(&hits_url(layer, bbox, filter), 60, lang).ok()?;
+    hits_of(&body)
+}
+
+/// The GetFeature address that asks only how many features the area holds.
+fn hits_url(layer: &catalog::WfsLayer, bbox: [f64; 4], filter: Option<&str>) -> String {
+    let mut url = format!(
+        "{}?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME={}&SRSNAME=EPSG:4326&RESULTTYPE=hits",
+        layer.url, layer.type_name
+    );
+    match filter {
+        // GUGiK refuses BBOX and FILTER in one request, so the polygon replaces the box.
+        Some(filter) => {
+            url.push_str("&FILTER=");
+            url.push_str(filter);
+        }
+        None => {
+            url.push_str(&format!(
+                "&BBOX={:.6},{:.6},{:.6},{:.6}",
+                bbox[0], bbox[1], bbox[2], bbox[3]
+            ));
+            // The KINR address service counts nothing without the CRS on the box.
+            if layer.bbox_crs {
+                url.push_str(",EPSG:4326");
+            }
+        }
+    }
+    url
+}
+
+/// The count a `RESULTTYPE=hits` answer carries, when it carries one.
+fn hits_of(body: &str) -> Option<usize> {
+    let key = "numberOfFeatures=\"";
+    let start = body.find(key)? + key.len();
+    let rest = &body[start..];
+    rest[..rest.find('"')?].parse().ok()
+}
+
+/// Refuses a run that would stop at the feature cap, and names the tick that lifts it.
+fn pre_check(
+    layer: &catalog::WfsLayer,
+    area: &str,
+    collection: &Value,
+    bbox: [f64; 4],
+    lang: Lang,
+    cap: usize,
+    confirm: bool,
+    no_limit: bool,
+    has_confirm: bool,
+    has_nolimit: bool,
+) -> Result<(), String> {
+    // A service that ignores the area has no count to trust: the fetch cuts it.
+    if no_limit || layer.unfiltered {
+        return Ok(());
+    }
+    let filter = if layer.bbox_crs {
+        None
+    } else {
+        filter::polygon_filter(layer, collection).ok()
+    };
+    let Some(wanted) = counted(layer, bbox, filter.as_deref(), lang) else {
+        return Ok(());
+    };
+    if wanted > cap {
+        return Err(text::over_budget(
+            lang, area, wanted, cap, confirm, &layer.name, has_confirm, has_nolimit,
+        ));
+    }
+    Ok(())
 }
 
 /// The bounding box of a FeatureCollection's geometry, `[west, south, east, north]`.
@@ -248,6 +329,23 @@ mod tests {
         let polish = run(&request("pl"), Lang::Pl).unwrap_err();
         assert!(english.contains("was not passed in"), "{english}");
         assert!(polish.contains("nie przekazano"), "{polish}");
+    }
+
+    #[test]
+    fn a_count_over_the_cap_names_the_tick() {
+        let msg = crate::text::over_budget(Lang::En, "Area", 11_058, 10_000, false, "Punkty adresowe", true, true);
+        assert!(msg.contains("Download even if large"), "{msg}");
+        assert!(msg.contains("No feature ceiling"), "{msg}");
+        let over = crate::text::over_budget(Lang::En, "Area", 60_000, 50_000, true, "Punkty adresowe", true, true);
+        assert!(over.contains("No feature ceiling"), "{over}");
+        assert!(!over.contains("Download even if large"), "{over}");
+    }
+
+    #[test]
+    fn a_hits_answer_carries_the_count() {
+        let body = "<wfs:FeatureCollection numberOfFeatures=\"54267\"></wfs:FeatureCollection>";
+        assert_eq!(hits_of(body), Some(54_267));
+        assert_eq!(hits_of("<ServiceException/>"), None);
     }
 
     #[test]

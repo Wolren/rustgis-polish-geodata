@@ -608,6 +608,58 @@ pub fn area_no_geometry(lang: Lang, area: &str) -> String {
     )
 }
 
+/// A run that would stop at the feature cap, with the tick that lifts it named.
+pub fn over_budget(
+    lang: Lang,
+    area: &str,
+    wanted: usize,
+    budget: usize,
+    confirm: bool,
+    name: &str,
+    has_confirm: bool,
+    has_nolimit: bool,
+) -> String {
+    let ceiling = crate::wfs::HARD_TOTAL;
+    let tick = if wanted > ceiling || !has_confirm {
+        if has_nolimit {
+            pick!(
+                lang,
+                format!(" Tick \"No feature ceiling\" to take every feature."),
+                format!(" Zaznacz \"Bez limitu obiektów\", aby wziąć wszystkie obiekty.")
+            )
+        } else {
+            String::new()
+        }
+    } else if confirm {
+        String::new()
+    } else if has_nolimit {
+        pick!(
+            lang,
+            format!(" Tick \"Download even if large\" for up to {ceiling}, or \"No feature ceiling\" for every feature."),
+            format!(" Zaznacz \"Pobierz mimo rozmiaru\", aby wziąć do {ceiling}, albo \"Bez limitu obiektów\", aby wziąć wszystkie.")
+        )
+    } else {
+        pick!(
+            lang,
+            format!(" Tick \"Download even if large\" for up to {ceiling}."),
+            format!(" Zaznacz \"Pobierz mimo rozmiaru\", aby wziąć do {ceiling}.")
+        )
+    };
+    pick!(
+        lang,
+        format!(
+            "the area \"{area}\" needs {} from \"{name}\", more than one run takes ({}).{tick} Narrow the area, or pick a smaller layer.",
+            features(lang, wanted),
+            features(lang, budget)
+        ),
+        format!(
+            "obszar \"{area}\" potrzebuje {} z zestawu \"{name}\", a jedno pobranie bierze najwyżej {}.{tick} Zawęź obszar albo wybierz mniejszą warstwę.",
+            features(lang, wanted),
+            features(lang, budget)
+        )
+    )
+}
+
 pub fn no_features(lang: Lang, name: &str) -> String {
     pick!(
         lang,

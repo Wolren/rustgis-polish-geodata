@@ -124,6 +124,14 @@ pub fn levels(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, Str
         .map(str::trim)
         .filter(|value| !value.is_empty());
     let filter = register_filter(wanted_level.as_str(), (!whole_country).then_some(scope.as_str()), wanted_name);
+    // Warn before the first page when the scope holds more than one run may take.
+    if !no_limit && !layer.unfiltered {
+        if let Some(wanted) = crate::tool::counted(layer, bbox, filter.as_deref(), lang) {
+            if wanted > cap {
+                return Err(text::over_budget(lang, &label, wanted, cap, confirm, &layer.name, true, true));
+            }
+        }
+    }
     host::progress_line(&text::levels_reading(lang, label));
     let mut report = |line: &str| host::progress_line(line);
     let download = match filter {

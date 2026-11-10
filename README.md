@@ -147,8 +147,10 @@ byte limit**: a whole-country run of `Granice gmin` at 0 brought all 2 479 gminy
 in 34 seconds. **Download even if large** raises both: 50 000 features, and the greater of 256 MB and the
 size slider, which ends at 500 MB. **No feature ceiling** takes every feature in the area, with no cap.
 
-A wide box starts immediately. The run stops at the feature cap (10 000, 50 000 with **Download even
-if large**, no cap with **No feature ceiling**) or at the byte limit, and the notice says where it
+Before the first page, the tool asks the service for a count when the run could hit the cap. Over
+the cap, it refuses and names both ticks. The run also stops at the feature cap (10 000, 50 000
+with **Download even if large**, no cap with **No feature ceiling**) or at the byte limit, and the
+notice says where it
 stopped. Only addresses, streets, parcels and buildings keep a small box; every other layer downloads
 over a whole voivodeship or wider.
 
