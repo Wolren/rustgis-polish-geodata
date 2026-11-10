@@ -6,6 +6,8 @@
 use crate::cache;
 use crate::text::{self, Lang};
 use std::io::{Read, Write};
+use flate2::write::GzEncoder;
+use flate2::Compression;
 use std::time::Duration;
 
 const UA: &str = concat!("polish-geodata/", env!("CARGO_PKG_VERSION"), " (RustGIS plugin)");
@@ -161,7 +163,7 @@ pub fn stream_body<T>(
     let _ = std::fs::create_dir_all(&dir);
     let part = dir.join(format!("{}.part", cache::key(url)));
     let file = match std::fs::File::create(&part) {
-        Ok(file) => Some(file),
+        Ok(file) => Some(GzEncoder::new(file, Compression::default())),
         Err(_) => None,
     };
     let tee = Tee { inner: response.into_reader(), copy: file, written: 0 };
@@ -175,9 +177,16 @@ pub fn stream_body<T>(
     };
     let counted = reader.into_inner();
     let bytes = counted.written;
-    // A body that parsed keeps its bytes, and the next run reads them from the file.
-    if counted.copy.is_some() {
-        let _ = std::fs::rename(&part, dir.join(cache::key(url)));
+    // A body that parsed keeps its bytes, gzipped, and the next run reads that file.
+    if let Some(encoder) = counted.copy {
+        match encoder.finish() {
+            Ok(_) => {
+                let _ = std::fs::rename(&part, dir.join(cache::key(url)));
+            }
+            Err(_) => {
+                let _ = std::fs::remove_file(&part);
+            }
+        }
     }
     Ok((bytes, value))
 }
@@ -185,7 +194,7 @@ pub fn stream_body<T>(
 /// A reader that copies every byte it hands on, so a stream can be cached as it is parsed.
 struct Tee<R: Read> {
     inner: R,
-    copy: Option<std::fs::File>,
+    copy: Option<GzEncoder<std::fs::File>>,
     written: u64,
 }
 

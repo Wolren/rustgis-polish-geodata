@@ -4,7 +4,11 @@
 //! exact request for a week turns a repeated download into a file read. The key is the request
 //! URL, hashed with FNV-1a; the cache is per user, under the app's data folder.
 
+use flate2::read::GzDecoder;
+use flate2::write::GzEncoder;
+use flate2::Compression;
 use std::fs;
+use std::io::{Read, Write};
 use std::path::PathBuf;
 use std::time::{Duration, SystemTime};
 
@@ -183,7 +187,8 @@ pub fn get(url: &str) -> Option<String> {
     if age > TTL {
         return None;
     }
-    fs::read_to_string(path).ok()
+    let bytes = fs::read(path).ok()?;
+    unpacked(bytes)
 }
 
 pub fn put(url: &str, body: &str) {
@@ -191,7 +196,26 @@ pub fn put(url: &str, body: &str) {
     if fs::create_dir_all(&dir).is_err() {
         return;
     }
-    let _ = fs::write(dir.join(key(url)), body);
+    let _ = fs::write(dir.join(key(url)), packed(body));
+}
+
+/// A body as it sits on disk: gzipped, with the header `get` checks.
+fn packed(body: &str) -> Vec<u8> {
+    let mut encoder = GzEncoder::new(Vec::new(), Compression::default());
+    if encoder.write_all(body.as_bytes()).is_err() {
+        return body.as_bytes().to_vec();
+    }
+    encoder.finish().unwrap_or_else(|_| body.as_bytes().to_vec())
+}
+
+/// A body read back, from a gzipped file or from a plain one a past version wrote.
+fn unpacked(bytes: Vec<u8>) -> Option<String> {
+    if bytes.starts_with(&[0x1f, 0x8b]) {
+        let mut text = String::new();
+        GzDecoder::new(bytes.as_slice()).read_to_string(&mut text).ok()?;
+        return Some(text);
+    }
+    String::from_utf8(bytes).ok()
 }
 
 /// Removes every cached answer; returns how many and how many bytes.
@@ -266,6 +290,20 @@ mod tests {
         assert_eq!(key("https://a"), key("https://a"));
         assert_ne!(key("https://a"), key("https://b"));
         assert_eq!(key("https://a").len(), 16);
+    }
+
+    #[test]
+    fn a_body_survives_the_round_trip_and_shrinks() {
+        let body = "<gml:pos>16.9256 52.4064</gml:pos>".repeat(10_000);
+        let bytes = packed(&body);
+        assert!(bytes.starts_with(&[0x1f, 0x8b]), "gzip magic");
+        assert!(bytes.len() < body.len() / 2, "{} of {}", bytes.len(), body.len());
+        assert_eq!(unpacked(bytes).as_deref(), Some(body.as_str()));
+    }
+
+    #[test]
+    fn a_plain_file_from_a_past_version_still_reads() {
+        assert_eq!(unpacked(b"<wfs/>".to_vec()).as_deref(), Some("<wfs/>"));
     }
 
     #[test]

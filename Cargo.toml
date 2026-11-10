@@ -16,6 +16,8 @@ quick-xml = "0.37"
 # native-certs: trust the OS store, so corporate/AV TLS interception and proxy CAs work.
 # webpki-roots alone rejects them, and GUGiK traffic then fails behind such a proxy.
 ureq = { version = "2.12", features = ["gzip", "native-certs"] }
+# The same gzip ureq reads answers with, so a big page costs about a third of its bytes on disk.
+flate2 = "1"
 
 [profile.release]
 opt-level = "s"
