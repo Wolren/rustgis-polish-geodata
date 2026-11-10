@@ -94,8 +94,9 @@ that touch the area, so **Clip to layer** (`przytnij`) is what cuts them to the 
 - `zrodla {"szukaj": "geologia"}` searches 3 296 proved addresses by dataset, institution and TERYT.
 - `zrodla {"dodaj": "<id>"}` adds one service as a tile layer.
 - `rejestr-widok {"rodzaj": "wfs"}` narrows the register to the county under the map view.
-- `bdot500` and `gesut` take the gmina or county under the view, add the most specific register WMS
-  (gmina, county, then national K-GESUT), or name the WFS for `rejestr-pobierz`.
+- `bdot500` and `gesut` take the gmina or county chosen in the panel or passed as `teryt`, else the
+  one under the view, add the most specific register WMS (gmina, county, then national K-GESUT), or
+  name the WFS for `rejestr-pobierz`.
 - `zapisz-gpkg {"warstwa": "<layer>", "plik": "<path>"}` saves a vector layer as GeoPackage;
   a bare name goes to Documents, and the path is optional.
 - `eziudp {"instytucja": "GIOŚ"}` asks the live register, which needs a filter: the whole register is

@@ -1388,6 +1388,14 @@ pub fn county_no_dataset(lang: Lang, dataset: &str, unit: &str) -> String {
     )
 }
 
+pub fn county_unit_not_local(lang: Lang, code: &str) -> String {
+    pick!(
+        lang,
+        format!("{code} is a voivodeship or an unknown code: name a gmina or county"),
+        format!("{code} to województwo albo nieznany kod: wskaż gminę albo powiat")
+    )
+}
+
 pub fn county_view_outside_at(lang: Lang, lon: f64, lat: f64) -> String {
     pick!(
         lang,

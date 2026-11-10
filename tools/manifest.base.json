@@ -342,15 +342,15 @@
       "id": "bdot500",
       "label": "BDOT500",
       "icon": "polygon_layer",
-      "help": "The gmina's or county's own BDOT500 service from the register, as one overlay.",
-      "params": "{}"
+      "help": "The gmina's or county's own BDOT500 service from the register: the unit chosen in the panel, a code you pass, or under the view.",
+      "params": "{\"teryt\": \"gmina or county code (optional; the panel's chosen unit when left out, else under the view)\"}"
     },
     {
       "id": "gesut",
       "label": "GESUT",
       "icon": "buffer",
-      "help": "The gmina's or county's own GESUT service from the register, as one overlay.",
-      "params": "{}"
+      "help": "The gmina's or county's own GESUT service from the register: the unit chosen in the panel, a code you pass, or under the view.",
+      "params": "{\"teryt\": \"gmina or county code (optional; the panel's chosen unit when left out, else under the view)\"}"
     },
     {
       "id": "zapisz-gpkg",
@@ -1496,13 +1496,13 @@
       "BDOT500 and GESUT from the register, for the gmina or county under the view.": "BDOT500 i GESUT z rejestru, dla gminy albo powiatu pod widokiem.",
       "BDOT500": "BDOT500",
       "GESUT": "GESUT",
-      "The gmina's or county's own BDOT500 service from the register, as one overlay.": "Usługa BDOT500 gminy albo powiatu z rejestru, jako jedna nakładka.",
-      "The gmina's or county's own GESUT service from the register, as one overlay.": "Usługa GESUT gminy albo powiatu z rejestru, jako jedna nakładka.",
       "Level crossings": "Przejazdy",
       "Level crossings of the railway operators, from PKP PLK to the terminal firms.": "Przejazdy kolejowe operatorów, od PKP PLK po firmy terminalowe.",
       "The operator's level-crossing type to download.": "Typ przejazdów operatora do pobrania.",
       "Save\nGeoPackage": "Zapisz\nGeoPackage",
-      "Saves the active vector layer, or the one you name, as a GeoPackage file in Documents. Give `plik` for another place.": "Zapisuje aktywną warstwę wektorową, albo wskazaną, jako plik GeoPackage w Dokumentach. Podaj `plik`, aby wybrać inne miejsce."
+      "Saves the active vector layer, or the one you name, as a GeoPackage file in Documents. Give `plik` for another place.": "Zapisuje aktywną warstwę wektorową, albo wskazaną, jako plik GeoPackage w Dokumentach. Podaj `plik`, aby wybrać inne miejsce.",
+      "The gmina's or county's own BDOT500 service from the register: the unit chosen in the panel, a code you pass, or under the view.": "Usługa BDOT500 gminy albo powiatu z rejestru: jednostka wybrana w panelu, podany kod albo widok.",
+      "The gmina's or county's own GESUT service from the register: the unit chosen in the panel, a code you pass, or under the view.": "Usługa GESUT gminy albo powiatu z rejestru: jednostka wybrana w panelu, podany kod albo widok."
     }
   },
   "moreMaps": {

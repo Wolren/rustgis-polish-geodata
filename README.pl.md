@@ -159,9 +159,9 @@ granica”), drzewo warstw granicznych z wyszukiwarką, drzewo **Mapa** z trzema
   `{"dodaj": "<id>"}` dodaje jedną usługę.
 - **Polecenie `rejestr-widok`:** zawęża rejestr do powiatu pod widokiem mapy, więc szukanie zaczyna
   się tam, gdzie stoi mapa. Parametr `rodzaj` wybiera `wms` albo `wfs`.
-- **Polecenia `bdot500` i `gesut`:** gmina albo powiat pod widokiem, jedno kliknięcie. Polecenie
-  bierze najbliższą usługę z rejestru: gminy, potem powiatu, na końcu krajową K-GESUT. Jednostka z
-  samym WFS dostaje swój identyfikator dla `rejestr-pobierz`.
+- **Polecenia `bdot500` i `gesut`:** gmina albo powiat wybrany w panelu, podany kod albo widok,
+  jedno kliknięcie. Polecenie bierze najbliższą usługę z rejestru: gminy, potem powiatu, na końcu
+  krajową K-GESUT. Jednostka z samym WFS dostaje swój identyfikator dla `rejestr-pobierz`.
 - **Narzędzie Pobierz z rejestru > Przejazdy:** dziesięć usług przejazdów, z PKP PLK, w jednym
   wyborze.
 

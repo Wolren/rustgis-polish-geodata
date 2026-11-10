@@ -17,13 +17,37 @@ pub const BDOT500: &str = "BDOT500";
 /// The GESUT dataset, as the register names it.
 pub const GESUT: &str = "GESUT";
 
-/// Adds the unit's own dataset for the view: a WMS on the map, or the id of its WFS.
-pub fn run(host: &mut Host, lang: Lang, dataset: &str) -> Result<Value, String> {
-    let (lon, lat) = host.centre()?;
-    if !in_poland(lon, lat) {
-        return Err(text::county_view_outside_at(lang, lon, lat));
-    }
-    let unit = unit_at(lon, lat, lang)?;
+/// Adds the unit's own dataset: the panel's unit, a code the caller names, or the view centre.
+pub fn run(host: &mut Host, request: &Value, lang: Lang, dataset: &str) -> Result<Value, String> {
+    let params = request.get("params").cloned().unwrap_or_else(|| json!({}));
+    let asked = params
+        .get("teryt")
+        .or_else(|| params.get("jednostka"))
+        .or_else(|| params.get("unit"))
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|code| !code.is_empty())
+        .map(str::to_string)
+        .or_else(|| {
+            request
+                .get("panel")
+                .and_then(|panel| panel.get("values"))
+                .and_then(|values| values.get("unit"))
+                .and_then(Value::as_str)
+                .map(str::trim)
+                .filter(|code| !code.is_empty())
+                .map(str::to_string)
+        });
+    let unit = match asked {
+        Some(code) => unit_from_code(&code, lang)?,
+        None => {
+            let (lon, lat) = host.centre()?;
+            if !in_poland(lon, lat) {
+                return Err(text::county_view_outside_at(lang, lon, lat));
+            }
+            unit_at(lon, lat, lang)?
+        }
+    };
     let found = matches(dataset, &unit);
     let entry = *found
         .first()
@@ -109,6 +133,33 @@ fn unit_at(lon: f64, lat: f64, lang: Lang) -> Result<Unit, String> {
 /// The country's box with a small margin, so a view over the sea or abroad says so first.
 fn in_poland(lon: f64, lat: f64) -> bool {
     (13.4..=25.0).contains(&lon) && (48.4..=55.3).contains(&lat)
+}
+
+/// A gmina or county code the caller named: 7 digits (or 6, or with `_type`), or 4 for a county.
+fn unit_from_code(code: &str, lang: Lang) -> Result<Unit, String> {
+    let digits: String = code.chars().filter(char::is_ascii_digit).collect();
+    let (gmina, county) = match digits.chars().count() {
+        7 | 6 => (digits[..6].to_string(), digits[..4].to_string()),
+        4 => (String::new(), digits.clone()),
+        _ => return Err(text::county_unit_not_local(lang, code)),
+    };
+    let name = unit_name(&digits).unwrap_or_else(|| digits.clone());
+    Ok(Unit { gmina, county, teryt: digits, name })
+}
+
+/// The name of a unit whose code may miss the gmina's type digit.
+fn unit_name(digits: &str) -> Option<String> {
+    if let Some((name, _)) = crate::jednostki::resolve(digits) {
+        return Some(name);
+    }
+    if digits.len() == 6 {
+        for suffix in '0'..='9' {
+            if let Some((name, _)) = crate::jednostki::resolve(&format!("{digits}{suffix}")) {
+                return Some(name);
+            }
+        }
+    }
+    None
 }
 
 /// The TERYT code without the gmina type suffix: `306401_1` becomes `306401`.
@@ -239,6 +290,17 @@ mod tests {
             teryt: String::new(),
             name: "Poznań (miasto)".into(),
         }
+    }
+
+    #[test]
+    fn a_code_names_its_gmina_county_and_unit() {
+        let gmina = unit_from_code("3064011", Lang::En).expect("a gmina");
+        assert_eq!((gmina.gmina.as_str(), gmina.county.as_str()), ("306401", "3064"));
+        let county = unit_from_code("3064", Lang::En).expect("a county");
+        assert!(county.gmina.is_empty());
+        assert_eq!(county.county, "3064");
+        assert!(unit_from_code("30", Lang::En).is_err());
+        assert!(unit_from_code("306401_1", Lang::En).is_ok());
     }
 
     #[test]

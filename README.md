@@ -262,9 +262,9 @@ built: 1 742 WMS from 570 institutions and 1 554 WFS. Three roads to them:
   `{"dodaj": "<id>"}` adds one service.
 - **Command `rejestr-widok`:** narrows the register to the county under the map view, so a search
   starts where the map is.
-- **Commands `bdot500` and `gesut`:** the gmina or county under the view, one click. The command takes
-  the most specific register service: the gmina's, then the county's, then the national K-GESUT. A WFS
-  only unit gets its id named for `rejestr-pobierz`.
+- **Commands `bdot500` and `gesut`:** the gmina or county chosen in the panel, a code you pass, or
+  under the view, one click. The command takes the most specific register service: the gmina's, then
+  the county's, then the national K-GESUT. A WFS only unit gets its id named for `rejestr-pobierz`.
 - **Tool Download from the register > Level crossings:** the ten level-crossing services, PKP PLK
   included, under one picker.
 
