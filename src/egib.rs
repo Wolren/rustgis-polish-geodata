@@ -17,7 +17,8 @@ use serde_json::{json, Value};
 const ULDK: &str = "https://uldk.gugik.gov.pl/";
 
 /// How many features one run may collect: a city's parcels run to thousands.
-const MAX_FEATURES: usize = 20_000;
+/// The cap one register read stops at; the national tools use the same ceiling.
+pub(crate) const MAX_FEATURES: usize = 50_000;
 /// How many features one page asks for.
 const PAGE: usize = 1000;
 /// A clipped feature smaller than this in square degrees is a line on the boundary, not a shape.

@@ -72,7 +72,7 @@ działki, adresy, osnowy i plany miejscowe z tych powiatów, które publikują W
 
 `dzialki-powiat` kładzie własne EGiB powiatu jako wektorowe działki i budynki. ULDK nazywa powiat
 pod obszarem, rejestr podaje adres WFS tego powiatu, a strony po 1 000 obiektów (`STARTINDEX`) wracają
-jako jedna warstwa. Sufit to 20 000 obiektów, a parametr `limit` obniża go.
+jako jedna warstwa. Sufit to 50 000 obiektów, a parametr `limit` obniża go.
 
 ## Pobieranie
 
@@ -161,7 +161,7 @@ granica”), drzewo warstw granicznych z wyszukiwarką, drzewo **Mapa** z trzema
   się tam, gdzie stoi mapa. Parametr `rodzaj` wybiera `wms` albo `wfs`.
 - **Polecenia `bdot500` i `gesut`:** gmina albo powiat wybrany w panelu, podany kod albo widok,
   jedno kliknięcie. Polecenie bierze najbliższą usługę z rejestru: gminy, potem powiatu, na końcu
-  krajową K-GESUT. Jednostka z samym WFS jest czytana z własnej usługi, do 20 000 obiektów.
+  krajową K-GESUT. Jednostka z samym WFS jest czytana z własnej usługi, do 50 000 obiektów.
 - **Narzędzie Pobierz z rejestru > Przejazdy:** dziesięć usług przejazdów, z PKP PLK, w jednym
   wyborze.
 

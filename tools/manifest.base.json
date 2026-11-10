@@ -363,7 +363,7 @@
       "id": "wmts",
       "label": "Add WMTS",
       "icon": "globe_view",
-      "help": "Adds a WMTS overlay from a GetTile template with the z, x and y placeholders.",
+      "help": "Adds a WMTS overlay from a GetTile template or a capabilities URL.",
       "params": "{\"url\": \"https://server?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=name&STYLE=default&TILEMATRIXSET=EPSG:3857&TILEMATRIX=EPSG:3857:{z}&TILEROW={y}&TILECOL={x}&FORMAT=image/jpeg\", \"nazwa\": \"Layer name\"}"
     },
     {
@@ -1599,9 +1599,9 @@
       "No feature ceiling": "Bez limitu obiektów",
       "Take every feature in the area, above the 50 000 feature ceiling.": "Bierze wszystkie obiekty w obszarze, ponad progiem 50 000.",
       "Add WMTS": "Dodaj WMTS",
-      "Adds a WMTS overlay from a GetTile template with the z, x and y placeholders.": "Dodaje nakładkę WMTS z szablonu GetTile ze znacznikami z, x i y.",
       "Add WCS": "Dodaj WCS",
-      "Adds any WCS coverage from its GetCoverage URL.": "Dodaje dowolne pokrycie WCS z jego adresu GetCoverage."
+      "Adds any WCS coverage from its GetCoverage URL.": "Dodaje dowolne pokrycie WCS z jego adresu GetCoverage.",
+      "Adds a WMTS overlay from a GetTile template or a capabilities URL.": "Dodaje nakładkę WMTS z szablonu GetTile albo z adresu capabilities."
     }
   },
   "moreMaps": {

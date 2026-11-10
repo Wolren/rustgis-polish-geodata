@@ -158,14 +158,6 @@ fn find_descendant<'a>(node: &'a Node, name: &str) -> Option<&'a Node> {
     node.children.iter().find_map(|c| find_descendant(c, name))
 }
 
-/// Puts a degree pair in longitude and latitude, whichever order the service wrote it in.
-///
-/// Returns true when every pair ended in degrees; a pair still in metres comes from a service
-/// that ignored the requested CRS, and the caller should say so.
-pub fn normalize_lon_lat(features: &mut [Value]) -> bool {
-    normalize(features, None)
-}
-
 /// The same, for a grid answer: the requested area's box tells the two axis orders apart.
 pub fn normalize_in_area(features: &mut [Value], area: [f64; 4]) -> bool {
     normalize(features, Some(area))
@@ -790,7 +782,7 @@ mod tests {
             json!({"geometry": {"type": "Point", "coordinates": [52.4, 16.9]}}),
             json!({"geometry": {"type": "Point", "coordinates": [16.9, 52.4]}}),
         ];
-        normalize_lon_lat(&mut features);
+        normalize_in_area(&mut features, [13.4, 48.4, 25.0, 55.3]);
         assert_eq!(features[0]["geometry"]["coordinates"][0], json!(16.9));
         assert_eq!(features[0]["geometry"]["coordinates"][1], json!(52.4));
         assert_eq!(features[1]["geometry"]["coordinates"][0], json!(16.9));
@@ -813,7 +805,7 @@ mod tests {
     fn a_pair_in_metres_is_left_and_reported() {
         // 2180 metres: the axis order cannot be told apart by range, so the caller must say.
         let mut features = vec![json!({"geometry": {"type": "Point", "coordinates": [507142.0, 216500.0]}})];
-        assert!(!normalize_lon_lat(&mut features));
+        assert!(!normalize_in_area(&mut features, [13.4, 48.4, 25.0, 55.3]));
         assert_eq!(features[0]["geometry"]["coordinates"][0], json!(507142.0));
     }
 }

@@ -608,86 +608,6 @@ pub fn area_no_geometry(lang: Lang, area: &str) -> String {
     )
 }
 
-pub fn area_too_large(
-    lang: Lang,
-    area: &str,
-    width: f64,
-    height: f64,
-    name: &str,
-    max: f64,
-) -> String {
-    let (width, height, max) = (num(lang, width, 1), num(lang, height, 1), num(lang, max, 2));
-    pick!(
-        lang,
-        format!(
-            "the layer \"{area}\" covers {width}° × {height}°, too much for \"{name}\" \
-             (at most {max}°). Select the features you want on the map and run the tool again \
-             (a selection narrows the area), or pick a smaller layer."
-        ),
-        format!(
-            "warstwa „{area}” obejmuje {width}° × {height}°, za dużo dla „{name}” \
-             (maks. {max}°). Zaznacz na mapie interesujące obiekty i uruchom narzędzie ponownie \
-             (zaznaczenie zawęża obszar) albo wskaż mniejszą warstwę."
-        )
-    )
-}
-
-/// A layer the catalogue sets no span for is measured in features instead, before any fetch.
-pub fn area_over_budget(
-    lang: Lang,
-    area: &str,
-    needed: usize,
-    budget: usize,
-    ceiling: usize,
-    confirm: bool,
-    name: &str,
-) -> String {
-    let escape = if confirm || needed > ceiling {
-        String::new()
-    } else {
-        pick!(
-            lang,
-            format!(" Tick \"Download even if large\" to take up to {}.", features(lang, ceiling)),
-            format!(" Zaznacz \"Pobierz mimo rozmiaru\", aby wziąć do {}.", features(lang, ceiling))
-        )
-    };
-    let ceiling_note = if needed > ceiling {
-        pick!(
-            lang,
-            format!(" Even a confirmed run stops at {}.", features(lang, ceiling)),
-            format!(" Nawet potwierdzony przebieg bierze najwyżej {}.", features(lang, ceiling))
-        )
-    } else {
-        String::new()
-    };
-    pick!(
-        lang,
-        format!(
-            "the layer \"{area}\" needs {} from \"{name}\", more than one download takes ({}).{escape}{ceiling_note} \
-             Select the features you want on the map and run the tool again (a selection narrows \
-             the area), or pick a smaller layer.",
-            features(lang, needed),
-            features(lang, budget)
-        ),
-        format!(
-            "warstwa „{area}” potrzebuje {} z zestawu „{name}”, a jedno pobranie bierze najwyżej \
-             {}.{escape}{ceiling_note} Zaznacz na mapie interesujące obiekty i uruchom narzędzie \
-             ponownie (zaznaczenie zawęża obszar) albo wskaż mniejszą warstwę.",
-            features(lang, needed),
-            features(lang, budget)
-        )
-    )
-}
-
-/// The progress line while the service counts the features the area needs.
-pub fn counting(lang: Lang, name: &str, area: &str) -> String {
-    pick!(
-        lang,
-        format!("{name}: counting the features in \"{area}\""),
-        format!("{name}: zliczanie obiektów w „{area}”")
-    )
-}
-
 pub fn no_features(lang: Lang, name: &str) -> String {
     pick!(
         lang,
@@ -744,6 +664,14 @@ pub fn wmts_needs_url(lang: Lang) -> String {
         lang,
         "A WMTS layer needs a GetTile URL template.".to_string(),
         "Warstwa WMTS potrzebuje szablonu adresu GetTile.".to_string()
+    )
+}
+
+pub fn wmts_no_layer(lang: Lang) -> String {
+    pick!(
+        lang,
+        "The WMTS capabilities name no layer with a tile matrix set.".to_string(),
+        "Usługa WMTS nie nazywa warstwy z zestawem macierzy płytek.".to_string()
     )
 }
 
@@ -1546,15 +1474,6 @@ pub fn clip_boundary_layer(lang: Lang) -> String {
     pick!(lang, "Clip boundary", "Granica cięcia").to_string()
 }
 
-/// The service counts no feature in the area, so no page is worth a request.
-pub fn area_empty(lang: Lang, layer: &str, area: &str) -> String {
-    pick!(
-        lang,
-        format!("{layer} has no feature in {area}: the run stops before a page"),
-        format!("{layer} nie ma żadnego obiektu w {area}: przebieg kończy się przed stroną")
-    )
-}
-
 /// The panel's tree has nothing chosen yet, so no unit sets the area.
 pub fn unit_not_chosen(lang: Lang) -> String {
     pick!(
@@ -1816,16 +1735,6 @@ pub fn unit_chosen(lang: Lang, name: &str, level: &str) -> String {
         format!("{level} {name}: czytam granicę z PRG")
     )
 }
-
-/// A box past the layer's span holds few enough features, so the run goes ahead.
-pub fn span_counted(lang: Lang, layer: &str, wanted: usize, span: f64) -> String {
-    pick!(
-        lang,
-        format!("{layer}: the box is wider than {span}\u{00b0}, but it holds {wanted} features, so the run goes ahead"),
-        format!("{layer}: prostokąt szerszy niż {span}\u{00b0}, ale ma {wanted} obiektów, więc przebieg idzie dalej")
-    )
-}
-
 
 /// A named area layer is on the map, ready for a download.
 pub fn area_added(lang: Lang, name: &str, size: (f64, f64)) -> String {
@@ -2603,15 +2512,6 @@ mod tests {
         assert!(service_exception(Lang::Pl, "błąd serwera").contains("błąd serwera"));
         assert!(http_status(Lang::En, 400, "https://x", "no such type").contains("no such type"));
         assert_eq!(http_status(Lang::En, 400, "https://x", ""), "HTTP 400 from https://x");
-    }
-
-    #[test]
-    fn an_area_over_the_ceiling_gets_no_tick_that_cannot_help() {
-        let message = area_over_budget(Lang::En, "Area", 60_000, 50_000, 50_000, true, "Punkty adresowe");
-        assert!(message.contains("Even a confirmed run stops"), "{message}");
-        assert!(!message.contains("Tick"), "{message}");
-        let small = area_over_budget(Lang::En, "Area", 20_000, 10_000, 50_000, false, "Punkty adresowe");
-        assert!(small.contains("Tick"), "{small}");
     }
 
     #[test]

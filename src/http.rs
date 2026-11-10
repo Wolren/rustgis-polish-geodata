@@ -42,14 +42,6 @@ pub fn get(url: &str, timeout_secs: u64, lang: Lang) -> Result<String, String> {
     Ok(body)
 }
 
-/// A GET answered from the cache when fresh, else from the server; the caller stores the body.
-pub fn get_unstored(url: &str, timeout_secs: u64, lang: Lang) -> Result<String, String> {
-    match cache::get(url) {
-        Some(cached) => Ok(cached),
-        None => fetch(url, timeout_secs, lang),
-    }
-}
-
 /// A GET that always reaches the server, bypassing the cache.
 pub fn fetch(url: &str, timeout_secs: u64, lang: Lang) -> Result<String, String> {
     let mut attempt = 0;

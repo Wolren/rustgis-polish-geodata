@@ -79,7 +79,7 @@ pub fn run(host: &mut Host, request: &Value, lang: Lang, dataset: &str) -> Resul
             .to_string();
         let read = crate::egib::from_register(
             host,
-            &json!({"usluga": entry.id, "obszar": area_name, "limit": 20_000}),
+            &json!({"usluga": entry.id, "obszar": area_name, "limit": crate::egib::MAX_FEATURES}),
             lang,
         )?;
         let note = text::county_wfs_added(lang, dataset, &unit.name, &entry.name);

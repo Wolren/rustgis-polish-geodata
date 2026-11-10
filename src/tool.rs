@@ -11,16 +11,12 @@
 
 use crate::cache;
 use crate::catalog;
-use crate::filter;
 use crate::host;
-use crate::http;
 use crate::sheets;
 use crate::text::{self, Lang};
 use crate::wfs;
 use serde_json::{json, Value};
 
-/// The span the catalogue gives a dataset it sets no real limit for; those are counted instead.
-const UNLIMITED_SPAN: f64 = 20.0;
 /// The cap any confirmed run stops at, whatever the panel's slider says.
 const HARD_MB: f64 = 256.0;
 /// The size limit the tool form offers, in megabytes; zero means no byte limit at all.
@@ -83,9 +79,6 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     // The no-ceiling tick takes every feature; the cache and the byte limit still apply.
     let no_limit = params.get("nolimit").and_then(Value::as_bool).unwrap_or(false);
     let cap = feature_cap(no_limit, confirm);
-    if !no_limit {
-        gate(layer, area, features_of_area, bbox, lang, cap, confirm)?;
-    }
 
     // The form's own number wins, then the panel's slider, so the pane that refuses can raise it.
     let asked_mb = params
@@ -162,127 +155,6 @@ fn feature_cap(no_limit: bool, confirm: bool) -> usize {
     } else {
         wfs::MAX_TOTAL
     }
-}
-
-/// The one gate before a download: the layer's span, confirmed by the feature count of the area.
-///
-/// A wide box over a sparse layer is fine, so the degrees limit only refuses when the service says
-/// the area holds more features than one run takes, or gives no count at all.
-fn gate(
-    layer: &catalog::WfsLayer,
-    area: &str,
-    collection: &Value,
-    bbox: [f64; 4],
-    lang: Lang,
-    cap: usize,
-    confirm: bool,
-) -> Result<(), String> {
-    gate_with(layer, area, bbox, lang, cap, confirm, || {
-        // The KINR service counts nothing for a 4326 filter, so its box carries the CRS instead.
-        let filter = if layer.bbox_crs {
-            None
-        } else {
-            filter::polygon_filter(layer, collection).ok()
-        };
-        host::progress_line(&text::counting(lang, layer.name, area));
-        needed(layer, bbox, filter.as_deref(), lang)
-    })
-}
-
-/// The gate with its count supplied, so a test needs no request.
-fn gate_with(
-    layer: &catalog::WfsLayer,
-    area: &str,
-    bbox: [f64; 4],
-    lang: Lang,
-    cap: usize,
-    confirm: bool,
-    counted: impl FnOnce() -> Option<usize>,
-) -> Result<(), String> {
-    // A service that ignores the area has no count to trust: the fetch cuts the whole set here.
-    if layer.unfiltered {
-        return Ok(());
-    }
-    let limited = layer.max_span < UNLIMITED_SPAN;
-    let over_span = limited && wfs::too_large(layer, bbox);
-    if limited && !over_span {
-        return Ok(());
-    }
-    let Some(wanted) = counted() else {
-        // Without a count the span is the only guard there is.
-        return if over_span {
-            Err(text::area_too_large(
-                lang,
-                area,
-                bbox[2] - bbox[0],
-                bbox[3] - bbox[1],
-                layer.name,
-                layer.max_span,
-            ))
-        } else {
-            Ok(())
-        };
-    };
-    // A zero count ends the run before a page is asked for, which would cost a request.
-    if wanted == 0 {
-        return Err(text::area_empty(lang, layer.name, area));
-    }
-    if wanted > cap {
-        return Err(text::area_over_budget(
-            lang,
-            area,
-            wanted,
-            cap,
-            wfs::HARD_TOTAL,
-            confirm,
-            layer.name,
-        ));
-    }
-    if over_span {
-        // A tool has no host calls, so the note goes out as a progress line.
-        host::progress_line(&text::span_counted(lang, layer.name, wanted, layer.max_span));
-    }
-    Ok(())
-}
-
-/// The features the service counts in the area, when it answers with a number at all.
-fn needed(layer: &catalog::WfsLayer, bbox: [f64; 4], filter: Option<&str>, lang: Lang) -> Option<usize> {
-    let body = http::get_unstored(&hits_url(layer, bbox, filter), 60, lang).ok()?;
-    hits_of(&body)
-}
-
-/// The GetFeature address that asks only how many features the area holds.
-fn hits_url(layer: &catalog::WfsLayer, bbox: [f64; 4], filter: Option<&str>) -> String {
-    let mut url = format!(
-        "{}?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME={}&SRSNAME=EPSG:4326&RESULTTYPE=hits",
-        layer.url, layer.type_name
-    );
-    match filter {
-        // GUGiK refuses BBOX and FILTER in one request, so the polygon replaces the box.
-        Some(filter) => {
-            url.push_str("&FILTER=");
-            url.push_str(filter);
-        }
-        None => {
-            url.push_str(&format!(
-                "&BBOX={:.6},{:.6},{:.6},{:.6}",
-                bbox[0], bbox[1], bbox[2], bbox[3]
-            ));
-            // The KINR address service counts nothing without the CRS on the box.
-            if layer.bbox_crs {
-                url.push_str(",EPSG:4326");
-            }
-        }
-    }
-    url
-}
-
-/// The count a `RESULTTYPE=hits` answer carries, when it carries one.
-fn hits_of(body: &str) -> Option<usize> {
-    let key = "numberOfFeatures=\"";
-    let start = body.find(key)? + key.len();
-    let rest = &body[start..];
-    rest[..rest.find('"')?].parse().ok()
 }
 
 /// The bounding box of a FeatureCollection's geometry, `[west, south, east, north]`.
@@ -379,29 +251,6 @@ mod tests {
     }
 
     #[test]
-    fn asks_the_service_for_the_count_of_a_big_dataset() {
-        let layer = catalog::wfs_by_label("Granice gmin").unwrap();
-        let url = hits_url(layer, [16.8, 52.3, 16.9, 52.4], None);
-        assert!(url.contains("RESULTTYPE=hits"), "{url}");
-        assert!(url.contains("TYPENAME=A03_Granice_gmin"), "{url}");
-        assert!(url.contains("BBOX=16.800000,52.300000,16.900000,52.400000"), "{url}");
-        assert!(!url.contains("MAXFEATURES"), "a page limit caps the count too: {url}");
-        // The polygon narrows the count as it narrows the download, and never rides with a bbox.
-        let filtered = hits_url(layer, [16.8, 52.3, 16.9, 52.4], Some("%3CFilter%3E"));
-        assert!(filtered.contains("&FILTER=%3CFilter%3E"), "{filtered}");
-        assert!(!filtered.contains("BBOX="), "{filtered}");
-        // The KINR service counts nothing unless the box names its CRS.
-        let addresses = catalog::wfs_by_label("Punkty adresowe").unwrap();
-        let counted = hits_url(addresses, [16.8, 52.3, 16.9, 52.4], None);
-        assert!(counted.contains("BBOX=16.800000,52.300000,16.900000,52.400000,EPSG:4326"), "{counted}");
-        // The count is what GUGiK's answer carries, beside the empty collection.
-        let body = "<wfs:FeatureCollection numberOfFeatures=\"54267\"></wfs:FeatureCollection>";
-        assert_eq!(hits_of(body), Some(54_267));
-        assert_eq!(hits_of("<ServiceException/>"), None);
-        assert_eq!(hits_of("numberOfFeatures=\"unknown\""), None);
-    }
-
-    #[test]
     fn a_no_ceiling_run_takes_every_feature() {
         assert_eq!(feature_cap(true, false), usize::MAX);
         assert_eq!(feature_cap(true, true), usize::MAX);
@@ -409,38 +258,4 @@ mod tests {
         assert_eq!(feature_cap(false, true), wfs::HARD_TOTAL);
     }
 
-    #[test]
-    fn one_gate_refuses_a_counted_area_over_the_budget() {
-        let layer = catalog::wfs_by_label("Działki").unwrap();
-        let area = json!({"type": "FeatureCollection", "features": []});
-        let error = gate_with(
-            layer,
-            "Area to download",
-            [14.0, 49.0, 24.2, 54.9],
-            Lang::En,
-            wfs::MAX_TOTAL,
-            false,
-            || Some(60_000),
-        )
-        .unwrap_err();
-        assert!(error.contains("Area to download"), "{error}");
-        assert!(error.contains("Działki"), "{error}");
-        assert!(error.contains("Even a confirmed run stops"), "{error}");
-        // The same gate lets a box inside the layer's own span through without a count.
-        assert!(gate(layer, "Area to download", &area, [21.0, 52.2, 21.01, 52.21], Lang::En, wfs::MAX_TOTAL, false).is_ok());
-    }
-
-    #[test]
-    fn the_sentinel_span_is_left_to_the_feature_budget() {
-        let gminy = catalog::wfs_by_label("Granice gmin").unwrap();
-        let dzialki = catalog::wfs_by_label("Działki").unwrap();
-        let country = [14.0, 49.0, 24.2, 54.9];
-        assert_eq!(gminy.max_span, UNLIMITED_SPAN, "a dataset with no real limit");
-        assert!(dzialki.max_span < UNLIMITED_SPAN, "a real span keeps the degree check");
-        assert!(
-            !wfs::too_large(gminy, country),
-            "the sentinel alone lets the country through"
-        );
-        assert!(wfs::too_large(dzialki, country), "a real span still refuses it");
-    }
 }

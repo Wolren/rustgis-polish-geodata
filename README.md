@@ -9,7 +9,7 @@ downloaded as editable layers.
 | WCS coverages | 8 GUGiK coverages: three orthophoto series and five terrain or surface models, as a raster of the area |
 | Vector download | 106 WFS datasets and 162 sheet indexes, as layers with progress and Cancel |
 | Protected areas | 15 GDOŚ types: national parks, reserves, Natura 2000, landscape parks |
-| County parcels | `dzialki-powiat`: the county's own EGiB, paged to 20 000 features |
+| County parcels | `dzialki-powiat`: the county's own EGiB, paged to 50 000 features |
 | Any register service | `rejestr-pobierz`: a WFS from the register by id, one bounded request per type |
 | Service register | 3 296 proved addresses, 1 742 WMS from 570 institutions and 1 554 WFS, with an update tool |
 | Area | from the view, a box, a GeoJSON shape, or a gmina, powiat, voivodeship, obręb or city |
@@ -147,10 +147,10 @@ byte limit**: a whole-country run of `Granice gmin` at 0 brought all 2 479 gminy
 in 34 seconds. **Download even if large** raises both: 50 000 features, and the greater of 256 MB and the
 size slider, which ends at 500 MB. **No feature ceiling** takes every feature in the area, with no cap.
 
-The gate counts before it refuses: a wide box over a sparse layer runs, and a dense one stops with
-the exact number, as in `needs 169818 features from "Budynki", more than one download takes (10 000)`.
-Only addresses, streets, parcels and buildings keep a small box; every other layer downloads over a
-whole voivodeship or wider.
+A wide box starts immediately. The run stops at the feature cap (10 000, 50 000 with **Download even
+if large**, no cap with **No feature ceiling**) or at the byte limit, and the notice says where it
+stopped. Only addresses, streets, parcels and buildings keep a small box; every other layer downloads
+over a whole voivodeship or wider.
 
 The WFS filter returns whole features that touch the area. **Clip to layer** cuts them with the
 built-in Clip and replaces the layer with the result.
@@ -266,7 +266,7 @@ built: 1 742 WMS from 570 institutions and 1 554 WFS. Three roads to them:
 - **Commands `bdot500` and `gesut`:** the gmina or county chosen in the panel, a code you pass, or
   under the view, one click. The command takes the most specific register service: the gmina's, then
   the county's, then the national K-GESUT. A unit with only a WFS is read from its own service, up to
-  20 000 features.
+  50 000 features.
 - **Tool Download from the register > Level crossings:** the ten level-crossing services, PKP PLK
   included, under one picker.
 

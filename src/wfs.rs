@@ -51,11 +51,6 @@ impl Srs {
     }
 }
 
-/// Whether the area is wider than the layer's limit in either direction.
-pub fn too_large(layer: &WfsLayer, bbox: [f64; 4]) -> bool {
-    bbox[2] - bbox[0] > layer.max_span || bbox[3] - bbox[1] > layer.max_span
-}
-
 /// What one download brought back, and what the user still has to be told.
 pub struct Download {
     pub features: Vec<Value>,
@@ -584,15 +579,6 @@ mod tests {
         assert!(!url.contains("BBOX="));
         // The first page asks for no offset, which some services refuse outright.
         assert!(!url.contains("STARTINDEX="), "{url}");
-    }
-
-    #[test]
-    fn refuses_a_huge_area() {
-        let dzialki = catalog::wfs_by_label("dzialki").unwrap();
-        let gminy = catalog::wfs_by_label("gminy").unwrap();
-        assert!(too_large(dzialki, [21.0, 52.0, 21.5, 52.4]));
-        assert!(!too_large(dzialki, [21.0, 52.2, 21.01, 52.21]));
-        assert!(!too_large(gminy, [21.0, 52.0, 22.5, 53.0]));
     }
 
     #[test]
