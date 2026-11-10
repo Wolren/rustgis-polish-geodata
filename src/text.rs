@@ -1368,15 +1368,11 @@ pub fn county_added(lang: Lang, dataset: &str, unit: &str, layers: &str) -> Stri
     )
 }
 
-pub fn county_wfs(lang: Lang, dataset: &str, unit: &str, id: &str) -> String {
+pub fn county_wfs_added(lang: Lang, dataset: &str, unit: &str, name: &str) -> String {
     pick!(
         lang,
-        format!(
-            "The register has {dataset} for {unit} only as a WFS: run rejestr-pobierz with {{\"usluga\": \"{id}\"}}."
-        ),
-        format!(
-            "Rejestr ma {dataset} dla {unit} tylko jako WFS: uruchom rejestr-pobierz z {{\"usluga\": \"{id}\"}}."
-        )
+        format!("{dataset} for {unit} read from its own WFS: {name}"),
+        format!("{dataset} dla {unit} odczytany z własnego WFS: {name}")
     )
 }
 

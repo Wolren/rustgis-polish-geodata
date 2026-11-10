@@ -65,7 +65,24 @@ pub fn run(host: &mut Host, request: &Value, lang: Lang, dataset: &str) -> Resul
         })
         .collect();
     if entry.kind != "wms" {
-        let note = text::county_wfs(lang, dataset, &unit.name, &entry.id);
+        // The closest service is the unit's own WFS: its boundary becomes the area, then one read.
+        let level = if unit.gmina.is_empty() { "powiat" } else { "gmina" };
+        let mut area_params = json!({"nazwa": unit.name, "poziom": level});
+        if let Some(code) = prg_code(&unit.teryt) {
+            area_params["kod"] = json!(code);
+        }
+        let area = crate::prg::area(host, &area_params, lang)?;
+        let area_name = area
+            .get("layer")
+            .and_then(Value::as_str)
+            .unwrap_or(text::AREA_LAYERS[0])
+            .to_string();
+        let read = crate::egib::from_register(
+            host,
+            &json!({"usluga": entry.id, "obszar": area_name, "limit": 20_000}),
+            lang,
+        )?;
+        let note = text::county_wfs_added(lang, dataset, &unit.name, &entry.name);
         host.notify(&note);
         return Ok(json!({
             "dataset": dataset,
@@ -75,6 +92,8 @@ pub fn run(host: &mut Host, request: &Value, lang: Lang, dataset: &str) -> Resul
             "service": entry.id,
             "name": entry.name,
             "url": entry.url,
+            "area": area_name,
+            "download": read,
             "count": candidates.len(),
             "candidates": candidates,
             "note": note,
@@ -162,12 +181,18 @@ fn unit_name(digits: &str) -> Option<String> {
     None
 }
 
+/// The PRG code of a unit: `306401_1` becomes the seven digits `3064011`, else nothing.
+fn prg_code(teryt: &str) -> Option<String> {
+    let digits: String = teryt.chars().filter(char::is_ascii_digit).collect();
+    (digits.chars().count() == 7).then_some(digits)
+}
+
 /// The TERYT code without the gmina type suffix: `306401_1` becomes `306401`.
 fn stem(code: &str) -> &str {
     code.split('_').next().unwrap_or(code)
 }
 
-/// How close a service is to the unit: a WMS before a WFS, then gmina, county and country.
+/// How close a service is: the gmina, the county, the country, and a WMS before a WFS.
 fn rank(entry: &Registered, unit: &Unit) -> Option<u8> {
     let code = stem(&entry.teryt);
     let territory = if !unit.gmina.is_empty() && code == unit.gmina {
@@ -179,7 +204,7 @@ fn rank(entry: &Registered, unit: &Unit) -> Option<u8> {
     } else {
         return None;
     };
-    Some(u8::from(entry.kind != "wms") * 4 + territory)
+    Some(territory * 4 + u8::from(entry.kind != "wms"))
 }
 
 /// Every service of the dataset that names the unit's own gmina, county or country, best first.
@@ -319,6 +344,15 @@ mod tests {
         ];
         let found: Vec<&str> = matches_in("GESUT", &unit("306401", "3064"), &entries).iter().map(|e| e.id.as_str()).collect();
         assert_eq!(found, ["gmina", "county", "k-gesut"]);
+    }
+
+    #[test]
+    fn a_gmina_wfs_beats_a_county_wms() {
+        let entries = vec![
+            entry("county-wms", "BDOT500 powiatu", "wms", "3064"),
+            entry("gmina-wfs", "BDOT500 gminy", "wfs", "306401_1"),
+        ];
+        assert_eq!(matches_in("BDOT500", &unit("306401", "3064"), &entries)[0].id, "gmina-wfs");
     }
 
     #[test]
