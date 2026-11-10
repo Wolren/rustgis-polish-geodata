@@ -378,7 +378,7 @@
     {
       "id": "granice",
       "name": "Administrative boundaries",
-      "summary": "Every level of the state boundaries: the country, a voivodeship, a powiat or a gmina.",
+      "summary": "Every level of the state boundaries: the country, a voivodeship, a powiat or a gmina. A country run of gminy is about 109 MB.",
       "toolbox": "Boundaries and units",
       "params": [
         {
@@ -1600,7 +1600,8 @@
       "Add WMTS": "Dodaj WMTS",
       "Add WCS": "Dodaj WCS",
       "Adds any WCS coverage from its GetCoverage URL.": "Dodaje dowolne pokrycie WCS z jego adresu GetCoverage.",
-      "Adds the national ortho WMTS on a click, or another service from a GetTile template or a capabilities URL.": "Dodaje krajową ortofoto WMTS po kliknięciu, a inną usługę z szablonu GetTile albo adresu capabilities."
+      "Adds the national ortho WMTS on a click, or another service from a GetTile template or a capabilities URL.": "Dodaje krajową ortofoto WMTS po kliknięciu, a inną usługę z szablonu GetTile albo adresu capabilities.",
+      "Every level of the state boundaries: the country, a voivodeship, a powiat or a gmina. A country run of gminy is about 109 MB.": "Każdy poziom granic państwowych: kraj, województwo, powiat albo gmina. Krajowy przebieg gmin to około 109 MB."
     }
   },
   "moreMaps": {

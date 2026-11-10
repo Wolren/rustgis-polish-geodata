@@ -26,7 +26,7 @@ pub fn add(host: &mut Host, params: &Value, lang: Lang) -> Result<Value, String>
     host.call(
         "map.addTiles",
         json!({"url": template, "name": name, "kind": "raster", "overlay": true}),
-    )?;
+    ).map_err(|error| crate::text::tile_limit(lang, error))?;
     host.notify(&text::wmts_added(lang, &name));
     Ok(json!({"name": name, "url": template}))
 }

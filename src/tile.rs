@@ -41,7 +41,7 @@ pub fn toggle(host: &mut Host, overlay: &Overlay, lang: Lang) -> Result<Value, S
             "minZoom": overlay.min_zoom,
             "maxZoom": overlay.max_zoom,
         }),
-    )?;
+    ).map_err(|error| crate::text::tile_limit(lang, error))?;
 
     let mut note = text::added(lang, name);
     if zoomed {
@@ -194,7 +194,7 @@ fn toggle_wms(host: &mut Host, picture: &Picture, lang: Lang) -> Result<Value, S
     if let Some(name) = on_map(&tiles, picture.name, &picture.address()) {
         return remove(host, &name, lang);
     }
-    host.call("map.addTiles", wms_layer(picture))?;
+    host.call("map.addTiles", wms_layer(picture)).map_err(|error| crate::text::tile_limit(lang, error))?;
     host.notify(&text::added(lang, picture.name));
     Ok(json!({ "added": picture.name }))
 }

@@ -221,7 +221,7 @@ pub(crate) fn add_wms(
             "minZoom": 0,
             "maxZoom": 19,
         }),
-    )?;
+    ).map_err(|error| crate::text::tile_limit(lang, error))?;
     Ok(json!({ "added": name }))
 }
 

@@ -448,10 +448,10 @@ pub fn clipped_empty(lang: Lang, layer: &str, area: &str) -> String {
     pick!(
         lang,
         format!(
-            "the boundary \"{area}\" covered nothing of \"{layer}\": no feature is kept, so the layer is unchanged"
+            "the boundary \"{area}\" covered nothing of \"{layer}\": no feature is kept, so the layer is unchanged. Draw the boundary over the features and try again."
         ),
         format!(
-            "granica „{area}” nie objęła żadnego obiektu warstwy „{layer}”: nic nie zostało zachowane, więc warstwa jest bez zmian"
+            "granica „{area}” nie objęła żadnego obiektu warstwy „{layer}”: nic nie zostało zachowane, więc warstwa jest bez zmian. Narysuj granicę nad obiektami i spróbuj ponownie."
         )
     )
 }
@@ -611,8 +611,8 @@ pub fn area_no_geometry(lang: Lang, area: &str) -> String {
 pub fn no_features(lang: Lang, name: &str) -> String {
     pick!(
         lang,
-        format!("no \"{name}\" features in the chosen area"),
-        format!("brak obiektów „{name}” w wybranym obszarze")
+        format!("no \"{name}\" features in the chosen area. Try a larger area or another dataset."),
+        format!("brak obiektów „{name}” w wybranym obszarze. Spróbuj większego obszaru albo innego zbioru.")
     )
 }
 
@@ -657,6 +657,19 @@ pub fn bbox_used(lang: Lang, problem: ShapeProblem) -> String {
         ),
     }
     .to_string()
+}
+
+/// The host's tile-layer cap, explained where an overlay add fails.
+pub fn tile_limit(lang: Lang, error: String) -> String {
+    if error.contains("32 tile layers") {
+        pick!(
+            lang,
+            "The map holds the host's limit of 32 tile layers. Remove an overlay in the Layers panel, then add this one.".to_string(),
+            "Mapa ma już limit hosta: 32 warstwy kafelkowe. Usuń nakładkę w panelu Warstwy i dodaj tę.".to_string()
+        )
+    } else {
+        error
+    }
 }
 
 pub fn wmts_no_layer(lang: Lang) -> String {
@@ -1041,8 +1054,8 @@ pub fn area_rect_armed(lang: Lang) -> String {
 pub fn area_nothing_drawn(lang: Lang) -> String {
     pick!(
         lang,
-        "No rectangle was drawn, so the area did not change.".to_string(),
-        "Nie narysowano prostokąta, więc obszar się nie zmienił.".to_string()
+        "No rectangle was drawn, so the area did not change. Draw a rectangle with Rectangle first.".to_string(),
+        "Nie narysowano prostokąta, więc obszar się nie zmienił. Najpierw narysuj prostokąt przyciskiem Prostokąt.".to_string()
     )
 }
 
@@ -2359,8 +2372,8 @@ pub fn height_failed(lang: Lang, detail: &str) -> String {
 pub fn height_outside(lang: Lang) -> String {
     pick!(
         lang,
-        "the terrain model covers Poland only, and the point is outside it",
-        "model terenu pokrywa tylko Polskę, a punkt jest poza nią",
+        "the terrain model covers Poland only, and the point is outside it. Move the view over Poland.",
+        "model terenu pokrywa tylko Polskę, a punkt jest poza nią. Przesuń widok nad Polskę.",
     )
     .to_string()
 }
@@ -2504,6 +2517,13 @@ mod tests {
         assert!(service_exception(Lang::Pl, "błąd serwera").contains("błąd serwera"));
         assert!(http_status(Lang::En, 400, "https://x", "no such type").contains("no such type"));
         assert_eq!(http_status(Lang::En, 400, "https://x", ""), "HTTP 400 from https://x");
+    }
+
+    #[test]
+    fn a_tile_limit_error_names_the_fix() {
+        let message = tile_limit(Lang::En, "a map holds at most 32 tile layers".to_string());
+        assert!(message.contains("Remove an overlay"), "{message}");
+        assert_eq!(tile_limit(Lang::En, "other".to_string()), "other");
     }
 
     #[test]

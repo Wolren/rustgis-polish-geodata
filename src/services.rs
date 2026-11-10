@@ -108,7 +108,7 @@ pub fn toggle(host: &mut Host, lang: Lang, request: &Value) -> Result<Value, Str
         return Ok(json!({ "removed": name }));
     }
 
-    host.call("map.addTiles", tile_layer(service))?;
+    host.call("map.addTiles", tile_layer(service)).map_err(|error| crate::text::tile_limit(lang, error))?;
     host.notify(&text::service_added(
         lang,
         service.display(),
