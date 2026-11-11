@@ -660,6 +660,15 @@ pub fn over_budget(
     )
 }
 
+/// The area lies outside the data the Polish services hold.
+pub fn area_outside_poland(lang: Lang, area: &str) -> String {
+    pick!(
+        lang,
+        format!("the area \"{area}\" is outside Poland: the services carry Polish data"),
+        format!("obszar \"{area}\" jest poza Polską: usługi mają dane tylko dla Polski")
+    )
+}
+
 pub fn no_features(lang: Lang, name: &str) -> String {
     pick!(
         lang,

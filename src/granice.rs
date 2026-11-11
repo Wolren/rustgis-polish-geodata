@@ -125,7 +125,9 @@ pub fn levels(host: &mut Host, request: &Value, lang: Lang) -> Result<Value, Str
     if !no_limit && !layer.unfiltered {
         if let Some(wanted) = crate::tool::counted(layer, bbox, filter.as_deref(), lang) {
             if wanted > cap {
-                return Err(text::over_budget(lang, &label, wanted, cap, confirm, &layer.name, true, true));
+                host::progress_line(&text::over_budget(
+                    lang, &label, wanted, cap, confirm, &layer.name, true, true,
+                ));
             }
         }
     }

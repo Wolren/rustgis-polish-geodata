@@ -73,7 +73,6 @@ pub fn run(params: &Value, lang: Lang) -> Result<Value, String> {
                 "id": layer.id,
                 "title": layer.name,
                 "tool": layer.tool,
-                "max_span": layer.max_span,
             })
         })
         .collect();

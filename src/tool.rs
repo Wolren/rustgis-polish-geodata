@@ -69,6 +69,20 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
         }
     };
     let bbox = bbox_of(features_of_area).ok_or_else(|| text::area_no_geometry(lang, area))?;
+    // The services hold Polish data: a world box clamps to Poland before the requests.
+    let inside = bbox[0] >= catalog::POLAND[0]
+        && bbox[1] >= catalog::POLAND[1]
+        && bbox[2] <= catalog::POLAND[2]
+        && bbox[3] <= catalog::POLAND[3];
+    let bbox = [
+        bbox[0].max(catalog::POLAND[0]),
+        bbox[1].max(catalog::POLAND[1]),
+        bbox[2].min(catalog::POLAND[2]),
+        bbox[3].min(catalog::POLAND[3]),
+    ];
+    if bbox[0] >= bbox[2] || bbox[1] >= bbox[3] {
+        return Err(text::area_outside_poland(lang, area));
+    }
 
     // A tool request carries no panel: the form's checkboxes arrive as parameters.
     let clear = params.get("clear").and_then(Value::as_bool).unwrap_or(false);
@@ -84,9 +98,11 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     // Warn before the first page when the area holds more than one run may take.
     let has_confirm = params.get("confirm").is_some();
     let has_nolimit = params.get("nolimit").is_some();
-    pre_check(
+    if let Some(warning) = pre_check(
         layer, area, features_of_area, bbox, lang, cap, confirm, no_limit, has_confirm, has_nolimit,
-    )?;
+    ) {
+        host::progress_line(&warning);
+    }
 
     // The form's own number wins, then the panel's slider, so the pane that refuses can raise it.
     let asked_mb = crate::number::of(&params, "limit_mb")
@@ -102,18 +118,11 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
     };
     let download = {
         let mut report = |text: &str| host::progress_line(text);
-        wfs::fetch(layer, bbox, Some(features_of_area), None, &mut report, lang, limit, cap)?
+        // A world rectangle filter returns nothing from the Polish services: the box alone does.
+        let polygon = if inside { Some(features_of_area) } else { None };
+        wfs::fetch(layer, bbox, polygon, None, &mut report, lang, limit, cap)?
     };
     let megabytes = download.bytes as f64 / 1e6;
-    if download.limit_hit && !confirm {
-        return Err(text::download_too_big(
-            lang,
-            layer.name,
-            megabytes,
-            asked_mb,
-            HARD_MB.max(asked_mb),
-        ));
-    }
     if download.features.is_empty() {
         return Err(text::no_features(lang, layer.name));
     }
@@ -124,6 +133,15 @@ pub fn run(request: &Value, lang: Lang) -> Result<Value, String> {
         messages.push(text::cache_cleared(lang, files, bytes as f64 / 1e6));
     }
     messages.push(text::count_size(lang, layer.name, total, download.bytes));
+    if download.limit_hit && !confirm {
+        messages.push(text::download_too_big(
+            lang,
+            layer.name,
+            megabytes,
+            asked_mb,
+            HARD_MB.max(asked_mb),
+        ));
+    }
     if download.limit_hit {
         messages.push(text::download_stopped_at(
             lang,
@@ -215,10 +233,10 @@ fn pre_check(
     no_limit: bool,
     has_confirm: bool,
     has_nolimit: bool,
-) -> Result<(), String> {
+) -> Option<String> {
     // A service that ignores the area has no count to trust: the fetch cuts it.
     if no_limit || layer.unfiltered {
-        return Ok(());
+        return None;
     }
     let filter = if layer.bbox_crs {
         None
@@ -226,14 +244,14 @@ fn pre_check(
         filter::polygon_filter(layer, collection).ok()
     };
     let Some(wanted) = counted(layer, bbox, filter.as_deref(), lang) else {
-        return Ok(());
+        return None;
     };
     if wanted > cap {
-        return Err(text::over_budget(
+        return Some(text::over_budget(
             lang, area, wanted, cap, confirm, &layer.name, has_confirm, has_nolimit,
         ));
     }
-    Ok(())
+    None
 }
 
 /// The bounding box of a FeatureCollection's geometry, `[west, south, east, north]`.
