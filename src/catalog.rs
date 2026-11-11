@@ -143,8 +143,6 @@ pub struct WfsLayer {
     pub url: &'static str,
     /// The feature type, as the service names it (WFS 1.1 `TYPENAME`).
     pub type_name: &'static str,
-    /// The widest area one download may cover, in degrees.
-    pub max_span: f64,
     /// The geometry property a WFS spatial filter names (the service accepts it bare).
     pub geom_field: &'static str,
     /// The download tool whose picker offers this dataset (empty for a sheet index).
@@ -182,7 +180,6 @@ struct Raw {
     #[serde(rename = "type")]
     type_name: String,
     geom: String,
-    max_span: f64,
     #[serde(default)]
     index: bool,
     #[serde(default)]
@@ -241,7 +238,6 @@ pub fn wfs_layers() -> &'static [WfsLayer] {
                 title: leaked(&entry.title),
                 url: leaked(&entry.url),
                 type_name: leaked(&entry.type_name),
-                max_span: entry.max_span,
                 geom_field: leaked(&entry.geom),
                 index: entry.index,
                 hidden: entry.hidden,
@@ -631,7 +627,6 @@ mod tests {
         for layer in wfs_layers() {
             assert!(!layer.name.is_empty(), "{}", layer.id);
             assert!(!layer.geom_field.is_empty(), "{}", layer.id);
-            assert!(layer.max_span > 0.0, "{}", layer.id);
         }
     }
 

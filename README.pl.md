@@ -83,13 +83,12 @@ które wskazują jego obiekty.
 | Limit | Wartość |
 | --- | --- |
 | Obiektów na pobranie | 10 000, 50 000 po potwierdzeniu, bez limitu z zaznaczeniem |
-| Zasięg dla działek i budynków | 0,15° |
-| Zasięg dla granic i jednostek | 20° |
-| Próg rozmiaru przed startem | 25 MB, w panelu suwak 5 do 500 MB |
+| Limit rozmiaru | 25 MB, w panelu suwak 5 do 500 MB |
 | Twardy sufit | 256 MB |
 
-Działki dla miasta ważą około 9 MB, zmierzone na Warszawie: 5 248 działek. Próg pyta raz, a
-zaznaczenie **Pobierz mimo rozmiaru** odpowiada za wszystkie następne przebiegi.
+Pobranie, które trafi na limit, zatrzymuje się: odpowiedź ostrzega, podaje limit i zaznaczenie, które
+go podnosi, a warstwa trzyma to, co przyszło. Działki dla miasta ważą około 9 MB, zmierzone na
+Warszawie: 5 248 działek.
 
 Filtr WFS zwraca całe obiekty, które dotykają obszaru. **Przytnij do warstwy** tnie je wbudowanym
 Clipem i zastępuje warstwę wynikiem.

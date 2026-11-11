@@ -6,7 +6,7 @@
 
 - The pre-download count and the byte limit warn and keep what fits; the run returns the partial layer.
 - The tool box clamps to the area the services hold; a box clear of Poland stops with the reason.
-- The layer catalogue answer drops `max_span`.
+- `max_span` is gone from the layer catalogue and from its answer.
 
 ### Fixed
 

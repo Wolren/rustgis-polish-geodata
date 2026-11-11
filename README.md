@@ -131,15 +131,13 @@ at.
 
 | Limit | Value |
 | --- | --- |
-| Features per download | 6 000 |
-| Span for parcels and buildings | 0.15° |
-| Span for boundaries and units | 20° |
-| Size gate before the run | 25 MB, the panel slider sets 5 to 500 MB |
+| Features per download | 10 000, 50 000 when confirmed, no limit with the tick |
+| Size limit | 25 MB, the panel slider sets 5 to 500 MB |
 | Hard ceiling | 256 MB |
 
-A city's parcels weigh about 9 MB, measured on Warsaw: 5 248 parcels. The gate asks once, and the
-**Download even if large** tick answers for every later run. An area the service counts at zero
-stops before the first page.
+A run that meets a limit stops there: the answer warns, names the limit and the tick that raises it,
+and the layer holds what came. A city's parcels weigh about 9 MB, measured on Warsaw: 5 248 parcels.
+An area the service counts at zero stops before the first page.
 
 One run takes 10 000 features and 25 MB by default. The tool form carries **Size limit (MB)**,
 **Download even if large** and **No feature ceiling**. The field takes any number, and **0 removes the
