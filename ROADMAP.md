@@ -1,6 +1,6 @@
 # Roadmap
 
-_Stan na 2026-11-10, wtyczka 0.2.0._
+_Stan na 2026-11-11, wtyczka 0.2.1._
 
 Cel: jedna wtyczka do RustGIS, która kondensuje polskie dane, dzieli je najpierw według instytucji,
 potem według tematu, i którą całą da się sterować przez MCP albo przez panel.
@@ -58,7 +58,7 @@ potem według tematu, i którą całą da się sterować przez MCP albo przez pa
 ### Wydanie
 
 - **macOS**: link wymaga SDK (Security, CoreFoundation); lokalnie brak. Ścieżka to runner macOS w CI.
-- **Tag 0.2.0**: wymaga zgody; publikuje paczkę i wpis w rejestrze.
+- **Tag 0.2.1**: wymaga zgody; publikuje paczkę i wpis w rejestrze.
 - **E2E w CI**: obecny e2e jest harnessem w `D:/Scratch/dsh`; warto przenieść do repo i uruchamiać
   na żywych usługach po harmonogramie.
 

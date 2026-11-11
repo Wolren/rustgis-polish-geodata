@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.1 - 2026-11-11
+
+### Changed
+
+- The pre-download count and the byte limit warn and keep what fits; the run returns the partial layer.
+- The tool box clamps to the area the services hold; a box clear of Poland stops with the reason.
+- The layer catalogue answer drops `max_span`.
+
+### Fixed
+
+- A clamped box drops the world polygon filter, which the Polish services answer with no feature.
+
 ## 0.2.0 - 2026-11-10
 
 ### Added

@@ -8,7 +8,7 @@ adresów WMS i WFS.
 
 ## Instalacja
 
-- **Z paczki:** zainstaluj `polish-geodata-0.2.0.rgplugin` przez **Plugins › Plugin Manager › Install from file**.
+- **Z paczki:** zainstaluj `polish-geodata-0.2.1.rgplugin` przez **Plugins › Plugin Manager › Install from file**.
 - **Z folderu:** wskaż `dist\polish-geodata` przez **Plugins › Plugin Manager › Settings › Add Plugin
   Folder…**.
 - **Bez instalacji:**
@@ -238,7 +238,7 @@ python tools/fuzz.py --cases 12 --seed 1 --report D:/Scratch/fuzz.json
 te same przypadki. Klasyfikuje wynik na OK, REFUSED, TIMEOUT i CRASH, a na końcu wypisuje wnioski
 o ścieżce pobierania.
 
-Pakowacz pisze `dist\polish-geodata\` (folder dla menedżera wtyczek), `dist\polish-geodata-0.2.0.rgplugin` i
+Pakowacz pisze `dist\polish-geodata\` (folder dla menedżera wtyczek), `dist\polish-geodata-0.2.1.rgplugin` i
 `dist\polish-geodata.json` (wpis do rejestru). Archiwum jest deterministyczne: dwa przebiegi na tych
 samych binariach dają ten sam SHA-256.
 
